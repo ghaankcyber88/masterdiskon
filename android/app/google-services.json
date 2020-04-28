@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "657580256409",
+    "firebase_url": "https://master-diskon-270704.firebaseio.com",
+    "project_id": "master-diskon-270704",
+    "storage_bucket": "master-diskon-270704.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657580256409:android:2a58e02f2a6882dd949c08",
+        "android_client_info": {
+          "package_name": "com.masterdiskon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657580256409-kscdjm43dvuskh9df8t5udh2vv4gljki.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.masterdiskon",
+            "certificate_hash": "1c455facca7f9c4dced65aceb63f8908c3cd3d89"
+          }
+        },
+        {
+          "client_id": "657580256409-dkhgqr5rhf37l629fk907ad2vrg82usa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvdGfqagXBP0UMK4Q1tuA27cV8TIhxxSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657580256409-dkhgqr5rhf37l629fk907ad2vrg82usa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
