@@ -28,7 +28,10 @@ export default class index extends Component {
     }
 
     componentDidMount() {
-        StatusBar.setBackgroundColor(BaseColor.primaryColor, true);
+        //StatusBar.setBackgroundColor(BaseColor.primaryColor, true);
+
+        StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+        StatusBar.setTranslucent(true);
     }
 
     render() {

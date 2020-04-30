@@ -13,7 +13,7 @@ export default class PostListItem extends Component {
                 onPress={onPress}
                 activeOpacity={0.9}
             >
-                <Image source={image} style={styles.imageBanner} />
+                {/* <Image source={image} style={styles.imageBanner} /> */}
                 <View style={styles.content}>
                     {title != "" && (
                         <View style={styles.contentTitle}>

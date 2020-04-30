@@ -11,9 +11,13 @@ export default StyleSheet.create({
     content: {
         height: Utils.scaleWithPixel(100),
         paddingHorizontal: 10,
-        backgroundColor: BaseColor.fieldColor,
+        // backgroundColor: '#007bff',
         justifyContent: "space-between",
-        flex: 1
+        flex: 1,
+          borderRadius: 10,
+        borderWidth: 1,
+        borderColor: BaseColor.fieldColor,
+        backgroundColor: BaseColor.whiteColor,
     },
     contentTitle: {
         paddingTop: 5,

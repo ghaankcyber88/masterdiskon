@@ -16,7 +16,10 @@ import {
     Card,
     Button,
     SafeAreaView,
+    PostListItem,
+
     EventCard,
+    ProfileDescription
 } from "@components";
 import { BaseStyle, BaseColor, Images } from "@config";
 import * as Utils from "@utils";
@@ -54,7 +57,9 @@ const renderPagination = (index, total, context) => {
 
 
 
+
 export default class Home extends Component {
+    
     constructor(props) {
         super(props);
         // Temp data define
@@ -146,23 +151,9 @@ export default class Home extends Component {
         this._deltaY = new Animated.Value(0);
     }
 
-    /**
-     * @description Show icon services on form searching
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     * @returns
-     */
 
-
-     /*function untuk mendapatkan bank payment*/
 
     getPayment(){
-            // const data={  
-            //     "fromCode": this.state.param.Origin,
-            //     "toCode": this.state.param.Destination
-            // }
-            // const param={"param":data}
-
             PostData('selectpayment_list')
                     .then((result) => {
                         console.log('-----------data bank payment----------------');
@@ -227,19 +218,6 @@ export default class Home extends Component {
     }
 
     getPopularDestination(){
-        // this.setState({ loading_popular: true }, () => {
-        //    PostData('get_popular_destination')
-        //         .then((result) => {
-        //             this.setState({loading_popular: false });
-        //             this.setState({listdata_popular_destination: result});
-        //         },
-        //         (error) => {
-        //             this.setState({ error });
-        //         }
-        //     ); 
-        // });
-
-
         this.setState({ loading_popular: true }, () => {
             const data={
                 "id_trip":"",
@@ -345,22 +323,6 @@ export default class Home extends Component {
         });
      }
 
-    // getTripDunia(){
-    //     const data={"id_trip":"","id_country":"","harga_min":"","harga_max":""}
-    //     const param={"param":data}
-    //     console.log('-------------param trip-------------');
-    //     console.log(JSON.stringify(param));
-    //     PostData('trip',param)
-    //          .then((result) => {
-    //              this.setState({listdata_trip_dunia: result});
-    //          },
-    //          (error) => {
-    //              this.setState({ error });
-    //          }
-    //      ); 
-    //  }
-    
-
 
     addDate(dt, amount, dateType) {
         switch (dateType) {
@@ -447,13 +409,9 @@ export default class Home extends Component {
         console.log("------------getage-----------");
         console.log(this.getAge("1987-09-18"));
 
-
-        // AsyncStorage.removeItem('dataCartArray');
-        //                 AsyncStorage.removeItem('dataCartArrayReal');
-
         
         this.getToken();
-        //this.getPayment();
+        this.getPayment();
         this.getFeaturedDestination();
         this.getPopularDestination();
         this.getTripDomestic();
@@ -461,39 +419,6 @@ export default class Home extends Component {
         this.getBlog();
         this.getAssets();
         this.getPromo();
-     
-            // this.setState({ loading_featured: true }, () => {
-            //     PostData('get_featured_destination')
-            //             .then((result) => {
-            //                 console.log("------------FEATURED DESTINATION------------");
-            //                 console.log(JSON.stringify(result));
-            //                 this.setState({listdata_featured_destination: result});
-            //             }
-            //         );
-            //     });
-            
-      
-
-
-        // var details = {
-        //     "grant_type":"password",
-        //     "client_id":"website.2",
-        //     "client_secret":"4bUbd9IH",
-        //     "username":"external@agent.com",
-        //     "password":"123456",
-        //     "timezone":"Asia/Jakarta",
-        //     "lang":"en_US",
-        //     "is_agent":"true",
-        // };
-        
-        // var formBody = [];
-        // for (var property in details) {
-        //   var encodedKey = encodeURIComponent(property);
-        //   var encodedValue = encodeURIComponent(details[property]);
-        //   formBody.push(encodedKey + "=" + encodedValue);
-        // }
-        // formBody = formBody.join("&");
-        
      }
 
      
@@ -590,11 +515,78 @@ export default class Home extends Component {
   }
 
 
+
+
+
     render() {
+        
+        const todo = [
+            {
+            id: '1',
+            title: 'South Travon',
+            image: Images.trip1,
+            },
+            {
+            id: '2',
+            title: 'South Travon',
+            image: Images.trip2,
+            },
+            {
+            id: '3',
+            title: 'South Travon',
+            image: Images.trip3,
+            },
+            {
+            id: '4',
+            title: 'South Travon',
+            image: Images.trip4,
+            },
+            {
+            id: '5',
+            title: 'South Travon',
+            image: Images.trip5,
+            },
+        ];
+        const valueProduct = [
+            {
+            image: Images.profile2,
+            subName: 'CEO Founder',
+            name: 'Kondo Ieyasu',
+            screen: 'Profile1',
+            description:
+                'Andaz Tokyo Toranomon Hills is one of the newest luxury hotels in Tokyo. Located in one of the uprising areas of Tokyo',
+            },
+            {
+            image: Images.profile3,
+            subName: 'Sale Manager',
+            name: 'Yeray Rosales',
+            screen: 'Profile2',
+            description:
+                'Andaz Tokyo Toranomon Hills is one of the newest luxury hotels in Tokyo. Located in one of the uprising areas of Tokyo',
+            },
+            {
+            image: Images.profile5,
+            subName: 'Product Manager',
+            name: 'Alf Huncoot',
+            screen: 'Profile3',
+            description:
+                'Andaz Tokyo Toranomon Hills is one of the newest luxury hotels in Tokyo. Located in one of the uprising areas of Tokyo',
+            },
+            {
+            image: Images.profile4,
+            subName: 'Designer UI/UX',
+            name: 'Chioke Okonkwo',
+            screen: 'Profile4',
+            description:
+                'Andaz Tokyo Toranomon Hills is one of the newest luxury hotels in Tokyo. Located in one of the uprising areas of Tokyo',
+            },
+        ];
+
+
         const { navigation } = this.props;
         const { promotion, tours, hotels, relate, heightHeader} = this.state;
         const heightImageBanner = Utils.scaleWithPixel(140);
-        const marginTopBanner = heightImageBanner - heightHeader-20;
+        const marginTopBanner = heightImageBanner - heightHeader+150;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
 
@@ -614,42 +606,41 @@ export default class Home extends Component {
             var banner=<Animated.View
                           style={[
                             styles.imageBackground,
-                            {
-                            backgroundColor: placeholderColor || BaseColor.fieldColor,    
-                            height: this._deltaY.interpolate({
-                                inputRange: [
-                                    0,
-                                    Utils.scaleWithPixel(100),
-                                    Utils.scaleWithPixel(100)
-                                ],
-                                outputRange: [
-                                    heightImageBanner,
-                                    heightHeader,
-                                    0
-                                ]
-                            })
-                        }
+                            // {
+                            //     backgroundColor: placeholderColor || BaseColor.fieldColor,    
+                            //     height: this._deltaY.interpolate({
+                            //         inputRange: [
+                            //             0,
+                            //             Utils.scaleWithPixel(100),
+                            //             Utils.scaleWithPixel(100)
+                            //         ],
+                            //         outputRange: [
+                            //             heightImageBanner,
+                            //             heightHeader,
+                            //             0
+                            //         ]
+                            //     })
+                            // }
                           ]} />
         }else{
              var banner=<Animated.Image
-                    // source={Images.trip3}
                     source={{uri : this.state.listdata_assets.banner}}
                     style={[
                         styles.imageBackground,
-                        {
-                            height: this._deltaY.interpolate({
-                                inputRange: [
-                                    0,
-                                    Utils.scaleWithPixel(100),
-                                    Utils.scaleWithPixel(100)
-                                ],
-                                outputRange: [
-                                    heightImageBanner,
-                                    heightHeader,
-                                    0
-                                ]
-                            })
-                        }
+                        // {
+                        //     height: this._deltaY.interpolate({
+                        //         inputRange: [
+                        //             0,
+                        //             Utils.scaleWithPixel(100),
+                        //             Utils.scaleWithPixel(100)
+                        //         ],
+                        //         outputRange: [
+                        //             heightImageBanner,
+                        //             heightHeader,
+                        //             0
+                        //         ]
+                        //     })
+                        // }
                     ]}
                 />
 
@@ -657,13 +648,7 @@ export default class Home extends Component {
 
         return (
             <View style={{ flex: 1 }}>
-                
-
-               
-                        
                 {banner}
-                
-
                 <SafeAreaView
                     style={BaseStyle.safeAreaView}
                     forceInset={{ top: "always" }}
@@ -683,173 +668,114 @@ export default class Home extends Component {
                         }
                         scrollEventThrottle={8}
                     >
-                        <View style={{ alignItems: "center" }}>
-                            <View style={[
-                                    { marginTop: marginTopBanner }
-                                ]}>
-                                <Text title3 semibold whiteColor style={{ textAlign: 'center'}}>Mines TO EXPLORE</Text>
-                                <Text whiteColor style={{ textAlign: 'center'}}>Temukan dan pesanlah aktivitas seru dengan harga yang eksklusif</Text>
-                            </View>
-                            <View
-                                style={[
-                                    styles.searchForm
-                                ]}
-                            >
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        navigation.navigate("Search")
-                                    }
-                                    activeOpacity={0.9}
+                    
+                        <View style={{ marginTop: marginTopBanner,backgroundColor:'#fff',borderRadius:30}}>
+                            <View style={{ alignItems: "center" }}>
+                                {/* <View style={[
+                                        
+                                    ]}>
+                                    <Text title3 semibold whiteColor style={{ textAlign: 'center'}}>Mines TO EXPLORE</Text>
+                                    <Text whiteColor style={{ textAlign: 'center'}}>Temukan dan pesanlah aktivitas seru dengan harga yang eksklusif</Text>
+                                </View> */}
+                                <View
+                                    style={[
+                                        styles.searchForm
+                                    ]}
                                 >
-                                    <View style={BaseStyle.textInput}>
-                                        <Text body1 grayColor>
-                                            What're you looking for ?
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                                {this.renderIconService()}
-                            </View>
-                        </View>
-                       
-                        <View>
-                            <View style={styles.contentHiking}>
-                                <Text title3 semibold>
-                                    Featuread Destination
-                                </Text>
-                                <Text body2 grayColor>
-                                   Sekumpulan tempat menginap pilihan yang telah terverifikasi kualitas dan desainnya
-                                </Text>
-                            </View>
-                         
-                            <FlatList
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                data={this.state.listdata_featured_destination}
-                                keyExtractor={(item, index) => item.id}
-                                renderItem={({ item, index }) => (
-                                    <Card
-                                        style={[
-                                            styles.tourItem,
-                                            index == 0
-                                                ? { marginHorizontal: 20 }
-                                                : { marginRight: 20 }
-                                        ]}
-                                        image={item.country_image}
-                                        url={this.state.DataMasterDiskon.site+'assets/upload/country/img/'}
+                                    <TouchableOpacity
                                         onPress={() =>
-                                            navigation.navigate("Tour",{country:item})
+                                            navigation.navigate("Search")
                                         }
-                                        loading={this.state.loading_featured}
+                                        activeOpacity={0.9}
                                     >
-                                    {!this.state.loading_featured && (
-                                        <View>
-                                            <Text headline whiteColor semibold>
-                                                {item.country_name}
-                                            </Text>
-                                            <Text subhead whiteColor>
-                                                {item.listing} pencarian
+                                        <View style={BaseStyle.textInput}>
+                                            <Text body1 grayColor>
+                                                Cari Tiket Pesawat
                                             </Text>
                                         </View>
-                                    )}
-                                    </Card>
-                                )}
-                            />
-                                 
-                        </View>
-
-                         <View>
-                            <View style={styles.contentHiking}>
-                                <Text title3 semibold>
-                                    Rekomendasi
-                                </Text>
-                                <Text body2 grayColor>
-                                   Jelajahi Sekarang
-                                </Text>
+                                    </TouchableOpacity>
+                                    {/* {this.renderIconService()} */}
+                                </View>
                             </View>
+                        
+                            {/* <View>
+                                <View style={styles.contentHiking}>
+                                    <Text title3 semibold>
+                                        Featuread Destination
+                                    </Text>
+                                    <Text body2 grayColor>
+                                    Sekumpulan tempat menginap pilihan yang telah terverifikasi kualitas dan desainnya
+                                    </Text>
+                                </View>
                             
-                            <FlatList
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                data={this.state.listdata_popular_destination}
-                                keyExtractor={(item, index) => item.id}
-                                renderItem={({ item, index }) => (
-                                    <Card
-                                        style={[
-                                            styles.promotionItem,
-                                            index == 0
-                                                ? { marginHorizontal: 20 }
-                                                : { marginRight: 20 }
-                                        ]}
-                                        image={item.img_featured}
-                                        url='https://masterdiskon.co.id/assets/upload/product/img/featured/'
-                                        onPress={() =>
-                                            navigation.navigate("TourDetailCustom",{product:item})
-                                        }
-                                        loading={this.state.loading_popular}
-                                    >
-                                    {!this.state.loading_popular && (
-                                        <View>
-                                        <Text subhead whiteColor>
-                                            {item.judul_trip}
-                                        </Text>
-                                        <Text title2 whiteColor semibold>
-                                            {item.duration} hari
-                                        </Text>
-                                        <View
-                                            style={styles.contentCartPromotion}
+                                <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={this.state.listdata_featured_destination}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item, index }) => (
+                                        <Card
+                                            style={[
+                                                styles.tourItem,
+                                                index == 0
+                                                    ? { marginHorizontal: 20 }
+                                                    : { marginRight: 20 }
+                                            ]}
+                                            image={item.country_image}
+                                            url={this.state.DataMasterDiskon.site+'assets/upload/country/img/'}
+                                            onPress={() =>
+                                                navigation.navigate("Tour",{country:item})
+                                            }
+                                            loading={this.state.loading_featured}
                                         >
-                                            <Button
-                                                style={styles.btnPromotion}
-                                                onPress={() => {
-                                                    navigation.navigate(
-                                                        "PreviewBooking"
-                                                    );
-                                                }}
-                                            >
-                                                <Text body2 semibold whiteColor>
-                                                IDR {priceSplitter(item.harga)}
+                                        {!this.state.loading_featured && (
+                                            <View>
+                                                <Text headline whiteColor semibold>
+                                                    {item.country_name}
                                                 </Text>
-                                            </Button>
-                                        </View>
-                                    </View>
+                                                <Text subhead whiteColor>
+                                                    {item.listing} pencarian
+                                                </Text>
+                                            </View>
                                         )}
-                                    </Card>
-                                )}
-                            />
-                        </View>
-                            
-                        <View>
-                            <View style={styles.contentHiking}>
-                                <Text title3 semibold>
-                                Domestic
-                                </Text>
-                                <Text body2 grayColor>
-                                Sekumpulan destinasi pilihan di Indonesia
-                                </Text>
-                            </View>
-                            
-                            <FlatList
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                data={this.state.listdata_trip_domestic}
-                                keyExtractor={(item, index) => item.id}
-                                renderItem={({ item, index }) => (
-                                    <Card
-                                        style={[
-                                            styles.promotionItem,
-                                            index == 0
-                                                ? { marginHorizontal: 20 }
-                                                : { marginRight: 20 }
-                                        ]}
-                                        image={item.img_featured}
-                                        url='https://masterdiskon.co.id/assets/upload/product/img/featured/'
-                                        onPress={() =>
-                                            navigation.navigate("TourDetailCustom",{product:item})
-                                        }
-                                        loading={this.state.loading_domestic}
-                                    >
-                                    {!this.state.loading_domestic && (
-                                        <View>
+                                        </Card>
+                                    )}
+                                />
+                                    
+                            </View> */}
+
+                            {/* <View>
+                                <View style={styles.contentHiking}>
+                                    <Text title3 semibold>
+                                        Rekomendasi
+                                    </Text>
+                                    <Text body2 grayColor>
+                                    Jelajahi Sekarang
+                                    </Text>
+                                </View>
+                                
+                                <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={this.state.listdata_popular_destination}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item, index }) => (
+                                        <Card
+                                            style={[
+                                                styles.promotionItem,
+                                                index == 0
+                                                    ? { marginHorizontal: 20 }
+                                                    : { marginRight: 20 }
+                                            ]}
+                                            image={item.img_featured}
+                                            url='https://masterdiskon.co.id/assets/upload/product/img/featured/'
+                                            onPress={() =>
+                                                navigation.navigate("TourDetailCustom",{product:item})
+                                            }
+                                            loading={this.state.loading_popular}
+                                        >
+                                        {!this.state.loading_popular && (
+                                            <View>
                                             <Text subhead whiteColor>
                                                 {item.judul_trip}
                                             </Text>
@@ -873,210 +799,249 @@ export default class Home extends Component {
                                                 </Button>
                                             </View>
                                         </View>
-                                        )}
-                                    </Card>
-                                )}
-                            />
-                        </View>
-                     
-
-{/* 
-
-                        <View>
-                            <View style={styles.contentHiking}>
-                                <Text title3 semibold>
+                                            )}
+                                        </Card>
+                                    )}
+                                />
+                            </View> */}
+                                
+                            {/* <View>
+                                <View style={styles.contentHiking}>
+                                    <Text title3 semibold>
                                     Domestic
-                                </Text>
-                                <Text body2 grayColor>
+                                    </Text>
+                                    <Text body2 grayColor>
                                     Sekumpulan destinasi pilihan di Indonesia
-                                </Text>
+                                    </Text>
+                                </View>
+                                
+                                <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={this.state.listdata_trip_domestic}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item, index }) => (
+                                        <Card
+                                            style={[
+                                                styles.promotionItem,
+                                                index == 0
+                                                    ? { marginHorizontal: 20 }
+                                                    : { marginRight: 20 }
+                                            ]}
+                                            image={item.img_featured}
+                                            url='https://masterdiskon.co.id/assets/upload/product/img/featured/'
+                                            onPress={() =>
+                                                navigation.navigate("TourDetailCustom",{product:item})
+                                            }
+                                            loading={this.state.loading_domestic}
+                                        >
+                                        {!this.state.loading_domestic && (
+                                            <View>
+                                                <Text subhead whiteColor>
+                                                    {item.judul_trip}
+                                                </Text>
+                                                <Text title2 whiteColor semibold>
+                                                    {item.duration} hari
+                                                </Text>
+                                                <View
+                                                    style={styles.contentCartPromotion}
+                                                >
+                                                    <Button
+                                                        style={styles.btnPromotion}
+                                                        onPress={() => {
+                                                            navigation.navigate(
+                                                                "PreviewBooking"
+                                                            );
+                                                        }}
+                                                    >
+                                                        <Text body2 semibold whiteColor>
+                                                        IDR {priceSplitter(item.harga)}
+                                                        </Text>
+                                                    </Button>
+                                                </View>
+                                            </View>
+                                            )}
+                                        </Card>
+                                    )}
+                                />
+                            </View> */}
+                        
+
+                            {/* <View style={styles.contentHiking}>
+                                    <Text title3 semibold>
+                                        BLOG
+                                    </Text>
+                                    <Text body2 grayColor>
+                                    Dapatkan Informasi Seputar Dunia Wisata
+                                    </Text>
                             </View>
+                            <View>
+                                <FlatList
+                                    contentContainerStyle={{
+                                        paddingRight: 20
+                                    }}
+                                    horizontal={true}
+                                    data={this.state.listdata_blog_new}
+                                    showsHorizontalScrollIndicator={false}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item, index }) => (
+                                        <EventCard
+                                            // image={item.image}
+                                            image={item.featured_image}
+                                            url={this.state.DataMasterDiskon.site+'assets/upload/blog/post/'}
+                                            title={item.title}
+                                            time={item.name_blog_category}
+                                            location={item.location}
+                                            onPress={() =>
+                                                navigation.navigate("PostDetail",{item:item})
+                                            }
+                                            style={{ marginLeft: 20 }}
+                                            loading={this.state.loading_blog}
+                                        />
+                                    )}
+                                />
+                            </View> */}
+
+
                             
-                            <FlatList
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                data={this.state.listdata_trip_domestic}
-                                keyExtractor={(item, index) => item.id}
-                                renderItem={({ item, index }) => (
-                                    <Card
-                                        style={[
-                                            styles.promotionItem,
-                                            index == 0
-                                                ? { marginHorizontal: 20 }
-                                                : { marginRight: 20 }
-                                        ]}
-                                        image={item.img_featured}
-                                        url={this.state.DataMasterDiskon.site+'assets/upload/product/img/featured/'}
-                                        onPress={() =>
-                                            navigation.navigate("TourDetailCustom",{product:item})
-                                        }
-                                         loading={this.state.loading_domestic}
-                                    >
-                                    {!this.state.loading_domestic && (
-                                         <View>
-                                         <Text subhead whiteColor>
-                                             {item.title_trip}
-                                         </Text>
-                                         <Text title2 whiteColor semibold>
-                                             {item.duration} hari
-                                         </Text>
-                                         <View
-                                             style={styles.contentCartPromotion}
-                                         >
-                                             <Button
-                                                 style={styles.btnPromotion}
-                                                 onPress={() => {
-                                                     navigation.navigate(
-                                                         "PreviewBooking"
-                                                     );
-                                                 }}
-                                             >
-                                                 <Text body2 semibold whiteColor>
-                                                 IDR {priceSplitter(item.price)}
-                                                 </Text>
-                                             </Button>
-                                         </View>
-                                     </View>
-                                        )}
-                                    </Card>
-                                )}
-                            />
-                        </View> */}
-
-
-
-                        {/* Event*/}
-                        <View style={styles.contentHiking}>
+                            <View
+                                style={{
+                                    padding: 20,
+                                    height: wp("75%"),
+                                }}
+                            >
                                 <Text title3 semibold>
-                                    BLOG
+                                    Wonders of Indonesia
                                 </Text>
                                 <Text body2 grayColor>
-                                   Dapatkan Informasi Seputar Dunia Wisata
+                                A gallery for Indonesia's best cultures. From ancient monuments to contemporary art, find inspiration from the country's rich cultures.
                                 </Text>
-                            </View>
-                        <View>
-                            <FlatList
-                                contentContainerStyle={{
-                                    paddingRight: 20
-                                }}
-                                horizontal={true}
-                                data={this.state.listdata_blog_new}
-                                showsHorizontalScrollIndicator={false}
-                                keyExtractor={(item, index) => item.id}
-                                renderItem={({ item, index }) => (
-                                    <EventCard
-                                        // image={item.image}
-                                        image={item.featured_image}
-                                        url={this.state.DataMasterDiskon.site+'assets/upload/blog/post/'}
-                                        title={item.title}
-                                        time={item.name_blog_category}
-                                        location={item.location}
-                                        onPress={() =>
-                                            navigation.navigate("PostDetail",{item:item})
-                                        }
-                                        style={{ marginLeft: 20 }}
-                                        loading={this.state.loading_blog}
-                                    />
-                                )}
-                            />
-                        </View>
-                        {/* Promotion */}
-                        <View
-                            style={{
-                                padding: 20,
-                                 height: wp("75%"),
-                            }}
-                        >
-                            <Text title3 semibold>
-                                Inspiration
-                            </Text>
-                            <Text body2 grayColor>
-                                Info maupun tips untuk perjalananmu
-                            </Text>
 
-                            {this.state.loading_promo ?
+                                {this.state.loading_promo ?
+                                
+                                <Placeholder
+                                        Animation={Fade}
+                                        style={{marginTop: 5}}
+                                        >
+                                            <PlaceholderLine width={100} height={200} style={{marginTop: 2,marginBottom:0,borderRadius: 5}} />
+                                            <PlaceholderLine width={100} style={{marginTop: 2,marginBottom:0}} />
+                                        </Placeholder>
 
-                              <Placeholder
-                                      Animation={Fade}
-                                      style={{marginTop: 5}}
+                                :      
+                                <Swiper
+                                    renderPagination={renderPagination}
+                                    loop={false}
+                                    style={styles.wrapper}
+                                    style={{marginTop: 5}}
                                     >
-                                        <PlaceholderLine width={100} height={200} style={{marginTop: 2,marginBottom:0,borderRadius: 5}} />
-                                        <PlaceholderLine width={100} style={{marginTop: 2,marginBottom:0}} />
-                                    </Placeholder>
 
-                              :      
-                              <Swiper
-                                renderPagination={renderPagination}
-                                loop={false}
-                                 style={styles.wrapper}
-                                >
+                                    {
+                                        this.state.listdata_promo.map((item, key) => {
+                                            return (
 
-                                {
-                                    this.state.listdata_promo.map((item, key) => {
-                                        return (
+                                                <View
+                                                    style={styles.slide}
+                                                    title={
+                                                        <Text numberOfLines={1}>{item.title_promo}</Text>
+                                                    }
+                                                    >
+                                                    <Image style={styles.image}  source={{uri : this.state.DataMasterDiskon.site+'assets/upload/promo/'+item.img_featured}} />
+                                                    </View>
 
-                                              <View
-                                                  style={styles.slide}
-                                                  title={
-                                                    <Text numberOfLines={1}>{item.title_promo}</Text>
-                                                  }
-                                                >
-                                                  <Image style={styles.image}  source={{uri : this.state.DataMasterDiskon.site+'assets/upload/promo/'+item.img_featured}} />
-                                                </View>
+                                            )
+                                        })
+                                    }
 
-                                        )
-                                    })
+                                </Swiper>
                                 }
 
-                            </Swiper>
-                            }
-
-                        </View>
-
-
-
-
-                          {/* Event*/}
-                        <View style={{padding: 20}}>
-                                <Text title3 semibold>
-                                    BLOG
-                                </Text>
-                                <Text body2 grayColor>
-                                   Dapatkan Informasi Seputar Dunia Wisata
-                                </Text>
                             </View>
-                        <View style={{paddingLeft: 20,paddingRight: 20}}>
-                            <FlatList
-                                columnWrapperStyle={{ marginBottom: 10 }}
-                                numColumns={2}
-                                data={this.state.listdata_blog_new}
-                                keyExtractor={(item, index) => item.id}
-                                renderItem={({ item, index }) => (
-                                    <HotelItem
-                                        grid
-                                        image={item.featured_image}
-                                        name={item.title}
-                                        location={item.name_blog_category}
-                                        price={item.price}
-                                        available={item.available}
-                                        rate={item.rate}
-                                        rateStatus={item.rateStatus}
-                                        numReviews={item.numReviews}
-                                        services={item.services}
-                                        style={
-                                            index % 2 ? { marginLeft: 15 } : {}
-                                        }
-                                        onPress={() =>
-                                            navigation.navigate("PostDetail",{item:item})
-                                        }
-                                        url={this.state.DataMasterDiskon.site+'assets/upload/blog/post/'}
-                                        loading={this.state.loading_blog}
-                                        type={'blog'}
+                                
+
+                          
+                            <View style={{padding: 20}}>
+                                <View
+                                style={[styles.blockView]}>
+                                {/* <View
+                                    style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    marginBottom: 10,
+                                    alignItems: 'flex-end',
+                                    }}>
+                                    <Text headline semibold>
+                                    asd
+                                    </Text>
+                                    <TouchableOpacity
+                                    onPress={() => {
+                                        navigation.navigate('Post');
+                                    }}>
+                                    <Text caption1 grayColor>
+                                       asdasd
+                                    </Text>
+                                    </TouchableOpacity>
+                                </View> */}
+                                <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={valueProduct}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({item}) => (
+                                    <PostListItem
+                                        style={{marginRight: 15}}
+                                        title={item.name}
+                                        // date="6 Deals Left"
+                                        description={item.description}
+                                        image={item.image}
+                                        onPress={() => {
+                                        navigation.navigate('PostDetail');
+                                        }}
                                     />
-                                )}
-                            />
+                                  
+                                    )}
+                                />
+                                </View>
+                            </View>            
 
-
+                            {/* <View style={{padding: 20}}>
+                                    <Text title3 semibold>
+                                        BLOG
+                                    </Text>
+                                    <Text body2 grayColor>
+                                    Dapatkan Informasi Seputar Dunia Wisata
+                                    </Text>
+                            </View>
+                            <View style={{paddingLeft: 20,paddingRight: 20}}>
+                                <FlatList
+                                    columnWrapperStyle={{ marginBottom: 10 }}
+                                    numColumns={2}
+                                    data={this.state.listdata_blog_new}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item, index }) => (
+                                        <HotelItem
+                                            grid
+                                            image={item.featured_image}
+                                            name={item.title}
+                                            location={item.name_blog_category}
+                                            price={item.price}
+                                            available={item.available}
+                                            rate={item.rate}
+                                            rateStatus={item.rateStatus}
+                                            numReviews={item.numReviews}
+                                            services={item.services}
+                                            style={
+                                                index % 2 ? { marginLeft: 15 } : {}
+                                            }
+                                            onPress={() =>
+                                                navigation.navigate("PostDetail",{item:item})
+                                            }
+                                            url={this.state.DataMasterDiskon.site+'assets/upload/blog/post/'}
+                                            loading={this.state.loading_blog}
+                                            type={'blog'}
+                                        />
+                                    )}
+                                />
+                            </View> */}
                         </View>
                     </ScrollView>
                 </SafeAreaView>

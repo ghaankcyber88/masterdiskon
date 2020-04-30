@@ -6,21 +6,21 @@ const { width } = Dimensions.get('window')
 
 export default StyleSheet.create({
     imageBackground: {
-        height: 140,
+        height: 350,
         width: "100%",
         position: "absolute"
     },
     searchForm: {
-        padding: 10,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: BaseColor.fieldColor,
-        backgroundColor: BaseColor.whiteColor,
+        paddingTop: 40,
+        // borderRadius: 10,
+        // borderWidth: 1,
+        // borderColor: BaseColor.fieldColor,
+        // backgroundColor: BaseColor.whiteColor,
         width: "90%",
-        shadowColor: "black",
-        shadowOffset: { width: 1.5, height: 1.5 },
-        shadowOpacity: 0.3,
-        shadowRadius: 1,
+        // shadowColor: "black",
+        // shadowOffset: { width: 1.5, height: 1.5 },
+        // shadowOpacity: 0.3,
+        // shadowRadius: 1,
         elevation: 1
     },
     contentServiceIcon: {
@@ -108,5 +108,21 @@ export default StyleSheet.create({
   paginationText: {
     color: BaseColor.default,
     fontSize: 20
-  }
+  },
+
+
+
+  blockView: {
+    paddingVertical: 10,
+    // borderBottomWidth: 0.5,
+  },
+//   titleAbout: {
+//     position: "absolute",
+//     top: 0,
+//     left: 0,
+//     right: 0,
+//     bottom: 0,
+//     justifyContent: "center",
+//     alignItems: "center"
+//   }
 });
