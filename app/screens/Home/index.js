@@ -65,11 +65,11 @@ export default class Home extends Component {
         // Temp data define
         this.state = {
             icons: [
-                // {
-                //     icon: "calendar-alt",
-                //     name: "Hotel",
-                //     route: "Hotel"
-                // },
+                {
+                    icon: "calendar-alt",
+                    name: "Hotel",
+                    route: "Hotel"
+                },
                 {
                     icon: "map-marker-alt",
                     name: "Tour",
@@ -137,6 +137,8 @@ export default class Home extends Component {
             listdata_trip_domestic:DataLoading,
             listdata_blog_new:DataLoading,
             listdata_promo:DataLoading,
+            listdata_musium:DataLoading,
+            listdata_culture:DataLoading,
 
 
             listdata_assets:{},
@@ -308,6 +310,36 @@ export default class Home extends Component {
     }
 
 
+    getMusium(){
+        this.setState({ loading_musium: true }, () => {
+            PostData('get_musium')
+                .then((result) => {
+                    console.log(JSON.stringify(result));
+                    this.setState({loading_musium: false });
+                    this.setState({listdata_musium: result});
+                },
+                (error) => {
+                    this.setState({ error });
+                }
+            );   
+        });
+    }
+
+    getculture(){
+        this.setState({ loading_culture: true }, () => {
+            PostData('get_culture')
+                .then((result) => {
+                    console.log(JSON.stringify(result));
+                    this.setState({loading_culture: false });
+                    this.setState({listdata_culture: result});
+                },
+                (error) => {
+                    this.setState({ error });
+                }
+            );   
+        });
+    }
+
     getAssets(){
         this.setState({ loading_assets: true }, () => {
           
@@ -411,7 +443,7 @@ export default class Home extends Component {
 
         
         this.getToken();
-        this.getPayment();
+        // this.getPayment();
         this.getFeaturedDestination();
         this.getPopularDestination();
         this.getTripDomestic();
@@ -419,6 +451,8 @@ export default class Home extends Component {
         this.getBlog();
         this.getAssets();
         this.getPromo();
+        this.getMusium();
+        this.getculture();
      }
 
      
@@ -446,12 +480,12 @@ export default class Home extends Component {
                             <View style={styles.iconContent}>
                                 <Icon
                                     name={item.icon}
-                                    size={18}
+                                    size={25}
                                     color={BaseColor.primaryColor}
                                     solid
                                 />
                             </View>
-                            <Text footnote grayColor>
+                            <Text footnote>
                                 {item.name}
                             </Text>
                         </TouchableOpacity>
@@ -669,41 +703,26 @@ export default class Home extends Component {
                         scrollEventThrottle={8}
                     >
                     
-                        <View style={{ marginTop: marginTopBanner,backgroundColor:'#fff',borderRadius:30}}>
-                            <View style={{ alignItems: "center" }}>
-                                {/* <View style={[
-                                        
-                                    ]}>
-                                    <Text title3 semibold whiteColor style={{ textAlign: 'center'}}>Mines TO EXPLORE</Text>
-                                    <Text whiteColor style={{ textAlign: 'center'}}>Temukan dan pesanlah aktivitas seru dengan harga yang eksklusif</Text>
-                                </View> */}
-                                <View
-                                    style={[
-                                        styles.searchForm
-                                    ]}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() =>
-                                            navigation.navigate("Search")
-                                        }
-                                        activeOpacity={0.9}
-                                    >
-                                        <View style={BaseStyle.textInput}>
-                                            <Text body1 grayColor>
-                                                Cari Tiket Pesawat
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                    {/* {this.renderIconService()} */}
+                        <View style={{ marginTop: marginTopBanner,backgroundColor:'#fff',borderRadius:30,elevation: 5}}>
+                            
+                            <View>
+                                <View style={styles.contentHiking2}>
+                                    <Text title3 semibold>
+                                    Hey Kamu Mau Kemana ?
+                                    </Text>
+                                </View>
+                                <View>
+                                    {this.renderIconService()}
                                 </View>
                             </View>
-                        
-                            {/* <View>
+
+
+                            <View>
                                 <View style={styles.contentHiking}>
                                     <Text title3 semibold>
                                         Featuread Destination
                                     </Text>
-                                    <Text body2 grayColor>
+                                    <Text body2>
                                     Sekumpulan tempat menginap pilihan yang telah terverifikasi kualitas dan desainnya
                                     </Text>
                                 </View>
@@ -742,14 +761,14 @@ export default class Home extends Component {
                                     )}
                                 />
                                     
-                            </View> */}
+                            </View>
 
-                            {/* <View>
+                            <View>
                                 <View style={styles.contentHiking}>
                                     <Text title3 semibold>
                                         Rekomendasi
                                     </Text>
-                                    <Text body2 grayColor>
+                                    <Text body2>
                                     Jelajahi Sekarang
                                     </Text>
                                 </View>
@@ -803,14 +822,14 @@ export default class Home extends Component {
                                         </Card>
                                     )}
                                 />
-                            </View> */}
+                            </View>
                                 
-                            {/* <View>
+                            <View>
                                 <View style={styles.contentHiking}>
                                     <Text title3 semibold>
                                     Domestic
                                     </Text>
-                                    <Text body2 grayColor>
+                                    <Text body2>
                                     Sekumpulan destinasi pilihan di Indonesia
                                     </Text>
                                 </View>
@@ -864,45 +883,111 @@ export default class Home extends Component {
                                         </Card>
                                     )}
                                 />
-                            </View> */}
-                        
-
-                            {/* <View style={styles.contentHiking}>
-                                    <Text title3 semibold>
-                                        BLOG
-                                    </Text>
-                                    <Text body2 grayColor>
-                                    Dapatkan Informasi Seputar Dunia Wisata
-                                    </Text>
                             </View>
+                        
+                            
+
                             <View>
+                                <View style={styles.contentHiking}>
+                                    <Text title3 semibold>
+                                    National Musium Collection
+                                    </Text>
+                                    <Text body2>
+                                    Sekumpulan tempat menginap pilihan yang telah terverifikasi kualitas dan desainnya
+                                    </Text>
+                                </View>
+                            
                                 <FlatList
-                                    contentContainerStyle={{
-                                        paddingRight: 20
-                                    }}
                                     horizontal={true}
-                                    data={this.state.listdata_blog_new}
                                     showsHorizontalScrollIndicator={false}
+                                    data={this.state.listdata_musium}
                                     keyExtractor={(item, index) => item.id}
                                     renderItem={({ item, index }) => (
-                                        <EventCard
-                                            // image={item.image}
-                                            image={item.featured_image}
-                                            url={this.state.DataMasterDiskon.site+'assets/upload/blog/post/'}
-                                            title={item.title}
-                                            time={item.name_blog_category}
-                                            location={item.location}
+                                        <Card
+                                            style={[
+                                                styles.tourItem,
+                                                index == 0
+                                                    ? { marginHorizontal: 20 }
+                                                    : { marginRight: 20 }
+                                            ]}
+                                            image={'https:'+item[2]}
+                                            url={''}
                                             onPress={() =>
-                                                navigation.navigate("PostDetail",{item:item})
+                                                navigation.navigate("Musium",{url:item[3]})
                                             }
-                                            style={{ marginLeft: 20 }}
-                                            loading={this.state.loading_blog}
-                                        />
+                                            loading={this.state.loading_featured}
+                                        >
+                                        {!this.state.loading_featured && (
+                                            <View>
+                                                <Text headline whiteColor semibold>
+                                                {item[0]}
+                                                </Text>
+                                                <Text subhead whiteColor>
+                                                {item[1]}
+                                                </Text>
+                                            </View>
+                                        )}
+                                        </Card>
                                     )}
                                 />
-                            </View> */}
+                                    
+                            </View>
+                            
 
-
+                            <View>
+                                <View style={styles.contentHiking}>
+                                    <Text title3 semibold>
+                                        Art & Culture Stories
+                                    </Text>
+                                    <Text body2>
+                                    Jelajahi Sekarang
+                                    </Text>
+                                </View>
+                                
+                                <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={this.state.listdata_culture}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item, index }) => (
+                                        <Card
+                                            style={[
+                                                styles.promotionItem,
+                                                index == 0
+                                                    ? { marginHorizontal: 20 }
+                                                    : { marginRight: 20 }
+                                            ]}
+                                            image={'https:'+item[2]}
+                                            url=''
+                                            onPress={() =>
+                                                navigation.navigate("Musium",{url:item[3]})
+                                            }
+                                            loading={this.state.loading_popular}
+                                        >
+                                        {!this.state.loading_popular && (
+                                            <View>
+                                            <Text subhead whiteColor>
+                                                {item[1]}
+                                            </Text>
+                                            {/* <Text title2 whiteColor semibold>
+                                                {item.duration} hari
+                                            </Text> */}
+                                            <View
+                                                style={styles.contentCartPromotion}
+                                            >
+                                                
+                                                    <Text body2 semibold whiteColor>
+                                                    {item[0]}
+                                                    </Text>
+                                              
+                                            </View>
+                                        </View>
+                                            )}
+                                        </Card>
+                                    )}
+                                />
+                            </View>
+                                
                             
                             <View
                                 style={{
@@ -913,7 +998,7 @@ export default class Home extends Component {
                                 <Text title3 semibold>
                                     Wonders of Indonesia
                                 </Text>
-                                <Text body2 grayColor>
+                                <Text body2>
                                 A gallery for Indonesia's best cultures. From ancient monuments to contemporary art, find inspiration from the country's rich cultures.
                                 </Text>
 
@@ -956,54 +1041,103 @@ export default class Home extends Component {
                                 }
 
                             </View>
-                                
 
-                          
-                            <View style={{padding: 20}}>
-                                <View
-                                style={[styles.blockView]}>
-                                {/* <View
-                                    style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-between',
-                                    marginBottom: 10,
-                                    alignItems: 'flex-end',
-                                    }}>
-                                    <Text headline semibold>
-                                    asd
+
+
+                        
+                           
+
+                            <View style={styles.contentHiking}>
+                                    <Text title3 semibold>
+                                        BLOG
                                     </Text>
-                                    <TouchableOpacity
-                                    onPress={() => {
-                                        navigation.navigate('Post');
-                                    }}>
-                                    <Text caption1 grayColor>
-                                       asdasd
+                                    <Text body2 grayColor>
+                                    Dapatkan Informasi Seputar Dunia Wisata
                                     </Text>
-                                    </TouchableOpacity>
-                                </View> */}
+                            </View>
+                            <View>
                                 <FlatList
+                                    contentContainerStyle={{
+                                        paddingRight: 20
+                                    }}
                                     horizontal={true}
+                                    data={this.state.listdata_blog_new}
                                     showsHorizontalScrollIndicator={false}
-                                    data={valueProduct}
                                     keyExtractor={(item, index) => item.id}
-                                    renderItem={({item}) => (
-                                    <PostListItem
-                                        style={{marginRight: 15}}
-                                        title={item.name}
-                                        // date="6 Deals Left"
-                                        description={item.description}
-                                        image={item.image}
-                                        onPress={() => {
-                                        navigation.navigate('PostDetail');
-                                        }}
-                                    />
-                                  
+                                    renderItem={({ item, index }) => (
+                                        <EventCard
+                                            image={item.featured_image}
+                                            url={this.state.DataMasterDiskon.site+'assets/upload/blog/post/'}
+                                            title={item.title}
+                                            time={item.name_blog_category}
+                                            location={item.location}
+                                            onPress={() =>
+                                                navigation.navigate("PostDetail",{item:item})
+                                            }
+                                            style={{ marginLeft: 20 }}
+                                            loading={this.state.loading_blog}
+                                        />
                                     )}
                                 />
-                                </View>
-                            </View>            
+                            </View>
 
-                            {/* <View style={{padding: 20}}>
+
+                            
+                            <View
+                                style={{
+                                    padding: 20,
+                                    height: wp("75%"),
+                                }}
+                            >
+                                <Text title3 semibold>
+                                    Wonders of Indonesia
+                                </Text>
+                                <Text body2>
+                                A gallery for Indonesia's best cultures. From ancient monuments to contemporary art, find inspiration from the country's rich cultures.
+                                </Text>
+
+                                {this.state.loading_promo ?
+                                
+                                <Placeholder
+                                        Animation={Fade}
+                                        style={{marginTop: 5}}
+                                        >
+                                            <PlaceholderLine width={100} height={200} style={{marginTop: 2,marginBottom:0,borderRadius: 5}} />
+                                            <PlaceholderLine width={100} style={{marginTop: 2,marginBottom:0}} />
+                                        </Placeholder>
+
+                                :      
+                                <Swiper
+                                    renderPagination={renderPagination}
+                                    loop={false}
+                                    style={styles.wrapper}
+                                    style={{marginTop: 5}}
+                                    >
+
+                                    {
+                                        this.state.listdata_promo.map((item, key) => {
+                                            return (
+
+                                                <View
+                                                    style={styles.slide}
+                                                    title={
+                                                        <Text numberOfLines={1}>{item.title_promo}</Text>
+                                                    }
+                                                    >
+                                                    <Image style={styles.image}  source={{uri : this.state.DataMasterDiskon.site+'assets/upload/promo/'+item.img_featured}} />
+                                                    </View>
+
+                                            )
+                                        })
+                                    }
+
+                                </Swiper>
+                                }
+                            </View>
+                                
+
+                         
+                            <View style={{padding: 20}}>
                                     <Text title3 semibold>
                                         BLOG
                                     </Text>
@@ -1041,7 +1175,7 @@ export default class Home extends Component {
                                         />
                                     )}
                                 />
-                            </View> */}
+                            </View>
                         </View>
                     </ScrollView>
                 </SafeAreaView>

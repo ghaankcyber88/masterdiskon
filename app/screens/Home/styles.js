@@ -39,10 +39,21 @@ export default StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 5
     },
+    btnPromotion2: {
+        height: 40,
+        borderRadius: 3,
+        paddingHorizontal: 10,
+        paddingVertical: 5
+    },
     contentHiking: {
         marginTop: 20,
         marginLeft: 20,
         marginBottom: 10
+    },
+    contentHiking2: {
+        marginTop: 20,
+        marginLeft: 20,
+        // marginBottom: 10
     },
     promotionBanner: {
         height: Utils.scaleWithPixel(100),
@@ -58,10 +69,19 @@ export default StyleSheet.create({
     iconContent: {
         justifyContent: "center",
         alignItems: "center",
-        width: 36,
-        height: 36,
+        width: 70,
+        height: 70,
         borderRadius: 18,
-        backgroundColor: BaseColor.fieldColor
+        backgroundColor: BaseColor.fieldColor,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        marginBottom:5
     },
     itemService: {
         alignItems: "center",

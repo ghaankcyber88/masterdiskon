@@ -112,7 +112,7 @@ export default class EventCard extends Component {
                             {time}
                         </Text>
                         <Text overline grayColor>
-                            {location}
+                            {image}
                         </Text>
                     </View>
                 </View>
