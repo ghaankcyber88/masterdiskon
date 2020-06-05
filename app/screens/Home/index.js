@@ -211,6 +211,7 @@ export default class Home extends Component {
        
             PostData('get_featured_destination')
                     .then((result) => {
+                        console.log('listdata_featured_destination',JSON.stringify(result));
                         this.setState({loading_featured: false });
                         this.setState({listdata_featured_destination: result});
                     }
@@ -717,7 +718,7 @@ export default class Home extends Component {
                             </View>
 
 
-                            <View>
+                            {/* <View>
                                 <View style={styles.contentHiking}>
                                     <Text title3 semibold>
                                         Featuread Destination
@@ -761,7 +762,7 @@ export default class Home extends Component {
                                     )}
                                 />
                                     
-                            </View>
+                            </View> */}
 
                             <View>
                                 <View style={styles.contentHiking}>

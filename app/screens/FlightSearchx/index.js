@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView,Text,TouchableOpacity,AsyncStorage } from "react-native";
+import { View, ScrollView,Text,TouchableOpacity } from "react-native";
 import { BaseStyle, BaseColor, Images } from "@config";
 import {
     Header,
@@ -13,15 +13,12 @@ import {
     Button
 } from "@components";
 import styles from "./styles";
-import { Image } from "@components";
 
-// import {AsyncStorage} from 'react-native';
+import {AsyncStorage} from 'react-native';
 
 export default class FlightSearch extends Component {
     constructor(props) {
         super(props);
-       
-
 
         const id_dari = '';
         const id_tujuan = '';
@@ -29,7 +26,6 @@ export default class FlightSearch extends Component {
         var tglAkhir=this.getDate(3);
 
         this.state = {
-            login:true,
             round: false,
             loading: false,
             from: {
@@ -326,18 +322,6 @@ export default class FlightSearch extends Component {
     
     
     componentDidMount() {
-
-        AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                this.setState({login:true});
-             }else{
-                this.setState({login:false});
-
-             }
-        });
-
-
-
         console.log("-------token------");
         AsyncStorage.getItem('tokenAgi', (error, result) => {
             if (result) {    
@@ -401,7 +385,7 @@ export default class FlightSearch extends Component {
      }
 
     render() {
-        const { round, from, to, loading,login  } = this.state;
+        const { round, from, to, loading  } = this.state;
         const { navigation } = this.props;
     
         return (
@@ -424,8 +408,6 @@ export default class FlightSearch extends Component {
                         navigation.goBack();
                     }}
                 />
-                {
-                    login ?
                 <ScrollView style={styles.contain}>
                     <View style={styles.flightType}>
                         <Tag
@@ -548,79 +530,8 @@ export default class FlightSearch extends Component {
                             typeOld="3"
                         />
                     </View>
-
-                    <Button
-                        full
-                        loading={loading}
-                        style={{
-                                borderRadius: 18,
-                                // backgroundColor: BaseColor.fieldColor,
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5}}
-                        onPress={() => {  
-                            this.onSubmit();
-                            // this.setState({ loading: true }, () => {
-                            //     setTimeout(() => {
-                            //         this.onSubmit();
-                            //         //navigation.navigate("FlightResult");
-                            //         this.setState({ loading: false });
-                            //     }, 500);
-                            // });
-                        }}
-                    >
-                        Search
-                    </Button>
                 </ScrollView>
-
-                :
-
-                <View
-                style={{flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100%',padding: 20}}
-                >       
-                <Image
-                    source={Images.login}
-                    style={{ width: "60%", height: "60%" }}
-                    resizeMode="cover"
-                />
-                <View><Text>Anda Belum Login</Text></View>
-                <Button
-                            full
-                            
-                            loading={this.state.loading}
-                            onPress={() => navigation.navigate("SignIn",{redirect:'FlightSearch'})}
-                        >
-                            Sign In
-                        </Button>
-                <View style={styles.contentActionBottom}>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate("SignUp")}
-                            >
-                                <Text body1 grayColor>
-                                    Haven’t registered yet?
-                                </Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate("SignUp")}
-                            >
-                                <Text body1 primaryColor>
-                                    Join Now
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-            </View>
-    }
-
-                {/* <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+                <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
                     <Button
                         full
                         loading={loading}
@@ -648,7 +559,7 @@ export default class FlightSearch extends Component {
                     >
                         Search
                     </Button>
-                </View> */}
+                </View>
             </SafeAreaView>
         );
     }

@@ -81,6 +81,18 @@ export default class SelectTitle extends Component {
         }else{
             title=[
                 {
+                    "id": "Mr",
+                    "name": "Mr"
+                },
+                {
+                    "id": "Ms",
+                    "name": "Ms"
+                },
+                {
+                    "id": "Mrs",
+                    "name": "Mrs"
+                },
+                {
                     "id": "Mstr",
                     "name": "Mstr"
                 },

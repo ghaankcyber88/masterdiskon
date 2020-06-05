@@ -282,7 +282,7 @@ class ProfileSmart extends Component {
                 (error) => {
                     this.setState({ error });
                 }
-                );
+            );
 
             }
         });    

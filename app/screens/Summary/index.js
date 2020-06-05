@@ -188,6 +188,9 @@ export default class Summary extends Component {
         this.updateParticipant = this.updateParticipant.bind(this);
         this.setTitle = this.setTitle.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+
+        //this.midtrans = this.midtrans.bind(this);
+
     }
     convertDuration(date1,date2){
         
@@ -687,6 +690,48 @@ export default class Summary extends Component {
         
     }
 
+    
+    // midtrans(id_order){
+
+    //     const midtransClient = require('./midtrans-nodejs-client-master/index.js');
+    //     let snap = new midtransClient.Snap({
+    //             isProduction : false,
+    //             serverKey : 'SB-Mid-server-h5mboMANRKZ_j0DfcgGwkNxI',
+    //             clientKey : 'SB-Mid-client-5WsXpT-RV8mTehtr'
+    //         });
+         
+    //     let parameter = {
+    //         "transaction_details": {
+    //             "order_id": id_order,
+    //             "gross_amount": this.state.totalAll
+    //         }, "credit_card":{
+    //             "secure" : true
+    //         }
+    //     };
+
+
+         
+    //         snap.createTransaction(parameter)
+    //         .then((transaction)=>{
+    //             let transactionToken = transaction.token;
+
+    //             //alert(transactionToken);
+    //              this.props.navigation.navigate("OrderPembayaran",
+    //                 {
+    //                     transactionToken:transactionToken,
+    //                     id_order:id_order
+    //                 })
+
+    //         })
+    //         .catch((e)=>{
+    //             console.log('Error occured:',e.message);
+    //         });
+            
+
+
+            
+    // }
+
     saveParticipant(){
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
@@ -873,10 +918,6 @@ export default class Summary extends Component {
         type
         ){
     
-
-            
-      
-
 
     if(type=='guest'){
         AsyncStorage.getItem('setDataParticipant', (error, result) => {

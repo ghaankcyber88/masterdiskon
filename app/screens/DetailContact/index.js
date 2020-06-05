@@ -339,7 +339,7 @@ export default class DetailContact extends Component {
       }
     
       setCountry(id_country,country_name,phone_code){
-        //console.log(id_country);
+        console.log('passport_country_ids',id_country);
         this.setState({passport_country_id:id_country});
         // this.setState({passport_country_phone_code:phone_code});
         this.setState({passport_country:country_name});
@@ -349,7 +349,7 @@ export default class DetailContact extends Component {
       }
 
       setNationality(id_country,country_name,phone_code){
-        console.log(id_country);
+        console.log('nationality_ids',id_country);
         this.setState({nationality_id:id_country});
         this.setState({nationality_phone_code:phone_code});
         this.setState({nationality:country_name});

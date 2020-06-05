@@ -55,10 +55,5 @@ export default StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         padding: 15
-    },
-      contentActionBottom: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 25
-    },
+    }
 });
