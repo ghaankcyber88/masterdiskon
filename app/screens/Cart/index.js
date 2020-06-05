@@ -412,9 +412,11 @@ export default class Cart extends Component {
                             this.setState({ loading: false });
                                 id_order=result.id_order;
                                 pay=result.pay;
-                                this.setState({id_order:id_order});
-                                this.setState({pay:pay});
-                                this.getVa(dataOrderSubmit);
+                                //alert('id_order :'+id_order);
+                                //this.midtrans(id_order,pay)
+                                // this.setState({id_order:id_order});
+                                // this.setState({pay:pay});
+                                // this.getVa(dataOrderSubmit);
                                 
                                 
 
@@ -427,6 +429,46 @@ export default class Cart extends Component {
     }
 
 
+    // midtrans(id_order,pay){
+
+    //     const midtransClient = require('midtrans-client');
+    //     let snap = new midtransClient.Snap({
+    //             isProduction : false,
+    //             serverKey : 'SB-Mid-server-h5mboMANRKZ_j0DfcgGwkNxI',
+    //             clientKey : 'SB-Mid-client-5WsXpT-RV8mTehtr'
+    //         });
+         
+    //     let parameter = {
+    //         "transaction_details": {
+    //             "order_id": id_order,
+    //             "gross_amount": pay
+    //         }, "credit_card":{
+    //             "secure" : true
+    //         }
+    //     };
+
+
+         
+    //         snap.createTransaction(parameter)
+    //         .then((transaction)=>{
+    //             let transactionToken = transaction.token;
+
+    //             alert(transactionToken);
+    //             //  this.props.navigation.navigate("OrderPembayaran",
+    //             //     {
+    //             //         transactionToken:transactionToken,
+    //             //         id_order:id_order
+    //             //     })
+
+    //         })
+    //         .catch((e)=>{
+    //             console.log('Error occured:',e.message);
+    //         });
+            
+
+
+            
+    // }
 
     
 
