@@ -10,7 +10,9 @@ export default StyleSheet.create({
     },
     flightType: {
         flexDirection: "row",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: 'center',
+        alignItems: "center",textAlignVertical: "center",textAlign: "center"
     },
     contentRow: { flexDirection: "row", marginTop: 20 },
     centerView: {
@@ -21,14 +23,17 @@ export default StyleSheet.create({
     colCenter: { flex: 1, alignItems: "center" },
 
     contentPickDate: {
-        flexDirection: "row",
-        justifyContent: "space-between",
+        // flexDirection: "row",
+        // justifyContent: "space-between",
         borderRadius: 8,
-        backgroundColor: BaseColor.fieldColor,
-        padding: 10
+        borderWidth: 3,
+        borderColor: BaseColor.fieldColor,
+        // backgroundColor: BaseColor.fieldColor,
+        flex: 6,
+        padding: 10,
     },
     itemPick: {
-        flex: 1,
+        flex: 4,
         justifyContent: "center"
     },
     linePick: {

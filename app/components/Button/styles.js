@@ -10,7 +10,17 @@ export default StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+
+         borderRadius: 18,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5,
     },
     textDefault: {
         ...Typography.headline,

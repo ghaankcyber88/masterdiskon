@@ -30,20 +30,20 @@ export default class FlightPlan extends Component {
                     <Text header semibold>
                         {fromCode}
                     </Text>
-                    <Text body1>{from}</Text>
+                    <Text style={{justifyContent: 'center',alignItems: "center",textAlignVertical: "center",textAlign: "center"}}>{from}</Text>
                 </TouchableOpacity>
                 <View style={styles.centerView}>
                     <Icon
                         name="plane"
                         color={BaseColor.primaryColor}
-                        size={24}
+                        size={14}
                         solid
                     />
                     {round && (
                         <Icon
                             name="plane"
                             color={BaseColor.primaryColor}
-                            size={24}
+                            size={14}
                             solid
                             style={{
                                 transform: [{ rotate: "180deg" }],
@@ -63,7 +63,7 @@ export default class FlightPlan extends Component {
                     <Text header semibold>
                         {toCode}
                     </Text>
-                    <Text body1>{to}</Text>
+                    <Text style={{justifyContent: 'center',alignItems: "center",textAlignVertical: "center",textAlign: "center"}}>{to}</Text>
                 </TouchableOpacity>
             </View>
         );

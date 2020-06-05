@@ -7,6 +7,8 @@ import {PostData} from '../../services/PostData';
 // Load sample data
 import { NotificationData,DataLoading } from "@data";
 import { View } from "react-native-animatable";
+import { Image } from "@components";
+import { Images } from "@config";
 
 import {
   Placeholder,
@@ -110,10 +112,9 @@ export default class Notification extends Component {
                         navigation.goBack();
                     }}
                 />
-
                  {
                     login ? 
-                        loading_spinner ? 
+                       
                         <FlatList
                             refreshControl={
                                 <RefreshControl
@@ -132,56 +133,45 @@ export default class Notification extends Component {
                                     txtContent={item.content}
                                     txtRight={item.date_added}
                                     loading={this.state.loading_spinner}
+                                    //loading={true}
                                 />
                             )}
                         /> 
-                        :
-                  <FlatList
-                            refreshControl={
-                                <RefreshControl
-                                    colors={[BaseColor.primaryColor]}
-                                    tintColor={BaseColor.primaryColor}
-                                    refreshing={this.state.refreshing}
-                                    onRefresh={() => { }}
-                                />
-                            }
-                            data={notification}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={({ item, index }) => (
-                                <ListThumbCircle
-                                    image={item.image}
-                                    txtLeftTitle={item.title}
-                                    txtContent={item.content}
-                                    txtRight={item.date_added}
-                                    loading={this.state.loading_spinner}
-                                />
-                            )}
-                        />
+
                 :
-                <View>
-                        <View style={{ padding: 20, alignItems: "center" }}>
-                            <Icon
-                                name="lock"
-                                size={72}
-                                color={BaseColor.lightPrimaryColor}
-                                style={{ paddingTop: 50, paddingBottom: 20 }}
-                            />
-                            <Text title3 style={{ marginVertical: 0 }} semibold>
-                                Your Profile
-                            </Text>
-                            <Text body1 grayColor style={{ textAlign: "center" }}>
-                                Log in to start planning your next trip
-                            </Text>
-                            
-                            <Button
+
+                <View
+                    style={{flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',padding: 20}}
+                    >       
+                    <Image
+                        source={Images.login}
+                        style={{ width: "60%", height: "60%" }}
+                        resizeMode="cover"
+                    />
+                    <View><Text>Anda Belum Login</Text></View>
+                    <Button
                                 full
-                                style={{ marginTop: 20 }}
+                                style={{ 
+                                     marginTop: 20,
+                                    borderRadius: 18,
+                                // backgroundColor: BaseColor.fieldColor,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5 }}
                                 loading={this.state.loading}
                                 onPress={() => navigation.navigate("SignIn",{redirect:'Booking'})}
                             >
                                 Sign In
                             </Button>
-                            <View style={styles.contentActionBottom}>
+                    <View style={styles.contentActionBottom}>
                                 <TouchableOpacity
                                     onPress={() => navigation.navigate("SignUp")}
                                 >
@@ -198,11 +188,11 @@ export default class Notification extends Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                        </View>    
-                    </View>    
+                </View>
+
+
                 }
                 
-                  
             </SafeAreaView>
         );
     }

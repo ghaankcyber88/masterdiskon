@@ -6,7 +6,10 @@ export default StyleSheet.create({
         padding: 10,
         borderRadius: 8,
         width: "100%",
-        backgroundColor: BaseColor.fieldColor
+        //backgroundColor: BaseColor.fieldColor
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: BaseColor.fieldColor,
     },
     bottomModal: {
         justifyContent: "flex-end",

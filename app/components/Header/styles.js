@@ -1,9 +1,10 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { BaseStyle } from "@config";
+import { BaseStyle,BaseColor } from "@config";
 
 export default StyleSheet.create({
-    contain: { height: 45, flexDirection: "row" },
+    contain: { height: 45, flexDirection: "row"},
+    contain2: { height: 45, flexDirection: "row",backgroundColor:BaseColor.primaryColor},
     contentLeft: {
         flex: 1,
         justifyContent: "center",

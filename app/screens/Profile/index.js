@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { View, ScrollView, TouchableOpacity, Switch,Animated,AsyncStorage, ActivityIndicator } from "react-native";
+import { View, ScrollView, TouchableOpacity, Switch,Animated,AsyncStorage } from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AuthActions } from "@actions";
 import { BaseStyle, BaseColor, BaseSetting,Images } from "@config";
+import { Image } from "@components";
 import {
     Header,
     SafeAreaView,
@@ -17,14 +18,14 @@ import styles from "./styles";
 
 import * as Utils from "@utils";
 // Load sample data
-import { UserData, DataMasterDiskon } from "@data";
+import { UserData } from "@data";
 
 import {
     GoogleSignin,
     GoogleSigninButton,
     statusCodes,
   } from '@react-native-community/google-signin';
-  import {PostData} from '../../services/PostData';
+
 
 class Profile extends Component {
     constructor(props) {
@@ -41,7 +42,6 @@ class Profile extends Component {
             loading_spinner:false,
             login:false,
             loading: false,
-            DataMasterDiskon:DataMasterDiskon[0]
         };
         this._deltaY = new Animated.Value(0);
     }
@@ -137,20 +137,17 @@ class Profile extends Component {
     };
 
     componentDidMount() {
-       this.getStatic();
+       
         this.setState({ loading_spinner: true }, () => {
 
             AsyncStorage.getItem('userSession', (error, result) => {
                 if (result) {
+                
 
                     let userSession = JSON.parse(result);
-                    console.log('-----------data user--------');
-                    console.log(JSON.stringify(userSession));
                     this.setState({ userSession: userSession });
                     this.setState({ loading_spinner: false });
                     this.setState({ login: true });
-                    var id_user=userSession.id_user;
-                    this.getProfile(id_user);
 
                  }
                 
@@ -159,56 +156,17 @@ class Profile extends Component {
         });
     }
 
-
-    getProfile(id_user) {
- 
-        var id_user=id_user;           
-
-                    const data={"id":id_user}
-                    const param={"param":data}
-                    console.log('-------------param profile-------------');
-                    console.log(JSON.stringify(param));
-                    PostData('get_profile',param)
-                        .then((result) => {
-                                        console.log("---------------get profile ------------");
-                                        console.log(JSON.stringify(result));
-                                        AsyncStorage.setItem('profile', JSON.stringify(result)); 
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    ); 
-    }
-
-
-    getStatic() {
- 
-                    PostData('get_static')
-                        .then((result) => {
-                                        console.log("---------------get static ------------");
-                                        console.log(JSON.stringify(result));
-                                        this.setState({dataStatic:result}); 
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    ); 
-    }
-
-
-  
-
     render() {
         const { navigation } = this.props;
         const { userData, loading,login,loading_spinner,userSession,heightHeader } = this.state;
 
         const heightImageBanner = Utils.scaleWithPixel(140);
-        const marginTopBanner = heightImageBanner - heightHeader-70;
+        const marginTopBanner = heightImageBanner - heightHeader-50;
         return (
             <View style={{ flex: 1 }}>
            <Animated.Image
                     // source={Images.trip3}
-                    source={{uri : this.state.DataMasterDiskon.banner}}
+                    //source={{uri : 'https://images.unsplash.com/photo-1555980483-93e7b3529e1a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80'}}
                     style={[
                         styles.imageBackground,
                         {
@@ -231,7 +189,7 @@ class Profile extends Component {
                 style={BaseStyle.safeAreaView}
                 forceInset={{ top: "always" }}
             >
-                {/* <Header
+                { <Header
                     title="Profile"
                     renderLeft={() => {
                         return (
@@ -269,7 +227,7 @@ class Profile extends Component {
                     onPressRightSecond={() => {
                         navigation.navigate("Messenger");
                     }}
-                /> */}
+                /> }
 
 {   
                     login ? 
@@ -312,159 +270,223 @@ class Profile extends Component {
                                    
                             </View>
                             <View
-                                // style={[
-                                //     styles.searchForm
-                                // ]}
-                            >
-                                <View
-                                style={[
-                                    styles.contentBoxTop,
-                                    { marginTop: marginTopBanner }
-                                ]}
-                            >
-                                <Text
-                                    title2
-                                    semibold
-                                    style={{ marginBottom: 7 }}
+                                    style={[
+                                        styles.searchForm
+                                    ]}
                                 >
-                                    Hi, {this.state.userSession.first} {this.state.userSession.last} 
-                                </Text>
-                              
-                                <Text
-                                    body2
-                                    style={{
-                                        marginTop: 7,
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    {this.state.userSession.email}
-                                </Text>
+                                    <View
+                                    style={[
+                                        // styles.contentBoxTop,
+                                    ]}
+                                >   
+                                    <Icon
+                                                name="pencil-alt"
+                                                size={18}
+                                                color={BaseColor.primaryColor}
+                                                style={{position: 'absolute', right: 0}}
+                                    />
+                                    <Text
+                                        title2
+                                        semibold
+                                        style={{ marginBottom: 7 }}
+                                    >
+                                         Hi, {this.state.userSession.first} {this.state.userSession.last} 
+                                    </Text>
+                                  
+                                    <Text
+                                        body2
+                                        style={{
+                                            marginTop: 7,
+                                            textAlign: "center"
+                                        }}
+                                    >
+                                        {this.state.userSession.email}
+                                    </Text>
+                                </View>
                             </View>
-                                {/* {this.renderIconService()} */}
-                            </View>
+
                         </View>
                        
 
                     <View style={styles.contain}>
-                        <ProfileDetail
-                            image={userData.image}
-                            textFirst={userData.name}
-                            point={userData.point}
-                            textSecond={userData.address}
-                            textThird={userData.id}
-                            onPress={() =>{
-                                alert('asd');
-                                 //navigation.navigate("ProfileExanple")
+                       
 
-                            }
-                            }
-                            viewImage={false}
-                        />
-                        {/* <ProfilePerformance
-                            data={userData.performance}
-                            style={{ marginTop: 20, marginBottom: 20 }}
-                        /> */}
+
+
                         <View style={{ width: "100%" }}>
+
+                            <View style={{paddingBottom:50}}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        navigation.navigate("ProfileSmart",{sourcePage:'profile'});
+                                    }}
+                                >   
+
+                                <View style={styles.contain}>
+                                    <Icon
+                                                name="user-check"
+                                                size={18}
+                                                color={BaseColor.primaryColor}
+                                            />
+                                    
+                                    <View style={styles.content}>
+                                        <View style={styles.left}>
+                                            <Text headline semibold>
+                                               Detail Utama
+                                            </Text>
+                                            <Text
+                                                note
+                                                numberOfLines={2}
+                                                footnote
+                                                grayColor
+                                                style={{
+                                                    paddingTop: 5
+                                                }}
+                                            >
+                                               Lengkapi data utama Anda untuk sebagai data pemesan
+                                            </Text>
+                                        </View>
+                                        <View style={styles.right}>
+                                            <Icon
+                                            name="angle-right"
+                                            size={18}
+                                            color={BaseColor.primaryColor}
+                                        />
+                                        </View>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+
+
                             <TouchableOpacity
-                                style={styles.profileItem}
                                 onPress={() => {
                                     navigation.navigate("ProfileSmart",{sourcePage:'profile'});
                                 }}
-                            >
-                                <Text body1>Smart Profile</Text>
-                                <Icon
-                                    name="angle-right"
-                                    size={18}
-                                    color={BaseColor.primaryColor}
-                                    style={{ marginLeft: 5 }}
-                                />
+                            >   
+
+                                <View style={styles.contain}>
+                                    <Icon
+                                                name="user-check"
+                                                size={18}
+                                                color={BaseColor.primaryColor}
+                                            />
+                                    
+                                    <View style={styles.content}>
+                                        <View style={styles.left}>
+                                            <Text headline semibold>
+                                               Smart Profile
+                                            </Text>
+                                            <Text
+                                                note
+                                                numberOfLines={2}
+                                                footnote
+                                                grayColor
+                                                style={{
+                                                    paddingTop: 5
+                                                }}
+                                            >
+                                               Pesenan lebih cepat, isi data penumpang, dengan satu klik
+                                            </Text>
+                                        </View>
+                                        <View style={styles.right}>
+                                            <Icon
+                                            name="angle-right"
+                                            size={18}
+                                            color={BaseColor.primaryColor}
+                                        />
+                                        </View>
+                                    </View>
+                                </View>
                             </TouchableOpacity>
+
+
+                        </View>
+                            
+                        <View style={{paddingBottom:50}}>
+                            <View><Text style={{ marginLeft: 10 }}>Pengaturan</Text></View>
                             <TouchableOpacity
                                 style={styles.profileItem}
                                 onPress={() => {
                                     navigation.navigate("ChangePassword");
                                 }}
                             >
-                                <Text body1>Change Password</Text>
+                                <Text body1 style={{ marginLeft: 10 }}>Change Password</Text>
                                 <Icon
-                                    name="pencil-alt"
+                                    name="angle-right"
                                     size={18}
                                     color={BaseColor.primaryColor}
-                                    style={{ marginLeft: 5 }}
+                                    style={{ marginRight: 10 }}
                                 />
                             </TouchableOpacity>
-                                        {/* <TouchableOpacity
-                                            style={styles.profileItem}
-                                            onPress={() => {
-                                                navigation.navigate("ChangePassword");
-                                            }}
-                                        >
-                                            <Text body1>Email dan Nomor Ponsel</Text>
-                                            <Icon
-                                                name="angle-right"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                                style={{ marginLeft: 5 }}
-                                            />
-                                        </TouchableOpacity> */}
-                                        <TouchableOpacity
-                                            style={styles.profileItem}
-                                            onPress={() => {
-                                                navigation.navigate("Static",{item:this.state.dataStatic,type:'tentang'});
-                                            }}
-                                        >
-                                            <Text body1>Tentang Masterdiskon</Text>
-                                            <Icon
-                                                name="angle-right"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                                style={{ marginLeft: 5 }}
-                                            />
-                                        </TouchableOpacity>
                                         <TouchableOpacity
                                             style={styles.profileItem}
                                             onPress={() => {
                                                 navigation.navigate("ChangePassword");
                                             }}
                                         >
-                                            <Text body1>Kebijakan</Text>
+                                            <Text body1 style={{ marginLeft: 10 }}>Email dan Nomor Ponsel</Text>
                                             <Icon
                                                 name="angle-right"
                                                 size={18}
                                                 color={BaseColor.primaryColor}
-                                                style={{ marginLeft: 5 }}
+                                                 style={{ marginRight: 10 }}
                                             />
                                         </TouchableOpacity>
-                                        {/* <TouchableOpacity
+
+
+                                        
+                            </View>
+
+                             <View style={{paddingBottom:50}}>
+                                <View><Text style={{ marginLeft: 10 }}>Lainnya</Text></View>
+                                        <TouchableOpacity
                                             style={styles.profileItem}
                                             onPress={() => {
                                                 navigation.navigate("ChangePassword");
                                             }}
                                         >
-                                            <Text body1>Syarat dan Ketentuan</Text>
+                                            <Text body1 style={{ marginLeft: 10 }}>Tentang Masterdiskon</Text>
                                             <Icon
                                                 name="angle-right"
                                                 size={18}
                                                 color={BaseColor.primaryColor}
-                                                style={{ marginLeft: 5 }}
+                                                 style={{ marginRight: 10 }}
                                             />
-                                        </TouchableOpacity> */}
-                                        {/* <TouchableOpacity
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity
                                             style={styles.profileItem}
                                             onPress={() => {
                                                 navigation.navigate("ChangePassword");
                                             }}
                                         >
-                                            <Text body1>Version</Text>
+                                            <Text body1 style={{ marginLeft: 10 }}>Kebijakan Privasi</Text>
                                             <Icon
                                                 name="angle-right"
                                                 size={18}
                                                 color={BaseColor.primaryColor}
-                                                style={{ marginLeft: 5 }}
+                                                 style={{ marginRight: 10 }}
                                             />
-                                        </TouchableOpacity> */}
+                                        </TouchableOpacity>
+
+                                        <TouchableOpacity
+                                            style={styles.profileItem}
+                                            onPress={() => {
+                                                navigation.navigate("ChangePassword");
+                                            }}
+                                        >
+                                            <Text body1 style={{ marginLeft: 10 }}>Syarat dan Ketentuan</Text>
+                                            <Icon
+                                                name="angle-right"
+                                                size={18}
+                                                color={BaseColor.primaryColor}
+                                                style={{ marginRight: 10 }}
+                                            />
+                                        </TouchableOpacity>
+
+                                       
                                             <View style={styles.profileItem}>
-                                                <Text body1>Reminders</Text>
+                                                <Text body1 style={{ marginLeft: 10 }}>Reminders</Text>
                                                 <Switch
                                                     name="angle-right"
                                                     size={18}
@@ -473,11 +495,12 @@ class Profile extends Component {
                                                 />
                                             </View>
                                             <View style={styles.profileItem}>
-                                                <Text body1>App Version</Text>
-                                                <Text body1 grayColor>
+                                                <Text body1 style={{ marginLeft: 10 }}>App Version</Text>
+                                                <Text body1 grayColor  style={{ marginRight: 10 }}>
                                                     {BaseSetting.appVersion}
                                                 </Text>
                                             </View>
+                            </View>
                         </View>
                     </View>
                     <View style={{ padding: 20 }}>

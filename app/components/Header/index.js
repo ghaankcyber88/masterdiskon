@@ -3,6 +3,7 @@ import { View, TouchableOpacity, StatusBar } from "react-native";
 import { Text } from "@components";
 import styles from "./styles";
 import PropTypes from "prop-types";
+import { BaseStyle,BaseColor } from "@config";
 
 export default class Header extends Component {
   componentDidMount() {

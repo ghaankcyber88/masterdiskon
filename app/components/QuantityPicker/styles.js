@@ -6,7 +6,10 @@ export default StyleSheet.create({
         padding: 10,
         borderRadius: 8,
         flex: 1,
-        backgroundColor: BaseColor.fieldColor,
-        alignItems: "center"
+        //backgroundColor: BaseColor.fieldColor,
+        alignItems: "center",
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: BaseColor.fieldColor,
     }
 });

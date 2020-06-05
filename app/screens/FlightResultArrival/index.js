@@ -281,6 +281,7 @@ export default class FlightResultArrival extends Component {
                     renderItem={({ item, index }) => (
                         
                         <FlightItem
+                            loading={false}
                             style={{ marginBottom: 10, marginHorizontal: 20 }}
                             fromHour={item.flight_schedule[0]['departure_time']}
                             toHour={item.flight_schedule[0]['arrival_time']}

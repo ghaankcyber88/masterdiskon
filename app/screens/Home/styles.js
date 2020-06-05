@@ -72,7 +72,7 @@ export default StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 18,
-        backgroundColor: BaseColor.fieldColor,
+        backgroundColor: BaseColor.whiteColor,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

@@ -438,52 +438,64 @@ export default class FlightSearch extends Component {
                         onPressFrom={() => this.onSelectFlight("from")}
                         onPressTo={() => this.onSelectFlight("to")}
                     />
+                   
                         
                     {
                             this.state.round ? 
-                                <View style={styles.contentPickDate}>
-                                    <TouchableOpacity
-                                        style={styles.itemPick}
-                                        onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
-                                    >
-                                        <Text caption1 light style={{ marginBottom: 5 }}>
-                                            Check In
-                                        </Text>
-                                        <Text headline semibold>
-                                            {this.convertDate(this.state.tglAwal)}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <View style={styles.linePick} />
-                                    <TouchableOpacity
-                                        style={styles.itemPick}
-                                        onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
-                                    >
-                                        <Text caption1 light style={{ marginBottom: 5 }}>
-                                            Check Out
-                                        </Text>
-                                        <Text headline semibold>
-                                        {this.convertDate(this.state.tglAkhir)}
-                                        </Text>
-                                    </TouchableOpacity>
+                                <View  style={{ flexDirection: "row" }}>
+                                    <View style={styles.contentPickDate}>
+                                        <TouchableOpacity
+                                            
+                                            onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
+                                        >
+                                            <Text caption2 light style={{ marginBottom: 5 }}>
+                                                Check In
+                                            </Text>
+                                            <Text body1 semibold>
+                                                {this.convertDate(this.state.tglAwal)}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={styles.contentPickDate}>   
+                                        <TouchableOpacity
+                                           
+                                            onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
+                                        >
+                                            <Text caption2 light style={{ marginBottom: 5 }}>
+                                                Check Out
+                                            </Text>
+                                            <Text body1 semibold>
+                                            {this.convertDate(this.state.tglAkhir)}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                             :
-                                <View style={styles.contentPickDate}>
-                                <TouchableOpacity
-                                    style={styles.itemPick}
-                                    onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
-                                >
-                                    <Text caption1 light style={{ marginBottom: 5 }}>
-                                        Check In
-                                    </Text>
-                                    <Text headline semibold>
-                                        {this.convertDate(this.state.tglAwal)}
-                                    </Text>
-                                </TouchableOpacity>
+                               <View tyle={{ marginTop: 20, flexDirection: "row" }}>
+                                    <View style={styles.contentPickDate}>
+                                        <TouchableOpacity
+                                            onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
+                                        >
+                                            <Text caption light style={{ marginBottom: 5 }}>
+                                                Check In
+                                            </Text>
+                                            <Text body1 semibold>
+                                                {this.convertDate(this.state.tglAwal)}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View>
+                                        <TouchableOpacity
+                                            style={{}} >
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
+                              
                                 
                                 
                     } 
-                        
+                   
                     
                     
                     <FormOption
@@ -523,6 +535,17 @@ export default class FlightSearch extends Component {
                     <Button
                         full
                         loading={loading}
+                        style={{
+                                borderRadius: 18,
+                                // backgroundColor: BaseColor.fieldColor,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5}}
                         onPress={() => {  
                             this.onSubmit();
                             // this.setState({ loading: true }, () => {

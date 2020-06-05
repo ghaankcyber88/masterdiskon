@@ -68,16 +68,24 @@ const styles = StyleSheet.create({
     },
 
     contentProfile: {
-        marginTop: 15,
+        // marginTop: 15,
         flexDirection: "row",
-        // backgroundColor: BaseColor.fieldColor,
-        marginBottom: 15
+        backgroundColor: BaseColor.fieldColor,
+        marginBottom: 15,
+
+        borderWidth: 1, 
+       borderRadius: 10,
+       borderColor: BaseColor.fieldColor,
+       padding: 5,
+       //backgroundColor: '#FFEB3B'
     },
     searchIcon: {
         flex: 1,
-        borderRadius: 8,
-        backgroundColor: BaseColor.fieldColor,
-        padding: 10
+        // borderRadius: 40/2,
+        // backgroundColor: BaseColor.fieldColor,
+        padding: 10,
+        // width:40,
+        // height:40
     },
 });
 
@@ -1239,7 +1247,7 @@ export default class Summary extends Component {
       
                       })}
                     viewImage={false}
-                    style={{ flex: 6, marginRight: 15 }}
+                    style={{ flex: 10, marginRight: 10 }}
                 />
                 <TouchableOpacity
                     style={styles.searchIcon}
@@ -1301,7 +1309,7 @@ export default class Summary extends Component {
       
                       })}
                     viewImage={false}
-                    style={{ flex: 6, marginRight: 15 }}
+                    style={{ flex: 10, marginRight: 10 }}
                 />
                 <TouchableOpacity
                     style={styles.searchIcon}
@@ -1391,13 +1399,26 @@ export default class Summary extends Component {
                 <TouchableOpacity  disabled={this.state.handlerButton} onPress={() => 
                     {
                         this.onSubmit()
-                        //alert('go');
+                        //alert('go`');
                     }} >
                 <View pointerEvents='none' style={styles.groupinput}>       
                 <Button
                 loading={loading}
                 full
-                style={{backgroundColor:this.state.colorButton}}
+                // style={{backgroundColor:this.state.colorButton}}
+                 style={{
+                                borderRadius: 18,
+                                // backgroundColor: BaseColor.fieldColor,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5,
+                                backgroundColor:this.state.colorButton
+                            }}
                 >
                 Add To Cart
                 </Button>
@@ -1454,14 +1475,14 @@ export default class Summary extends Component {
                         <View style={styles.line} />
                         {/* --------------------------------- */}
 
-                        <Text title3 style={{ paddingVertical: 10 }}>
+                        <Text title3 style={{ paddingVertical: 10,fontSize: 12 }}>
                             Detail Pemesan
                         </Text>
                         {contentFormCustomer}
                         <View style={styles.line} />
                         {/* --------------------------------- */}
 
-                        <Text title3 style={{ paddingVertical: 10 }}>
+                        <Text title3 style={{ paddingVertical: 10,fontSize: 12 }}>
                         Detail Penumpang
                         </Text>
                         <View style={styles.profileItem}>

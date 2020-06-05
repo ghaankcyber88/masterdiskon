@@ -625,7 +625,7 @@ class InformationTab extends Component {
                                 <Text body2 grayColor>
                                     {item.title}
                                 </Text>
-                                <Text body2 semibold accentColor>
+                                <Text body2 semibold >
                                     {item.detail}
                                 </Text>
                             </View>

@@ -6,7 +6,8 @@ import { TabView, TabBar } from "react-native-tab-view";
 import { BookingHistoryData,UserData, ReviewData, TourData, PackageData,DataLoading } from "@data";
 import {PostData} from '../../services/PostData';
 import styles from "./styles";
-
+import { Image } from "@components";
+import { Images } from "@config";
 import {
     Placeholder,
     PlaceholderMedia,
@@ -238,30 +239,38 @@ export default class Booking extends Component {
                 />
                 
                 :
-                <View>
-                        <View style={{ padding: 20, alignItems: "center" }}>
-                            <Icon
-                                name="lock"
-                                size={72}
-                                color={BaseColor.lightPrimaryColor}
-                                style={{ paddingTop: 50, paddingBottom: 20 }}
-                            />
-                            <Text title3 style={{ marginVertical: 0 }} semibold>
-                                Your Profile
-                            </Text>
-                            <Text body1 grayColor style={{ textAlign: "center" }}>
-                                Log in to start planning your next trip
-                            </Text>
-                            
-                            <Button
+                <View
+                    style={{flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',padding: 20}}
+                    >       
+                    <Image
+                        source={Images.login}
+                        style={{ width: "60%", height: "60%" }}
+                        resizeMode="cover"
+                    />
+                    <View><Text>Anda Belum Login</Text></View>
+                    <Button
                                 full
-                                style={{ marginTop: 20 }}
+                                style={{ 
+                                     marginTop: 20,
+                                    borderRadius: 18,
+                                // backgroundColor: BaseColor.fieldColor,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5 }}
                                 loading={this.state.loading}
                                 onPress={() => navigation.navigate("SignIn",{redirect:'Booking'})}
                             >
                                 Sign In
                             </Button>
-                            <View style={styles.contentActionBottom}>
+                    <View style={styles.contentActionBottom}>
                                 <TouchableOpacity
                                     onPress={() => navigation.navigate("SignUp")}
                                 >
@@ -278,8 +287,8 @@ export default class Booking extends Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-                        </View>    
-                    </View>    
+                </View>
+                  
                 }
             </SafeAreaView>
         );
@@ -338,21 +347,8 @@ class BelumLunasTab extends Component {
         let { reviewList,loading_spinner } = this.state;
         return (
             <View>
-            {
-                loading_spinner ? 
-                <Placeholder
-                    Animation={Fade}
-                    style={{ padding: 20 }}
-                >
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                </Placeholder>
-            :
-
+          
             <FlatList
-                style={{ padding: 20 }}
                 refreshControl={
                     <RefreshControl
                         colors={[BaseColor.primaryColor]}
@@ -367,6 +363,7 @@ class BelumLunasTab extends Component {
                     <CommentItem
                         style={{ marginTop: 10 }}
                         item={item}
+                        loading={this.state.loading_spinner}
                         onPress={() => {
                             this.props.navigation.navigate("PreviewBooking",{item:item});
                         }}
@@ -374,7 +371,7 @@ class BelumLunasTab extends Component {
                     />
                 )}
             />
-                    }
+            
             </View>
         );
     }
@@ -427,8 +424,65 @@ class LunasTab extends Component {
         });
     }
 
+
+
+
+
     render() {
         let { reviewList,loading_spinner } = this.state;
+        var content=<View></View>
+        if(this.state.dataBooking != 0){
+
+            content=<FlatList
+                refreshControl={
+                    <RefreshControl
+                        colors={[BaseColor.primaryColor]}
+                        tintColor={BaseColor.primaryColor}
+                        refreshing={this.state.refreshing}
+                        onRefresh={() => {}}
+                    />
+                }
+                data={this.state.dataBooking}
+                keyExtractor={(item, index) => item.id}
+                renderItem={({ item }) => (
+                    // <CommentItem
+                    //     style={{ marginTop: 10 }}
+                    //     item={item}
+                    //     loading={this.state.loading_spinner}
+                    //     onPress={() => {
+                    //         this.props.navigation.navigate("PreviewBooking",{item:item});
+                    //     }}
+                    //     status={'lunas'}
+                    // />
+
+                    <CommentItem
+                        style={{ marginTop: 10 }}
+                        item={item}
+                        loading={this.state.loading_spinner}
+                        onPress={() => {
+                            this.props.navigation.navigate("PreviewBooking",{item:item});
+                        }}
+                        status={'lunas'}
+                    />
+                )}
+            />
+        }else{
+
+            content=<View
+                    style={{flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%'}}
+                    >       
+                    <Image
+                        source={Images.empty}
+                        style={{ width: "60%", height: "60%" }}
+                        resizeMode="cover"
+                    />
+                    <View><Text>Ooops, Data Tidak Tersedia</Text></View>
+                    </View>
+        }
+
         return (
             <View>
             {
@@ -443,30 +497,8 @@ class LunasTab extends Component {
                     <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
                 </Placeholder>
             :
-
-            <FlatList
-                style={{ padding: 20 }}
-                refreshControl={
-                    <RefreshControl
-                        colors={[BaseColor.primaryColor]}
-                        tintColor={BaseColor.primaryColor}
-                        refreshing={this.state.refreshing}
-                        onRefresh={() => {}}
-                    />
-                }
-                data={this.state.dataBooking}
-                keyExtractor={(item, index) => item.id}
-                renderItem={({ item }) => (
-                    <CommentItem
-                        style={{ marginTop: 10 }}
-                        item={item}
-                        onPress={() => {
-                            this.props.navigation.navigate("PreviewBooking",{item:item});
-                        }}
-                        status={'lunas'}
-                    />
-                )}
-            />
+            content
+            
                     }
             </View>
         );

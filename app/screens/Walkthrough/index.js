@@ -24,10 +24,10 @@ class Walkthrough extends Component {
             loading: false,
             scrollEnabled: true,
             slide: [
-                { key: 1, image: Images.trip2,text:'Temukan dan pesanlah aktivitas seru dengan harga yang eksklusif' },
-                { key: 2, image: Images.trip1,text:'Temukan perjalanan impian untukmu sendiri atau dengan yang lainnya' },
-                { key: 3, image: Images.trip3,text:'Temukan dan pesanlah aktivitas seru dengan harga yang eksklusif' },
-                { key: 4, image: Images.trip4,text:'Temukan dan pesanlah aktivitas seru dengan harga yang eksklusif' }
+                { key: 1, image: Images.intergrity,title:'Intergrity',text:'Giving the best, responsible to complete, responding your needs.' },
+                { key: 2, image: Images.trip1,title:'Intergrity',text:'Discipline, honest, trustworthy, persistent, and committed.' },
+                { key: 3, image: Images.trip3,title:'Intergrity',text:'Initiative to learn continuosly, creative, and innovative.' },
+                // { key: 4, image: Images.trip4,text:'Temukan dan pesanlah aktivitas seru dengan harga yang eksklusif' }
             ]
         };
     }
@@ -186,6 +186,9 @@ class Walkthrough extends Component {
                                             source={item.image}
                                             style={styles.img}
                                         />
+                                        <Text body1 style={styles.titleSlide}>
+                                            {item.title}
+                                        </Text>
                                         <Text body1 style={styles.textSlide}>
                                             {item.text}
                                         </Text>

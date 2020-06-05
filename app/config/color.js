@@ -10,10 +10,13 @@ let OrangeColor = {
 };
 
 let BlueColor = {
-    primaryColor: "#0072ff",
+    primaryColor: "#0070BA",
+    secondColor: "#FFCD02",
     darkPrimaryColor: "#1281ac",
     lightPrimaryColor: "#B4D5F9",
-    accentColor: "#FF8A65"
+    accentColor: "#FF8A65",
+    textWhite:"#fff",
+    whiteColor: "#FFF",
 };
 
 let PinkColor = {

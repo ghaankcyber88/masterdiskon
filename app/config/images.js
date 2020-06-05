@@ -80,5 +80,9 @@ export const Images = {
     event4: require("@assets/images/event-4.jpg"),
     event5: require("@assets/images/event-5.jpg"),
     event6: require("@assets/images/event-6.jpg"),
-    event7: require("@assets/images/event-7.jpg")
+    event7: require("@assets/images/event-7.jpg"),
+    empty: require("@assets/images/empty.jpg"),
+    login: require("@assets/images/login.jpg"),
+    intergrity: require("@assets/images/intergrity.jpg"),
+
 };

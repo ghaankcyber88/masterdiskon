@@ -42,11 +42,11 @@ export default StyleSheet.create({
         height: 32,
         justifyContent: "center"
     },
-    contain: {
-        alignItems: "center",
-        padding: 20,
-        width: "100%"
-    },
+    // contain: {
+    //     alignItems: "center",
+    //     padding: 20,
+    //     width: "100%"
+    // },
     textInput: {
         height: 56,
         backgroundColor: BaseColor.fieldColor,
@@ -63,6 +63,16 @@ export default StyleSheet.create({
         paddingBottom: 20,
         paddingTop: 20
     },
+    profileItem2: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderBottomColor: BaseColor.textSecondaryColor,
+        borderBottomWidth: 1,
+        paddingBottom: 20,
+        paddingTop: 20
+    },
+
     contentActionBottom: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -81,13 +91,15 @@ export default StyleSheet.create({
         shadowOffset: { width: 1.5, height: 1.5 },
         shadowOpacity: 0.3,
         shadowRadius: 1,
-        elevation: 1
+        elevation: 1,
+        alignItems: "center",
     },
 
     imageBackground: {
         height: 140,
         width: "100%",
-        position: "absolute"
+        position: "absolute",
+        backgroundColor:BaseColor.primaryColor,
     },
 
     contentBoxTop: {
@@ -103,4 +115,40 @@ export default StyleSheet.create({
         shadowOpacity: 1.0,
         elevation: 5
     },
+
+
+
+
+    item: {
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 5,
+        paddingBottom: 5
+    },
+    contain: {
+        flexDirection: "row",
+        borderBottomColor: BaseColor.textSecondaryColor,
+        borderBottomWidth: 1,
+        paddingTop: 5,
+        paddingBottom: 5,
+         alignItems: "center",
+        padding: 10,
+        width: "100%"
+    },
+    thumb: { width: 48, height: 48, marginRight: 10, borderRadius: 24 },
+    content: {
+        flex: 1,
+        flexDirection: "row",
+        marginLeft:10
+    },
+    left: {
+        flex: 7.5,
+        alignItems: "flex-start",
+        justifyContent: "center",
+    },
+    right: {
+        flex: 2.5,
+        alignItems: "flex-end",
+        justifyContent: "center"
+    }
 });

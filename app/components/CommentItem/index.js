@@ -1,12 +1,18 @@
 import React, { Component } from "react";
 import { View,TouchableOpacity } from "react-native";
 import { Images, BaseColor } from "@config";
-import { Text, Image, StarRating } from "@components";
+import { Text, Image, StarRating,Icon } from "@components";
 import PropTypes from "prop-types";
 import styles from "./styles";
 import * as Utils from "@utils";
 import moment from 'moment';
 import CountDown from 'react-native-countdown-component';
+import {
+  Placeholder,
+  PlaceholderMedia,
+  PlaceholderLine,
+  Fade
+} from "rn-placeholder";
 
 
 
@@ -37,7 +43,7 @@ export default class CommentItem extends Component {
     render() {
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
-        const { style, image, name, rate, date, title, comment, item,onPress,status } = this.props;
+        const { style, image, name, rate, date, title, comment, item,onPress,status,loading } = this.props;
 
         
         var fieldsArray = [];
@@ -65,33 +71,37 @@ export default class CommentItem extends Component {
     var stat='';
  
     if(item.status_payment=="lunas"){
-            statusPay= <View style={styles.validContentRed}>
-                <Text caption3 semibold>
-                    Status
-                </Text>
-                <Text grayColor>
-                    Lunas
-                </Text>
-            </View>
+            // statusPay= <View style={styles.validContentRed}>
+            //     <Text caption3 semibold>
+            //         Status
+            //     </Text>
+            //     <Text grayColor>
+            //         Lunas
+            //     </Text>
+            // </View>
+
+            statusPay='Lunas';
     }else{
         if(expiredTime > 0){
-            statusPay= <View style={styles.validContentGreen}>
-            <Text caption3 semibold>
-                Status
-            </Text>
-            <Text caption3 semibold>
-                Belum Lunas
-            </Text>
-            </View>
+            // statusPay= <View style={styles.validContentGreen}>
+            // <Text caption3 semibold>
+            //     Status
+            // </Text>
+            // <Text caption3 semibold>
+            //     Belum Lunas
+            // </Text>
+            // </View>
+            statusPay='Belum Lunas';
         }else{
-            statusPay= <View style={styles.validContentGreen}>
-            <Text caption3 semibold>
-                Status 
-            </Text>
-            <Text caption3 semibold>
-                Cancel
-            </Text>
-            </View>
+            // statusPay= <View style={styles.validContentGreen}>
+            // <Text caption3 semibold>
+            //     Status 
+            // </Text>
+            // <Text caption3 semibold>
+            //     Cancel
+            // </Text>
+            // </View>
+            statusPay='Cancel';
         }
 
 
@@ -117,119 +127,129 @@ export default class CommentItem extends Component {
         }
     }
 
+    var icon='';
+    if(item.product=='Flight'){
+        icon=<Icon
+                                    name={'plane'}
+                                    color={BaseColor.primaryColor}
+                                    size={18}
+                                    solid
+                                    style={{ marginLeft: -10,marginTop:10,position:'absolute',width:40,height:40,
+                                    backgroundColor: "#fff",
+                                    borderRadius: 18,
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3.84,
+                                    elevation: 5,
+                                    padding:10,
+                                         }}
+                                />
+    }else{
+        icon=<Icon
+                                    name={'suitcase'}
+                                    color={BaseColor.primaryColor}
+                                    size={18}
+                                    solid
+                                    style={{ marginLeft: -10,marginTop:10,position:'absolute',width:40,height:40,
+                                    backgroundColor: "#fff",
+                                    borderRadius: 18,
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3.84,
+                                    elevation: 5,
+                                    padding:10,
+                                         }}
+                                />
+
+    }
 
     var content='';
-    content=<View style={[styles.contain, style]}>
-        <View style={{ flexDirection: "row", marginBottom: 10 }}>
-                    <View style={styles.contentLeft}>
-                        <View>
-                            <Text headline semibold numberOfLines={1}>
-                            {item.product} ( ID Order {item.id_order} )
+
+    if(loading==true){
+    content=<View style={styles.contain}>
+                                <Icon
+                                    name={'spinner'}
+                                    color={BaseColor.primaryColor}
+                                    size={18}
+                                    solid
+                                    style={{ marginLeft: -10,marginTop:10,position:'absolute',width:40,height:40,
+                                    backgroundColor: "#fff",
+                                    borderRadius: 18,
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3.84,
+                                    elevation: 5,
+                                    padding:10,
+                                         }}
+                                />
+                    <View style={styles.content}>
+                        <View style={styles.left}>
+                            <PlaceholderLine width={50} />
+                            <PlaceholderLine width={100} />
+                        </View>
+                        <View style={styles.right}>
+                            <PlaceholderLine width={40} />
+                            <PlaceholderLine width={50} />
+                        </View>
+                    </View>
+                </View>
+    }else{
+        content=<View style={styles.contain}>
+                                {icon}
+                    <View style={styles.content}>
+                        <View style={styles.left}>
+                            <Text headline semibold style={{fontSize:12}}>
+                                {item.detail[0].product_name} 
+                            </Text>
+                            <Text
+                                note
+                                numberOfLines={2}
+                                grayColor
+                                style={{
+                                    paddingTop: 5
+                                }}
+                            >
+                                IDR {priceSplitter(item.total_price)}
+                            </Text>
+                        </View>
+                        <View style={styles.right}>
+                            <Text caption2 grayColor style={{fontSize:14,fontWeight: "bold"}}>
+                               Status
+                            </Text>
+                            <Text caption2 grayColor>
+                               {statusPay}
                             </Text>
                         </View>
                     </View>
-        </View>
+                </View>
 
-        {fieldsArray}
-        <View style={styles.validContent}>
-                <Text caption3 semibold>
-                    Price
-                </Text>
-                <Text caption3 semibold>
-                    IDR {priceSplitter(item.total_price)}
-                </Text>
-        </View>
-        {countDown}
-        {statusPay}
-    </View>
-
-
-//      <View style={[styles.contain, style]}>
-//         <View style={{ flexDirection: "row", marginBottom: 10 }}>
-//             <View style={styles.contentLeft}>
-//                 <View>
-//                     <Text headline semibold numberOfLines={1}>
-//                     {item.product} ( ID Order {item.id_order} )
-//                     </Text>
-//                 </View>
-//             </View>
-//         </View>
-     
-//         <View style={styles.validContentRed}>
-//             <Text caption3 semibold>
-//                 Status
-//             </Text>
-//         </View>
-
-
-//         <View style={styles.validContentRed}>
-//             <Text caption3 semibold>
-//                 Price
-//             </Text>
-//             <Text grayColor>
-//                 Lunas
-//             </Text>
-//         </View>
-
-//      <View style={styles.validContentRed}>
-//          <Text caption3 semibold>
-//              Status
-//          </Text>
-//          <Text grayColor>
-//              Lunas
-//          </Text>
-//      </View>
-//  </View>
-
-
-
-   
-
-
+    }
 
         return (
-            <TouchableOpacity
-            style={[styles.contain, style]}
-            activeOpacity={0.9}
-            onPress={onPress}
+            // <TouchableOpacity
+            // style={[styles.contain, style]}
+            // activeOpacity={0.9}
+            // onPress={onPress}
+            // >
+
+             <TouchableOpacity
+                style={[styles.item, style]}
+                onPress={onPress}
+                activeOpacity={0.9}
             >
                 {content}
-            {/* <View style={[styles.contain, style]}>
-                <View style={{ flexDirection: "row", marginBottom: 10 }}>
-                    <View style={styles.contentLeft}>
-                        <View>
-                            <Text headline semibold numberOfLines={1}>
-                            {item.product} ( ID Order {item.id_order} )
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-                
-                <View style={styles.validContentRed}>
-                    <Text caption3 semibold>
-                        Status
-                    </Text>
-                </View>
-
-
-                <View style={styles.validContentRed}>
-                    <Text caption3 semibold>
-                        Price
-                    </Text>
-                    <Text grayColor>
-                        Lunas
-                    </Text>
-                </View>
-
-                <View style={styles.validContentRed}>
-                    <Text caption3 semibold>
-                        Status
-                    </Text>
-                    <Text grayColor>
-                        Lunas
-                    </Text>
-                </View>
-            </View> */}
             </TouchableOpacity>
         );
     }
@@ -245,7 +265,8 @@ CommentItem.propTypes = {
     title: PropTypes.string,
     comment: PropTypes.string,
     onPress: PropTypes.func,
-    status: PropTypes.func
+    status: PropTypes.func,
+    loading: PropTypes.bool
 };
 
 CommentItem.defaultProps = {
@@ -259,4 +280,5 @@ CommentItem.defaultProps = {
     comment: "",
     onPress: () => {},
     status: "",
+    loading: true,
 };

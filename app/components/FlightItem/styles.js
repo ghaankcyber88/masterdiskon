@@ -4,8 +4,18 @@ import { BaseColor } from "@config";
 export default StyleSheet.create({
     content: {
         padding: 10,
-        borderRadius: 8,
-        backgroundColor: BaseColor.fieldColor
+        backgroundColor: "#fff",
+
+         borderRadius: 18,
+                                // backgroundColor: BaseColor.fieldColor,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5
     },
     contentTop: {
         flexDirection: "row",
@@ -39,5 +49,6 @@ export default StyleSheet.create({
         justifyContent: "space-between"
     },
     bottomLeft: { flexDirection: "row", alignItems: "center" },
+    bottomRight: {flexDirection: 'row', justifyContent: 'flex-end'},
     image: { width: 32, height: 32, marginRight: 10, borderRadius: 16 }
 });
