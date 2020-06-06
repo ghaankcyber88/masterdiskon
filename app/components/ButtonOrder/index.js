@@ -106,9 +106,9 @@ export default class ButtonOrder extends Component {
                     </TouchableOpacity>
                 </View>
                 
-                <Text body2 numberOfLines={5} style={{ marginTop: 10 }}>
+                {/* <Text body2 numberOfLines={5} style={{ marginTop: 10 }}>
                     {description}
-                </Text>
+                </Text> */}
                 {/* <Button full style={{ marginTop: 10 }} onPress={onPress}>
                     Book Now
                 </Button> */}

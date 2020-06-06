@@ -3,7 +3,8 @@ import { BaseColor } from "@config";
 
 export default StyleSheet.create({
     contain: {
-        padding: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
         backgroundColor: BaseColor.fieldColor,
         borderRadius: 8,
         width: "100%"

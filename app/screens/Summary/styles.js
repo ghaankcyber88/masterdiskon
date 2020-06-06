@@ -44,7 +44,7 @@ export default StyleSheet.create({
         alignItems: "center",
         borderBottomColor: BaseColor.textSecondaryColor,
         borderBottomWidth: 1,
-        paddingBottom: 20,
-        paddingTop: 20
+        //paddingBottom: 20,
+        //paddingTop: 20
     }
 });

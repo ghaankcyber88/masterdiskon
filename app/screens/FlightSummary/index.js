@@ -327,7 +327,6 @@ export default class FlightSummary extends Component {
                     "departure_timezone": returnPost.departure_timezone,
                     "gmt_departure": returnPost.gmt_departure,
                     "arrival_date": returnPost.arrival_date,
-                    "arrival_time": returnPost.arrival_time,
                     "arrival_timezone": returnPost.arrival_timezone,
                     "gmt_arrival": returnPost.gmt_arrival,
                     "duration": returnPost.duration,

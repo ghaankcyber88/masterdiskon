@@ -103,6 +103,7 @@ export default class Summary extends Component {
         if(this.props.navigation.state.params.param){
             param=this.props.navigation.state.params.param;
         }
+        //alert(JSON.stringify(param));
 
         var paramOther=[];
         if(this.props.navigation.state.params.paramOther){
@@ -283,6 +284,7 @@ export default class Summary extends Component {
                 "Infants": param.Infants,
                 "CabinClass": param.CabinClass[0],
                 "CorporateCode": param.CorporateCode,
+                "ReturnDate"   : param.ReturnDate,
                 "DepartureDate": param.DepartureDate,
                 "Destination": param.Destination,
                 "Origin": param.Origin,
@@ -1389,12 +1391,24 @@ export default class Summary extends Component {
                 packageName={'IDR '+priceSplitter(this.state.total_price)}
                 price={packageItem.price}
                 type={'Total Price for '+this.state.jumlahPenumpang+' Person(s)'}
-                description={'Include insurance'}
+                //description={'Include insurance'}
                 onPressIcon={() => {
                     navigation.navigate("PricingTable");
                 }}
-                style={{ marginBottom: 10 }}
+                //style={{ marginBottom: 10 }}
             />
+            
+                <View style={{width:'100%',paddingLeft: 20,paddingRight:20}}>
+
+                        <View style={styles.profileItem}>
+                            <Text body1>Asuransi</Text>
+                            <Switch name="angle-right" 
+                                size={18} 
+                                onValueChange={this.toggleSwitch}
+                                value={this.state.reminders}
+                             />
+                        </View>
+                </View>
             
             </View>
 
@@ -1475,8 +1489,6 @@ export default class Summary extends Component {
                 />
                 <ScrollView>
                     <View style={styles.contain}>
-                 
-                        
                         {contentProduct}
                         <View style={styles.line} />
                         {/* --------------------------------- */}
