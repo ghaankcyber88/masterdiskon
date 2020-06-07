@@ -315,7 +315,7 @@ export default class Summary extends Component {
                                     .then((response) => response.json())
                                     .then((result) => {
                                         this.setState({ loading_spinner: false });
-                                        console.log("---------------data price------------");
+                                        console.log("---------------data pricess------------");
                                         console.log(JSON.stringify(result));
                                         // alert();
                                         this.setState({dataPrice:result});
@@ -667,21 +667,32 @@ export default class Summary extends Component {
     
 
                                     const cartToBeSaved = dataCart;
-                                    AsyncStorage.getItem('dataCartArray', (err, result) => {
-                                    let newcart = JSON.parse(result);
+                                    var newcart=[cartToBeSaved];
+
+                                    setTimeout(() => {
+                                        AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
+                                        AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
+                                        this.props.navigation.navigate("Cart",{dataCart:dataCart}); 
+                                        this.setState({ loading: false });
+                                    }, 500);
+
+
+                                    // AsyncStorage.getItem('dataCartArray', (err, result) => {
+                                    // let newcart = JSON.parse(result);
+                                    // console.log('cartopp',JSON.stringify(newcart));
+
+                                    // if(!newcart){
+                                    // newcart=[]
+                                    // }
                                 
-                                    if(!newcart){
-                                    newcart=[]
-                                    }
-                                
-                                    newcart.push(cartToBeSaved);
-                                        setTimeout(() => {
-                                            AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
-                                            AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
-                                            this.props.navigation.navigate("Cart",{dataCart:dataCart}); 
-                                            this.setState({ loading: false });
-                                        }, 500);
-                                    });  
+                                    // newcart.push(cartToBeSaved);
+                                    //     setTimeout(() => {
+                                    //         AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
+                                    //         AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
+                                    //         this.props.navigation.navigate("Cart",{dataCart:dataCart}); 
+                                    //         this.setState({ loading: false });
+                                    //     }, 500);
+                                    // });  
                 
                             }
                         })

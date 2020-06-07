@@ -88,7 +88,7 @@ export default class Cart extends Component {
         this.updatePrice=this.updatePrice.bind(this);
         this.deleteCart=this.deleteCart.bind(this);
         this.setPayment = this.setPayment.bind(this);
-        this.midtrans = this.midtrans.bind(this);
+        //this.midtrans = this.midtrans.bind(this);
     }
 
     onChangeSort() {}
@@ -408,11 +408,14 @@ export default class Cart extends Component {
                     .then(response => response.json())
                     .then((result) => {
                         var dataOrderSubmit=result;
-                        console.log("---------------status carts ------------");
-                        console.log(JSON.stringify(result));
+                        console.log("---------------status carts-------------");
+                        console.log(JSON.stringify(dataOrderSubmit));
                             this.setState({ loading: false });
                                 id_order=result.id_order;
                                 pay=result.pay;
+
+
+                                
                                 //alert('id_order :'+id_order);
                                 //this.midtrans(id_order,pay)
                                 // this.setState({id_order:id_order});
@@ -430,47 +433,47 @@ export default class Cart extends Component {
     }
 
 
-    midtrans(id_order,pay){
-    console.log(id_order+','+pay);
-    //alert(id_order);
-        const midtransClient = require('midtrans-client');
-        let snap = new midtransClient.Snap({
-                isProduction : false,
-                serverKey : 'SB-Mid-server-kaH7VW-jCiV028kVrbfn6HLf',
-                clientKey : 'SB-Mid-client-zxkvGZYYuXIidGRG'
-            });
+    // midtrans(id_order,pay){
+    // console.log(id_order+','+pay);
+    // alert(id_order);
+    //     const midtransClient = require('midtrans-client');
+    //     let snap = new midtransClient.Snap({
+    //             isProduction : false,
+    //             serverKey : 'SB-Mid-server-kaH7VW-jCiV028kVrbfn6HLf',
+    //             clientKey : 'SB-Mid-client-zxkvGZYYuXIidGRG'
+    //         });
          
-        let parameter = {
-            "transaction_details": {
-                "order_id": id_order,
-                "gross_amount": pay
-            }, "credit_card":{
-                "secure" : true
-            }
-        };
+    //     let parameter = {
+    //         "transaction_details": {
+    //             "order_id": id_order,
+    //             "gross_amount": pay
+    //         }, "credit_card":{
+    //             "secure" : true
+    //         }
+    //     };
 
-        console.log('param midtrans',JSON.stringify(parameter));
+    //     console.log('param midtrans',JSON.stringify(parameter));
          
-            snap.createTransaction(parameter)
-            .then((transaction)=>{
-                let transactionToken = transaction.token;
+    //         snap.createTransaction(parameter)
+    //         .then((transaction)=>{
+    //             let transactionToken = transaction.token;
 
-                alert(transactionToken);
-                //  this.props.navigation.navigate("OrderPembayaran",
-                //     {
-                //         transactionToken:transactionToken,
-                //         id_order:id_order
-                //     })
+    //             alert(transactionToken);
+    //             //  this.props.navigation.navigate("OrderPembayaran",
+    //             //     {
+    //             //         transactionToken:transactionToken,
+    //             //         id_order:id_order
+    //             //     })
 
-            })
-            .catch((e)=>{
-                console.log('Error occured:',e.message);
-            });
+    //         })
+    //         .catch((e)=>{
+    //             console.log('Error occured:',e.message);
+    //         });
             
 
 
             
-    }
+    // }
 
     
 
