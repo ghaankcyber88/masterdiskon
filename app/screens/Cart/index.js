@@ -283,12 +283,11 @@ export default class Cart extends Component {
                             updatePrice={this.updatePrice}
                             onPress={() => this.onSelect(item)}
                         />
-                            <Button
+                            {/* <Button
                                 style={{ height: 46 }}
                                 full
                                 onPress={() => {  
                                    //this.deleteCart(item.id,this.state.dataCartArrayReal);
-
                                    Alert.alert(
                                     'Remove Cart',
                                     'Yakin ingin mau di hapus ?',
@@ -297,13 +296,10 @@ export default class Cart extends Component {
                                       {text: 'YES', onPress: () => this.deleteCart(item.id)},
                                     ]
                                   );
-
-
-                                   //this.alert();
                                 }}
                             >
                                 Delete
-                            </Button>
+                            </Button> */}
                         </View>
                     )}
                 />
@@ -413,7 +409,10 @@ export default class Cart extends Component {
                             this.setState({ loading: false });
                                 id_order=result.id_order;
                                 pay=result.pay;
-
+                                setTimeout(() => {
+                                    this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit})
+                                }, 500);
+                            
 
                                 
                                 //alert('id_order :'+id_order);
@@ -643,7 +642,7 @@ export default class Cart extends Component {
                     </View>
                 </ScrollView>
                 
-                <View style={styles.contentButtonBottomBank}>
+                {/* <View style={styles.contentButtonBottomBank}>
                     <TouchableOpacity
                     style={styles.itemPick}
                     onPress={() => this.props.navigation.navigate('SelectPayment',
@@ -659,7 +658,7 @@ export default class Cart extends Component {
                         onFilter={this.onFilter}
                     /> 
                     </TouchableOpacity>
-                </View>
+                </View> */}
                     
                 <View style={styles.contentButtonBottom}>
                     <View>
@@ -690,7 +689,7 @@ export default class Cart extends Component {
                             // });
                         }}
                     >
-                       Pay
+                       Pesan Sekarang
                     </Button>
                     {/* <Button
                         style={{ height: 46 }}

@@ -64,6 +64,7 @@ import PricingTableIcon from "@screens/PricingTableIcon";
 import BookingDetail from "@screens/BookingDetail";
 import PostDetail from "@screens/PostDetail";
 import Musium from "@screens/Musium";
+import Pembayaran from "@screens/Pembayaran";
 // import WebViewPage from "@screens/WebViewPage";
 import TourDetail from "@screens/TourDetail";
 import TourDetailCustom from "@screens/TourDetailCustom";
@@ -313,6 +314,9 @@ const StackNavigator = createStackNavigator(
         },
         Musium: {
             screen: Musium
+        },
+        Pembayaran: {
+            screen: Pembayaran
         },
         // WebViewPage: {
         //     screen: WebViewPage

@@ -9,7 +9,7 @@ import {
     Text,
     FlightItem,
     Button,
-    ProfileDetail
+    ProfileDetail,
     
 } from "@components";
 // import styles from "./styles";
@@ -1398,15 +1398,55 @@ export default class Summary extends Component {
 
         }else{
             contentPrice= <View>
+            
+            <View style={{flexDirection:'row',padding:20}} >
+                <View style={{flexDirection:'row',flex: 8,justifyContent: "flex-start",alignItems: "center"}}>
+                    <View style={{ flex: 10,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                        <View>
+                            <Text footnote grayColor numberOfLines={1}>
+                                {'asd'}
+                            </Text>
+                        
+                        </View>
+                    </View>
+                    <View style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}>
+                           
+                            <Text headline semibold numberOfLines={1}>
+                                {'asd'}
+                            </Text>
+                    </View>
+                </View>
+                <TouchableOpacity
+                    style={{flex: 2}}
+                    onPress={() =>
+                        {navigation.navigate("ProfileSmart",
+                         {
+                            sourcePage:'summary',
+                            item:item,
+                            type:'guest',
+                            updateParticipant: this.updateParticipant,
+                         }
+                        );}
+                    }
+                >
+                                 <Icon
+                                    name="search"
+                                    size={18}
+                                    color={BaseColor.primaryColor}
+                                    style={{ textAlign: "center"}}
+                                />
+                </TouchableOpacity>
+            </View>
+               
+            
+            
             <ButtonOrder
                 packageName={'IDR '+priceSplitter(this.state.total_price)}
                 price={packageItem.price}
                 type={'Total Price for '+this.state.jumlahPenumpang+' Person(s)'}
-                //description={'Include insurance'}
                 onPressIcon={() => {
                     navigation.navigate("PricingTable");
                 }}
-                //style={{ marginBottom: 10 }}
             />
             
                 <View style={{width:'100%',paddingLeft: 20,paddingRight:20}}>
@@ -1451,7 +1491,7 @@ export default class Summary extends Component {
                                 backgroundColor:this.state.colorButton
                             }}
                 >
-                Add To Cart
+                Book Now
                 </Button>
                 </View> 
                 </TouchableOpacity>
@@ -1484,7 +1524,7 @@ export default class Summary extends Component {
                             :
                 <View>
                 <Header
-                    title="Summary"
+                    title="Booking"
                     renderLeft={() => {
                         return (
                             <Icon
