@@ -320,6 +320,7 @@ export default class Summary extends Component {
                                         // alert();
                                         this.setState({dataPrice:result});
                                         this.setState({total_price:result.data.total_price});
+                                        this.setState({insurance_total:result.data.insurance_total});
 
                                     
                                     })
@@ -1225,6 +1226,11 @@ export default class Summary extends Component {
         }
     };
 
+
+    toggleSwitchInsurance = value => {
+
+    };
+
     render() {
         const { navigation } = this.props;
         let { paramOther,selectDataDeparture,selectDataReturn,param,dataPrice, packageItem, packageItemDetail,loading, loading_spinner,userData } = this.state;
@@ -1399,20 +1405,20 @@ export default class Summary extends Component {
         }else{
             contentPrice= <View>
             
-            <View style={{flexDirection:'row',padding:20}} >
-                <View style={{flexDirection:'row',flex: 8,justifyContent: "flex-start",alignItems: "center"}}>
-                    <View style={{ flex: 10,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                    <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
                         <View>
                             <Text footnote grayColor numberOfLines={1}>
-                                {'asd'}
+                                Subtotal
                             </Text>
                         
                         </View>
                     </View>
-                    <View style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}>
+                    <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
                            
                             <Text headline semibold numberOfLines={1}>
-                                {'asd'}
+                            {'IDR '+priceSplitter(this.state.total_price)}
                             </Text>
                     </View>
                 </View>
@@ -1430,26 +1436,105 @@ export default class Summary extends Component {
                     }
                 >
                                  <Icon
-                                    name="search"
+                                    name="angle-down"
                                     size={18}
                                     color={BaseColor.primaryColor}
                                     style={{ textAlign: "center"}}
                                 />
                 </TouchableOpacity>
             </View>
+
+
+
+            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                    <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                        <View>
+                            <Text footnote grayColor numberOfLines={1}>
+                                Insurance
+                            </Text>
+                        
+                        </View>
+                    </View>
+                    <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                           
+                            <Text headline semibold numberOfLines={1}>
+                            {'IDR '+priceSplitter(this.state.insurance_total)}
+                            </Text>
+                    </View>
+                </View>
+                <TouchableOpacity
+                    style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}
+                    onPress={() =>
+                        {navigation.navigate("ProfileSmart",
+                         {
+                            sourcePage:'summary',
+                            item:item,
+                            type:'guest',
+                            updateParticipant: this.updateParticipant,
+                         }
+                        );}
+                    }
+                >
+                                <Switch name="angle-right" 
+                                size={18} 
+                                onValueChange={this.toggleSwitch}
+                                value={this.state.reminders}
+                             />
+                </TouchableOpacity>
+            </View>
+
+
+            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                    <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                        <View>
+                            <Text footnote grayColor numberOfLines={1}>
+                                Total
+                            </Text>
+                        
+                        </View>
+                    </View>
+                    <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                           
+                            <Text headline semibold numberOfLines={1}>
+                            {'IDR '+priceSplitter(this.state.total)}
+                            </Text>
+                    </View>
+                </View>
+                {/* <TouchableOpacity
+                    style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}
+                    onPress={() =>
+                        {navigation.navigate("ProfileSmart",
+                         {
+                            sourcePage:'summary',
+                            item:item,
+                            type:'guest',
+                            updateParticipant: this.updateParticipant,
+                         }
+                        );}
+                    }
+                >
+                                <Switch name="angle-right" 
+                                size={18} 
+                                onValueChange={this.toggleSwitch}
+                                value={this.state.reminders}
+                             />
+                </TouchableOpacity> */}
+            </View>
                
             
             
-            <ButtonOrder
+            {/* <ButtonOrder
                 packageName={'IDR '+priceSplitter(this.state.total_price)}
                 price={packageItem.price}
                 type={'Total Price for '+this.state.jumlahPenumpang+' Person(s)'}
                 onPressIcon={() => {
                     navigation.navigate("PricingTable");
                 }}
-            />
+            /> */}
             
-                <View style={{width:'100%',paddingLeft: 20,paddingRight:20}}>
+                {/* <View style={{width:'100%',paddingLeft: 20,paddingRight:20}}>
 
                         <View style={styles.profileItem}>
                             <Text body1>Asuransi</Text>
@@ -1459,7 +1544,7 @@ export default class Summary extends Component {
                                 value={this.state.reminders}
                              />
                         </View>
-                </View>
+                </View> */}
             
             </View>
 
