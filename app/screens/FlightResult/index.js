@@ -17,7 +17,7 @@ import {
     FilterSort
 } from "@components";
 import styles from "./styles";
-import { FlightData } from "@data";
+import { FlightData,DataLoading } from "@data";
 import { FlightSearch } from "@data";
 import {PostData} from '../../services/PostData';
 import {AsyncStorage} from 'react-native';
@@ -30,6 +30,8 @@ import {
     PlaceholderLine,
     Fade
   } from "rn-placeholder";
+
+import Timeline from 'react-native-timeline-flatlist';
 
 export default class FlightResult extends Component {
     constructor(props) {
@@ -226,10 +228,15 @@ export default class FlightResult extends Component {
                 "to_name": "Ngurah Rai (Bali) International Airport",
                 "to_city": "Bali",
                 "to_country": "Indonesia",
-                "to_country_code": "ID"
-              }
-              
-              
+                "to_country_code": "ID",
+              },
+            ],
+            data_timeline:[
+                {time: '09:00', title: 'Event 1', description: 'Event 1 Description'},
+                {time: '10:45', title: 'Event 2', description: 'Event 2 Description'},
+                {time: '12:00', title: 'Event 3', description: 'Event 3 Description'},
+                {time: '14:00', title: 'Event 4', description: 'Event 4 Description'},
+                {time: '16:30', title: 'Event 5', description: 'Event 5 Description'}
             ],
             listdata_return:[],
 
@@ -485,6 +492,7 @@ export default class FlightResult extends Component {
     
     onSelectDetail(select) {
         console.log('details',JSON.stringify(select));
+        this.openModal();
     
     }
     onSelect(select) {
@@ -762,6 +770,15 @@ export default class FlightResult extends Component {
             kelas="First Class";
         }
         var subTitle=param.DepartureDate+", "+qty+" pax, "+kelas;
+        var modalVisible=this.state.modalVisible;
+
+        var information= [
+            { title: "County", detail: 'asd' },
+            { title: "Category", detail: 'asd' },
+            { title: "Duration", detail: 'asdsad' },
+        ]
+
+
         return (
             <SafeAreaView
                 style={BaseStyle.safeAreaView}
@@ -792,14 +809,14 @@ export default class FlightResult extends Component {
                             modalVisible: false,
                             // option: this.props.option
                         });
-                        onCancel();
+                        //onCancel();
                     }}
                     onSwipeComplete={() => {
                         this.setState({
                             modalVisible: false,
                             //option: this.props.option
                         });
-                        onCancel();
+                        //onCancel();
                     }}
                     swipeDirection={["down"]}
                     style={styles.bottomModal}
@@ -808,7 +825,42 @@ export default class FlightResult extends Component {
                         <View style={styles.contentSwipeDown}>
                             <View style={styles.lineSwipeDown} />
                         </View>
+                       
                         <Text>asd</Text>
+                        {/* <View style={{ paddingHorizontal: 0 }}>
+                            {information.map((item, index) => {
+                                return (
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            paddingVertical: 10,
+                                            borderBottomColor:
+                                                BaseColor.textSecondaryColor,
+                                            borderBottomWidth: 1
+                                        }}
+                                        key={"information" + index}
+                                    >
+                                        <Text body2 grayColor>
+                                            {item.title}
+                                        </Text>
+                                        <Text body2 semibold >
+                                            {item.detail}
+                                        </Text>
+                                    </View>
+                                );
+                            })}
+                        </View> */}
+                        <View style={{flex:1}}>
+                        <Timeline
+                            data={this.state.data_timeline}
+                            innerCircle={'dot'}
+                            options={{
+                                removeClippedSubviews: false
+                              }}
+                        />
+                        </View>
                     </View>
                 </Modal>
             </SafeAreaView>
