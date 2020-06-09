@@ -62,23 +62,7 @@ export default class FormOption extends Component {
             );
     }
 
-    // onApply() {
-    //     const { option, value } = this.state;
-    //     const { onChange } = this.props;
-    //     const selected = option.filter(item => item.checked);
-    //     if (selected.length > 0) {
-    //         this.props.setKelasPesawat(selected[0].text,selected[0].value);
-    //         this.setState(
-    //             {
-    //                 value: selected[0].value,
-    //                 modalVisible: false
-    //             },
-    //             () => {
-    //                 onChange(value);
-    //             }
-    //         );
-    //     }
-    // }
+
 
     render() {
         const { style, label, onCancel } = this.props;
@@ -87,6 +71,13 @@ export default class FormOption extends Component {
             <View>
                 <Modal
                     isVisible={modalVisible}
+                    onBackdropPress={() => {
+                        this.setState({
+                            modalVisible: false,
+                            option: this.props.option
+                        });
+                        onCancel();
+                    }}
                     onSwipeComplete={() => {
                         this.setState({
                             modalVisible: false,

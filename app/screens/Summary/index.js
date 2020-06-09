@@ -317,10 +317,11 @@ export default class Summary extends Component {
                                         this.setState({ loading_spinner: false });
                                         console.log("---------------data pricess------------");
                                         console.log(JSON.stringify(result));
-                                        // alert();
                                         this.setState({dataPrice:result});
                                         this.setState({total_price:result.data.total_price});
                                         this.setState({insurance_total:result.data.insurance_total});
+                                        this.setState({total_all:result.data.total_price});
+                                        this.setState({insurance_included:false});
 
                                     
                                     })
@@ -623,7 +624,7 @@ export default class Summary extends Component {
                 "pax":participant,
                 "departure":departureCart,
                 "return":returnCart,
-                "insurance_included":true,
+                "insurance_included":this.state.insurance_included,
 
             };
 
@@ -1228,7 +1229,18 @@ export default class Summary extends Component {
 
 
     toggleSwitchInsurance = value => {
-
+        this.setState({ remindersInsurance: value });
+        if(value==true){
+            //alert(value);
+            var total_all=parseInt(this.state.total_price)+parseInt(this.state.insurance_total);
+            this.setState({total_all:total_all});
+            this.setState({insurance_included:true});
+        }else{
+            //alert(value);
+            var total_all=parseInt(this.state.total_price);
+            this.setState({total_all:total_all});
+            this.setState({insurance_included:false});
+        }
     };
 
     render() {
@@ -1412,7 +1424,6 @@ export default class Summary extends Component {
                             <Text footnote grayColor numberOfLines={1}>
                                 Subtotal
                             </Text>
-                        
                         </View>
                     </View>
                     <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
@@ -1424,15 +1435,11 @@ export default class Summary extends Component {
                 </View>
                 <TouchableOpacity
                     style={{flex: 2}}
-                    onPress={() =>
-                        {navigation.navigate("ProfileSmart",
-                         {
-                            sourcePage:'summary',
-                            item:item,
-                            type:'guest',
-                            updateParticipant: this.updateParticipant,
-                         }
-                        );}
+                    onPress={() => {
+                        navigation.navigate("PricingTable",{
+                            dataPrice:this.state.dataPrice
+                        });
+                        }
                     }
                 >
                                  <Icon
@@ -1476,11 +1483,11 @@ export default class Summary extends Component {
                         );}
                     }
                 >
-                                <Switch name="angle-right" 
+                            <Switch name="angle-right" 
                                 size={18} 
-                                onValueChange={this.toggleSwitch}
-                                value={this.state.reminders}
-                             />
+                                onValueChange={this.toggleSwitchInsurance}
+                                value={this.state.remindersInsurance}
+                            />
                 </TouchableOpacity>
             </View>
 
@@ -1498,7 +1505,7 @@ export default class Summary extends Component {
                     <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
                            
                             <Text headline semibold numberOfLines={1}>
-                            {'IDR '+priceSplitter(this.state.total)}
+                            {'IDR '+priceSplitter(this.state.total_all)}
                             </Text>
                     </View>
                 </View>

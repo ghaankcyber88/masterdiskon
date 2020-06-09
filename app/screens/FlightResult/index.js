@@ -21,6 +21,8 @@ import { FlightData } from "@data";
 import { FlightSearch } from "@data";
 import {PostData} from '../../services/PostData';
 import {AsyncStorage} from 'react-native';
+import Modal from "react-native-modal";
+
 
 import {
     Placeholder,
@@ -232,7 +234,10 @@ export default class FlightResult extends Component {
             listdata_return:[],
 
             listdata_departure_original:listdata_departure_original,
-            listdata_return_original:listdata_return_original
+            listdata_return_original:listdata_return_original,
+            
+            
+            modalVisible: false,
         };
         this.onChangeView = this.onChangeView.bind(this);
         this.onFilter = this.onFilter.bind(this);
@@ -477,7 +482,11 @@ export default class FlightResult extends Component {
         return array;
         
     }
-
+    
+    onSelectDetail(select) {
+        console.log('details',JSON.stringify(select));
+    
+    }
     onSelect(select) {
         
         if(this.state.param.IsReturn==true)
@@ -571,6 +580,7 @@ export default class FlightResult extends Component {
                     price={item.currency+ " "+priceSplitter(item.price['total_price'])}
                     route={item.transit}
                     onPress={() => this.onSelect(item)}
+                    onPressDetail={() => this.onSelectDetail(item)}
                 />
             )}
         />
@@ -700,7 +710,40 @@ export default class FlightResult extends Component {
 
         // });
     }
+    
+    
+    openModal() {
+        //const { option, value } = this.state;
+        this.setState({
+            modalVisible: true,
+            // option: option.map(item => {
+            //     return {
+            //         ...item,
+            //         checked: item.value == value
+            //     };
+            // })
+        });
+    }
 
+    // onSelect(select) {
+    //     this.setState({
+    //         option: this.state.option.map(item => {
+    //             return {
+    //                 ...item,
+    //                 checked: item.value == select.value
+    //             };
+    //         })
+    //     });
+        
+
+    //     this.props.setKelasPesawat(select.text,select.value);
+    //         this.setState(
+    //             {
+    //                 value: select.value,
+    //                 modalVisible: false
+    //             }
+    //         );
+    // }
 
     render() {
         const { navigation} = this.props;
@@ -741,8 +784,33 @@ export default class FlightResult extends Component {
                     }}
                 />
                          
-                            {this.renderContent()}
-                                 
+                {this.renderContent()}
+                <Modal
+                    isVisible={modalVisible}
+                    onBackdropPress={() => {
+                        this.setState({
+                            modalVisible: false,
+                            // option: this.props.option
+                        });
+                        onCancel();
+                    }}
+                    onSwipeComplete={() => {
+                        this.setState({
+                            modalVisible: false,
+                            //option: this.props.option
+                        });
+                        onCancel();
+                    }}
+                    swipeDirection={["down"]}
+                    style={styles.bottomModal}
+                >
+                    <View style={styles.contentFilterBottom}>
+                        <View style={styles.contentSwipeDown}>
+                            <View style={styles.lineSwipeDown} />
+                        </View>
+                        <Text>asd</Text>
+                    </View>
+                </Modal>
             </SafeAreaView>
         );
     }

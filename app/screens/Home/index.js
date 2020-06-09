@@ -445,15 +445,16 @@ export default class Home extends Component {
         
         this.getToken();
         // this.getPayment();
-        this.getFeaturedDestination();
-        this.getPopularDestination();
-        this.getTripDomestic();
-        this.getTripDunia();
-        this.getBlog();
-        this.getAssets();
-        this.getPromo();
-        this.getMusium();
-        this.getculture();
+        
+        // this.getFeaturedDestination();
+        // this.getPopularDestination();
+        // this.getTripDomestic();
+        // this.getTripDunia();
+        // this.getBlog();
+        // this.getAssets();
+        // this.getPromo();
+        // this.getMusium();
+        // this.getculture();
      }
 
      

@@ -11,7 +11,7 @@ import {
     PlaceholderLine,
     Fade
   } from "rn-placeholder";
-
+  import Modal from "react-native-modal";
 
 export default class FlightItem extends Component {
     timeConvert(n) {
@@ -38,6 +38,11 @@ export default class FlightItem extends Component {
         }
         return rhours + ":"+rminutes;
         }
+    
+    
+    
+    
+    
     render() {
         const {
             style,
@@ -54,6 +59,7 @@ export default class FlightItem extends Component {
             type,
             price,
             onPress,
+            onPressDetail,
             loading
         } = this.props;
 
@@ -76,7 +82,7 @@ export default class FlightItem extends Component {
         }
 
         return (
-            <TouchableOpacity style={[styles.content, style]} onPress={onPress}>
+            <View style={[styles.content, style]}>
                 {
                     loading ? 
                     <View>
@@ -117,69 +123,83 @@ export default class FlightItem extends Component {
                 </View>
                     :
                 <View>
-                    <View style={styles.contentTop}>
-                        <View style={{ flex: 1 }}>
-                            <Text title2>{fromHour}</Text>
-                            <Text footnote light>
-                                {fromFlight}
-                            </Text>
+                    <TouchableOpacity  onPress={onPress}>
+                        <View style={styles.contentTop}>
+                            <View style={{ flex: 1 }}>
+                                <Text title2>{fromHour}</Text>
+                                <Text footnote light>
+                                    {fromFlight}
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1.5, alignItems: "center" }}>
+                                <Text caption1 light>
+                                    {this.timeConvert(totalHour)}
+                                </Text>
+                                <View style={styles.contentLine}>
+                                    <View style={styles.line} />
+                                    <Icon
+                                        name="plane"
+                                        color={BaseColor.dividerColor}
+                                        size={24}
+                                        solid
+                                    />
+                                    <View style={styles.dot} />
+                                </View>
+                                <Text caption1 light>
+                                    {routeKet}
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: "flex-end" }}>
+                                <Text title2>{toHour}</Text>
+                                <Text footnote light>
+                                    {toFlight}
+                                </Text>
+                            </View>
                         </View>
-                        <View style={{ flex: 1.5, alignItems: "center" }}>
-                            <Text caption1 light>
-                                {this.timeConvert(totalHour)}
-                            </Text>
-                            <View style={styles.contentLine}>
-                                <View style={styles.line} />
-                                <Icon
-                                    name="plane"
-                                    color={BaseColor.dividerColor}
-                                    size={24}
-                                    solid
+                        <View style={styles.contentBottom}>
+                            <View style={styles.bottomLeft}>
+                                <Image
+                                    style={styles.image}
+                                    resizeMode="contain"
+                                    source={{uri: image}}
+                                    // source={image}
                                 />
-                                <View style={styles.dot} />
+                                <View>
+                                    <Text caption1 semibold accentColor>
+                                        {brand}
+                                    </Text>
+                                    <Text caption2 light>
+                                        {kelas}
+                                    </Text>
+                                </View>
                             </View>
-                            <Text caption1 light>
-                                {routeKet}
-                            </Text>
-                        </View>
-                        <View style={{ flex: 1, alignItems: "flex-end" }}>
-                            <Text title2>{toHour}</Text>
-                            <Text footnote light>
-                                {toFlight}
-                            </Text>
-                        </View>
-                    </View>
-                    <View style={styles.contentBottom}>
-                        <View style={styles.bottomLeft}>
-                            <Image
-                                style={styles.image}
-                                resizeMode="contain"
-                                source={{uri: image}}
-                                // source={image}
-                            />
-                            <View>
-                                <Text caption1 semibold accentColor>
-                                    {brand}
+                            <View
+                                style={{ flexDirection: "row", alignItems: "flex-end" }}
+                            >
+                                <Text title3 semibold primaryColor>
+                                    {price}
                                 </Text>
-                                <Text caption2 light>
-                                    {kelas}
+                                <Text caption1 light style={{ marginLeft: 5 }}>
+                                    Pax
                                 </Text>
                             </View>
                         </View>
-                        <View
-                            style={{ flexDirection: "row", alignItems: "flex-end" }}
-                        >
-                            <Text title3 semibold primaryColor>
-                                {price}
-                            </Text>
-                            <Text caption1 light style={{ marginLeft: 5 }}>
-                                Pax
-                            </Text>
-                        </View>
-                    </View>
-                </View>
+                       
+                    </TouchableOpacity>
+                 
+                     <TouchableOpacity style={styles.contentBottom} onPress={onPressDetail}>
+                         <View style={{ flex: 1.5, alignItems: "center" }}>
+                                 <Icon
+                                     name="angle-down"
+                                     color={BaseColor.dividerColor}
+                                     size={24}
+                                     solid
+                                 />
+                         </View>
+                     </TouchableOpacity>
+                 </View>
                 }
-            </TouchableOpacity>
+            </View>
         );
     }
 }
@@ -199,6 +219,7 @@ FlightItem.propTypes = {
     price: PropTypes.string,
     route: PropTypes.string,
     onPress: PropTypes.func,
+    onPressDetail: PropTypes.func,
     loading: PropTypes.bool,
 };
 
@@ -227,5 +248,6 @@ FlightItem.defaultProps = {
     fromFlight: "xx",
     toFlight: "yy",
     onPress: () => { },
+    onPressDetail: () => { },
     loading: true,
 };
