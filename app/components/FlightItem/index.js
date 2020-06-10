@@ -189,12 +189,24 @@ export default class FlightItem extends Component {
                  
                      <TouchableOpacity style={styles.contentBottom} onPress={onPressDetail}>
                          <View style={{ flex: 1.5, alignItems: "center" }}>
-                                 <Icon
+                                 {/* <Icon
                                      name="angle-down"
                                      color={BaseColor.dividerColor}
                                      size={24}
                                      solid
                                  />
+                                  */}
+                                 <Text caption1 light>
+                                    Detail
+                                </Text>
+                                <View style={styles.contentLine}>
+                                    <Icon
+                                        name="angle-down"
+                                        color={BaseColor.dividerColor}
+                                        size={24}
+                                        solid
+                                    />
+                                </View>
                          </View>
                      </TouchableOpacity>
                  </View>

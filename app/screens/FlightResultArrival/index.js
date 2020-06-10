@@ -158,7 +158,13 @@ export default class FlightResultArrival extends Component {
         
     }
 
+    onSelectDetail(select) {
+        const { navigation } = this.props;
 
+        navigation.navigate("FlightDetail", {
+            select: select,
+        });
+    }
 
     onSelect(select) {
         // console.log('-------------------------------------------------');
@@ -297,6 +303,7 @@ export default class FlightResultArrival extends Component {
                             route={item.transit}
                             //onPress={() => navigation.navigate("FlightSummary")}
                             onPress={() => this.onSelect(item)}
+                            onPressDetail={() => this.onSelectDetail(item)}
                         />
                     )}
                 />

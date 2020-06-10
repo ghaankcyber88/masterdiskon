@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView,Animated,RefreshControl,TouchableOpacity, ActivityIndicator,StyleSheet,Switch } from "react-native";
+import { View, ScrollView,Animated,RefreshControl,TouchableOpacity, ActivityIndicator,StyleSheet,Switch,Image } from "react-native";
 import { BaseStyle, BaseColor, Images } from "@config";
 import {
     Header,
@@ -98,6 +98,8 @@ export default class Summary extends Component {
         var param=this.props.navigation.state.params.param;
         var paramOther=this.props.navigation.state.params.paramOther;
         var product=this.props.navigation.state.params.product;
+        
+        
 
         var param=[];
         if(this.props.navigation.state.params.param){
@@ -119,11 +121,14 @@ export default class Summary extends Component {
         var selectDataDeparture=[];
         if(this.props.navigation.state.params.selectDataDeparture){
             selectDataDeparture=this.props.navigation.state.params.selectDataDeparture;
+            console.log('selectDataDeparture',JSON.stringify(selectDataDeparture));
+
         }
 
         var selectDataReturn=[];
         if(this.props.navigation.state.params.selectDataReturn){
             selectDataReturn=this.props.navigation.state.params.selectDataReturn;
+            console.log('selectDataReturn',JSON.stringify(selectDataReturn));
         }
 
         var departurePost=[];
@@ -1385,14 +1390,81 @@ export default class Summary extends Component {
             </View>
 
         }else{
-
-            contentProduct=<FlightPlan
+        
+            var dataDeparture=<View style={{flexDirection: "row",marginTop: 10,justifyContent: "space-between"}}>
+                                <View style={{flexDirection: "row", alignItems: "center"}}>
+                                    <Image
+                                        style={{width: 32, height: 32, marginRight: 10, borderRadius: 16}}
+                                        resizeMode="contain"
+                                        source={{uri: this.state.selectDataDeparture.flight_schedule[0].airline_logo}}
+                                    />
+                                    <View>
+                                        <Text body1>
+                                            {this.state.selectDataDeparture.flight_schedule[0].airline_name}
+                                        </Text>
+                                        <Text body3>
+                                            {this.state.selectDataDeparture.flight_schedule[0].from} - 
+                                            {this.state.selectDataDeparture.flight_schedule[0].to} | 
+                                            {this.state.selectDataDeparture.flight_schedule[0].departure_date} 
+                                            {this.state.selectDataDeparture.flight_schedule[0].departure_time}
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View
+                                    style={{ flexDirection: "row", alignItems: "flex-end" }}
+                                >
+                                    <Text title3 semibold primaryColor>
+                                        Departure
+                                    </Text>
+                                </View>
+                            </View>
+            
+    
+            var dataReturn=null;
+            if(this.props.navigation.state.params.selectDataReturn){
+                dataReturn=<View style={{flexDirection: "row",marginTop: 10,justifyContent: "space-between"}}>
+                            <View style={{flexDirection: "row", alignItems: "center"}}>
+                                <Image
+                                    style={{width: 32, height: 32, marginRight: 10, borderRadius: 16}}
+                                    resizeMode="contain"
+                                    source={{uri: this.state.selectDataReturn.flight_schedule[0].airline_logo}}
+                                />
+                                <View>
+                                    <Text body1>
+                                        {this.state.selectDataReturn.flight_schedule[0].airline_name}
+                                    </Text>
+                                    <Text body3>
+                                        {this.state.selectDataReturn.flight_schedule[0].from} - 
+                                        {this.state.selectDataReturn.flight_schedule[0].to} | 
+                                        {this.state.selectDataReturn.flight_schedule[0].departure_date} 
+                                        {this.state.selectDataReturn.flight_schedule[0].departure_time}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View
+                                style={{ flexDirection: "row", alignItems: "flex-end" }}
+                            >
+                                <Text title3 semibold primaryColor>
+                                    Return
+                                </Text>
+                            </View>
+                        </View>
+            }
+            
+            contentProduct=<View><FlightPlan
                             round={this.state.param.IsReturn}
                             fromCode={this.state.param.Origin}
                             toCode={this.state.param.Destination}
                             from={this.state.paramOther.bandaraAsalLabel}
                             to={this.state.paramOther.bandaraTujuanLabel}
                         />
+                        
+                            
+                            {dataDeparture}
+                            {dataReturn}
+                            
+                        </View>
+                        
                         
         }
 

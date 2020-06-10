@@ -15,6 +15,7 @@ import Profile from "@screens/Profile";
 /* Modal Screen only affect iOS */
 import Filter from "@screens/Filter";
 import FlightFilter from "@screens/FlightFilter";
+import FlightDetail from "@screens/FlightDetail";
 import BusFilter from "@screens/BusFilter";
 import Search from "@screens/Search";
 import SearchHistory from "@screens/SearchHistory";
@@ -465,6 +466,9 @@ const RootStack = createStackNavigator(
         },
         FlightFilter: {
             screen: FlightFilter
+        },
+        FlightDetail: {
+            screen: FlightDetail
         },
         BusFilter: {
             screen: BusFilter

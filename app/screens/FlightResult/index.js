@@ -231,13 +231,7 @@ export default class FlightResult extends Component {
                 "to_country_code": "ID",
               },
             ],
-            data_timeline:[
-                {time: '09:00', title: 'Event 1', description: 'Event 1 Description'},
-                {time: '10:45', title: 'Event 2', description: 'Event 2 Description'},
-                {time: '12:00', title: 'Event 3', description: 'Event 3 Description'},
-                {time: '14:00', title: 'Event 4', description: 'Event 4 Description'},
-                {time: '16:30', title: 'Event 5', description: 'Event 5 Description'}
-            ],
+            data_timeline: '',
             listdata_return:[],
 
             listdata_departure_original:listdata_departure_original,
@@ -491,10 +485,14 @@ export default class FlightResult extends Component {
     }
     
     onSelectDetail(select) {
-        console.log('details',JSON.stringify(select));
-        this.openModal();
-    
+        const { navigation } = this.props;
+
+        navigation.navigate("FlightDetail", {
+            select: select,
+        });
     }
+    
+    
     onSelect(select) {
         
         if(this.state.param.IsReturn==true)
@@ -722,15 +720,19 @@ export default class FlightResult extends Component {
     
     openModal() {
         //const { option, value } = this.state;
-        this.setState({
-            modalVisible: true,
-            // option: option.map(item => {
-            //     return {
-            //         ...item,
-            //         checked: item.value == value
-            //     };
-            // })
-        });
+        var data_timeline=[
+            {time: '09:00', title: 'Event 1', description: 'Event 1 Description'},
+            {time: '10:45', title: 'Event 2', description: 'Event 2 Description'},
+            {time: '12:00', title: 'Event 3', description: 'Event 3 Description'},
+            {time: '14:00', title: 'Event 4', description: 'Event 4 Description'},
+            {time: '16:30', title: 'Event 5', description: 'Event 5 Description'}
+        ];
+        this.setState({data_timeline:data_timeline});
+        this.setState({modalVisible: true});
+        setTimeout(() => {
+            alert(JSON.stringify(data_timeline));
+        }, 200);
+      
     }
 
     // onSelect(select) {
@@ -827,7 +829,7 @@ export default class FlightResult extends Component {
                         </View>
                        
                         <Text>asd</Text>
-                        {/* <View style={{ paddingHorizontal: 0 }}>
+                        <View style={{ paddingHorizontal: 0 }}>
                             {information.map((item, index) => {
                                 return (
                                     <View
@@ -851,15 +853,16 @@ export default class FlightResult extends Component {
                                     </View>
                                 );
                             })}
-                        </View> */}
+                        </View>
                         <View style={{flex:1}}>
-                        <Timeline
+                        <Text>{JSON.stringify(this.state.data_timeline)}</Text>
+                        {/* <Timeline
                             data={this.state.data_timeline}
                             innerCircle={'dot'}
                             options={{
                                 removeClippedSubviews: false
                               }}
-                        />
+                        /> */}
                         </View>
                     </View>
                 </Modal>
