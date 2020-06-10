@@ -291,6 +291,7 @@ export default class DetailContact extends Component {
           };
           this.setCountry = this.setCountry.bind(this);  
           this.setNationality = this.setNationality.bind(this);  
+          this.setPhoneCode = this.setPhoneCode.bind(this);  
           this.setTitle = this.setTitle.bind(this);  
          
       }
@@ -349,7 +350,7 @@ export default class DetailContact extends Component {
       }
 
       setNationality(id_country,country_name,phone_code){
-        console.log('nationality_ids',id_country);
+        //console.log('nationality_ids',id_country);
         this.setState({nationality_id:id_country});
         this.setState({nationality_phone_code:phone_code});
         this.setState({nationality:country_name});
@@ -357,7 +358,15 @@ export default class DetailContact extends Component {
             this.validation();
         }, 500);
       }
-      
+    
+
+      setPhoneCode(phone_code){
+        console.log('phonecodes',phone_code);
+        this.setState({nationality_phone_code:phone_code});
+        setTimeout(() => {
+            this.validation();
+        }, 500);
+      }
    
     
       setTitle(title){
@@ -689,104 +698,66 @@ export default class DetailContact extends Component {
 
 
         var formFullName=<View style={{marginBottom: 10}}>
-                        <View style={{flexDirection: "row"}}>
-                            <View style={{flex: 6,marginRight: 15}}>
-                                {/* <View style={styles.contentTitle}>
-                                    <Text headline semibold>
-                                        Firstname
-                                    </Text>
-                                </View> */}
-                                <TouchableOpacity 
-                                style={{width:'100%'}}
-                                >
-                                    <View style={styles.contentProfile}>
-                                        <View style={{ flex: 6 }}>
-                                        {/* <TextInput
-                                            style={BaseStyle.textInput}
-                                            onChangeText={(firstname)=> {
-                                                this.setState({firstname : firstname})
-                                                setTimeout(() => {
-                                                        this.validation();
-                                                }, 500);
-                                                
-                                            }} 
-                                            value={this.state.firstname}
-                                            autoCorrect={false}
-                                            placeholderTextColor={BaseColor.grayColor}
-                                            selectionColor={BaseColor.primaryColor}
-                                        /> */}
-                                        <TextValidator
-                                                        name="firstname"
-                                                        label="lastname"
-                                                        validators={['required']}
-                                                        errorMessages={['This field is required']}
-                                                        placeholder="Your firstname"
-                                                        type="text"
-                                                        // keyboardType="email-address"
-                                                        value={this.state.firstname}
-                                                        onChangeText={(firstname)=> {
-                                                            this.setState({firstname : firstname})
-                                                            setTimeout(() => {
-                                                                    this.validation();
-                                                            }, 500);
-                                                            
-                                                        }} 
-                                                    />
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>                    
-
-                            <View style={{flex: 6}}>
-                                {/* <View style={styles.contentTitle}>
-                                            <Text headline semibold>
-                                                Lastname
-                                            </Text>
-                                        </View> */}
-                                        <TouchableOpacity 
-                                        style={{width:'100%'}}
+                            <View style={{flexDirection: "row"}}>
+                                <View style={{flex: 6,marginRight: 15}}>
+                                    <TouchableOpacity 
+                                    style={{width:'100%'}}
                                     >
-                                            <View style={styles.contentProfile}>
-                                                <View style={{ flex: 6 }}>
-                                                {/* <TextInput
-                                                    style={BaseStyle.textInput}
-                                                    onChangeText={(lastname)=> {
-                                                        this.setState({lastname : lastname})
-                                                        setTimeout(() => {
-                                                            this.validation();
-                                                        }, 500);
-                                                    }} 
-                                                    value={this.state.lastname}
-                                                    autoCorrect={false}
-                                                    placeholderTextColor={BaseColor.grayColor}
-                                                    selectionColor={BaseColor.primaryColor}
-                                                /> */}
-
-                                                    <TextValidator
-                                                        name="lastname"
-                                                        label="lastname"
-                                                        validators={['required']}
-                                                        errorMessages={['This field is required']}
-                                                        placeholder="Your lastname"
-                                                        type="text"
-                                                        // keyboardType="email-address"
-                                                        value={this.state.lastname}
-                                                        onChangeText={(lastname)=> {
-                                                            this.setState({lastname : lastname})
-                                                            setTimeout(() => {
-                                                                    this.validation();
-                                                            }, 500);
-                                                            
-                                                        }} 
-                                                    />
-                                                </View>
+                                        <View style={styles.contentProfile}>
+                                            <View style={{ flex: 6 }}>
+                                            <TextValidator
+                                                            name="firstname"
+                                                            label="lastname"
+                                                            validators={['required']}
+                                                            errorMessages={['This field is required']}
+                                                            placeholder="Your firstname"
+                                                            type="text"
+                                                            // keyboardType="email-address"
+                                                            value={this.state.firstname}
+                                                            onChangeText={(firstname)=> {
+                                                                this.setState({firstname : firstname})
+                                                                setTimeout(() => {
+                                                                        this.validation();
+                                                                }, 500);
+                                                                
+                                                            }} 
+                                                        />
                                             </View>
-                                        </TouchableOpacity>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>                    
+                                        
+                                <View style={{flex: 6}}>
+
+                                                    <TouchableOpacity 
+                                                    style={{width:'100%'}}
+                                                >
+                                                        <View style={styles.contentProfile}>
+                                                            <View style={{ flex: 6 }}>
+                                                                <TextValidator
+                                                                    name="lastname"
+                                                                    label="lastname"
+                                                                    validators={['required']}
+                                                                    errorMessages={['This field is required']}
+                                                                    placeholder="Your lastname"
+                                                                    type="text"
+                                                                    value={this.state.lastname}
+                                                                    onChangeText={(lastname)=> {
+                                                                        this.setState({lastname : lastname})
+                                                                        setTimeout(() => {
+                                                                                this.validation();
+                                                                        }, 500);
+                                                                        
+                                                                    }} 
+                                                                />
+                                                            </View>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                </View>
                             </View>
-                        </View>
-                        <Text body2 grayColor style={{marginTop:-15}}>
-                        Isikan sesuai dengan KTP Anda
-                       </Text>
+                            <Text body2 grayColor style={{marginTop:-15}}>
+                            Isikan sesuai dengan KTP Anda
+                            </Text>
                        </View>
 
 
@@ -1059,68 +1030,70 @@ export default class DetailContact extends Component {
             </View>
 
             var formPhone=<View style={{marginBottom: 10}}>
-            {/* <View style={styles.contentTitle}>
-                            <Text headline semibold>
-                                Phone
-                            </Text>
-                        </View> */}
-                        <TouchableOpacity 
-                        style={{width:'100%'}}
-                       >
-
-                            <View style={styles.contentProfile}>
-                                <View style={{ flex: 6 }}>
-                                {/* <TextInput
-                                    style={BaseStyle.textInput}
-                                    onChangeText={(phone)=> {
-                                        this.setState({phone : phone.replace(/[^0-9]/g, '')})
-                                        setTimeout(() => {
-                                            this.validation();
-                                        }, 500);
-
+                            <View style={{flexDirection: "row"}}>
+                                <View style={{flex: 4,marginRight: 15}}>
+                                    <TouchableOpacity 
+                                    style={{width:'100%'}}
+                                    onPress={() => this.props.navigation.navigate('SelectPhoneCode',
+                                    {
+                                        setPhoneCode: this.setPhoneCode,
+                                        pageReturn:'DetailContact',
+                                        selected: this.state.nationality_phone_code,
+                                        // type:'nationality'
+                                    })}>
+                                        <View style={styles.contentProfile} pointerEvents='none'>
+                                            <View style={{ flex: 6}}>
+                                                                <TextValidator
+                                                                    name="nationality_phone_code"
+                                                                    label="nationality_phone_code"
+                                                                    validators={['required']}
+                                                                    errorMessages={['This field is required']}
+                                                                    placeholder="Phone Code"
+                                                                    type="text"
+                                                                    keyboardType="email-address"
+                                                                    value={this.state.nationality_phone_code}
+                                                                />
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>                    
                                         
-                                    }}
-                                    value={this.state.phone}
-                                    autoCorrect={false}
-                                    placeholderTextColor={BaseColor.grayColor}
-                                    selectionColor={BaseColor.primaryColor}
-                                /> */}
+                                <View style={{flex: 8}}>
 
-                                            <TextValidator
-                                                name="phone"
-                                                label="phone"
-                                                validators={['required', 'isNumber']}
-                                                errorMessages={['This field is required', 'Number invalid']}
-                                                placeholder="Your phone"
-                                                type="text"
-                                                keyboardType="email-address"
-                                                value={this.state.phone}
-                                                onChangeText={(phone)=> {
-                                                    this.setState({phone : phone})
-                                                    setTimeout(() => {
-                                                        this.validation();
-                                                    }, 500);
-                                                }}
-                                               
-                                            />
+                                                    <TouchableOpacity 
+                                                    style={{width:'100%'}}
+                                                >
+                                                        <View style={styles.contentProfile}>
+                                                                <View style={{ flex: 6 }}>
+                                                                        <TextValidator
+                                                                            name="phone"
+                                                                            label="phone"
+                                                                            validators={['required', 'isNumber']}
+                                                                            errorMessages={['This field is required', 'Number invalid']}
+                                                                            placeholder="Your phone"
+                                                                            type="text"
+                                                                            keyboardType="email-address"
+                                                                            value={this.state.phone}
+                                                                            onChangeText={(phone)=> {
+                                                                                this.setState({phone : phone})
+                                                                                setTimeout(() => {
+                                                                                    this.validation();
+                                                                                }, 500);
+                                                                            }}
+                                                                        
+                                                                        />
+                                                            </View>
+                                                        </View>
+                                                    </TouchableOpacity>
                                 </View>
-                                {/* <View style={styles.searchIcon} onPress={()=>
-                                    {navigation.navigate("ProfileSmart");} } >
-                                    <Icon name="phone" size={18} color={BaseColor.primaryColor} />
-                                </View> */}
                             </View>
-                        </TouchableOpacity>
-                        <Text body2 grayColor style={{marginTop:-15}}>
-                                             Isi dengan nomor handphone Anda yang aktif
-                                            </Text>
-            </View>
+                            <Text body2 grayColor style={{marginTop:-15}}>
+                            Mobile Phone
+                            </Text>
+                       </View>
+
 
             var formNationality=<View style={{marginBottom: 10}}>
-            {/* <View style={styles.contentTitle}>
-                            <Text headline semibold>
-                            Nationality
-                            </Text>
-                        </View> */}
                         <TouchableOpacity 
                         style={{width:'100%'}}
                         onPress={() => this.props.navigation.navigate('SelectCountry',
@@ -1134,18 +1107,7 @@ export default class DetailContact extends Component {
 
                             <View style={styles.contentProfile} pointerEvents='none'>
                                 <View style={{ flex: 6}}>
-                                {/* <TextInput
-                                    style={BaseStyle.textInput}
-                                    onChangeText={text => this.setState({ id: text })}
-                                    autoCorrect={false}
-                                    placeholder={this.state.nationality}
-                                    placeholderTextColor={BaseColor.grayColor}
-                                    value={this.state.nationality}
-                                    selectionColor={BaseColor.primaryColor}
-                                />
-                                 */}
-
-                                <TextValidator
+                                                    <TextValidator
                                                         name="nationality"
                                                         label="nationality"
                                                         validators={['required']}
@@ -1156,10 +1118,6 @@ export default class DetailContact extends Component {
                                                         value={this.state.nationality}
                                                     />
                                 </View>
-                                {/* <View style={styles.searchIcon} onPress={()=>
-                                    {navigation.navigate("ProfileSmart");} } >
-                                    <Icon name="chevron-down" size={18} color={BaseColor.primaryColor} />
-                                </View> */}
                             </View>
                         </TouchableOpacity>
                         <Text body2 grayColor style={{marginTop:-15}}>

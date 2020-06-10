@@ -1058,36 +1058,41 @@ export default class Summary extends Component {
         //birthday
 
 
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {  
+            let userSession = JSON.parse(result);
+            var customer = [];
+            for (var i=1; i<=1; i++) {
+            var obj = {};
+                obj['key'] = i;
+                obj['label'] = "Contact";
+                obj['old'] = 'adult';
 
-        var customer = [];
-        for (var i=1; i<=1; i++) {
-        var obj = {};
-            obj['key'] = i;
-            obj['label'] = "Contact";
-            obj['old'] = 'adult';
+                obj['fullname'] = userSession.fullname;
+                obj['firstname'] = userSession.firstname;
+                obj['lastname'] = userSession.lastname;
+                obj['birthday'] = def_date_adult;
+                obj['nationality'] = userSession.nationality;
+                obj['passport_number'] = def_passport_number;
+                obj['passport_country'] = def_passport_country;
+                obj['passport_expire'] = def_passport_expire;
+                obj['phone'] = userSession.phone;
+                obj['title'] = userSession.title;
+                obj['email'] = userSession.email;
 
-            obj['fullname'] = "";
-            obj['firstname'] = "";
-            obj['lastname'] = "";
-            obj['birthday'] = def_date_adult;
-            obj['nationality'] = "";
-            obj['passport_number'] = def_passport_number;
-            obj['passport_country'] = def_passport_country;
-            obj['passport_expire'] = def_passport_expire;
-            obj['phone'] = "";
-            obj['title'] = "";
-            obj['email'] = "";
+                obj['nationality_id'] = userSession.nationality_id;
+                obj['nationality_phone_code'] = userSession.nationality_phone_code;
 
-            obj['nationality_id'] = "";
-            obj['nationality_phone_code'] = "";
+                obj['passport_country_id'] = userSession.passport_country_id;
 
-            obj['passport_country_id'] = def_passport_country_id;
-            // obj['passport_country_phone_code'] = "";
+                // obj['passport_country_phone_code'] = "";
 
-            customer.push(obj)
-        }
-        AsyncStorage.setItem('setDataCustomer',JSON.stringify(customer));
-        this.setState({listdata_customer:customer});
+                customer.push(obj)
+            }
+            AsyncStorage.setItem('setDataCustomer',JSON.stringify(customer));
+            this.setState({listdata_customer:customer});
+            }
+        });
 
 
 

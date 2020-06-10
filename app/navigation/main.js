@@ -77,6 +77,8 @@ import TourSet from "@screens/TourSet";
 import SelectFlight from "@screens/SelectFlight";
 import SelectTitle from "@screens/SelectTitle";
 import SelectCountry from "@screens/SelectCountry";
+import SelectPhoneCode from "@screens/SelectPhoneCode";
+
 import SelectPayment from "@screens/SelectPayment";
 import Cart from "@screens/Cart";
 import CartTour from "@screens/CartTour";
@@ -357,6 +359,9 @@ const StackNavigator = createStackNavigator(
         },
         SelectCountry: {
             screen: SelectCountry
+        },
+        SelectPhoneCode: {
+            screen: SelectPhoneCode
         },
         SelectPayment: {
             screen: SelectPayment

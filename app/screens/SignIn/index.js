@@ -155,11 +155,6 @@ class SignIn extends Component {
                     AsyncStorage.setItem('userSession', JSON.stringify(userSession));
                     AsyncStorage.setItem('id_user', JSON.stringify(userSession.id_user));
                     var id_user=userSession.id_user;
-                    //alert(id_user);
-                    //this.getProfile(id_user);
-                   // this.getSmartProfile(id_user);
-                    // this.getBookingHistory(id_user);
-                    // this.getNotification(id_user);
                     setTimeout(() => {
                     this.authentication(redirect);
                     }, 500);
