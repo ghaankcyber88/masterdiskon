@@ -27,6 +27,17 @@ export default class FilterSort extends Component {
             })
         });
     }
+    
+ 
+    
+    // sort()
+    // {
+    //     homes.sort((a, b) => Number(a.price) - Number(b.price));
+    //     console.log("ascending", homes);
+        
+    //     homes.sort((a, b) => Number(b.price) - Number(a.price));
+    //     console.log("descending", homes);
+    // }
 
     onSelectFilter(selected) {
         const { sortOption } = this.state;
@@ -38,19 +49,30 @@ export default class FilterSort extends Component {
                 };
             })
         });
-            // const { onChangeSort } = this.props;
-            //     this.setState({
-            //         sortSelected: selected.value,
-            //         modalVisible: false
-            //     });
-          
-
-
-            //onChangeSort(selected.value);
-            //alert(this.state.sortSelected);
+        //this.onApply();
+        this.sortData(selected);
+        
+        setTimeout(() => {
+            this.onApply();
+        }, 50);
     }
-
-    onOpenSort() {
+    
+    
+    onApply() {
+        const { sortOption } = this.state;
+        const { onChangeSort } = this.props;
+        const sorted = sortOption.filter(item => item.checked);
+        if (sorted.length > 0) {
+            this.setState({
+                sortSelected: sorted[0],
+                modalVisible: false
+            });
+            onChangeSort(sorted[0]);
+        }
+    }
+    
+    sortData(selected){
+        var typeSort=selected.value;
         var listdata=this.props.listdata;
         console.log('listdatasort',JSON.stringify(listdata));
         
@@ -59,7 +81,7 @@ export default class FilterSort extends Component {
         listdata.map(item => {
             var obj = {};
             var fas=[];
-            obj['num'] = a.toString();
+            obj['nums'] = a;
             obj['transit'] = item.transit.toString();
             obj['airline'] = item.airline_code;
             obj['price'] = item.price.total_price;
@@ -96,9 +118,51 @@ export default class FilterSort extends Component {
         console.log("----------------departure new sort------------------------------------");
         console.log(listdata_new_sort);
         
+        // {
+        //     value: "low_price",
+        //     icon: "sort-amount-up",
+        //     text: "Lowest Price"
+        // },
+        // {
+        //     value: "hight_price",
+        //     icon: "sort-amount-down",
+        //     text: "Hightest Price"
+        // },
+        
+        if(typeSort=='low_price'){
+            listdata_new_sort.sort((a, b) => a.price - b.price);
+            console.log("ascendings", listdata_new_sort);
+        }else if(typeSort=='hight_price'){
+            
+            listdata_new_sort.sort((a, b) => b.price - a.price);
+            console.log("descendings", listdata_new_sort);
+        }
         
         
+        this.sortFinal(listdata_new_sort);
+        
+    
+    }
+    
+    sortFinal(filtered){
+        const { navigation } = this.props;
+        var filter = [];
+        filtered.map(item => {
+            filter.push(item.nums);
+        });
 
+        console.log("----------------sort final------------------------------------");
+        console.log(JSON.stringify(filter));
+        this.props.sortProcess(filter);
+
+        // this.props.navigation.state.params.filterProcess(filter);
+        // navigation.goBack();
+
+        
+    }
+
+    onOpenSort() {
+        // this.listdata_new();
         const { sortOption, sortSelected } = this.state;
         this.setState({
             modalVisible: true,
@@ -111,18 +175,6 @@ export default class FilterSort extends Component {
         });
     }
 
-    onApply() {
-        const { sortOption } = this.state;
-        const { onChangeSort } = this.props;
-        const sorted = sortOption.filter(item => item.checked);
-        if (sorted.length > 0) {
-            this.setState({
-                sortSelected: sorted[0],
-                modalVisible: false
-            });
-            onChangeSort(sorted[0]);
-        }
-    }
 
     iconModeView(modeView) {
         switch (modeView) {
@@ -145,7 +197,8 @@ export default class FilterSort extends Component {
             onClear,
             onChangeView,
             labelCustom,
-            listdata
+            listdata,
+            sortProcess,
         } = this.props;
         const { sortOption, modalVisible, sortSelected } = this.state;
         const customAction =
@@ -210,13 +263,13 @@ export default class FilterSort extends Component {
                                 )}
                             </TouchableOpacity>
                         ))}
-                        <Button
+                        {/* <Button
                             full
                             style={{ marginTop: 10, marginBottom: 20 }}
                             onPress={() => this.onApply()}
                         >
                             Apply
-                        </Button>
+                        </Button> */}
                     </View>
                 </Modal>
                 <TouchableOpacity
@@ -283,6 +336,7 @@ FilterSort.propTypes = {
     onFilter: PropTypes.func,
     onClear: PropTypes.func,
     listdata: PropTypes.array,
+    sortProcess: PropTypes.func,
 };
 
 FilterSort.defaultProps = {
@@ -298,16 +352,16 @@ FilterSort.defaultProps = {
             icon: "sort-amount-down",
             text: "Hightest Price"
         },
-        {
-            value: "high_rate",
-            icon: "sort-amount-up",
-            text: "Hightest Rating"
-        },
-        {
-            value: "popular",
-            icon: "sort-amount-down",
-            text: "Popularity"
-        }
+        // {
+        //     value: "high_rate",
+        //     icon: "sort-amount-up",
+        //     text: "Hightest Rating"
+        // },
+        // {
+        //     value: "popular",
+        //     icon: "sort-amount-down",
+        //     text: "Popularity"
+        // }
     ],
     sortSelected: {
         value: "high_rate",
@@ -320,5 +374,6 @@ FilterSort.defaultProps = {
     onChangeView: () => {},
     onFilter: () => {},
     onClear: () => {},
+    sortProcess: () => {},
     listdata:[]
 };

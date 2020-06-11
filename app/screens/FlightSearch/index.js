@@ -278,6 +278,7 @@ export default class FlightSearch extends Component {
         listdata.map(item => {
             var obj = {};
             obj['num'] = a.toString();
+            obj['nums'] = a;
             obj["price"]=item.price;
             obj["international"]= item.international;
             obj["combinable"]= item.combinable;

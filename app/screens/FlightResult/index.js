@@ -244,6 +244,7 @@ export default class FlightResult extends Component {
         this.onFilter = this.onFilter.bind(this);
         this.onChangeSort = this.onChangeSort.bind(this);
         this.filterProcess = this.filterProcess.bind(this);
+        this.sortProcess = this.sortProcess.bind(this);
         this.onClear = this.onClear.bind(this);
     }
 
@@ -253,6 +254,7 @@ export default class FlightResult extends Component {
         listdata.map(item => {
             var obj = {};
             obj['num'] = a.toString();
+            obj['nums'] = a;
             obj["price"]=item.price;
             obj["international"]= item.international;
             obj["combinable"]= item.combinable;
@@ -435,18 +437,18 @@ export default class FlightResult extends Component {
 
         
         if(filter.length != 0){
-        var filters = {}
-        if(filter.length != 0){
-           filters = {
-            num: num => filter.includes(num)
-          };
-        }
-        filtered = this.filterArray(products, filters);
-        this.setState({listdata_departure:filtered});
-
-       
-        console.log("----------------hasil filter------------------------------------");
-        console.log(filtered);
+            var filters = {}
+            if(filter.length != 0){
+               filters = {
+                num: num => filter.includes(num)
+              };
+            }
+            filtered = this.filterArray(products, filters);
+            this.setState({listdata_departure:filtered});
+    
+           
+            console.log("----------------hasil filter------------------------------------");
+            console.log(filtered);
 
         }else{
             console.log("----------------hasil filter------------------------------------");
@@ -454,6 +456,61 @@ export default class FlightResult extends Component {
             this.setState({listdata_departure:[]});
         }
     }
+    
+    
+    sortProcess(filter)
+    {   
+        ///this.onClear();
+       
+            this.setState({listdata_departure:this.state.listdata_departure_original});
+        var filter=filter;
+        setTimeout(() => {
+
+        // setTimeout(() => {
+            console.log("----------------sortProcess------------------------------------");
+            console.log(filter);
+    
+            // var filter=filter;
+            const products =this.state.listdata_departure_original;
+         
+            // products.sort( function (a, b) {
+            //     var A = a['num'], B = b['num'];
+                
+            //     if (filter.indexOf(A) > filter.indexOf(B)) {
+            //       return 1;
+            //     } else {
+            //       return -1;
+            //     }
+                
+            //   });
+            //   console.log('listdataSort',JSON.stringify(products));
+            //   this.setState({listdata_departure:products});
+        // }, 100);
+        
+        ordered_array = this.mapOrder(products, filter, 'nums');
+        console.log('listdataSort',JSON.stringify(ordered_array));
+        this.setState({listdata_departure:products});
+    }, 50);
+        
+    }
+    
+     mapOrder(array, order, key) {
+  
+        array.sort( function (a, b) {
+          var A = a[key], B = b[key];
+          
+          if (order.indexOf(A) > order.indexOf(B)) {
+            return 1;
+          } else {
+            return -1;
+          }
+          
+        });
+        
+        return array;
+      };
+      
+      
 
 
 
@@ -607,6 +664,7 @@ export default class FlightResult extends Component {
                         onChangeSort={this.onChangeSort}
                         onFilter={this.onFilter}
                         onClear={this.onClear}
+                        sortProcess={this.sortProcess}
                     />
                 </Animated.View>
             </View>
