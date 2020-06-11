@@ -17,6 +17,8 @@ export default class FlightFilter extends Component {
     constructor(props) {
         super(props);
         var listdata=this.props.navigation.state.params.listdata;
+        console.log("----------------listdata asli ------------------------------------");
+        console.log(JSON.stringify(listdata));
 
 
         var listdata_new = [];
@@ -29,7 +31,6 @@ export default class FlightFilter extends Component {
             obj['airline'] = item.airline_code;
             obj['price'] = item.price.total_price;
             obj['meal'] = item.flight_schedule[0].meal;
-            //obj['entertainment'] = item.flight_schedule[0].inflight_entertainment;
             
 
             if (item.flight_schedule[0].inflight_entertainment != false){
@@ -124,9 +125,9 @@ export default class FlightFilter extends Component {
         });
       }
 
-      componentDidMount() {
+    componentDidMount() {
           
-      }
+    }
 
 
     onChangeRound(status) {
@@ -324,18 +325,12 @@ export default class FlightFilter extends Component {
         
         const products =filtered;
         
-    //     var filters = {
-    //         price: price => price >= 2000000
-    //    };
-
-
        
         filtered = products.filter(function (el) {
           return el.price >= parseInt(priceBegin) && el.price <= parseInt(priceEnd); 
         });
 
 
-       //filtered = this.filterArray(products, filters);
        console.log("----------------hasil filter harga------------------------------------");
        console.log(filtered);
        this.filterFinal(filtered);
@@ -349,34 +344,8 @@ export default class FlightFilter extends Component {
         });
 
 
-        // var filter=filter;
-        // const products =this.state.listdata;
-
-
-
-        // var filters = {}
-        // if(filter.length != 0){
-        //    filters = {
-        //     num: num => filter.includes(num)
-        //   };
-        // }
-        // filtered = this.filterArray(products, filters);
-
-
-
-        // console.log("----------------array listdata------------------------------------");
-        // console.log(this.state.listdata);
-
-        // console.log("----------------array filter------------------------------------");
-        // console.log(filter);
-
         this.props.navigation.state.params.filterProcess(filter);
         navigation.goBack();
-
-
-
-       
-
 
         
     }

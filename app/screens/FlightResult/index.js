@@ -603,6 +603,7 @@ export default class FlightResult extends Component {
                 >
                     <FilterSort
                         labelCustom={this.state.listdata_departure.length+' result'}
+                        listdata={this.state.listdata_departure_original}
                         onChangeSort={this.onChangeSort}
                         onFilter={this.onFilter}
                         onClear={this.onClear}

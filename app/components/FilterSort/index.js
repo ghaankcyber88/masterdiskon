@@ -38,11 +38,11 @@ export default class FilterSort extends Component {
                 };
             })
         });
-            const { onChangeSort } = this.props;
-                this.setState({
-                    sortSelected: selected.value,
-                    modalVisible: false
-                });
+            // const { onChangeSort } = this.props;
+            //     this.setState({
+            //         sortSelected: selected.value,
+            //         modalVisible: false
+            //     });
           
 
 
@@ -51,6 +51,54 @@ export default class FilterSort extends Component {
     }
 
     onOpenSort() {
+        var listdata=this.props.listdata;
+        console.log('listdatasort',JSON.stringify(listdata));
+        
+        var listdata_new_sort = [];
+        var a=1;
+        listdata.map(item => {
+            var obj = {};
+            var fas=[];
+            obj['num'] = a.toString();
+            obj['transit'] = item.transit.toString();
+            obj['airline'] = item.airline_code;
+            obj['price'] = item.price.total_price;
+            obj['meal'] = item.flight_schedule[0].meal;
+            
+
+            if (item.flight_schedule[0].inflight_entertainment != false){
+                obj['entertainment']="1";
+                fas.push("entertainment"); 
+            }else{
+                obj['entertainment']="0";
+            }
+
+
+            if (item.flight_schedule[0].baggage != 0){
+                obj['baggage']="1";
+                fas.push("baggage");
+            }else{
+                obj['baggage']="0";
+            }
+
+            if (item.flight_schedule[0].meal != "0"){
+                fas.push("meal");
+            }
+
+            obj['fasilities']=fas;
+
+
+            listdata_new_sort.push(obj);
+            a++;
+        });
+
+
+        console.log("----------------departure new sort------------------------------------");
+        console.log(listdata_new_sort);
+        
+        
+        
+
         const { sortOption, sortSelected } = this.state;
         this.setState({
             modalVisible: true,
@@ -96,7 +144,8 @@ export default class FilterSort extends Component {
             onFilter,
             onClear,
             onChangeView,
-            labelCustom
+            labelCustom,
+            listdata
         } = this.props;
         const { sortOption, modalVisible, sortSelected } = this.state;
         const customAction =
@@ -233,6 +282,7 @@ FilterSort.propTypes = {
     onChangeView: PropTypes.func,
     onFilter: PropTypes.func,
     onClear: PropTypes.func,
+    listdata: PropTypes.array,
 };
 
 FilterSort.defaultProps = {
@@ -269,5 +319,6 @@ FilterSort.defaultProps = {
     onChangeSort: () => {},
     onChangeView: () => {},
     onFilter: () => {},
-    onClear: () => {}
+    onClear: () => {},
+    listdata:[]
 };
