@@ -410,7 +410,12 @@ export default class Cart extends Component {
                                 id_order=result.id_order;
                                 pay=result.pay;
                                 setTimeout(() => {
-                                    this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit})
+                                    const data={  
+                                        "dataOrderSubmit": dataOrderSubmit,
+                                    }
+                                    const param={"param":data}
+                                    //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
+                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
                                 }, 500);
                             
 

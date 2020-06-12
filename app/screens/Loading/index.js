@@ -23,6 +23,13 @@ class Loading extends Component {
             var redirect='';
         }
         
+        if(this.props.navigation.state.params && this.props.navigation.state.params.param){
+            var param=this.props.navigation.state.params.param;
+        }else{
+            var param='';
+        }
+        
+        
         SplashScreen.hide();
         let { navigation, auth } = this.props;
         let status = auth.login.success;
@@ -30,7 +37,7 @@ class Loading extends Component {
 
         if(redirect != ''){
             setTimeout(() => {
-                navigation.navigate(redirect);
+                navigation.navigate(redirect,{param:param});
             }, 500);
 
         }else{

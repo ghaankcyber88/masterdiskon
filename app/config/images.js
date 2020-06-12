@@ -85,5 +85,8 @@ export const Images = {
     login: require("@assets/images/login.jpg"),
     intergrity: require("@assets/images/intergrity.jpg"),
     dot: require("@assets/images/dot.png"),
+    airplane: require("@assets/images/airplane.gif"),
+    trip: require("@assets/images/trip.gif"),
+    hotel: require("@assets/images/hotel.gif"),
 
 };

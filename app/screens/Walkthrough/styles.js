@@ -58,4 +58,8 @@ export default StyleSheet.create({
         color: '#333333',
         marginBottom: 5,
       },
+      lottie: {
+        width: 100,
+        height: 100
+      }
 });

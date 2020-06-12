@@ -24,9 +24,9 @@ class Walkthrough extends Component {
             loading: false,
             scrollEnabled: true,
             slide: [
-                { key: 1, image: Images.intergrity,title:'Intergrity',text:'Giving the best, responsible to complete, responding your needs.' },
-                { key: 2, image: Images.trip1,title:'Intergrity',text:'Discipline, honest, trustworthy, persistent, and committed.' },
-                { key: 3, image: Images.trip3,title:'Intergrity',text:'Initiative to learn continuosly, creative, and innovative.' },
+                { key: 1, image: Images.airplane,title:'Tiket Pesawat',text:'Cari tiket pesawat murah & promo secara online dengan cepat dan mudah di sini!' },
+                { key: 2, image: Images.hotel,title:'Hotel',text:'Cari & booking hotel dengan harga termurah di sini!' },
+                { key: 3, image: Images.trip,title:'Trip',text:'Pengalaman Memikat Dengan Harga Terhemat ' },
                 // { key: 4, image: Images.trip4,text:'Temukan dan pesanlah aktivitas seru dengan harga yang eksklusif' }
             ]
         };
@@ -178,6 +178,7 @@ class Walkthrough extends Component {
                             activeDotColor={BaseColor.primaryColor}
                             paginationStyle={styles.contentPage}
                             removeClippedSubviews={false}
+                            autoplay={true}
                         >
                             {this.state.slide.map((item, index) => {
                                 return (

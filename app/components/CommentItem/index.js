@@ -231,6 +231,7 @@ export default class CommentItem extends Component {
                             <Text caption2 grayColor>
                                {statusPay}
                             </Text>
+                            {countDown}
                         </View>
                     </View>
                 </View>
