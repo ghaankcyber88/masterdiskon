@@ -172,6 +172,7 @@ export default class SignUp extends Component {
                         />
 
                         <TextInput
+                            secureTextEntry={true}
                             style={[BaseStyle.textInput, { marginTop: 10 }]}
                             onChangeText={text => this.setState({ password: text })}
                             autoCorrect={false}
@@ -185,6 +186,7 @@ export default class SignUp extends Component {
                         />
 
                         <TextInput
+                            secureTextEntry={true}
                             style={[BaseStyle.textInput, { marginTop: 10 }]}
                             onChangeText={text => this.setState({ passwordKonfirm: text })}
                             autoCorrect={false}

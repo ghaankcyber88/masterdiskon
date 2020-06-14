@@ -78,6 +78,18 @@ export default class SelectTitle extends Component {
                     "name": "Mrs"
                 }
             ];
+        }else if(old=='children' || old=='baby'){
+            title=[
+                {
+                    "id": "Mstr",
+                    "name": "Mstr"
+                },
+                {
+                    "id": "Miss",
+                    "name": "Miss"
+                }
+            ];
+            
         }else{
             title=[
                 {

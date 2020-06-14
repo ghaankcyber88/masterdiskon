@@ -563,7 +563,9 @@ export default class FlightSearch extends Component {
                                 },
                                 shadowOpacity: 0.25,
                                 shadowRadius: 3.84,
-                                elevation: 5}}
+                                elevation: 5,
+                                marginTop:20
+                            }}
                         onPress={() => {  
                             this.onSubmit();
                             // this.setState({ loading: true }, () => {

@@ -405,6 +405,7 @@ getNotification(id_user) {
                             selectionColor={BaseColor.primaryColor}
                         />
                         <TextInput
+                            secureTextEntry={true}
                             style={[BaseStyle.textInput, { marginTop: 10 }]}
                             onChangeText={text =>
                                 this.setState({ password: text })
