@@ -134,6 +134,10 @@ export default class Notification extends Component {
                                     txtRight={item.date_added}
                                     loading={this.state.loading_spinner}
                                     //loading={true}
+                                    onPress={() => {
+                                        //this.props.navigation.navigate("PreviewBooking",{item:item});
+                                        this.props.navigation.navigate("WebViewPage",{url:item.tautan+'?access=app',title:'Pembayaran'});
+                                    }}
                                 />
                             )}
                         /> 

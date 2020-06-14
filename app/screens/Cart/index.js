@@ -28,6 +28,7 @@ import DropdownAlert from 'react-native-dropdownalert';
 import ButtonOrder from "../../components/ButtonOrder";
 
 import moment from 'moment';
+import { cos } from "react-native-reanimated";
 
 
 
@@ -57,6 +58,10 @@ export default class Cart extends Component {
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
         var dataCart=this.props.navigation.state.params.dataCart;
+        var listdata_customer=this.props.navigation.state.params.listdata_customer;
+        var listdata_participant=this.props.navigation.state.params.listdata_participant;
+        var saveContact=this.props.navigation.state.params.saveContact;
+        var otherUser=this.props.navigation.state.params.otherUser;
       
         this.state = {
             refreshing: false,
@@ -78,7 +83,11 @@ export default class Cart extends Component {
             loading: false,
             dataCart:dataCart,
             payment_method:'013',
-            payment_method_title:'Permata ATM'
+            payment_method_title:'Permata ATM',
+            listdata_customer:listdata_customer,
+            listdata_participant:listdata_participant,
+            saveContact:saveContact,
+            otherUser:otherUser
 
         };
         this.onChangeView = this.onChangeView.bind(this);
@@ -319,8 +328,110 @@ export default class Cart extends Component {
         );
     }
 
+    convertOld(dateString){
+
+        var age = parseInt(moment().diff(dateString,'years',true));
+        var old="";
+        if(age < 2){
+            old="INF";
+        }else if(age>=2 && age<=11){
+            old="CHD";
+        }else{
+            old="ADT";
+        }
+        return old;
+    }
+    
+
+    
+    updatePerson(){
+
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {
+                let userSession = JSON.parse(result);
+                console.log("---------------data session user  ------------");
+                console.log(JSON.stringify(userSession));
+                var id_user=userSession.id_user;
+
+                var participant = [];
+                this.state.listdata_participant.map(item => {
+                    var obj = {};
+                    obj['id_user'] = id_user;
+                    obj['fullname'] = item.title+' '+item.firstname+' '+item.lastname;
+                    obj['firstname'] = item.firstname;
+                    obj['lastname'] = item.lastname;
+                    obj['birthday'] = item.birthday;
+                    obj['nationality'] = item.nationality;
+                    obj['passport_number'] = item.passport_number;
+                    obj['passport_country'] = item.passport_country;
+                    obj['passport_expire'] = item.passport_expire;
+                    obj['phone'] = item.phone;
+                    obj['title'] = item.title;
+                    obj['email'] = item.email;
+                    obj['nationality_id'] = item.nationality_id;
+                    obj['nationality_phone_code'] = item.nationality_phone_code;
+                    obj['passport_country_id'] = item.passport_country_id;
+                    obj['type'] = this.convertOld(item.birthday);
+                    participant.push(obj);
+                });
+
+
+                var customer = [];
+                this.state.listdata_customer.map(item => {
+                    var obj = {};
+                    obj['id_user'] = id_user;
+                    obj['fullname'] = item.title+' '+item.firstname+' '+item.lastname;
+                    obj['firstname'] = item.firstname;
+                    obj['lastname'] = item.lastname;
+                    obj['birthday'] = item.birthday;
+                    obj['nationality'] = item.nationality;
+                    obj['passport_number'] = item.passport_number;
+                    obj['passport_country'] = item.passport_country;
+                    obj['passport_expire'] = item.passport_expire;
+                    obj['phone'] = item.phone;
+                    obj['title'] = item.title;
+                    obj['email'] = item.email;
+                    obj['nationality_id'] = item.nationality_id;
+                    obj['nationality_phone_code'] = item.nationality_phone_code;
+                    obj['passport_country_id'] = item.passport_country_id;
+                    obj['type'] = this.convertOld(item.birthday);
+                    customer.push(obj);
+                });
+
+
+
+                const data={  
+                    "participant": participant,
+                    "customer":customer,
+                    "saveContact":this.state.saveContact
+                  
+                }
+                const param={"param":data}
+
+                this.setState({dataPersonSave:data});
+                console.log("------------------data param update person--------------");
+                console.log(JSON.stringify(param));
+
+                // PostData('update_participant_order',param)
+                //     .then((result) => {
+                //         console.log("------------------result update participant--------------");
+                //         console.log(JSON.stringify(result));
+                //         //this.redirect('ProfileSmart');
+                //     },
+                //     (error) => {
+                //         this.setState({ error });
+                //     }
+                // );
+
+            }
+        });  
+
+        
+    }
+
   
     componentDidMount() {
+        this.updatePerson();
         this.fetchData();
         
         // AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
@@ -380,14 +491,16 @@ export default class Cart extends Component {
                     "cart_select":this.state.dataCartArrayReal,
                     "token":access_token,
                     "id_user":this.state.id_user,
-                    "dataCart":this.state.dataCart
+                    "dataCart":this.state.dataCart,
+                    "dataSavePerson":this.state.dataPersonSave
                     }
                     
                     console.log("---------------data cart array cart kirim  ------------");
                     console.log(JSON.stringify(dataCartArrayRealSend));
 
+                    this.updateUserSession();
              
-
+                    
                     var myHeaders = new Headers();
                     myHeaders.append("Content-Type", "application/json");
 
@@ -407,27 +520,20 @@ export default class Cart extends Component {
                         console.log("---------------status carts-------------");
                         console.log(JSON.stringify(dataOrderSubmit));
                             this.setState({ loading: false });
-                                id_order=result.id_order;
-                                pay=result.pay;
-                                setTimeout(() => {
-                                    const data={  
-                                        "dataOrderSubmit": dataOrderSubmit,
-                                    }
-                                    const param={"param":data}
-                                    //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
-                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
-                                }, 500);
                             
 
-                                
-                                //alert('id_order :'+id_order);
-                                //this.midtrans(id_order,pay)
-                                // this.setState({id_order:id_order});
-                                // this.setState({pay:pay});
-                                // this.getVa(dataOrderSubmit);
-                                
-                                
+                                id_order=result.id_order;
+                                pay=result.pay;
 
+                                var redirect='Pembayaran';
+                                setTimeout(() => {
+                                    var id_order=dataOrderSubmit.id_order;
+                                    //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
+                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
+                                }, 500);
+
+
+                                //this.getVa(dataOrderSubmit);
                     });
 
                 }
@@ -436,52 +542,94 @@ export default class Cart extends Component {
 
     }
 
+    updateUserSession(){
+        
+        //alert(otherUser);
 
-    // midtrans(id_order,pay){
-    // console.log(id_order+','+pay);
-    // alert(id_order);
-    //     const midtransClient = require('midtrans-client');
-    //     let snap = new midtransClient.Snap({
-    //             isProduction : false,
-    //             serverKey : 'SB-Mid-server-kaH7VW-jCiV028kVrbfn6HLf',
-    //             clientKey : 'SB-Mid-client-zxkvGZYYuXIidGRG'
-    //         });
-         
-    //     let parameter = {
-    //         "transaction_details": {
-    //             "order_id": id_order,
-    //             "gross_amount": pay
-    //         }, "credit_card":{
-    //             "secure" : true
-    //         }
-    //     };
+       
+            AsyncStorage.getItem('userSession', (error, result) => {
+                if (result) {  
+                    let userSession = JSON.parse(result);
+                    console.log('userSession',JSON.stringify(userSession));
+                    
+                    
+                    var customer=this.state.listdata_customer[0];
+                    console.log('data contact',JSON.stringify(customer));
 
-    //     console.log('param midtrans',JSON.stringify(parameter));
-         
-    //         snap.createTransaction(parameter)
-    //         .then((transaction)=>{
-    //             let transactionToken = transaction.token;
+                    var otherUser=this.state.otherUser;
+                    if(otherUser){
+                        var newUserSession={
+                            id_user: userSession.id_user,
+                            fullname: userSession.fullname,
+                            firstname: userSession.firstname,
+                            lastname: userSession.lastname,
+                            birthday: userSession.birthday,
+                            nationality: userSession.nationality,
+                            passport_number: userSession.passport_number,
+                            passport_country: userSession.passport_country,
+                            passport_expire: userSession.passport_expire,
+                            phone: userSession.phone,
+                            title: userSession.title,
+                            email: userSession.email,
+                            nationality_id: userSession.nationality_id,
+                            nationality_phone_code:userSession.nationality_phone_code,
+                            passport_country_id: userSession.passport_country_id,
+                            username: userSession.username,
+                            gender:userSession.gender,
+                            un_nationality: userSession.un_nationality,
+                            id_city: userSession.id_city,
+                            city_name: userSession.city_name,
+                            address: userSession.address,
+                            postal_code: userSession.postal_code,
+                            avatar: userSession.avatar,
+                            cart: userSession.cart,
+                            status: userSession.status,
+                            loginVia: userSession.loginVia,
+                        }
+                       
+                    }else{
+                        
 
-    //             alert(transactionToken);
-    //             //  this.props.navigation.navigate("OrderPembayaran",
-    //             //     {
-    //             //         transactionToken:transactionToken,
-    //             //         id_order:id_order
-    //             //     })
+                        var newUserSession={
+                            id_user: userSession.id_user,
+                            fullname: customer['fullname'],
+                            firstname: customer['firstname'],
+                            lastname: customer['lastname'],
+                            birthday: customer['birthday'],
+                            nationality: customer['nationality'],
+                            passport_number: customer['passport_number'],
+                            passport_country: customer['passport_country'],
+                            passport_expire: customer['passport_expire'],
+                            phone: customer['phone'],
+                            title: customer['title'],
+                            email: userSession.email,
+                            nationality_id: customer['nationality_id'],
+                            nationality_phone_code: customer['nationality_phone_code'],
+                            passport_country_id: customer['passport_country_id'],
+                            username: userSession.username,
+                            gender:userSession.gender,
+                            un_nationality: userSession.un_nationality,
+                            id_city: userSession.id_city,
+                            city_name: userSession.city_name,
+                            address: userSession.address,
+                            postal_code: userSession.postal_code,
+                            avatar: userSession.avatar,
+                            cart: userSession.cart,
+                            status: userSession.status,
+                            loginVia: userSession.loginVia,
+                        }
 
-    //         })
-    //         .catch((e)=>{
-    //             console.log('Error occured:',e.message);
-    //         });
-            
 
+                    }
+                
+                    
+                    console.log('newUserSession',JSON.stringify(newUserSession))
+                    AsyncStorage.setItem('userSession', JSON.stringify(newUserSession));
 
-            
-    // }
-
-    
-
-    
+                }
+            });
+        
+    }
 
 
     getVa(dataOrderSubmit){
@@ -496,17 +644,21 @@ export default class Cart extends Component {
             redirect: 'follow'
           };
           
-          console.log("---------------URL GET VA------------");
-          console.log("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay+"&payment_method="+this.state.payment_method);
+          //console.log("---------------URL GET VA------------");
+          //console.log("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay+"&payment_method="+this.state.payment_method);
           
-          fetch("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay+"&payment_method="+this.state.payment_method, requestOptions)
+          fetch("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay, requestOptions)
             .then(response => response.json())
             .then((result) => {
                 this.setState({ loading: false });
-            var id_order_payment=result.key;
-            console.log("---------------ID ORDER PAYMENT------------");
-            console.log(id_order_payment);
-            this.confirm_wa(id_order_payment,id_order);
+                var id_order_payment=result.key;
+                console.log('statusss',JSON.stringify(result));
+                                var redirect='Pembayaran';
+                                setTimeout(() => {
+                                    var id_order=dataOrderSubmit.id_order;
+                                    //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
+                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
+                                }, 500);
             },
             (error) => {
                 this.setState({ error });

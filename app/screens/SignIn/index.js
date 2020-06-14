@@ -123,7 +123,7 @@ class SignIn extends Component {
                 "firstname":userInfo.user.givenName,
                 "lastname":userInfo.user.familyName,
                 "username":username,
-                "password":'123456',
+                "password": "123456",
                 "email":userInfo.user.email
                 }
 
@@ -170,6 +170,64 @@ class SignIn extends Component {
        
     
 }
+
+
+
+onLogin() {
+    const { email, password, success,redirect } = this.state;
+    const { navigation } = this.props;
+    if (email == "" || password == "") {
+        this.setState({
+            success: {
+                ...success,
+                email: false,
+                password: false
+            }
+        });
+    } else {
+
+        this.setState({ loading: true }, () => {
+            var data={"email":email,"password":password}
+            const param={"param":data}
+
+            console.log("------------------data param submit login--------------");
+            console.log(JSON.stringify(param));
+    
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            var raw = JSON.stringify(param);
+            var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+            };
+
+            fetch("https://masterdiskon.co.id/front/auth/login/login_proses_app", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                var userSession=result.userSession;
+                userSession.loginVia = "form";
+                this.setState({ loading: false });
+                console.log(JSON.stringify(result));
+                if(result.success==false){
+                    this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
+                    //this.setState({ loading: false });
+                }else if(result.success==true){
+                    this.dropdown.alertWithType('success', 'Success', JSON.stringify(result.message));
+                    AsyncStorage.setItem('userSession', JSON.stringify(userSession));
+                    AsyncStorage.setItem('id_user', JSON.stringify(userSession.id_user));
+                    this.authentication(redirect);
+                  
+                }
+
+            })
+        });
+        
+       
+    }
+}
+
 
 getProfile(id_user) {
  
@@ -292,61 +350,6 @@ getNotification(id_user) {
                 });
             }
         );
-    }
-
-    onLogin() {
-        const { email, password, success,redirect } = this.state;
-        const { navigation } = this.props;
-        if (email == "" || password == "") {
-            this.setState({
-                success: {
-                    ...success,
-                    email: false,
-                    password: false
-                }
-            });
-        } else {
-
-            this.setState({ loading: true }, () => {
-                var data={"email":email,"password":password}
-                const param={"param":data}
-
-                console.log("------------------data param submit login--------------");
-                console.log(JSON.stringify(param));
-        
-                var myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
-                var raw = JSON.stringify(param);
-                var requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: raw,
-                redirect: 'follow'
-                };
-
-                fetch("https://masterdiskon.co.id/front/auth/login/login_proses_app", requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                    var userSession=result.userSession;
-                    userSession.loginVia = "form";
-                    this.setState({ loading: false });
-                    console.log(JSON.stringify(result));
-                    if(result.success==false){
-                        this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
-                        //this.setState({ loading: false });
-                    }else if(result.success==true){
-                        this.dropdown.alertWithType('success', 'Success', JSON.stringify(result.message));
-                        AsyncStorage.setItem('userSession', JSON.stringify(userSession));
-                        AsyncStorage.setItem('id_user', JSON.stringify(userSession.id_user));
-                        this.authentication(redirect);
-                      
-                    }
-
-                })
-            });
-            
-           
-        }
     }
 
 

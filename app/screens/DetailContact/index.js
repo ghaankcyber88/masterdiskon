@@ -352,7 +352,7 @@ export default class DetailContact extends Component {
       setNationality(id_country,country_name,phone_code){
         //console.log('nationality_ids',id_country);
         this.setState({nationality_id:id_country});
-        this.setState({nationality_phone_code:phone_code});
+        //this.setState({nationality_phone_code:phone_code});
         this.setState({nationality:country_name});
         setTimeout(() => {
             this.validation();
@@ -582,10 +582,11 @@ export default class DetailContact extends Component {
                 title !='' &&
                 email !='' &&
                 phone !='' &&
-                nationality !=''
+                nationality !='' &&
+                nationality_phone_code !=''
             ){
                 console.log('perfect');
-                this.setState({colorButton:'red'});
+                this.setState({colorButton:BaseColor.primaryColor});
                 this.setState({handlerButton:false});
             }else{
                 console.log('not yet');
@@ -1052,6 +1053,12 @@ export default class DetailContact extends Component {
                                                                     type="text"
                                                                     keyboardType="email-address"
                                                                     value={this.state.nationality_phone_code}
+                                                                    onChangeText={(nationality_phone_code)=> {
+                                                                        this.setState({nationality_phone_code : nationality_phone_code})
+                                                                        setTimeout(() => {
+                                                                            this.validation();
+                                                                        }, 500);
+                                                                    }}
                                                                 />
                                             </View>
                                         </View>

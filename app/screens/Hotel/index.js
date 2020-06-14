@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { FlatList, RefreshControl, View, Animated } from "react-native";
+import { FlatList, RefreshControl, View, Animated,Text} from "react-native";
 import { BaseStyle, BaseColor } from "@config";
-import { Header, SafeAreaView, Icon, HotelItem, FilterSort } from "@components";
+import { Header, SafeAreaView, Icon, HotelItem, FilterSort,Image } from "@components";
 import styles from "./styles";
 import * as Utils from "@utils";
+import { Images } from "@config";
 
 // Load sample data
 import { HotelData } from "@data";
@@ -403,7 +404,7 @@ export default class Hotel extends Component {
             >
                 <Header
                     title="Hotels"
-                    subTitle="24 Dec 2018, 2 Nights, 1 Room"
+                    //subTitle="24 Dec 2018, 2 Nights, 1 Room"
                     renderLeft={() => {
                         return (
                             <Icon
@@ -413,15 +414,15 @@ export default class Hotel extends Component {
                             />
                         );
                     }}
-                    renderRight={() => {
-                        return (
-                            <Icon
-                                name="search"
-                                size={20}
-                                color={BaseColor.primaryColor}
-                            />
-                        );
-                    }}
+                    // renderRight={() => {
+                    //     return (
+                    //         <Icon
+                    //             name="search"
+                    //             size={20}
+                    //             color={BaseColor.primaryColor}
+                    //         />
+                    //     );
+                    // }}
                     onPressLeft={() => {
                         navigation.goBack();
                     }}
@@ -429,7 +430,22 @@ export default class Hotel extends Component {
                         navigation.navigate("SearchHistory");
                     }}
                 />
-                {this.renderContent()}
+              
+                <View
+                    style={{flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',padding: 20}}
+                    >       
+                    <Image
+                        source={Images.login}
+                        style={{ width: "60%", height: "60%" }}
+                        resizeMode="cover"
+                    />
+                    <View><Text>Masih dalam pengembangan</Text></View>
+
+                </View>    
+                {/* {this.renderContent()} */}
             </SafeAreaView>
         );
     }

@@ -67,65 +67,93 @@ export default class CommentItem extends Component {
     var statusPay='';
     var countDown=<View></View>;
     var current_payment=item.current_payment;
-    var expiredTime=this.duration(current_payment.expired);
+    var order_expired=item.order_expired;
+    var order_status=item.order_status;
+    //var expiredTime=this.duration(current_payment.expired);
+    var expiredTime=this.duration(order_expired);
     var stat='';
  
-    if(item.status_payment=="lunas"){
-            // statusPay= <View style={styles.validContentRed}>
-            //     <Text caption3 semibold>
-            //         Status
-            //     </Text>
-            //     <Text grayColor>
-            //         Lunas
-            //     </Text>
-            // </View>
+    // if(item.status_payment=="lunas"){
+    //         // statusPay= <View style={styles.validContentRed}>
+    //         //     <Text caption3 semibold>
+    //         //         Status
+    //         //     </Text>
+    //         //     <Text grayColor>
+    //         //         Lunas
+    //         //     </Text>
+    //         // </View>
 
-            statusPay='Lunas';
-    }else{
-        if(expiredTime > 0){
-            // statusPay= <View style={styles.validContentGreen}>
-            // <Text caption3 semibold>
-            //     Status
-            // </Text>
-            // <Text caption3 semibold>
-            //     Belum Lunas
-            // </Text>
-            // </View>
-            statusPay='Belum Lunas';
-        }else{
-            // statusPay= <View style={styles.validContentGreen}>
-            // <Text caption3 semibold>
-            //     Status 
-            // </Text>
-            // <Text caption3 semibold>
-            //     Cancel
-            // </Text>
-            // </View>
-            statusPay='Cancel';
-        }
+    //         statusPay='Lunas';
+    // }else{
+    //     if(expiredTime > 0){
+    //         // statusPay= <View style={styles.validContentGreen}>
+    //         // <Text caption3 semibold>
+    //         //     Status
+    //         // </Text>
+    //         // <Text caption3 semibold>
+    //         //     Belum Lunas
+    //         // </Text>
+    //         // </View>
+    //         statusPay='Belum Lunas';
+    //     }else{
+    //         // statusPay= <View style={styles.validContentGreen}>
+    //         // <Text caption3 semibold>
+    //         //     Status 
+    //         // </Text>
+    //         // <Text caption3 semibold>
+    //         //     Cancel
+    //         // </Text>
+    //         // </View>
+    //         statusPay='Cancel';
+    //     }
 
 
-        if(expiredTime > 0){
-        countDown=<View style={styles.validContent}>
-                <Text caption3 semibold>
-                    Tagihan Pembayaran
-                </Text>
-                <CountDown
-                    size={12}
-                    until={expiredTime}
-                    // onFinish={() => alert('Finished')}
-                    style={{float:'left'}}
-                    digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
-                    digitTxtStyle={{color: BaseColor.primaryColor}}
-                    timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
-                    separatorStyle={{color: BaseColor.primaryColor}}
-                    timeToShow={['H', 'M', 'S']}
-                    timeLabels={{m: null, s: null}}
-                    showSeparator
-                />
-        </View>
-        }
-    }
+    //     if(expiredTime > 0){
+    //     countDown=<View style={styles.validContent}>
+    //             {/* <Text caption3 semibold>
+    //                 Tagihan Pembayaran
+    //             </Text> */}
+    //             <CountDown
+    //                 size={12}
+    //                 until={expiredTime}
+    //                 // onFinish={() => alert('Finished')}
+    //                 style={{float:'left'}}
+    //                 digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
+    //                 digitTxtStyle={{color: BaseColor.primaryColor}}
+    //                 timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
+    //                 separatorStyle={{color: BaseColor.primaryColor}}
+    //                 timeToShow={['H', 'M', 'S']}
+    //                 timeLabels={{m: null, s: null}}
+    //                 showSeparator
+    //             />
+    //     </View>
+    //     }
+    // }
+
+
+
+            statusPay=item.order_status_name;
+        
+            if(expiredTime > 0){
+                countDown=<View style={styles.validContent}>
+                        {/* <Text caption3 semibold>
+                            Tagihan Pembayaran
+                        </Text> */}
+                        <CountDown
+                            size={12}
+                            until={expiredTime}
+                            // onFinish={() => alert('Finished')}
+                            style={{float:'left'}}
+                            digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
+                            digitTxtStyle={{color: BaseColor.primaryColor}}
+                            timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
+                            separatorStyle={{color: BaseColor.primaryColor}}
+                            timeToShow={['H', 'M', 'S']}
+                            timeLabels={{m: null, s: null}}
+                            showSeparator
+                        />
+                </View>
+            }
 
     var icon='';
     if(item.product=='Flight'){
@@ -171,8 +199,20 @@ export default class CommentItem extends Component {
 
     }
 
-    var content='';
 
+    var title_product='';
+    if(item.product=='Flight'){
+        title_product=<Text headline semibold style={{fontSize:12}}>
+               {item.detail[0].order_flight_detail[0].airline_name} - {item.detail[0].product_name} 
+            </Text>
+    }else{
+        title_product=<Text headline semibold style={{fontSize:12}}>
+                asd
+            </Text>
+
+    }
+
+    var content='';
     if(loading==true){
     content=<View style={styles.contain}>
                                 <Icon
@@ -210,8 +250,16 @@ export default class CommentItem extends Component {
                                 {icon}
                     <View style={styles.content}>
                         <View style={styles.left}>
-                            <Text headline semibold style={{fontSize:12}}>
-                                {item.detail[0].product_name} 
+                            {title_product}
+                            <Text
+                                note
+                                numberOfLines={2}
+                                grayColor
+                                style={{
+                                    paddingTop: 5
+                                }}
+                            >
+                                No.Tagihan {item.order_code}
                             </Text>
                             <Text
                                 note

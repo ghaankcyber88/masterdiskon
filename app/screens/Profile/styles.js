@@ -99,7 +99,7 @@ export default StyleSheet.create({
         height: 140,
         width: "100%",
         position: "absolute",
-        backgroundColor:BaseColor.primaryColor,
+        //backgroundColor:BaseColor.primaryColor,
     },
 
     contentBoxTop: {

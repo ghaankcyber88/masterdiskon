@@ -20,10 +20,10 @@ import { WebView } from 'react-native-webview';
 
 export default class Pembayaran extends Component {
     constructor(props) {
-        var dataOrderSubmit=props.navigation.state.params.dataOrderSubmit;
+        var id_order=props.navigation.state.params.param;
         // var token=dataOrderSubmit.midtrans.snaptoken;
-        var id_order=dataOrderSubmit.id_order;
-        var url='https://masterdiskon.com/front/user/purchase/detail_app/'+id_order;
+        //var id_order=dataOrderSubmit.id_order;
+        var url='https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app';
         console.log('url',url);
         super(props);
         this.state = {

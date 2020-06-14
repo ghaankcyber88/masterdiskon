@@ -224,7 +224,7 @@ export default class Tour extends Component {
                         }
 
 
-                        <Animated.View
+                        {/* <Animated.View
                             style={[
                                 styles.navbar,
                                 { transform: [{ translateY: navbarTranslate }] }
@@ -236,7 +236,7 @@ export default class Tour extends Component {
                                 onChangeView={this.onChangeView}
                                 onFilter={this.onFilter}
                             />
-                        </Animated.View>
+                        </Animated.View> */}
 
 
 
@@ -486,8 +486,8 @@ export default class Tour extends Component {
                 forceInset={{ top: "always" }}
             >
                 <Header
-                    title="Tourss"
-                    subTitle="24 Dec 2018, 2 Nights, 1 Room"
+                    title="Tours"
+                    //subTitle="24 Dec 2018, 2 Nights, 1 Room"
                     renderLeft={() => {
                         return (
                             <Icon
@@ -497,15 +497,15 @@ export default class Tour extends Component {
                             />
                         );
                     }}
-                    renderRight={() => {
-                        return (
-                            <Icon
-                                name="search"
-                                size={20}
-                                color={BaseColor.primaryColor}
-                            />
-                        );
-                    }}
+                    // renderRight={() => {
+                    //     return (
+                    //         <Icon
+                    //             name="search"
+                    //             size={20}
+                    //             color={BaseColor.primaryColor}
+                    //         />
+                    //     );
+                    // }}
                     onPressLeft={() => {
                         navigation.goBack();
                     }}

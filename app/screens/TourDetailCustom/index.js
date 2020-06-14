@@ -525,8 +525,11 @@ export default class TourDetailCustom extends Component {
                         <Button
                             style={{ height: 46 }}
                             onPress={() =>
+                                {
                                 // navigation.navigate("PreviewBooking")
-                                navigation.navigate("TourSet",{product:this.state.product})
+                                //navigation.navigate("TourSet",{product:this.state.product})
+                                alert('Masih dalam pengembangan')
+                                }
                             }
                         >
                             Book Now

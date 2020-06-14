@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FlatList, RefreshControl,View,TouchableOpacity,AsyncStorage,ActivityIndicator,ScrollView } from "react-native";
+import { FlatList, RefreshControl,View,TouchableOpacity,AsyncStorage,ActivityIndicator,ScrollView,Dimensions } from "react-native";
 import { BaseStyle, BaseColor } from "@config";
 import { Header, SafeAreaView, Icon, BookingHistory,Text,Button,BookingDetailFlight,BookingDetailTrip,PackageItem,RateDetail,CommentItem } from "@components";
 import { TabView, TabBar } from "react-native-tab-view";
@@ -40,11 +40,20 @@ export default class Booking extends Component {
 
             index: 0,
             routes: [
-                { key: "belumLunas", title: "Belum Lunas" },
-                { key: "lunas", title: "Lunas" },
-                // { key: "cancel", title: "Cancel" },
-                // { key: "package", title: "Packages" },
-                // { key: "review", title: "Review" }
+              
+
+
+                { key: "OrderFlight", title: "Flight" },
+                { key: "OrderHotel", title: "Hotel" },
+                { key: "OrderTrip", title: "Trip" },
+                { key: "OrderVoucher", title: "Voucher" },
+                // { key: "OrderBooked", title: "Booked" },
+                // { key: "OrderComplete", title: "Complete" },
+                // { key: "OrderCanceled", title: "Cancel" },
+                // { key: "OrderExpired", title: "Expired" },
+                // { key: "OrderBilled", title: "Billed" },
+
+
                 
             ],
             dataBooking:[]
@@ -67,6 +76,7 @@ export default class Booking extends Component {
             indicatorStyle={styles.indicator}
             style={styles.tabbar}
             tabStyle={styles.tab}
+            labelStyle={styles.noLabel}
             inactiveColor={BaseColor.grayColor}
             activeColor={BaseColor.textPrimaryColor}
             renderLabel={({ route, focused, color }) => (
@@ -80,46 +90,89 @@ export default class Booking extends Component {
     );
 
     // Render correct screen container when tab is activated
+
+    // { key: "OrderNew", title: "New Order" },
+    // { key: "OrderProcess", title: "Processed" },
+    // { key: "OrderPaid", title: "Paid" },
+    // { key: "OrderBooked", title: "Booked" },
+    // { key: "OrderComplete", title: "Complete" },
+    // { key: "OrderCanceled", title: "Cancel" },
+    // { key: "OrderExpired", title: "Expired" },
+    // { key: "OrderBilled", title: "Billed" },
+
+
     _renderScene = ({ route, jumpTo }) => {
         switch (route.key) {
-            case "belumLunas":
+            case "OrderFlight":
                 return (
-                    <BelumLunasTab
-                        jumpTo={jumpTo}
-                        navigation={this.props.navigation}
-                        data={this.state.dataBooking}
-                    />
-                );
-            case "lunas":
-                return (
-                    <LunasTab
-                        jumpTo={jumpTo}
-                        navigation={this.props.navigation}
-                        data={'yy'}
-                    />
-                );
-            case "cancel":
-                return (
-                    <CancelTab
-                        jumpTo={jumpTo}
-                        navigation={this.props.navigation}
-                        data={'zz'}
-                    />
-                );
-            case "package":
-                return (
-                    <PackageTab
+                    <OrderTab
+                        status={'new'}
+                        product={'Flight'}
                         jumpTo={jumpTo}
                         navigation={this.props.navigation}
                     />
                 );
-            case "review":
-                return (
-                    <ReviewTab
+            case "OrderHotel":
+                    return (
+                        <OrderTab
+                        status={'process'}
+                        product={'Hotel'}
                         jumpTo={jumpTo}
                         navigation={this.props.navigation}
-                    />
-                );
+                        />
+            );
+            case "OrderTrip":
+                    return (
+                        <OrderTab
+                        status={'paid'}
+                        product={'Trip'}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                        />
+            );
+            // case "OrderBooked":
+            //         return (
+            //             <OrderTab
+            //             status={'booked'}
+            //             jumpTo={jumpTo}
+            //             navigation={this.props.navigation}
+            //             />
+            // );
+            // case "OrderComplete":
+            //     return (
+            //         <OrderTab
+            //         status={'complete'}
+            //         jumpTo={jumpTo}
+            //         navigation={this.props.navigation}
+            //         />
+            // );
+            // case "OrderCanceled":
+            //     return (
+            //         <OrderTab
+            //         status={'cancel'}
+            //         jumpTo={jumpTo}
+            //         navigation={this.props.navigation}
+            //         />
+            // );
+            // case "OrderExpired":
+            //     return (
+            //         <OrderTab
+            //         status={'expired'}
+            //         jumpTo={jumpTo}
+            //         navigation={this.props.navigation}
+            //         />
+            // );
+            // case "OrderBilled":
+            //     return (
+            //         <OrderTab
+            //         status={'billed'}
+            //         jumpTo={jumpTo}
+            //         navigation={this.props.navigation}
+            //         />
+            // );
+          
+          
+           
          
         }
     };
@@ -136,24 +189,6 @@ export default class Booking extends Component {
                 this.setState({userSession:userSession});
                 this.setState({login:true});
                 this.setState({ loading_spinner: false });
-
-                // var id_user=userSession.id_user;
-                //     const data={"id":id_user,"id_order":""}
-                //     const param={"param":data}
-                //     console.log('-------------param booking-------------');
-                //     console.log(JSON.stringify(param));
-                //     PostData('get_booking_history',param)
-                //         .then((result) => {
-                //             console.log("---------------get_booking_history ------------");
-                //             console.log(JSON.stringify(result));
-                //             this.setState({ loading_spinner: false });
-                //             this.setState({dataBooking:result});
-                //             AsyncStorage.setItem('dataBooking', JSON.stringify(result));    
-                //         },
-                //         (error) => {
-                //             this.setState({ error });
-                //         }
-                //     ); 
 
              }else{
                 this.setState({login:false});
@@ -216,26 +251,14 @@ export default class Booking extends Component {
                                 }}
                         /> 
                         :
-                // <FlatList
-                //         refreshControl={
-                //             <RefreshControl
-                //                 colors={[BaseColor.primaryColor]}
-                //                 tintColor={BaseColor.primaryColor}
-                //                 refreshing={refreshing}
-                //                 onRefresh={() => {}}
-                //             />
-                //         }
-                //         data={this.state.dataBooking}
-                //         keyExtractor={(item, index) => item.id}
-                //         renderItem={({ item }) => this.renderItem(item)}
-                //     />
-                     
                     <TabView
                     lazy
                     navigationState={this.state}
                     renderScene={this._renderScene}
                     renderTabBar={this._renderTabBar}
                     onIndexChange={this._handleIndexChange}
+                    onIndexChange={index => this.setState({index})}
+                    initialLayout={{height: 100, width: Dimensions.get('window').width}}
                 />
                 
                 :
@@ -297,17 +320,57 @@ export default class Booking extends Component {
 
 
 
-class BelumLunasTab extends Component {
+class OrderTab extends Component {
     constructor(props) {
         super(props);
+        var product=this.props.product;
+        //alert(product);
         this.state = {
             dataBooking: [],
-            DataLoading:DataLoading
+            button:[
+                {
+                    title: "New Order",
+                    status:"new"
+                },
+                {
+                    title: "Processed",
+                    status:"process"
+                },
+                {
+                    title: "Paid",
+                    status:"paid"
+                },
+                {
+                    title: "Booked",
+                    status:"booked"
+                },
+                {
+                    title: "Complete",
+                    status:"complete"
+                },
+                {
+                    title: "Canceled",
+                    status:"cancel"
+                },
+                {
+                    title: "Expired",
+                    status: "expired",
+                },
+                {
+                    title: "Billed",
+                    status: "billed",
+                },
+               
+            ],
+            status:'new',
+            product:product,
+            colorButtonActive:BaseColor.primaryColor,
+            statusActive:'new'
         };
     }
 
+    fetch(){
 
-    componentDidMount() {
         this.setState({ loading_spinner: true }, () => {
 
             AsyncStorage.getItem('userSession', (error, result) => {
@@ -319,10 +382,12 @@ class BelumLunasTab extends Component {
                 this.setState({login:true});
                 
                 var id_user=userSession.id_user;
-                    const data={"id":id_user,"id_order":"","status_payment":"belum_lunas"}
+                    const data={"id":id_user,"id_order":"","order_status":this.state.status,"product":this.state.product}
                     const param={"param":data}
                     console.log('-------------param booking-------------');
                     console.log(JSON.stringify(param));
+
+
                     PostData('get_booking_history',param)
                         .then((result) => {
                             console.log("---------------get_booking_history ------------");
@@ -341,13 +406,51 @@ class BelumLunasTab extends Component {
             
             });
         });
+
     }
 
+    fetchByStatus(status){
+       this.setState({status:status});
+              setTimeout(() => {
+                                  this.fetch();
+                                }, 500);
+
+
+    }
+
+
+    componentDidMount() {
+        this.fetch();
+    }
+
+   
+
     render() {
-        let { reviewList,loading_spinner } = this.state;
         return (
             <View>
-          
+
+                                <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={this.state.button}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item, index }) => (
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                this.fetchByStatus(item.status);
+                                            }}
+                                        >
+                                            <View style={{padding:10,backgroundColor:BaseColor.secondColor,margin:5,borderRadius:10}}>
+                                                <Text>
+                                                    {item.title}
+                                                </Text>
+                                            </View>
+                                         
+                                        </TouchableOpacity>
+                                    )}
+                                />
+
+
             <FlatList
                 refreshControl={
                     <RefreshControl
@@ -365,9 +468,9 @@ class BelumLunasTab extends Component {
                         item={item}
                         loading={this.state.loading_spinner}
                         onPress={() => {
-                            this.props.navigation.navigate("PreviewBooking",{item:item});
+                            //this.props.navigation.navigate("PreviewBooking",{item:item});
+                            this.props.navigation.navigate("Pembayaran",{param:item.id_order});
                         }}
-                        status={'belum_lunas'}
                     />
                 )}
             />
@@ -378,343 +481,5 @@ class BelumLunasTab extends Component {
 }
 
 
-class LunasTab extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            dataBooking: [],
-            DataLoading:DataLoading
-        };
-    }
 
 
-    componentDidMount() {
-        this.setState({ loading_spinner: true }, () => {
-
-            AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
-                this.setState({userSession:userSession});
-                this.setState({login:true});
-                
-                var id_user=userSession.id_user;
-                const data={"id":id_user,"id_order":"","status_payment":"lunas"}
-                    const param={"param":data}
-                    console.log('-------------param booking-------------');
-                    console.log(JSON.stringify(param));
-                    PostData('get_booking_history',param)
-                        .then((result) => {
-                            console.log("---------------get_booking_history ------------");
-                            console.log(JSON.stringify(result));
-                            this.setState({ loading_spinner: false });
-                            this.setState({dataBooking:result});
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    ); 
-
-             }else{
-                this.setState({login:false});
-             }
-            
-            });
-        });
-    }
-
-
-
-
-
-    render() {
-        let { reviewList,loading_spinner } = this.state;
-        var content=<View></View>
-        if(this.state.dataBooking != 0){
-
-            content=<FlatList
-                refreshControl={
-                    <RefreshControl
-                        colors={[BaseColor.primaryColor]}
-                        tintColor={BaseColor.primaryColor}
-                        refreshing={this.state.refreshing}
-                        onRefresh={() => {}}
-                    />
-                }
-                data={this.state.dataBooking}
-                keyExtractor={(item, index) => item.id}
-                renderItem={({ item }) => (
-                    // <CommentItem
-                    //     style={{ marginTop: 10 }}
-                    //     item={item}
-                    //     loading={this.state.loading_spinner}
-                    //     onPress={() => {
-                    //         this.props.navigation.navigate("PreviewBooking",{item:item});
-                    //     }}
-                    //     status={'lunas'}
-                    // />
-
-                    <CommentItem
-                        style={{ marginTop: 10 }}
-                        item={item}
-                        loading={this.state.loading_spinner}
-                        onPress={() => {
-                            this.props.navigation.navigate("PreviewBooking",{item:item});
-                        }}
-                        status={'lunas'}
-                    />
-                )}
-            />
-        }else{
-
-            content=<View
-                    style={{flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100%'}}
-                    >       
-                    <Image
-                        source={Images.empty}
-                        style={{ width: "60%", height: "60%" }}
-                        resizeMode="cover"
-                    />
-                    <View><Text>Ooops, Data Tidak Tersedia</Text></View>
-                    </View>
-        }
-
-        return (
-            <View>
-            {
-                loading_spinner ? 
-                <Placeholder
-                    Animation={Fade}
-                    style={{ padding: 20 }}
-                >
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                </Placeholder>
-            :
-            content
-            
-                    }
-            </View>
-        );
-    }
-}
-
-
-class CancelTab extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            dataBooking: [],
-            DataLoading:DataLoading
-        };
-    }
-
-
-    componentDidMount() {
-        this.setState({ loading_spinner: true }, () => {
-
-            AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
-                this.setState({userSession:userSession});
-                this.setState({login:true});
-                
-                var id_user=userSession.id_user;
-                    const data={"id":id_user,"id_order":"","status_payment":"lunas"}
-                    const param={"param":data}
-                    console.log('-------------param booking-------------');
-                    console.log(JSON.stringify(param));
-                    PostData('get_booking_history',param)
-                        .then((result) => {
-                            console.log("---------------get_booking_history ------------");
-                            console.log(JSON.stringify(result));
-                            this.setState({ loading_spinner: false });
-                            this.setState({dataBooking:result});
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    ); 
-
-             }else{
-                this.setState({login:false});
-             }
-            
-            });
-        });
-    }
-
-    render() {
-        let { reviewList,loading_spinner } = this.state;
-        return (
-            <View>
-            {
-                loading_spinner ? 
-                <Placeholder
-                    Animation={Fade}
-                    style={{ padding: 20 }}
-                >
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                    <PlaceholderLine width={100} height={100} style={{marginTop: 10,marginBottom:0,borderRadius: 5}} />
-                </Placeholder>
-            :
-
-            <FlatList
-                style={{ padding: 20 }}
-                refreshControl={
-                    <RefreshControl
-                        colors={[BaseColor.primaryColor]}
-                        tintColor={BaseColor.primaryColor}
-                        refreshing={this.state.refreshing}
-                        onRefresh={() => {}}
-                    />
-                }
-                data={this.state.dataBooking}
-                keyExtractor={(item, index) => item.id}
-                renderItem={({ item }) => (
-                    <CommentItem
-                        style={{ marginTop: 10 }}
-                        item={item}
-                        onPress={() => {
-                            this.props.navigation.navigate("PreviewBooking",{id_order:item.id_order});
-                        }}
-                        status={'cancel'}
-                    />
-                )}
-            />
-                    }
-            </View>
-        );
-    }
-}
-
-
-
-
-
-
-/**
- * @description Show when tab Package activated
- * @author Passion UI <passionui.com>
- * @date 2019-08-03
- * @class PreviewTab
- * @extends {Component}
- */
-class PackageTab extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            packageItem: PackageData[0],
-            packageItem2: PackageData[2]
-        };
-    }
-
-    render() {
-        const { packageItem, packageItem2 } = this.state;
-
-        return (
-            <ScrollView>
-                <View style={{ paddingHorizontal: 20 }}>
-                    <Text body2 style={{ marginTop: 20 }}>
-                        Europe welcomes millions of travelers every year. With
-                        Expat Explore you can see all that Europe has to offer.
-                        Take the time to explore small villages and big cities.
-                        There's lots to choose from in over 50 independent
-                        states. Our Europe multi-country tours are some of the
-                        best packages. We offer you great prices, quality and
-                        convenience. Get ready for the best European vacation!
-                        Europe has a list of possible adventures for everyone.{" "}
-                    </Text>
-                    <PackageItem
-                        packageName={packageItem.packageName}
-                        price={packageItem.price}
-                        type={packageItem.type}
-                        description={packageItem.description}
-                        services={packageItem.services}
-                        onPressIcon={() => {
-                            this.props.navigation.navigate("PricingTable");
-                        }}
-                        style={{ marginBottom: 10, marginTop: 20 }}
-                    />
-                    <PackageItem
-                        detail
-                        packageName={packageItem2.packageName}
-                        price={packageItem2.price}
-                        type={packageItem2.type}
-                        description={packageItem2.description}
-                        services={packageItem2.services}
-                    />
-                </View>
-            </ScrollView>
-        );
-    }
-}
-
-/**
- * @description Show when tab Review activated
- * @author Passion UI <passionui.com>
- * @date 2019-08-03
- * @class PreviewTab
- * @extends {Component}
- */
-class ReviewTab extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            rateDetail: {
-                point: 4.7,
-                maxPoint: 5,
-                totalRating: 25,
-                data: ["80%", "10%", "10%", "0%", "0%"]
-            },
-            reviewList: ReviewData
-        };
-    }
-    render() {
-        let { rateDetail, reviewList } = this.state;
-        return (
-            <FlatList
-                style={{ padding: 20 }}
-                refreshControl={
-                    <RefreshControl
-                        colors={[BaseColor.primaryColor]}
-                        tintColor={BaseColor.primaryColor}
-                        refreshing={this.state.refreshing}
-                        onRefresh={() => {}}
-                    />
-                }
-                data={reviewList}
-                keyExtractor={(item, index) => item.id}
-                ListHeaderComponent={() => (
-                    <RateDetail
-                        point={rateDetail.point}
-                        maxPoint={rateDetail.maxPoint}
-                        totalRating={rateDetail.totalRating}
-                        data={rateDetail.data}
-                    />
-                )}
-                renderItem={({ item }) => (
-                    <CommentItem
-                        style={{ marginTop: 10 }}
-                        image={item.source}
-                        name={item.name}
-                        rate={item.rate}
-                        date={item.date}
-                        title={item.title}
-                        comment={item.comment}
-                    />
-                )}
-            />
-        );
-    }
-}

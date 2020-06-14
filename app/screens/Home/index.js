@@ -269,6 +269,7 @@ export default class Home extends Component {
         this.setState({ loading_dunia: true }, () => {
             const data={"id_trip":"","id_country":"","harga_min":"","harga_max":""}
             const param={"param":data}
+            console.log('getTripDunia',JSON.stringify(param));
             PostData('trip',param)
                  .then((result) => {
                     this.setState({loading_dunia: false });
@@ -446,15 +447,19 @@ export default class Home extends Component {
         this.getToken();
         // this.getPayment();
         
-        // this.getFeaturedDestination();
-        // this.getPopularDestination();
-        // this.getTripDomestic();
-        // this.getTripDunia();
-        // this.getBlog();
-        // this.getAssets();
-        // this.getPromo();
-        // this.getMusium();
-        // this.getculture();
+        //this.getFeaturedDestination();
+        //this.getTripDunia();
+
+        
+        
+        
+        this.getPopularDestination();
+        this.getTripDomestic();
+        this.getBlog();
+        this.getAssets();
+        this.getPromo();
+        this.getMusium();
+        this.getculture();
      }
 
      
@@ -622,7 +627,7 @@ export default class Home extends Component {
         const { navigation } = this.props;
         const { promotion, tours, hotels, relate, heightHeader} = this.state;
         const heightImageBanner = Utils.scaleWithPixel(140);
-        const marginTopBanner = heightImageBanner - heightHeader+150;
+        const marginTopBanner = heightImageBanner - heightHeader-50;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
 
@@ -704,7 +709,37 @@ export default class Home extends Component {
                         }
                         scrollEventThrottle={8}
                     >
-                    
+                        
+                        <View style={{}}>
+                            
+                            <View>
+                                <View style={styles.contentHiking2}>
+                                    <Text  whiteColor style={ {
+                                            fontSize: 30,
+                                            fontWeight: "700",
+                                            fontFamily: "Lato"
+                                    }}>
+                                    Panduanmu 
+                                    </Text>
+                                    <Text whiteColor style={ {
+                                            fontSize: 50,
+                                            fontWeight: "700",
+                                            fontFamily: "Lato",
+                                            elevation: 5
+                                    }}>
+                                    Jelajahi Dunia
+                                    </Text>
+                                    <Text whiteColor style={ {
+                                            fontSize: 15,
+                                            fontWeight: "300",
+                                            fontFamily: "Lato"
+                                    }}>
+                                    Gali lebih dalam begitu banyak ide, panduan, dan cerita unik yang dapat menginspirasi perjalanan anda selanjutnya
+                                    </Text>
+                                </View>
+                               
+                            </View>
+                       </View>
                         <View style={{ marginTop: marginTopBanner,backgroundColor:'#fff',borderRadius:30,elevation: 5}}>
                             
                             <View>
@@ -1170,7 +1205,7 @@ export default class Home extends Component {
                                                 index % 2 ? { marginLeft: 15 } : {}
                                             }
                                             onPress={() =>
-                                                navigation.navigate("PostDetail",{item:item})
+                                                navigation.navigate("WebViewPage",{url:'https://masterdiskon.com/blog/detail/'+item.slug_blog_category+'/'+item.title_slug+'?access=app',title:item.title})
                                             }
                                             url={this.state.DataMasterDiskon.site+'assets/upload/blog/post/'}
                                             loading={this.state.loading_blog}

@@ -187,6 +187,13 @@ export default class Summary extends Component {
             colorButton:'grey',
             handlerButton:true,
             reminders: false,
+            remindersInsurance:false,
+            remindersSaveContact:false,
+            saveContact:false,
+
+
+            otherUser:false,
+            remindersOtherUser:false
 
 
         };
@@ -679,7 +686,14 @@ export default class Summary extends Component {
                                     setTimeout(() => {
                                         AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
                                         AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
-                                        this.props.navigation.navigate("Cart",{dataCart:dataCart}); 
+                                        this.props.navigation.navigate("Cart",
+                                        {
+                                            dataCart:dataCart,
+                                            listdata_customer:this.state.listdata_customer,
+                                            listdata_participant:this.state.listdata_participant,
+                                            saveContact:this.state.saveContact,
+                                            otherUser:this.state.otherUser
+                                        }); 
                                         this.setState({ loading: false });
                                     }, 500);
 
@@ -872,7 +886,7 @@ export default class Summary extends Component {
 
         if(jml_empty_participant == 0 && jml_empty_customer == 0 ){
             console.log('perfect');
-            this.setState({colorButton:'red'});
+            this.setState({colorButton:BaseColor.primaryColor});
             this.setState({handlerButton:false});
         }else{
             console.log('not yet');
@@ -1083,7 +1097,7 @@ export default class Summary extends Component {
                 obj['nationality_id'] = userSession.nationality_id;
                 obj['nationality_phone_code'] = userSession.nationality_phone_code;
 
-                obj['passport_country_id'] = userSession.passport_country_id;
+                obj['passport_country_id'] = def_passport_country_id;
 
                 // obj['passport_country_phone_code'] = "";
 
@@ -1152,7 +1166,7 @@ export default class Summary extends Component {
     toggleSwitch = value => {
         this.setState({ reminders: value });
         var customer=this.state.listdata_customer[0];
-        console.log(JSON.stringify(customer));
+        console.log('datacustomerswtich',JSON.stringify(customer));
 
         if(value==true){
         var key=1;
@@ -1252,6 +1266,25 @@ export default class Summary extends Component {
             this.setState({insurance_included:false});
         }
     };
+
+    toggleSwitchSaveContact = value => {
+        this.setState({ remindersSaveContact: value });
+        if(value==true){
+            this.setState({saveContact:true});
+        }else{
+            this.setState({saveContact:false});
+        }
+    };
+
+    toggleSwitchOtherUser = value => {
+        this.setState({ remindersOtherUser: value });
+        if(value==true){
+            this.setState({otherUser:true});
+        }else{
+            this.setState({otherUser:false});
+        }
+    };
+
 
     render() {
         const { navigation } = this.props;
@@ -1547,25 +1580,25 @@ export default class Summary extends Component {
                             </Text>
                     </View>
                 </View>
-                <TouchableOpacity
+                <View
                     style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}
-                    onPress={() =>
-                        {navigation.navigate("ProfileSmart",
-                         {
-                            sourcePage:'summary',
-                            item:item,
-                            type:'guest',
-                            updateParticipant: this.updateParticipant,
-                         }
-                        );}
-                    }
+                    // onPress={() =>
+                    //     {navigation.navigate("ProfileSmart",
+                    //      {
+                    //         sourcePage:'summary',
+                    //         item:item,
+                    //         type:'guest',
+                    //         updateParticipant: this.updateParticipant,
+                    //      }
+                    //     );}
+                    // }
                 >
                             <Switch name="angle-right" 
                                 size={18} 
                                 onValueChange={this.toggleSwitchInsurance}
                                 value={this.state.remindersInsurance}
                             />
-                </TouchableOpacity>
+                </View>
             </View>
 
 
@@ -1717,7 +1750,38 @@ export default class Summary extends Component {
                             Detail Pemesan
                         </Text>
                         {contentFormCustomer}
+                        <View style={{flexDirection:'row',marginTop:-10}} >
+                            <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                                    <View>
+                                        <Text footnote grayColor numberOfLines={1}>
+                                            Order Sebagai Pengguna Lain
+                                        </Text>
+                                    
+                                    </View>
+                            </View>
+                            <View
+                                style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}
+                                // onPress={() =>
+                                //     {navigation.navigate("ProfileSmart",
+                                //     {
+                                //         sourcePage:'summary',
+                                //         item:item,
+                                //         type:'guest',
+                                //         updateParticipant: this.updateParticipant,
+                                //     }
+                                //     );}
+                                // }
+                            >
+                                        <Switch name="angle-right" 
+                                            size={18} 
+                                            onValueChange={this.toggleSwitchOtherUser}
+                                            value={this.state.remindersOtherUser}
+                                        />
+                            </View>
+                        </View>
                         <View style={styles.line} />
+                       
+
                         {/* --------------------------------- */}
 
                         <Text title3 style={{ paddingVertical: 10,fontSize: 12 }}>

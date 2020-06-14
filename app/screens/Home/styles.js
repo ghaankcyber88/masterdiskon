@@ -51,7 +51,7 @@ export default StyleSheet.create({
         marginBottom: 10
     },
     contentHiking2: {
-        marginTop: 20,
+        marginTop: 40,
         marginLeft: 20,
         // marginBottom: 10
     },

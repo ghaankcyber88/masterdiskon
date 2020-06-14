@@ -66,7 +66,7 @@ import BookingDetail from "@screens/BookingDetail";
 import PostDetail from "@screens/PostDetail";
 import Musium from "@screens/Musium";
 import Pembayaran from "@screens/Pembayaran";
-// import WebViewPage from "@screens/WebViewPage";
+import WebViewPage from "@screens/WebViewPage";
 import TourDetail from "@screens/TourDetail";
 import TourDetailCustom from "@screens/TourDetailCustom";
 import CarDetail from "@screens/CarDetail";
@@ -167,22 +167,14 @@ const routeConfigs = {
                         solid
                         color={tintColor}
                         name="envelope"
-                        size={20}
+                        size={25}
                         solid
                     />
                 );
             }
         })
     },
-    Post: {
-        screen: Booking,
-        navigationOptions: ({ navigation }) => ({
-            title: "News",
-            tabBarIcon: ({ focused, tintColor }) => {
-                return <Icon color={tintColor} name="copy" size={20} solid />;
-            }
-        })
-    },
+    
     Profile: {
         screen: Profile,
         navigationOptions: ({ navigation }) => ({
@@ -321,9 +313,9 @@ const StackNavigator = createStackNavigator(
         Pembayaran: {
             screen: Pembayaran
         },
-        // WebViewPage: {
-        //     screen: WebViewPage
-        // },
+        WebViewPage: {
+            screen: WebViewPage
+        },
         TourDetail: {
             screen: TourDetail
         },

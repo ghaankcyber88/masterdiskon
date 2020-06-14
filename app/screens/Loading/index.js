@@ -44,12 +44,12 @@ class Loading extends Component {
             switch (status) {
                 case true:
                     setTimeout(() => {
-                        navigation.navigate("Main");
+                        navigation.navigate("Home");
                     }, 500);
                     break;
                 case false:
                     setTimeout(() => {
-                        navigation.navigate("Walkthrough");
+                        navigation.navigate("Home");
                     }, 500);
                     break;
                 default:

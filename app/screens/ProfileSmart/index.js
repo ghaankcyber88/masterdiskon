@@ -224,70 +224,70 @@ class ProfileSmart extends Component {
   }
 
 
-  saveParticipant(key,fullname,
-    firstname,
-    lastname,
-    birthday,
-    nationality,
-    passport_number,
-    passport_country,
-    passport_expire,
-    phone,
-    title,
-    email,
-    nationality_id,
-      nationality_phone_code,
-      passport_country_id){
-    AsyncStorage.getItem('userSession', (error, result) => {
-        if (result) {
-            let userSession = JSON.parse(result);
-            console.log("---------------data session user  ------------");
-            console.log(JSON.stringify(userSession));
-            this.setState({userSession:userSession});
-            this.setState({login:true});
+    saveParticipant(
+        key,
+        fullname,
+        firstname,
+        lastname,
+        birthday,
+        nationality,
+        passport_number,
+        passport_country,
+        passport_expire,
+        phone,
+        title,
+        email,
+        nationality_id,
+        nationality_phone_code,
+        passport_country_id){
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {
+                let userSession = JSON.parse(result);
+                console.log("---------------data session user  ------------");
+                console.log(JSON.stringify(userSession));
+                this.setState({userSession:userSession});
+                this.setState({login:true});
 
 
-            var id_user=userSession.id_user;
-            const data={  
-                "id": key,
-                "id_user": id_user,
-                "fullname": fullname,
-                "firstname": firstname,
-                "lastname": lastname,
-                "birthday": birthday,
-                "nationality": nationality,
-                "passport_number": passport_number,
-                "passport_country": passport_country,
-                "passport_expire": passport_expire,
-                "phone": phone,
-                "title": title,
-                "email": email,
-                "nationality_id": nationality_id,
-                "nationality_phone_code": nationality_phone_code,
-                "passport_country_id": passport_country_id,
-            }
-            const param={"param":data}
-
-
-
-            console.log("------------------data param submit participant--------------");
-            console.log(JSON.stringify(param));
-
-            PostData('update_participant',param)
-                .then((result) => {
-                    console.log("------------------result update participant--------------");
-                    console.log(JSON.stringify(result));
-                    //this.redirect('ProfileSmart');
-                },
-                (error) => {
-                    this.setState({ error });
+                var id_user=userSession.id_user;
+                const data={  
+                    "id": key,
+                    "id_user": id_user,
+                    "fullname": fullname,
+                    "firstname": firstname,
+                    "lastname": lastname,
+                    "birthday": birthday,
+                    "nationality": nationality,
+                    "passport_number": passport_number,
+                    "passport_country": passport_country,
+                    "passport_expire": passport_expire,
+                    "phone": phone,
+                    "title": title,
+                    "email": email,
+                    "nationality_id": nationality_id,
+                    "nationality_phone_code": nationality_phone_code,
+                    "passport_country_id": passport_country_id,
+                    "type":this.convertOld(birthday)
                 }
-            );
+                const param={"param":data}
+                console.log("------------------data param submit participant--------------");
+                console.log(JSON.stringify(param));
 
-            }
-        });    
+                PostData('update_participant',param)
+                    .then((result) => {
+                        console.log("------------------result update participant--------------");
+                        console.log(JSON.stringify(result));
+                        //this.redirect('ProfileSmart');
+                    },
+                    (error) => {
+                        this.setState({ error });
+                    }
+                );
 
-}
+                }
+            });    
+
+    }
 
     componentDidMount() {
 
@@ -568,14 +568,15 @@ class ProfileSmart extends Component {
         var age = parseInt(moment().diff(dateString,'years',true));
         var old="";
         if(age < 2){
-            old="Bayi";
+            old="INF";
         }else if(age>=2 && age<=11){
-            old="Anak";
+            old="CHD";
         }else{
-            old="Dewasa";
+            old="ADT";
         }
         return old;
     }
+    
     
 
     render() {
@@ -619,24 +620,24 @@ class ProfileSmart extends Component {
                             />
                         );
                     }}
-                    renderRight={() => {
-                        return (
-                            <Icon
-                                name="bell"
-                                size={24}
-                                color={BaseColor.primaryColor}
-                            />
-                        );
-                    }}
-                    renderRightSecond={() => {
-                        return (
-                            <Icon
-                                name="envelope"
-                                size={24}
-                                color={BaseColor.primaryColor}
-                            />
-                        );
-                    }}
+                    // renderRight={() => {
+                    //     return (
+                    //         <Icon
+                    //             name="bell"
+                    //             size={24}
+                    //             color={BaseColor.primaryColor}
+                    //         />
+                    //     );
+                    // }}
+                    // renderRightSecond={() => {
+                    //     return (
+                    //         <Icon
+                    //             name="envelope"
+                    //             size={24}
+                    //             color={BaseColor.primaryColor}
+                    //         />
+                    //     );
+                    // }}
                     onPressLeft={() => {
                         navigation.goBack();
                     }}

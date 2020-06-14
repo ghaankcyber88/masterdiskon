@@ -14,10 +14,14 @@ export default StyleSheet.create({
 
     tabbar: {
         backgroundColor: "white",
-        height: 40
+        height: 40,
+        // paddingHorizontal: '15%',
+        // alignItems: "center",
+        // justifyContent: 'center',
+        //textAlign: 'center'
     },
     tab: {
-        width: 170
+        width: 100
     },
     indicator: {
         backgroundColor: BaseColor.primaryColor,
@@ -26,17 +30,21 @@ export default StyleSheet.create({
     label: {
         fontWeight: "400"
     },
-    containProfileItem: {
-        // paddingLeft: 20,
-        // paddingRight: 20
+    // containProfileItem: {
+    //     paddingLeft: 20,
+    //     paddingRight: 20
+    // },
+    // profileItem: {
+    //     flexDirection: "row",
+    //     justifyContent: "space-between",
+    //     alignItems: "center",
+    //     borderBottomColor: BaseColor.textSecondaryColor,
+    //     borderBottomWidth: 1,
+    //     paddingBottom: 20,
+    //     paddingTop: 20
+    // },
+    noLabel: {
+        display: 'none',
+        height: 0
     },
-    profileItem: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderBottomColor: BaseColor.textSecondaryColor,
-        borderBottomWidth: 1,
-        paddingBottom: 20,
-        paddingTop: 20
-    }
 });

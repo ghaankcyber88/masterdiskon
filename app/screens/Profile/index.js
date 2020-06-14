@@ -200,24 +200,24 @@ class Profile extends Component {
                             />
                         );
                     }}
-                    renderRight={() => {
-                        return (
-                            <Icon
-                                name="bell"
-                                size={24}
-                                color={BaseColor.primaryColor}
-                            />
-                        );
-                    }}
-                    renderRightSecond={() => {
-                        return (
-                            <Icon
-                                name="envelope"
-                                size={24}
-                                color={BaseColor.primaryColor}
-                            />
-                        );
-                    }}
+                    // renderRight={() => {
+                    //     return (
+                    //         <Icon
+                    //             name="bell"
+                    //             size={24}
+                    //             color={BaseColor.primaryColor}
+                    //         />
+                    //     );
+                    // }}
+                    // renderRightSecond={() => {
+                    //     return (
+                    //         <Icon
+                    //             name="envelope"
+                    //             size={24}
+                    //             color={BaseColor.primaryColor}
+                    //         />
+                    //     );
+                    // }}
                     onPressLeft={() => {
                         navigation.goBack();
                     }}
@@ -279,18 +279,18 @@ class Profile extends Component {
                                         // styles.contentBoxTop,
                                     ]}
                                 >   
-                                    <Icon
+                                    {/* <Icon
                                                 name="pencil-alt"
                                                 size={18}
                                                 color={BaseColor.primaryColor}
                                                 style={{position: 'absolute', right: 0}}
-                                    />
+                                    /> */}
                                     <Text
                                         title2
                                         semibold
                                         style={{ marginBottom: 7 }}
                                     >
-                                         Hi, {this.state.userSession.first} {this.state.userSession.last} 
+                                         Hi, {this.state.userSession.firstname} {this.state.userSession.lastname} 
                                     </Text>
                                   
                                     <Text
@@ -316,7 +316,7 @@ class Profile extends Component {
                         <View style={{ width: "100%" }}>
 
                             <View style={{paddingBottom:50}}>
-                                <TouchableOpacity
+                                {/* <TouchableOpacity
                                     onPress={() => {
                                         navigation.navigate("ProfileSmart",{sourcePage:'profile'});
                                     }}
@@ -355,7 +355,7 @@ class Profile extends Component {
                                         </View>
                                     </View>
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
 
                             <TouchableOpacity
@@ -374,7 +374,7 @@ class Profile extends Component {
                                     <View style={styles.content}>
                                         <View style={styles.left}>
                                             <Text headline semibold>
-                                               Smart Profile
+                                               QuickPick
                                             </Text>
                                             <Text
                                                 note
@@ -402,7 +402,7 @@ class Profile extends Component {
 
                         </View>
                             
-                        <View style={{paddingBottom:50}}>
+                        {/* <View style={{paddingBottom:50}}>
                             <View><Text style={{ marginLeft: 10 }}>Pengaturan</Text></View>
                             <TouchableOpacity
                                 style={styles.profileItem}
@@ -435,9 +435,9 @@ class Profile extends Component {
 
 
                                         
-                            </View>
+                        </View> */}
 
-                             <View style={{paddingBottom:50}}>
+                             {/* <View style={{paddingBottom:50}}>
                                 <View><Text style={{ marginLeft: 10 }}>Lainnya</Text></View>
                                         <TouchableOpacity
                                             style={styles.profileItem}
@@ -500,10 +500,10 @@ class Profile extends Component {
                                                     {BaseSetting.appVersion}
                                                 </Text>
                                             </View>
-                            </View>
+                            </View> */}
                         </View>
                     </View>
-                    <View style={{ padding: 20 }}>
+                    <View style={{ paddingLeft: 20,paddingRight:20 }}>
                     <Button
                         full
                         loading={loading}
