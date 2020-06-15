@@ -24,11 +24,13 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import styles from "./styles";
 // Load sample data
 import { HelpBlockData } from "@data";
+import {PostDataProduct} from '../../services/PostDataProduct';
 
 export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
-
+        var param=this.props.navigation.state.params.param;
+        var slug=this.props.navigation.state.params.slug;
         // Temp data define
         this.state = {
             heightHeader: Utils.heightHeader(),
@@ -94,12 +96,35 @@ export default class HotelDetail extends Component {
                     image: Images.trip5
                 }
             ],
-            helpBlock: HelpBlockData
+            helpBlock: HelpBlockData,
+            
+            param:param,
+            slug:slug
         };
         this._deltaY = new Animated.Value(0);
     }
+    getHotel(){
+        var param=this.state.param;
+        var slug=this.state.slug;
+        this.setState({ loading_spinner: true }, () => {
+            PostDataProduct('hotel/detail_app/'+slug+'?'+param)
+            .then((result) => {
+                    this.setState({ loading_spinner: false });
+                    //var hotels=result.result;
+                    console.log('hotellsx',JSON.stringify(result));
+                    //this.setState({hotels:hotels});
+                },
+                (error) => {
+                    this.setState({ error });
+                }
+            );
+            
 
+
+        });
+    }
     componentDidMount() {
+        this.getHotel();
         InteractionManager.runAfterInteractions(() => {
             this.setState({ renderMapView: true });
         });

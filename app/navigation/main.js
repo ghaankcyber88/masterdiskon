@@ -39,6 +39,7 @@ import Tour from "@screens/Tour";
 import Car from "@screens/Car";
 import OverViewCar from "@screens/OverViewCar";
 import Hotel from "@screens/Hotel";
+import HotelSearch from "@screens/HotelSearch";
 import Review from "@screens/Review";
 import Feedback from "@screens/Feedback";
 import Messages from "@screens/Messages";
@@ -75,6 +76,7 @@ import OurService from "@screens/OurService";
 import FlightSearch from "@screens/FlightSearch";
 import TourSet from "@screens/TourSet";
 import SelectFlight from "@screens/SelectFlight";
+import SelectCity from "@screens/SelectCity";
 import SelectTitle from "@screens/SelectTitle";
 import SelectCountry from "@screens/SelectCountry";
 import SelectPhoneCode from "@screens/SelectPhoneCode";
@@ -286,6 +288,9 @@ const StackNavigator = createStackNavigator(
         HotelDetail: {
             screen: HotelDetail
         },
+        HotelSearch: {
+            screen: HotelSearch
+        },
         ContactUs: {
             screen: ContactUs
         },
@@ -348,6 +353,9 @@ const StackNavigator = createStackNavigator(
         },
         SelectFlight: {
             screen: SelectFlight
+        },
+        SelectCity: {
+            screen: SelectCity
         },
         SelectCountry: {
             screen: SelectCountry

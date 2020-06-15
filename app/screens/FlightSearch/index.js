@@ -15,8 +15,6 @@ import {
 import styles from "./styles";
 import { Image } from "@components";
 
-// import {AsyncStorage} from 'react-native';
-
 export default class FlightSearch extends Component {
     constructor(props) {
         super(props);
@@ -209,7 +207,6 @@ export default class FlightSearch extends Component {
         "CorporateCode":"",
         "Subclasses":false,
         "Airlines": []
-        //"Airlines": ["GA","QG"]
         }
 
         var paramOther={
@@ -225,7 +222,6 @@ export default class FlightSearch extends Component {
         });
 
 
-        //this.getProduct(param,paramOther);
     }
 
 
@@ -243,7 +239,6 @@ export default class FlightSearch extends Component {
                             myHeaders.append("Authorization", "Bearer "+access_token);
 
                             var raw = JSON.stringify(param);
-
                             var requestOptions = {
                             method: 'POST',
                             headers: myHeaders,
@@ -510,13 +505,7 @@ export default class FlightSearch extends Component {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                              
-                                
-                                
                     } 
-                   
-                    
-                    
                     <FormOption
                         style={{ marginTop: 20 }} 
                         listdata={this.state.listdata_kelas}
@@ -555,7 +544,6 @@ export default class FlightSearch extends Component {
                         loading={loading}
                         style={{
                                 borderRadius: 18,
-                                // backgroundColor: BaseColor.fieldColor,
                                 shadowColor: "#000",
                                 shadowOffset: {
                                     width: 0,
@@ -568,13 +556,7 @@ export default class FlightSearch extends Component {
                             }}
                         onPress={() => {  
                             this.onSubmit();
-                            // this.setState({ loading: true }, () => {
-                            //     setTimeout(() => {
-                            //         this.onSubmit();
-                            //         //navigation.navigate("FlightResult");
-                            //         this.setState({ loading: false });
-                            //     }, 500);
-                            // });
+                           
                         }}
                     >
                         Search

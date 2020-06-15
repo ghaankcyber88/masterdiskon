@@ -68,7 +68,7 @@ export default class Home extends Component {
                 {
                     icon: "calendar-alt",
                     name: "Hotel",
-                    route: "Hotel"
+                    route: "HotelSearch"
                 },
                 {
                     icon: "map-marker-alt",
@@ -445,21 +445,22 @@ export default class Home extends Component {
 
         
         this.getToken();
-        // this.getPayment();
         
+        //gak kepake
+        // this.getPayment();
         //this.getFeaturedDestination();
         //this.getTripDunia();
 
         
         
         
-        this.getPopularDestination();
-        this.getTripDomestic();
-        this.getBlog();
-        this.getAssets();
-        this.getPromo();
-        this.getMusium();
-        this.getculture();
+        // this.getPopularDestination();
+        // this.getTripDomestic();
+        // this.getBlog();
+        // this.getAssets();
+        // this.getPromo();
+        // this.getMusium();
+        // this.getculture();
      }
 
      
@@ -725,7 +726,8 @@ export default class Home extends Component {
                                             fontSize: 50,
                                             fontWeight: "700",
                                             fontFamily: "Lato",
-                                            elevation: 5
+                                            elevation: 5,
+                                            marginTop:-5
                                     }}>
                                     Jelajahi Dunia
                                     </Text>
@@ -740,11 +742,11 @@ export default class Home extends Component {
                                
                             </View>
                        </View>
-                        <View style={{ marginTop: marginTopBanner,backgroundColor:'#fff',borderRadius:30,elevation: 5}}>
+                        <View style={{backgroundColor:'#fff',marginTop: marginTopBanner}}>
                             
-                            <View>
+                            <View style={{ marginTop: -50,backgroundColor:'#fff',borderRadius:30,width:'90%',alignSelf: 'center'}}>
                                 <View style={styles.contentHiking2}>
-                                    <Text title3 semibold>
+                                    <Text title3 semibold style={{alignSelf: 'center'}}>
                                     Hey Kamu Mau Kemana ?
                                     </Text>
                                 </View>

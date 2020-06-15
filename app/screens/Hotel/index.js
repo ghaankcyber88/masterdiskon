@@ -7,14 +7,17 @@ import * as Utils from "@utils";
 import { Images } from "@config";
 
 // Load sample data
-import { HotelData } from "@data";
+import { HotelData,DataMasterDiskon } from "@data";
+import {PostDataProduct} from '../../services/PostDataProduct';
 
 export default class Hotel extends Component {
     constructor(props) {
         super(props);
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
-
+        var param=this.props.navigation.state.params.param;
+        var city=this.props.navigation.state.params.city;
+        console.log('paramHotel',JSON.stringify(param));
         // Temp data define
         this.state = {
             refreshing: false,
@@ -33,15 +36,47 @@ export default class Hotel extends Component {
                 0,
                 40
             ),
-            modeView: "block",
-            hotels: HotelData
+            modeView: "list",
+            hotels: HotelData,
+            param:param,
+            city:city,
+            DataMasterDiskon:DataMasterDiskon[0],
         };
 
         this.onChangeView = this.onChangeView.bind(this);
         this.onFilter = this.onFilter.bind(this);
         this.onChangeSort = this.onChangeSort.bind(this);
     }
+    
+    
+    getHotel(){
+        var param=this.state.param;
+        var city=this.state.city;
+        this.setState({ loading_spinner: true }, () => {
+            PostDataProduct('hotel/search_app?city='+city+'&'+param)
+            .then((result) => {
+                    this.setState({ loading_spinner: false });
+                  
+                    var hotels=result.result;
+                   
+                    console.log('hotellsx',JSON.stringify(hotels));
+                    this.setState({hotels:hotels});
+                   
+        
+                },
+                (error) => {
+                    this.setState({ error });
+                }
+            );
+            
 
+
+        });
+    }
+    componentDidMount(){
+    
+    this.getHotel();
+    }
     onChangeSort() {}
 
     /**
@@ -100,6 +135,8 @@ export default class Hotel extends Component {
             outputRange: [0, -40],
             extrapolate: "clamp"
         });
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
         switch (modeView) {
             case "block":
                 return (
@@ -134,10 +171,11 @@ export default class Hotel extends Component {
                             key={"block"}
                             keyExtractor={(item, index) => item.id}
                             renderItem={({ item, index }) => (
+                                
                                 <HotelItem
                                     block
                                     image={item.image}
-                                    name={item.name}
+                                    name={item.name_hotel}
                                     location={item.location}
                                     price={item.price}
                                     available={item.available}
@@ -282,23 +320,24 @@ export default class Hotel extends Component {
                             renderItem={({ item, index }) => (
                                 <HotelItem
                                     list
-                                    image={item.image}
-                                    name={item.name}
-                                    location={item.location}
-                                    price={item.price}
-                                    available={item.available}
-                                    rate={item.rate}
+                                    image={item.img_featured}
+                                    url={this.state.DataMasterDiskon.site+'assets/upload/product/hotel/img/featured/'}
+                                    name={item.name_hotel}
+                                    location={item.city_name}
+                                    price={'Rp '+priceSplitter(item.price_from)}
+                                    available={'Inclusive of Taxes'}
+                                    rate={item.stars}
                                     rateStatus={item.rateStatus}
                                     numReviews={item.numReviews}
                                     services={item.services}
-                                    rateCount={item.rateCount}
+                                    rateCount={item.rating+'of 100'}
                                     style={{
                                         marginHorizontal: 20,
                                         marginBottom: 20
                                     }}
                                     onPress={() => {
                                         this.props.navigation.navigate(
-                                            "HotelDetail"
+                                            "HotelDetail",{slug:item.slug_hotel,param:this.state.param}
                                         );
                                     }}
                                 />
@@ -430,7 +469,7 @@ export default class Hotel extends Component {
                         navigation.navigate("SearchHistory");
                     }}
                 />
-              
+{/*               
                 <View
                     style={{flexDirection: 'column',
                             justifyContent: 'center',
@@ -444,8 +483,8 @@ export default class Hotel extends Component {
                     />
                     <View><Text>Masih dalam pengembangan</Text></View>
 
-                </View>    
-                {/* {this.renderContent()} */}
+                </View>     */}
+                 {this.renderContent()}
             </SafeAreaView>
         );
     }

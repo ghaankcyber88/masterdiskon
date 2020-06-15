@@ -304,7 +304,7 @@ export default class HotelItem extends Component {
                         {price}
                     </Text>
                     <Text caption1 semibold>
-                        AVG/NIGHT
+                        night / room
                     </Text>
                     <Text footnote accentColor style={{ marginTop: 3 }}>
                         {available}

@@ -8,7 +8,7 @@ export default StyleSheet.create({
     imageBackground: {
         height: 350,
         width: "100%",
-        position: "absolute"
+        position: "absolute",
     },
     searchForm: {
         paddingTop: 40,
