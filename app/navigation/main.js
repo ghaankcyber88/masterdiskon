@@ -54,6 +54,7 @@ import ProfileEdit from "@screens/ProfileEdit";
 import ProfileExample from "@screens/ProfileExample";
 import ChangeLanguage from "@screens/ChangeLanguage";
 import HotelInformation from "@screens/HotelInformation";
+import HotelRoom from "@screens/HotelRoom";
 import CheckOut from "@screens/CheckOut";
 import Currency from "@screens/Currency";
 import Coupons from "@screens/Coupons";
@@ -275,6 +276,9 @@ const StackNavigator = createStackNavigator(
         },
         HotelInformation: {
             screen: HotelInformation
+        },
+        HotelRoom: {
+            screen: HotelRoom
         },
         CheckOut: {
             screen: CheckOut

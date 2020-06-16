@@ -23,7 +23,7 @@ import { InteractionManager } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import styles from "./styles";
 // Load sample data
-import { HelpBlockData } from "@data";
+import { HelpBlockData,DataMasterDiskon } from "@data";
 import {PostDataProduct} from '../../services/PostDataProduct';
 
 export default class HotelDetail extends Component {
@@ -99,7 +99,49 @@ export default class HotelDetail extends Component {
             helpBlock: HelpBlockData,
             
             param:param,
-            slug:slug
+            slug:slug,
+            
+            hotelDetail:{},
+            hotelRoom:[],
+            hotelData:{},
+            hotelReview:{
+                s_kebersihan: 15,
+                c_kebersihan: 2,
+                s_kenyamanan: 15,
+                c_kenyamanan: 2,
+                s_lokasi: 15,
+                c_lokasi: 2,
+                s_fasilitas: 15,
+                c_fasilitas: 2,
+                s_staf: 15,
+                c_staf: 2,
+                s_harga: 15,
+                c_harga: 2,
+                s_wifi: 15,
+                c_wifi: 2
+            },
+            hotelReviewCustomer:[
+                {
+                    id_hotel_review: "1",
+                    id_hotel: "1",
+                    id_user: "9",
+                    name: "Ndaru Kurniawan",
+                    nationality: "Indonesia",
+                    summary: "Solo Traveler,Dipesan dari Mobile,Menginap 1 malam",
+                    kebersihan: "7",
+                    kenyamanan: "7",
+                    lokasi: "7",
+                    fasilitas: "7",
+                    staf: "7",
+                    harga: "7",
+                    wifi: "7",
+                    title: "mantap",
+                    pros: "Kolasi strategis",
+                    cons: "Tidak banyak restoran dekat lokasi",
+                    date_order: "2020-05-05",
+                    date_review: "2020-05-06"
+                }],
+            DataMasterDiskon:DataMasterDiskon[0],
         };
         this._deltaY = new Animated.Value(0);
     }
@@ -110,9 +152,18 @@ export default class HotelDetail extends Component {
             PostDataProduct('hotel/detail_app/'+slug+'?'+param)
             .then((result) => {
                     this.setState({ loading_spinner: false });
-                    //var hotels=result.result;
-                    console.log('hotellsx',JSON.stringify(result));
-                    //this.setState({hotels:hotels});
+                    var hotelData=result;
+                    var hotelDetail=result.hotel;
+                    var hotelRoom=result.room;
+                    var hotelReview=result.review;
+                    var hotelReviewCustomer=result.review_teks;
+                    console.log('hotel',JSON.stringify(hotelDetail));
+                    console.log('room',JSON.stringify(hotelRoom));
+                    this.setState({hotelData:hotelData});
+                    this.setState({hotelDetail:hotelDetail});
+                    this.setState({hotelRoom:hotelRoom});
+                    this.setState({hotelReview:hotelReview});
+                    this.setState({hotelReviewCustomer:hotelReviewCustomer});
                 },
                 (error) => {
                     this.setState({ error });
@@ -141,11 +192,12 @@ export default class HotelDetail extends Component {
         } = this.state;
         const heightImageBanner = Utils.scaleWithPixel(250, 1);
         const marginTopBanner = heightImageBanner - heightHeader - 40;
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         return (
             <View style={{ flex: 1 }}>
                 <Animated.Image
-                    source={Images.room6}
+                    source={{ uri: 'https://masterdiskon.com/assets/upload/product/hotel/img/featured/'+this.state.hotelDetail.img_featured}}
                     style={[
                         styles.imgBanner,
                         {
@@ -225,13 +277,13 @@ export default class HotelDetail extends Component {
                                     semibold
                                     style={{ marginBottom: 7 }}
                                 >
-                                    Hilton San Francisco
+                                    {this.state.hotelDetail.name_hotel}
                                 </Text>
                                 <StarRating
                                     disabled={true}
                                     starSize={14}
                                     maxStars={5}
-                                    rating={4.5}
+                                    rating={this.state.hotelDetail.stars}
                                     selectedStar={rating => {}}
                                     fullStarColor={BaseColor.yellowColor}
                                 />
@@ -242,9 +294,7 @@ export default class HotelDetail extends Component {
                                         textAlign: "center"
                                     }}
                                 >
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    labore adipiscing elit, sed do eiusmod
-                                    tempor.
+                                    {this.state.hotelDetail.address}
                                 </Text>
                             </View>
                             {/* Rating Review */}
@@ -257,7 +307,7 @@ export default class HotelDetail extends Component {
                                 >
                                     <View style={styles.circlePoint}>
                                         <Text title3 whiteColor>
-                                            9.5
+                                            {this.state.hotelDetail.rating}
                                         </Text>
                                     </View>
                                     <View>
@@ -284,13 +334,13 @@ export default class HotelDetail extends Component {
                                                 grayColor
                                                 style={{ marginBottom: 5 }}
                                             >
-                                                Interio Design
+                                                Kebersihan
                                             </Text>
                                             <View style={styles.lineBaseRate} />
                                             <View
                                                 style={[
                                                     styles.linePercent,
-                                                    { width: "40%" }
+                                                    { width: this.state.hotelReview.s_kebersihan+"%" }
                                                 ]}
                                             />
                                         </View>
@@ -298,7 +348,7 @@ export default class HotelDetail extends Component {
                                             caption2
                                             style={{ marginLeft: 15 }}
                                         >
-                                            4
+                                           {this.state.hotelReview.s_kebersihan}
                                         </Text>
                                     </View>
                                     <View style={styles.contentLineRate}>
@@ -308,13 +358,13 @@ export default class HotelDetail extends Component {
                                                 grayColor
                                                 style={{ marginBottom: 5 }}
                                             >
-                                                Server Quality
+                                                Kenyamanan
                                             </Text>
                                             <View style={styles.lineBaseRate} />
                                             <View
                                                 style={[
                                                     styles.linePercent,
-                                                    { width: "70%" }
+                                                    { width: this.state.hotelReview.s_kenyamanan+"%" }
                                                 ]}
                                             />
                                         </View>
@@ -322,7 +372,7 @@ export default class HotelDetail extends Component {
                                             caption2
                                             style={{ marginLeft: 15 }}
                                         >
-                                            7
+                                            {this.state.hotelReview.s_kenyamanan}
                                         </Text>
                                     </View>
                                 </View>
@@ -339,13 +389,13 @@ export default class HotelDetail extends Component {
                                                 grayColor
                                                 style={{ marginBottom: 5 }}
                                             >
-                                                Interio Design
+                                                Lokasi
                                             </Text>
                                             <View style={styles.lineBaseRate} />
                                             <View
                                                 style={[
                                                     styles.linePercent,
-                                                    { width: "50%" }
+                                                    { width: this.state.hotelReview.s_lokasi+"%" }
                                                 ]}
                                             />
                                         </View>
@@ -353,7 +403,7 @@ export default class HotelDetail extends Component {
                                             caption2
                                             style={{ marginLeft: 15 }}
                                         >
-                                            5
+                                            {this.state.hotelReview.s_lokasi}
                                         </Text>
                                     </View>
                                     <View style={styles.contentLineRate}>
@@ -363,13 +413,13 @@ export default class HotelDetail extends Component {
                                                 grayColor
                                                 style={{ marginBottom: 5 }}
                                             >
-                                                Server Quality
+                                                Fasilitas
                                             </Text>
                                             <View style={styles.lineBaseRate} />
                                             <View
                                                 style={[
                                                     styles.linePercent,
-                                                    { width: "60%" }
+                                                    { width: this.state.hotelReview.s_fasilitas+"%" }
                                                 ]}
                                             />
                                         </View>
@@ -377,7 +427,7 @@ export default class HotelDetail extends Component {
                                             caption2
                                             style={{ marginLeft: 15 }}
                                         >
-                                            6
+                                            {this.state.hotelReview.s_fasilitas}
                                         </Text>
                                     </View>
                                 </View>
@@ -388,9 +438,7 @@ export default class HotelDetail extends Component {
                                     Hotel Description
                                 </Text>
                                 <Text body2 style={{ marginTop: 5 }}>
-                                    218 Austen Mountain, consectetur adipiscing,
-                                    sed eiusmod tempor incididunt ut labore et
-                                    dolore
+                                    {this.state.hotelDetail.description}
                                 </Text>
                             </View>
                             {/* Facilities Icon */}
@@ -409,7 +457,7 @@ export default class HotelDetail extends Component {
                                         <Icon
                                             name={item.name}
                                             size={24}
-                                            color={BaseColor.accentColor}
+                                            color={BaseColor.primaryColor}
                                         />
                                         <Text
                                             overline
@@ -431,9 +479,7 @@ export default class HotelDetail extends Component {
                                     Location
                                 </Text>
                                 <Text body2 numberOfLines={2}>
-                                    218 Austen Mountain, consectetur adipiscing,
-                                    sed do eiusmod tempor incididunt ut labore
-                                    et …
+                                    {this.state.hotelDetail.address}
                                 </Text>
                                 <View
                                     style={{
@@ -479,8 +525,8 @@ export default class HotelDetail extends Component {
                                         <Text body2 grayColor>
                                             Check in from
                                         </Text>
-                                        <Text body2 accentColor semibold>
-                                            15:00
+                                        <Text body2 accentColor semibold style={{color:BaseColor.primaryColor}}>
+                                            {this.state.hotelDetail.checkIn}
                                         </Text>
                                     </View>
                                     <View
@@ -492,8 +538,8 @@ export default class HotelDetail extends Component {
                                         <Text body2 grayColor>
                                             Check in from
                                         </Text>
-                                        <Text body2 accentColor semibold>
-                                            15:00
+                                        <Text body2 accentColor semibold style={{color:BaseColor.primaryColor}}>
+                                            {this.state.hotelDetail.checkOut}
                                         </Text>
                                     </View>
                                 </View>
@@ -504,25 +550,34 @@ export default class HotelDetail extends Component {
                                     Room Type
                                 </Text>
                                 <FlatList
-                                    data={roomType}
-                                    keyExtractor={(item, index) => item.id}
+                                    data={this.state.hotelRoom}
+                                    keyExtractor={(item, index) => item.id_hotel_room}
                                     renderItem={({ item }) => (
                                         <RoomType
-                                            image={item.image}
-                                            name={item.name}
-                                            price={item.price}
+                                            image={'dd32d9b188d86d6d8dc40d1ff9a0ebf6.jpg'}
+                                            url={this.state.DataMasterDiskon.site+'assets/upload/product/hotel/img/featured/'}
+                                            name={item.room_type}
+                                            price={'Rp '+priceSplitter(item.price)}
                                             available={item.available}
                                             services={item.services}
+                                            amenities={item.amenities}
                                             style={{ marginTop: 10 }}
                                             onPress={() => {
                                                 this.props.navigation.navigate(
                                                     "HotelInformation"
                                                 );
                                             }}
+                                            buttonBookNow={false}
+                                            onPressBookNow={() => {
+                                                this.props.navigation.navigate(
+                                                    "HotelRoom"
+                                                );
+                                            }}
                                         />
                                     )}
                                 />
                             </View>
+                            
                             {/* Todo Things */}
                             <View style={styles.blockView}>
                                 <View
@@ -534,7 +589,7 @@ export default class HotelDetail extends Component {
                                     }}
                                 >
                                     <Text headline semibold>
-                                        Todo Things
+                                        Review
                                     </Text>
                                     <TouchableOpacity
                                         onPress={() => {
@@ -549,15 +604,17 @@ export default class HotelDetail extends Component {
                                 <FlatList
                                     horizontal={true}
                                     showsHorizontalScrollIndicator={false}
-                                    data={todo}
+                                    data={this.state.hotelReviewCustomer}
                                     keyExtractor={(item, index) => item.id}
                                     renderItem={({ item }) => (
                                         <PostListItem
                                             style={{ marginRight: 20 }}
-                                            title="South Travon"
-                                            date="6 Deals Left"
-                                            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                                            title={item.name}
+                                            date={item.date_review}
+                                            description={item.summary}
                                             image={item.image}
+                                            pros={item.pros}
+                                            cons={item.cons}
                                             onPress={() => {
                                                 navigation.navigate(
                                                     "PostDetail"
@@ -568,7 +625,7 @@ export default class HotelDetail extends Component {
                                 />
                             </View>
                             {/* Help Block Information */}
-                            <View style={styles.blockView}>
+                            {/* <View style={styles.blockView}>
                                 <HelpBlock
                                     title={helpBlock.title}
                                     description={helpBlock.description}
@@ -579,9 +636,9 @@ export default class HotelDetail extends Component {
                                         navigation.navigate("ContactUs");
                                     }}
                                 />
-                            </View>
+                            </View> */}
                             {/* Other Information */}
-                            <View style={{ paddingVertical: 10 }}>
+                            {/* <View style={{ paddingVertical: 10 }}>
                                 <Text headline semibold>
                                     4 Reason To Choose Us
                                 </Text>
@@ -653,29 +710,29 @@ export default class HotelDetail extends Component {
                                         </Text>
                                     </View>
                                 </View>
-                            </View>
+                            </View> */}
                         </View>
                     </ScrollView>
                     {/* Pricing & Booking Process */}
                     <View style={styles.contentButtonBottom}>
                         <View>
                             <Text caption1 semibold>
-                                Price/Room/Night
+                                Price from
                             </Text>
                             <Text title3 primaryColor semibold>
-                                $399.99
+                                Rp {priceSplitter(this.state.hotelDetail.price_from)}
                             </Text>
                             <Text caption1 semibold style={{ marginTop: 5 }}>
-                                AVG/Night
+                                kamar/Night
                             </Text>
                         </View>
                         <Button
                             style={{ height: 46 }}
                             onPress={() =>
-                                navigation.navigate("PreviewBooking")
+                                {navigation.navigate("HotelRoom",{hotelData:this.state.hotelData})}
                             }
                         >
-                            Book Now
+                            Pilih Kamar
                         </Button>
                     </View>
                 </SafeAreaView>

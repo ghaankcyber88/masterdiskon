@@ -527,8 +527,8 @@ export default class TourDetailCustom extends Component {
                             onPress={() =>
                                 {
                                 // navigation.navigate("PreviewBooking")
-                                //navigation.navigate("TourSet",{product:this.state.product})
-                                alert('Masih dalam pengembangan')
+                                navigation.navigate("TourSet",{product:this.state.product})
+                                //alert('Masih dalam pengembangan')
                                 }
                             }
                         >

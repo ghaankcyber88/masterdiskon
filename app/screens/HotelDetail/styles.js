@@ -59,7 +59,7 @@ export default StyleSheet.create({
         height: 12,
         borderTopLeftRadius: 8,
         borderBottomLeftRadius: 8,
-        backgroundColor: BaseColor.accentColor,
+        backgroundColor: BaseColor.primaryColor,
         position: "absolute",
         bottom: 0
     },

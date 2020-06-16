@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 export default class PostListItem extends Component {
     render() {
-        const { style, title, description, date, onPress, image } = this.props;
+        const { style, title, description, date, onPress, image,pros,cons } = this.props;
         return (
             <TouchableOpacity
                 style={[styles.contain, style]}
@@ -26,10 +26,30 @@ export default class PostListItem extends Component {
                         <Text
                             body2
                             grayColor
-                            numberOfLines={5}
-                            style={{ paddingVertical: 5 }}
+                            numberOfLines={3}
+                            //style={{ paddingVertical: 5 }}
                         >
                             {description}
+                        </Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Text
+                            body2
+                            grayColor
+                            numberOfLines={1}
+                            //style={{ paddingVertical: 5 }}
+                        >
+                            [ + ] {pros}
+                        </Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Text
+                            body2
+                            grayColor
+                            numberOfLines={1}
+                            //style={{ paddingVertical: 5 }}
+                        >
+                            [ + ] {cons}
                         </Text>
                     </View>
                     {date != "" && (
@@ -51,6 +71,8 @@ PostListItem.propTypes = {
     title: PropTypes.string,
     description: PropTypes.string,
     date: PropTypes.string,
+    pros: PropTypes.string,
+    cons: PropTypes.string,
     onPress: PropTypes.func
 };
 
@@ -59,6 +81,8 @@ PostListItem.defaultProps = {
     title: "",
     description: "",
     date: "",
+    pros: "",
+    cons: "",
     style: {},
     onPress: () => {}
 };

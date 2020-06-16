@@ -940,7 +940,6 @@ export default class Summary extends Component {
                     nationality_phone_code:nationality_phone_code,
                                                                     
                     passport_country_id:passport_country_id,
-                    // passport_country_phone_code:passport_country_phone_code,
                     }
                 : p
             );
@@ -975,7 +974,6 @@ export default class Summary extends Component {
                         nationality_phone_code:nationality_phone_code,
                                                                     
                         passport_country_id:passport_country_id,
-                        // passport_country_phone_code:passport_country_phone_code,
                         }
                     : p
                 );
@@ -1099,7 +1097,6 @@ export default class Summary extends Component {
 
                 obj['passport_country_id'] = def_passport_country_id;
 
-                // obj['passport_country_phone_code'] = "";
 
                 customer.push(obj)
             }
