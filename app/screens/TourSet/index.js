@@ -312,8 +312,7 @@ export default class TourSet extends Component {
         }
 
         var product=this.state.product;
-        //alert(param);
-        //this.props.navigation.navigate('FlightResult',{param:param,paramOther:paramOther});
+        
         if(login){
          this.getProduct(param,paramOther,product);
         }else{
@@ -496,7 +495,7 @@ export default class TourSet extends Component {
                                 <View style={styles.contentPickDate}>
                                     <TouchableOpacity
                                         style={styles.itemPick}
-                                        onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime})}
+                                        onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
                                     >
                                         <Text caption1 light style={{ marginBottom: 5 }}>
                                             Check In
@@ -508,7 +507,7 @@ export default class TourSet extends Component {
                                     <View style={styles.linePick} />
                                     <TouchableOpacity
                                         style={styles.itemPick}
-                                        onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime})}
+                                        onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
                                     >
                                         <Text caption1 light style={{ marginBottom: 5 }}>
                                             Check Out

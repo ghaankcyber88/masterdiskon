@@ -57,11 +57,14 @@ export default class Cart extends Component {
 
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
-        var dataCart=this.props.navigation.state.params.dataCart;
-        var listdata_customer=this.props.navigation.state.params.listdata_customer;
-        var listdata_participant=this.props.navigation.state.params.listdata_participant;
-        var saveContact=this.props.navigation.state.params.saveContact;
-        var otherUser=this.props.navigation.state.params.otherUser;
+        var outputCart=this.props.navigation.state.params.outputCart;
+        
+        
+        // var dataCart=this.props.navigation.state.params.dataCart;
+        // var listdata_customer=this.props.navigation.state.params.listdata_customer;
+        // var listdata_participant=this.props.navigation.state.params.listdata_participant;
+        // // var saveContact=this.props.navigation.state.params.saveContact;
+        // var otherUser=this.props.navigation.state.params.otherUser;
       
         this.state = {
             refreshing: false,
@@ -81,13 +84,19 @@ export default class Cart extends Component {
                 40
             ),
             loading: false,
-            dataCart:dataCart,
+            
+            //dataCart:dataCart,
             payment_method:'013',
             payment_method_title:'Permata ATM',
-            listdata_customer:listdata_customer,
-            listdata_participant:listdata_participant,
-            saveContact:saveContact,
-            otherUser:otherUser
+            //listdata_customer:listdata_customer,
+            //listdata_participant:listdata_participant,
+            //otherUser:otherUser
+            outputCart:outputCart,
+            dataCart:outputCart.dataCart,
+            listdata_customer:outputCart.listdata_customer,
+            listdata_participant:outputCart.listdata_participant,
+            otherUser:outputCart.otherUser,
+            paramOther:outputCart.paramOther
 
         };
         this.onChangeView = this.onChangeView.bind(this);
@@ -146,6 +155,8 @@ export default class Cart extends Component {
 
 
     fetchData() {
+    
+        console.log('outputCart',JSON.stringify(this.state.outputCart));
         AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
             if (result) {
                 let dataCartArrayReal = JSON.parse(result);
@@ -236,82 +247,91 @@ export default class Cart extends Component {
             outputRange: [0, -40],
             extrapolate: "clamp"
         }); 
+        
+        var content='';
+        if(this.state.paramOther.type=='trip'){
+            
+            content=<View><Text>{this.state.outputCart.dataCart.product.judul_trip}</Text></View>
+        }else{
+            content=<Animated.FlatList
+            contentContainerStyle={{
+                paddingTop: 10,
+                paddingBottom: 20
+            }}
+            // refreshControl={
+            //     <RefreshControl
+            //         colors={[BaseColor.primaryColor]}
+            //         tintColor={BaseColor.primaryColor}
+            //         refreshing={refreshing}
+            //         onRefresh={() => {}}
+            //     />
+            // }
+            scrollEventThrottle={1}
+            onScroll={Animated.event(
+                [
+                    {
+                        nativeEvent: {
+                            contentOffset: {
+                                y: this.state.scrollAnim
+                            }
+                        }
+                    }
+                ],
+                { useNativeDriver: true }
+            )}
+            data={this.state.dataCartArray}
+            keyExtractor={(item, index) => item.id}
+            renderItem={({ item, index }) => (
+                <View style={{marginBottom:20}}> 
+                <CartCard
+                    //timeLimit={100}
+                    dataCartArrayReal={this.state.dataCartArrayReal}
+                    timeLimit={item.time_limit}
+                    fromFlight={item.origin.id}
+                    toFlight={item.destination.id}
+                    from={item.origin.name}
+                    to={item.destination.name}
+                    type={'aa'}
+                    adult={item.adult+' person'}
+                    children={item.child+' person'}
+                    infant={item.infant+' person'}
+                    contactName={item.contact.title+item.contact.first_name+item.contact.last_name}
+                    contactPhone={'('+item.contact.phone_code+')'+item.contact.phone_number}
+                    total={item.total_price}
+                    idCart={item.id}
+                    departure={item.id}
+                    returns={'aa'}
+                    type={item.type_name}
+                    deleteCart={this.deleteCart}
+                    updatePrice={this.updatePrice}
+                    onPress={() => this.onSelect(item)}
+                />
+                    {/* <Button
+                        style={{ height: 46 }}
+                        full
+                        onPress={() => {  
+                           //this.deleteCart(item.id,this.state.dataCartArrayReal);
+                           Alert.alert(
+                            'Remove Cart',
+                            'Yakin ingin mau di hapus ?',
+                            [
+                              {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                              {text: 'YES', onPress: () => this.deleteCart(item.id)},
+                            ]
+                          );
+                        }}
+                    >
+                        Delete
+                    </Button> */}
+                </View>
+            )}
+        />
+        
+        }
       
         return (
             <View style={{ flex: 1 }}>
-                <Animated.FlatList
-                    contentContainerStyle={{
-                        paddingTop: 10,
-                        paddingBottom: 20
-                    }}
-                    // refreshControl={
-                    //     <RefreshControl
-                    //         colors={[BaseColor.primaryColor]}
-                    //         tintColor={BaseColor.primaryColor}
-                    //         refreshing={refreshing}
-                    //         onRefresh={() => {}}
-                    //     />
-                    // }
-                    scrollEventThrottle={1}
-                    onScroll={Animated.event(
-                        [
-                            {
-                                nativeEvent: {
-                                    contentOffset: {
-                                        y: this.state.scrollAnim
-                                    }
-                                }
-                            }
-                        ],
-                        { useNativeDriver: true }
-                    )}
-                    data={this.state.dataCartArray}
-                    keyExtractor={(item, index) => item.id}
-                    renderItem={({ item, index }) => (
-                        <View style={{marginBottom:20}}> 
-                        <CartCard
-                            //timeLimit={100}
-                            dataCartArrayReal={this.state.dataCartArrayReal}
-                            timeLimit={item.time_limit}
-                            fromFlight={item.origin.id}
-                            toFlight={item.destination.id}
-                            from={item.origin.name}
-                            to={item.destination.name}
-                            type={'aa'}
-                            adult={item.adult+' person'}
-                            children={item.child+' person'}
-                            infant={item.infant+' person'}
-                            contactName={item.contact.title+item.contact.first_name+item.contact.last_name}
-                            contactPhone={'('+item.contact.phone_code+')'+item.contact.phone_number}
-                            total={item.total_price}
-                            idCart={item.id}
-                            departure={item.id}
-                            returns={'aa'}
-                            type={item.type_name}
-                            deleteCart={this.deleteCart}
-                            updatePrice={this.updatePrice}
-                            onPress={() => this.onSelect(item)}
-                        />
-                            {/* <Button
-                                style={{ height: 46 }}
-                                full
-                                onPress={() => {  
-                                   //this.deleteCart(item.id,this.state.dataCartArrayReal);
-                                   Alert.alert(
-                                    'Remove Cart',
-                                    'Yakin ingin mau di hapus ?',
-                                    [
-                                      {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
-                                      {text: 'YES', onPress: () => this.deleteCart(item.id)},
-                                    ]
-                                  );
-                                }}
-                            >
-                                Delete
-                            </Button> */}
-                        </View>
-                    )}
-                />
+                {content}
                 <Animated.View
                     style={[
                         styles.navbar,
@@ -403,7 +423,7 @@ export default class Cart extends Component {
                 const data={  
                     "participant": participant,
                     "customer":customer,
-                    "saveContact":this.state.saveContact
+                    // "saveContact":this.state.saveContact
                   
                 }
                 const param={"param":data}
@@ -492,7 +512,8 @@ export default class Cart extends Component {
                     "token":access_token,
                     "id_user":this.state.id_user,
                     "dataCart":this.state.dataCart,
-                    "dataSavePerson":this.state.dataPersonSave
+                    "dataSavePerson":this.state.dataPersonSave,
+                    "paramOther":this.state.paramOther,
                     }
                     
                     console.log("---------------data cart array cart kirim  ------------");
@@ -513,28 +534,28 @@ export default class Cart extends Component {
                     redirect: 'follow'
                     };
 
-                    fetch("https://masterdiskon.com/front/product/flightapp/fu_submit_flight", requestOptions)
-                    .then(response => response.json())
-                    .then((result) => {
-                        var dataOrderSubmit=result;
-                        console.log("---------------status carts-------------");
-                        console.log(JSON.stringify(dataOrderSubmit));
-                            this.setState({ loading: false });
+                    // fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
+                    // .then(response => response.json())
+                    // .then((result) => {
+                    //     var dataOrderSubmit=result;
+                    //     console.log("---------------status carts-------------");
+                    //     console.log(JSON.stringify(dataOrderSubmit));
+                    //         this.setState({ loading: false });
                             
 
-                                id_order=result.id_order;
-                                pay=result.pay;
+                    //             id_order=result.id_order;
+                    //             pay=result.pay;
 
-                                var redirect='Pembayaran';
-                                setTimeout(() => {
-                                    var id_order=dataOrderSubmit.id_order;
-                                    //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
-                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
-                                }, 500);
+                    //             var redirect='Pembayaran';
+                    //             setTimeout(() => {
+                    //                 var id_order=dataOrderSubmit.id_order;
+                    //                 //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
+                    //                 this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
+                    //             }, 500);
 
 
-                                //this.getVa(dataOrderSubmit);
-                    });
+                    //             //this.getVa(dataOrderSubmit);
+                    // });
 
                 }
             });

@@ -24,7 +24,7 @@ export default class PricingTable extends Component {
         const { packageItem, packageItemDetail } = this.state;
         
         var dataPrice=this.props.navigation.state.params.dataPrice;
-        var detail_price=dataPrice.data.detail_price[0];
+        var detail_price=dataPrice.detail_price[0];
         
         var content_data_price='';
         

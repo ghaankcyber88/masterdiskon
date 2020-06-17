@@ -94,30 +94,8 @@ export default class Summary extends Component {
         super(props);
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
-
-        var param=this.props.navigation.state.params.param;
-        var paramOther=this.props.navigation.state.params.paramOther;
-        var product=this.props.navigation.state.params.product;
         
-        
-
-        var param=[];
-        if(this.props.navigation.state.params.param){
-            param=this.props.navigation.state.params.param;
-        }
-        //alert(JSON.stringify(param));
-
-        var paramOther=[];
-        if(this.props.navigation.state.params.paramOther){
-            paramOther=this.props.navigation.state.params.paramOther;
-        }
-
-        var product=[];
-        if(this.props.navigation.state.params.product){
-            product=this.props.navigation.state.params.product;
-        }
-
-
+        //------------------------parameter untuk flight------------------------//
         var selectDataDeparture=[];
         if(this.props.navigation.state.params.selectDataDeparture){
             selectDataDeparture=this.props.navigation.state.params.selectDataDeparture;
@@ -140,7 +118,39 @@ export default class Summary extends Component {
         if(this.props.navigation.state.params.returnPost){
             returnPost=this.props.navigation.state.params.returnPost;
         }
+        //------------------------parameter untuk flight------------------------//
+        
+        
+        //------------------------parameter untuk non flight-------------------//
+        
+        var product=[];
+        if(this.props.navigation.state.params.product){
+            product=this.props.navigation.state.params.product;
+            console.log('dataProduct',JSON.stringify(product));
+        }
+        //------------------------parameter untuk non flight-------------------//
+        
+        //------------------------parameter inti------------------------//
+        var param=this.props.navigation.state.params.param;
+        var paramOther=this.props.navigation.state.params.paramOther;
+        var product=this.props.navigation.state.params.product;
+        
+        
+        
+        var param=[];
+        if(this.props.navigation.state.params.param){
+            param=this.props.navigation.state.params.param;
+        }
 
+        var paramOther=[];
+        if(this.props.navigation.state.params.paramOther){
+            paramOther=this.props.navigation.state.params.paramOther;
+        }
+        
+        //------------------------parameter inti------------------------//
+
+        
+        
         var amount = parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
         var arrOldGuest=this.convertOld(param);
 
@@ -188,14 +198,43 @@ export default class Summary extends Component {
             handlerButton:true,
             reminders: false,
             remindersInsurance:false,
-            remindersSaveContact:false,
-            saveContact:false,
-
 
             otherUser:false,
-            remindersOtherUser:false
-
-
+            remindersOtherUser:false,
+            
+            dataPrice:{      
+                      required_dob:true,
+                      required_passport:false,
+                      total_price:0,
+                      nett_price:0,
+                      insurance_total:0,
+                      transaction_fee:0
+                },
+            insurance_included:false,
+            total_all:0,
+            dataCart:{
+                id:"1",
+                id_trip:"1",
+                adult: 1,
+                child: 0,
+                infant: 0,
+                nett_price: 596360,
+                discount: 0,
+                total_price: 606180,
+                insurance_total: 0,
+                transaction_fee: 1080,
+                time_limit: "2020-06-17T13:37:00",
+                contact: {
+                    title: "Mr",
+                    first_name: "arifinss",
+                    last_name: "hendra",
+                    country_id: "ID",
+                    country_name: "Indonesia",
+                    phone_code: "62",
+                    phone_number: "6666666",
+                    email: "matadesaindotcom@gmail.com"
+                }
+            }
         };
 
         this.updateParticipant = this.updateParticipant.bind(this);
@@ -286,7 +325,19 @@ export default class Summary extends Component {
             var biayaChildren=(parseInt(param.Children)*parseInt(product.harga))*parseInt(duration);
             var biayaInfants=(parseInt(param.Infants)*(parseInt(product.harga)*0.2))*parseInt(duration);
             total_price=parseInt(biayaAdult)+parseInt(biayaChildren)+parseInt(biayaInfants);
-            this.setState({total_price:total_price});
+            //this.setState({total_price:total_price});
+            
+            
+            var dataPrice={      
+                required_dob:true,
+                required_passport:false,
+                total_price:total_price,
+                nett_price:0,
+                insurance_total:1000,
+                transaction_fee:0
+            };
+            this.setState({dataPrice:dataPrice});
+            this.setState({total_all:dataPrice.total_price});
         }else{
             var departurePost=this.removePrice(this.state.selectDataDeparture); 
             var returnPost=this.removePrice(this.state.selectDataReturn);   
@@ -327,15 +378,9 @@ export default class Summary extends Component {
                                     .then((response) => response.json())
                                     .then((result) => {
                                         this.setState({ loading_spinner: false });
-                                        console.log("---------------data pricess------------");
-                                        console.log(JSON.stringify(result));
-                                        this.setState({dataPrice:result});
-                                        this.setState({total_price:result.data.total_price});
-                                        this.setState({insurance_total:result.data.insurance_total});
+                                        console.log('data pricess',JSON.stringify(result));
+                                        this.setState({dataPrice:result.data});
                                         this.setState({total_all:result.data.total_price});
-                                        this.setState({insurance_included:false});
-
-                                    
                                     })
                                     .catch(error => console.log('error', error));
                         }
@@ -347,11 +392,6 @@ export default class Summary extends Component {
 
 
     typeFlight(){
-        // let {param}=this.state;
-        // fromCode=param.Origin;
-        // toCode=param.OriginDestination;
-
-
         const data={  
             "fromCode": this.state.param.Origin,
             "toCode": this.state.param.Destination
@@ -379,115 +419,173 @@ export default class Summary extends Component {
         this.setState({title:title});
     }
 
-    onSubmitTrip(){
-        
-    }
-    
-    
-    
-
 
     onSubmit() {
 
         var paramOther=this.state.paramOther;
         this.saveParticipant();
         if(paramOther.type=='trip'){
+            var customer=this.state.listdata_customer;
+            var product= this.state.product;
+            var guest=this.state.listdata_participant;
+            var param=this.state.param;
+            var paramOther=this.state.paramOther;
+            var dataPrice=this.state.dataPrice;
 
             
 
-            AsyncStorage.getItem('userSession', (error, result) => {
-                if (result) {
-                    let userSession = JSON.parse(result);
+            // AsyncStorage.getItem('userSession', (error, result) => {
+            //     if (result) {
+            //         let userSession = JSON.parse(result);
     
-                        var participant = [];
-                        var customer=this.state.listdata_customer;
-                        var product= this.state.product;
-                        var guest=this.state.listdata_participant;
+            //             var participant = [];
+            //             var customer=this.state.listdata_customer;
+            //             var product= this.state.product;
+            //             var guest=this.state.listdata_participant;
                            
-                        var participant = [];
-                        var a=1;
-                        guest.map(item => {
-                            var obj = {};
-                            obj['type'] = item.old;
-                            obj['fullname'] = item.fullname;
-                            obj['firstname'] = item.firstname;
-                            obj['lastname'] = item.lastname;
-                            obj['birthday'] = item.birthday;
-                            obj['nationality'] = item.nationality;
-                            obj['passport_number'] = item.passport_number;
-                            obj['passport_country'] = item.passport_country;
-                            obj['passport_expire'] = item.passport_expire;
-                            obj['phone'] = item.phone;
-                            obj['title'] = item.title;
-                            obj['email'] = item.email;
-                            obj['nationality_id'] = item.nationality_id;
-                            obj['nationality_phone_code'] = item.nationality_phone_code;
-                            obj['passport_country_id'] = item.passport_country_id;
-                            participant.push(obj);
-                            a++;
-                        });
+            //             var participant = [];
+            //             var a=1;
+            //             guest.map(item => {
+            //                 var obj = {};
+            //                 obj['type'] = item.old;
+            //                 obj['fullname'] = item.fullname;
+            //                 obj['firstname'] = item.firstname;
+            //                 obj['lastname'] = item.lastname;
+            //                 obj['birthday'] = item.birthday;
+            //                 obj['nationality'] = item.nationality;
+            //                 obj['passport_number'] = item.passport_number;
+            //                 obj['passport_country'] = item.passport_country;
+            //                 obj['passport_expire'] = item.passport_expire;
+            //                 obj['phone'] = item.phone;
+            //                 obj['title'] = item.title;
+            //                 obj['email'] = item.email;
+            //                 obj['nationality_id'] = item.nationality_id;
+            //                 obj['nationality_phone_code'] = item.nationality_phone_code;
+            //                 obj['passport_country_id'] = item.passport_country_id;
+            //                 participant.push(obj);
+            //                 a++;
+            //             });
     
-                            var contact= {
-                            "title": customer[0].title,
-                            "first_name": customer[0].firstname,
-                            "last_name": customer[0].lastname,
-                            "country": customer[0].nationality_id,
-                            "area_phone_code": customer[0].nationality_phone_code,
-                            "phone_number": customer[0].phone,
-                            "email": customer[0].email
-                            };
+            //                 var contact= {
+            //                 "title": customer[0].title,
+            //                 "first_name": customer[0].firstname,
+            //                 "last_name": customer[0].lastname,
+            //                 "country": customer[0].nationality_id,
+            //                 "area_phone_code": customer[0].nationality_phone_code,
+            //                 "phone_number": customer[0].phone,
+            //                 "email": customer[0].email
+            //                 };
     
-                                const data={  
-                                    "type": this.state.paramOther.type,
-                                    "order_code": "",
-                                    "payment_code": "",
-                                    "promo_code": "",
-                                    "id_user": userSession.id_user,
-                                    "user_token": "",
-                                    "pax": this.state.jumlahPenumpang,
-                                    "adult": this.state.param.Adults,
-                                    "children": this.state.param.Children,
-                                    "baby": this.state.param.Infants,
-                                    "payment_method": "",
-                                    "payment_expired": "",
-                                    "subtotal": this.state.total_price,
-                                    "start_date": this.state.param.DepartureDate,
-                                    "ret_date": this.state.param.ReturnDate,
-                                    "a": "",
-                                    "d": "",
-                                    "insurance": "",
-                                    "pp": "",
-                                    "total_price":this.state.total_price,
-                                    "tax":"",
-                                    "contact":contact,
-                                    "product":product,
-                                    "participant":participant
-                                }
-                            const param={"param":data}
+            //                     const data={  
+            //                         "type": this.state.paramOther.type,
+            //                         "order_code": "",
+            //                         "payment_code": "",
+            //                         "promo_code": "",
+            //                         "id_user": userSession.id_user,
+            //                         "user_token": "",
+            //                         "pax": this.state.jumlahPenumpang,
+            //                         "adult": this.state.param.Adults,
+            //                         "children": this.state.param.Children,
+            //                         "baby": this.state.param.Infants,
+            //                         "payment_method": "",
+            //                         "payment_expired": "",
+            //                         "subtotal": this.state.dataPrice.total_price,
+            //                         "start_date": this.state.param.DepartureDate,
+            //                         "ret_date": this.state.param.ReturnDate,
+            //                         "a": "",
+            //                         "d": "",
+            //                         "insurance": "",
+            //                         "pp": "",
+            //                         "total_price":this.state.dataPrice.total_price,
+            //                         "tax":"",
+            //                         "contact":contact,
+            //                         "product":product,
+            //                         "participant":participant
+            //                     }
+            //                 const param={"param":data}
                             
-                            console.log("------------------data param submit order trip--------------");
-                            console.log(JSON.stringify(param));
+            //                 console.log("------------------data param submit order trip--------------");
+            //                 console.log(JSON.stringify(param));
     
-                            PostData('submitbook_order_new',param)
-                                .then((result) => {
-                                    id_order=result.id_order;
-                                    pay=result.pay;
-                                    this.props.navigation.navigate('CartTour',
-                                    {
-                                        dataOrderSubmit:result,
-                                        dataOrder:data
-                                    }
-                                    );
+            //                 PostData('submitbook_order_new',param)
+            //                     .then((result) => {
+            //                         id_order=result.id_order;
+            //                         pay=result.pay;
+            //                         this.props.navigation.navigate('CartTour',
+            //                         {
+            //                             dataOrderSubmit:result,
+            //                             dataOrder:data
+            //                         }
+            //                         );
     
-                                },
-                                (error) => {
-                                    this.setState({ error });
-                                }
-                                );
+            //                     },
+            //                     (error) => {
+            //                         this.setState({ error });
+            //                     }
+            //                     );
     
-                    }
+            //         }
                 
-                });
+            //     });
+            
+            
+                       //                 var contact= {
+            //                 "title": customer[0].title,
+            //                 "first_name": customer[0].firstname,
+            //                 "last_name": customer[0].lastname,
+            //                 "country": customer[0].nationality_id,
+            //                 "area_phone_code": customer[0].nationality_phone_code,
+            //                 "phone_number": customer[0].phone,
+            //                 "email": customer[0].email
+            //                 };
+            
+                var dataCart={
+                    id:this.state.dataCart.id,
+                    adult: param.Adults,
+                    child: param.Children,
+                    infant:param.Infants,
+                    nett_price: dataPrice.total_price,
+                    discount: 0,
+                    total_price: this.state.total_all,
+                    insurance_total: 0,
+                    transaction_fee: 1080,
+                    time_limit: "2020-06-17T13:37:00",
+                    contact: {
+                        title: customer[0].title,
+                        first_name: customer[0].firstname,
+                        last_name: customer[0].lastname,
+                        country_id: customer[0].nationality_id,
+                        country_name: customer[0].nationality,
+                        phone_code: customer[0].nationality_phone_code,
+                        phone_number: customer[0].phone,
+                        email: customer[0].email
+                    },
+                    product:this.state.product
+                }
+                
+                var outputCart={
+                    dataCart:dataCart,
+                    listdata_customer:this.state.listdata_customer,
+                    listdata_participant:this.state.listdata_participant,
+                    otherUser:this.state.otherUser,
+                    paramOther:this.state.paramOther
+                };
+                
+                console.log('outputCartFlight',JSON.stringify(outputCart));
+                var newcart=[dataCart];
+                AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
+                AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
+                
+                
+                setTimeout(() => {
+                    this.props.navigation.navigate("Cart",
+                    {
+                        outputCart:outputCart
+                    }); 
+                    this.setState({ loading: false });
+                }, 500);
+                
+                
             
         }else{
 
@@ -497,8 +595,8 @@ export default class Summary extends Component {
             var departurePost=this.state.departurePost;
             var returnPost=this.state.returnPost;
             var dataPrice=this.state.dataPrice;
-            var departurePrice=dataPrice.data.detail_price[0];
-            var returnPrice=dataPrice.data.detail_price[1];
+            var departurePrice=dataPrice.detail_price[0];
+            var returnPrice=dataPrice.detail_price[1];
             console.log('--param------------');
             console.log(JSON.stringify(param));
             console.log('------------------');
@@ -682,22 +780,35 @@ export default class Summary extends Component {
 
                                     const cartToBeSaved = dataCart;
                                     var newcart=[cartToBeSaved];
-
+                                    
+                                    var outputCart={
+                                        dataCart:dataCart,
+                                        listdata_customer:this.state.listdata_customer,
+                                        listdata_participant:this.state.listdata_participant,
+                                        otherUser:this.state.otherUser,
+                                        paramOther:this.state.paramOther
+                                    };
+                                    
+                                    console.log('outputCartFlight',JSON.stringify(outputCart));
+                                    var newcart=[dataCart];
+                                    AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
+                                    AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
+                                    
+                                    
                                     setTimeout(() => {
-                                        AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
-                                        AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
                                         this.props.navigation.navigate("Cart",
                                         {
-                                            dataCart:dataCart,
-                                            listdata_customer:this.state.listdata_customer,
-                                            listdata_participant:this.state.listdata_participant,
-                                            saveContact:this.state.saveContact,
-                                            otherUser:this.state.otherUser
+                                            outputCart:outputCart
                                         }); 
                                         this.setState({ loading: false });
                                     }, 500);
+                                    
+                                    
+                                    
+                                    
 
-
+                                    //untuk membuat cart
+                                    
                                     // AsyncStorage.getItem('dataCartArray', (err, result) => {
                                     // let newcart = JSON.parse(result);
                                     // console.log('cartopp',JSON.stringify(newcart));
@@ -1062,13 +1173,6 @@ export default class Summary extends Component {
         var def_phone="12345678";
         var def_email="email@gmail.com";
 
-        //yang kurang customer
-        // "passport_number":"",
-        // "passport_country":"",
-        // "passport_expire":"",
-        // "passport_country_id":""
-        //birthday
-
 
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {  
@@ -1107,9 +1211,8 @@ export default class Summary extends Component {
 
 
 
-        if(typeFlight=='domestic' || typeProduct=='trip'){
-
-            //yang kurang guest
+        if(typeFlight=='domestic' || typeProduct=='trip')
+        {
             def_passport_number=def_passport_number;
             def_passport_country=def_passport_country;
             def_passport_expire=def_passport_expire;
@@ -1149,7 +1252,6 @@ export default class Summary extends Component {
             obj['nationality_phone_code'] = "";
 
             obj['passport_country_id'] = def_passport_country_id;
-            // obj['passport_country_phone_code'] = "";
 
         participant.push(obj)
         }
@@ -1253,25 +1355,18 @@ export default class Summary extends Component {
         this.setState({ remindersInsurance: value });
         if(value==true){
             //alert(value);
-            var total_all=parseInt(this.state.total_price)+parseInt(this.state.insurance_total);
+            var total_all=parseInt(this.state.dataPrice.total_price)+parseInt(this.state.dataPrice.insurance_total);
             this.setState({total_all:total_all});
             this.setState({insurance_included:true});
         }else{
             //alert(value);
-            var total_all=parseInt(this.state.total_price);
+            var total_all=parseInt(this.state.dataPrice.total_price);
             this.setState({total_all:total_all});
             this.setState({insurance_included:false});
         }
     };
 
-    toggleSwitchSaveContact = value => {
-        this.setState({ remindersSaveContact: value });
-        if(value==true){
-            this.setState({saveContact:true});
-        }else{
-            this.setState({saveContact:false});
-        }
-    };
+   
 
     toggleSwitchOtherUser = value => {
         this.setState({ remindersOtherUser: value });
@@ -1507,159 +1602,177 @@ export default class Summary extends Component {
         var contentPrice=<View></View>
         if(this.state.paramOther.type=='trip')
         {
-            contentPrice= <View>
-            <ButtonOrder
-                packageName={'IDR '+priceSplitter(this.state.total_price)}
-                price={packageItem.price}
-                type={'Total Price for '+this.state.jumlahPenumpang+' Person(s)'}
-                description={'Include insurance'}
-                onPressIcon={() => {
-                    navigation.navigate("PricingTable");
-                }}
-                style={{ marginBottom: 10 }}
-            />
-            
+            contentPrice=<View>
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text footnote grayColor numberOfLines={1}>
+                                    Subtotal
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                               
+                                <Text headline semibold numberOfLines={1}>
+                                {'IDR '+priceSplitter(this.state.dataPrice.total_price)}
+                                </Text>
+                        </View>
+                    </View>
+                    <TouchableOpacity
+                        style={{flex: 2}}
+                        onPress={() => {
+                            navigation.navigate("PricingTable",{
+                                dataPrice:this.state.dataPrice
+                            });
+                            }
+                        }
+                    >
+                                     <Icon
+                                        name="angle-down"
+                                        size={18}
+                                        color={BaseColor.primaryColor}
+                                        style={{ textAlign: "center"}}
+                                    />
+                    </TouchableOpacity>
+                </View>
+
+
+
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text footnote grayColor numberOfLines={1}>
+                                    Insurance
+                                </Text>
+                            
+                            </View>
+                        </View>
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                               
+                                <Text headline semibold numberOfLines={1}>
+                                {'IDR '+priceSplitter(this.state.dataPrice.insurance_total)}
+                                </Text>
+                        </View>
+                    </View>
+                    <View
+                        style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}
+                    >
+                                <Switch name="angle-right" 
+                                    size={18} 
+                                    onValueChange={this.toggleSwitchInsurance}
+                                    value={this.state.remindersInsurance}
+                                />
+                    </View>
+                </View>
+
+
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text footnote grayColor numberOfLines={1}>
+                                    Total
+                                </Text>
+                            
+                            </View>
+                        </View>
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                               
+                                <Text headline semibold numberOfLines={1}>
+                                {'IDR '+priceSplitter(this.state.total_all)}
+                                </Text>
+                        </View>
+                    </View>
+                </View>
             </View>
 
         }else{
-            contentPrice= <View>
-            
-            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                    <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                        <View>
-                            <Text footnote grayColor numberOfLines={1}>
-                                Subtotal
-                            </Text>
+            contentPrice=<View>
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text footnote grayColor numberOfLines={1}>
+                                    Subtotal
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                               
+                                <Text headline semibold numberOfLines={1}>
+                                {'IDR '+priceSplitter(this.state.dataPrice.total_price)}
+                                </Text>
                         </View>
                     </View>
-                    <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
-                           
-                            <Text headline semibold numberOfLines={1}>
-                            {'IDR '+priceSplitter(this.state.total_price)}
-                            </Text>
-                    </View>
-                </View>
-                <TouchableOpacity
-                    style={{flex: 2}}
-                    onPress={() => {
-                        navigation.navigate("PricingTable",{
-                            dataPrice:this.state.dataPrice
-                        });
+                    <TouchableOpacity
+                        style={{flex: 2}}
+                        onPress={() => {
+                            navigation.navigate("PricingTable",{
+                                dataPrice:this.state.dataPrice
+                            });
+                            }
                         }
-                    }
-                >
-                                 <Icon
-                                    name="angle-down"
-                                    size={18}
-                                    color={BaseColor.primaryColor}
-                                    style={{ textAlign: "center"}}
-                                />
-                </TouchableOpacity>
-            </View>
+                    >
+                                     <Icon
+                                        name="angle-down"
+                                        size={18}
+                                        color={BaseColor.primaryColor}
+                                        style={{ textAlign: "center"}}
+                                    />
+                    </TouchableOpacity>
+                </View>
 
 
 
-            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                    <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                        <View>
-                            <Text footnote grayColor numberOfLines={1}>
-                                Insurance
-                            </Text>
-                        
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text footnote grayColor numberOfLines={1}>
+                                    Insurance
+                                </Text>
+                            
+                            </View>
+                        </View>
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                               
+                                <Text headline semibold numberOfLines={1}>
+                                {'IDR '+priceSplitter(this.state.dataPrice.insurance_total)}
+                                </Text>
                         </View>
                     </View>
-                    <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
-                           
-                            <Text headline semibold numberOfLines={1}>
-                            {'IDR '+priceSplitter(this.state.insurance_total)}
-                            </Text>
-                    </View>
-                </View>
-                <View
-                    style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}
-                    // onPress={() =>
-                    //     {navigation.navigate("ProfileSmart",
-                    //      {
-                    //         sourcePage:'summary',
-                    //         item:item,
-                    //         type:'guest',
-                    //         updateParticipant: this.updateParticipant,
-                    //      }
-                    //     );}
-                    // }
-                >
-                            <Switch name="angle-right" 
-                                size={18} 
-                                onValueChange={this.toggleSwitchInsurance}
-                                value={this.state.remindersInsurance}
-                            />
-                </View>
-            </View>
-
-
-            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                    <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                        <View>
-                            <Text footnote grayColor numberOfLines={1}>
-                                Total
-                            </Text>
-                        
-                        </View>
-                    </View>
-                    <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
-                           
-                            <Text headline semibold numberOfLines={1}>
-                            {'IDR '+priceSplitter(this.state.total_all)}
-                            </Text>
-                    </View>
-                </View>
-                {/* <TouchableOpacity
-                    style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}
-                    onPress={() =>
-                        {navigation.navigate("ProfileSmart",
-                         {
-                            sourcePage:'summary',
-                            item:item,
-                            type:'guest',
-                            updateParticipant: this.updateParticipant,
-                         }
-                        );}
-                    }
-                >
+                    <View
+                        style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}
+                    >
                                 <Switch name="angle-right" 
-                                size={18} 
-                                onValueChange={this.toggleSwitch}
-                                value={this.state.reminders}
-                             />
-                </TouchableOpacity> */}
-            </View>
-               
-            
-            
-            {/* <ButtonOrder
-                packageName={'IDR '+priceSplitter(this.state.total_price)}
-                price={packageItem.price}
-                type={'Total Price for '+this.state.jumlahPenumpang+' Person(s)'}
-                onPressIcon={() => {
-                    navigation.navigate("PricingTable");
-                }}
-            /> */}
-            
-                {/* <View style={{width:'100%',paddingLeft: 20,paddingRight:20}}>
+                                    size={18} 
+                                    onValueChange={this.toggleSwitchInsurance}
+                                    value={this.state.remindersInsurance}
+                                />
+                    </View>
+                </View>
 
-                        <View style={styles.profileItem}>
-                            <Text body1>Asuransi</Text>
-                            <Switch name="angle-right" 
-                                size={18} 
-                                onValueChange={this.toggleSwitch}
-                                value={this.state.reminders}
-                             />
+
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text footnote grayColor numberOfLines={1}>
+                                    Total
+                                </Text>
+                            
+                            </View>
                         </View>
-                </View> */}
-            
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                               
+                                <Text headline semibold numberOfLines={1}>
+                                {'IDR '+priceSplitter(this.state.total_all)}
+                                </Text>
+                        </View>
+                    </View>
+                </View>
             </View>
 
         }
@@ -1669,16 +1782,13 @@ export default class Summary extends Component {
                 <TouchableOpacity  disabled={this.state.handlerButton} onPress={() => 
                     {
                         this.onSubmit()
-                        //alert('go`');
                     }} >
                 <View pointerEvents='none' style={styles.groupinput}>       
                 <Button
-                loading={loading}
-                full
-                // style={{backgroundColor:this.state.colorButton}}
-                 style={{
+                    loading={loading}
+                    full
+                    style={{
                                 borderRadius: 18,
-                                // backgroundColor: BaseColor.fieldColor,
                                 shadowColor: "#000",
                                 shadowOffset: {
                                     width: 0,
@@ -1690,12 +1800,10 @@ export default class Summary extends Component {
                                 backgroundColor:this.state.colorButton
                             }}
                 >
-                Book Now
+                Books Now
                 </Button>
                 </View> 
                 </TouchableOpacity>
-
-
             </View>
 
     
@@ -1758,16 +1866,6 @@ export default class Summary extends Component {
                             </View>
                             <View
                                 style={{flex: 2,justifyContent: "center",alignItems: "flex-end"}}
-                                // onPress={() =>
-                                //     {navigation.navigate("ProfileSmart",
-                                //     {
-                                //         sourcePage:'summary',
-                                //         item:item,
-                                //         type:'guest',
-                                //         updateParticipant: this.updateParticipant,
-                                //     }
-                                //     );}
-                                // }
                             >
                                         <Switch name="angle-right" 
                                             size={18} 
