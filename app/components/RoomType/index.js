@@ -97,6 +97,7 @@ export default class RoomType extends Component {
                     </Text>
                     {buttonBookNow && (
                          <Button
+                         onPress={onPressBookNow}
                          style={{ height: 30,borderRadius:10,width:'60%' }}
                         
                      >

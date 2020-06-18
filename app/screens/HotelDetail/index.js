@@ -29,8 +29,12 @@ import {PostDataProduct} from '../../services/PostDataProduct';
 export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
+        var paramUrl=this.props.navigation.state.params.paramUrl;
         var param=this.props.navigation.state.params.param;
+        var paramOther=this.props.navigation.state.params.paramOther;
         var slug=this.props.navigation.state.params.slug;
+        var product=this.props.navigation.state.params.product;
+        console.log('product',JSON.stringify(product));
         // Temp data define
         this.state = {
             heightHeader: Utils.heightHeader(),
@@ -98,8 +102,11 @@ export default class HotelDetail extends Component {
             ],
             helpBlock: HelpBlockData,
             
-            param:param,
+            paramUrl:paramUrl,
             slug:slug,
+            param:param,
+            paramOther:paramOther,
+            product:product,
             
             hotelDetail:{},
             hotelRoom:[],
@@ -146,10 +153,10 @@ export default class HotelDetail extends Component {
         this._deltaY = new Animated.Value(0);
     }
     getHotel(){
-        var param=this.state.param;
+        var paramUrl=this.state.paramUrl;
         var slug=this.state.slug;
         this.setState({ loading_spinner: true }, () => {
-            PostDataProduct('hotel/detail_app/'+slug+'?'+param)
+            PostDataProduct('hotel/detail_app/'+slug+'?'+paramUrl)
             .then((result) => {
                     this.setState({ loading_spinner: false });
                     var hotelData=result;
@@ -729,7 +736,17 @@ export default class HotelDetail extends Component {
                         <Button
                             style={{ height: 46 }}
                             onPress={() =>
-                                {navigation.navigate("HotelRoom",{hotelData:this.state.hotelData})}
+                                {
+                                navigation.navigate("HotelRoom",
+                                    {
+                                        hotelData:this.state.hotelData,
+                                        paramUrl:this.state.paramUrl,
+                                        slug:this.state.slug,
+                                        param:this.state.param,
+                                        paramOther:this.state.paramOther,
+                                        product:this.state.product,
+                                    }
+                                )}
                             }
                         >
                             Pilih Kamar

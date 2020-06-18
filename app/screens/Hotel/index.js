@@ -15,9 +15,11 @@ export default class Hotel extends Component {
         super(props);
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
+        var paramUrl=this.props.navigation.state.params.paramUrl;
+        var paramOther=this.props.navigation.state.params.paramOther;
         var param=this.props.navigation.state.params.param;
         var city=this.props.navigation.state.params.city;
-        console.log('paramHotel',JSON.stringify(param));
+        console.log('paramHotel',JSON.stringify(paramUrl));
         // Temp data define
         this.state = {
             refreshing: false,
@@ -38,8 +40,10 @@ export default class Hotel extends Component {
             ),
             modeView: "list",
             hotels: HotelData,
-            param:param,
+            paramUrl:paramUrl,
             city:city,
+            param:param,
+            paramOther:paramOther,
             DataMasterDiskon:DataMasterDiskon[0],
         };
 
@@ -50,10 +54,10 @@ export default class Hotel extends Component {
     
     
     getHotel(){
-        var param=this.state.param;
+        var paramUrl=this.state.paramUrl;
         var city=this.state.city;
         this.setState({ loading_spinner: true }, () => {
-            PostDataProduct('hotel/search_app?city='+city+'&'+param)
+            PostDataProduct('hotel/search_app?city='+city+'&'+paramUrl)
             .then((result) => {
                     this.setState({ loading_spinner: false });
                   
@@ -337,7 +341,13 @@ export default class Hotel extends Component {
                                     }}
                                     onPress={() => {
                                         this.props.navigation.navigate(
-                                            "HotelDetail",{slug:item.slug_hotel,param:this.state.param}
+                                            "HotelDetail",{
+                                            slug:item.slug_hotel,
+                                            paramUrl:this.state.paramUrl,
+                                            param:this.state.param,
+                                            paramOther:this.state.paramOther,
+                                            product:item
+                                            }
                                         );
                                     }}
                                 />

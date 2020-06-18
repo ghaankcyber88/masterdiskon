@@ -65,11 +65,22 @@ export default class HotelRoom extends Component {
         var hotelRoom=hotelData.room;
         var hotelReview=hotelData.review;
         var hotelReviewCustomer=hotelData.review_teks;
+        
+        
+        var param=this.props.navigation.state.params.param;
+        var paramOther=this.props.navigation.state.params.paramOther;
+        var product=this.props.navigation.state.params.product;
+        
+        
         // Temp data define
         this.state = {
             userData: UserData[0],
             hotelRoom:hotelRoom,
             DataMasterDiskon:DataMasterDiskon[0],
+            
+            param:param,
+            paramOther:paramOther,
+            product:product
             
             
         };
@@ -129,14 +140,29 @@ export default class HotelRoom extends Component {
                                             amenities={item.amenities}
                                             style={{ marginTop: 10 }}
                                             onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    "HotelInformation"
-                                                );
+                                                alert('xxx');
+                                                // this.props.navigation.navigate(
+                                                //     "HotelInformation"
+                                                // );
                                             }}
                                             buttonBookNow={true}
                                             onPressBookNow={() => {
+                                                // var xx={
+                                                //     param:this.state.param,
+                                                //     paramOther:this.state.paramOther,
+                                                //     product:this.state.product,
+                                                //     productPart:item
+                                                // }
+                                                // console.log('HotelRoomParam',JSON.stringify(xx));
+                                                
                                                 this.props.navigation.navigate(
-                                                    "HotelRoom"
+                                                    "Summary",
+                                                        {
+                                                            param:this.state.param,
+                                                            paramOther:this.state.paramOther,
+                                                            product:this.state.product,
+                                                            productPart:item
+                                                        }
                                                 );
                                             }}
                                         />

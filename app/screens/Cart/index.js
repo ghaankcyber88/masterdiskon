@@ -250,8 +250,9 @@ export default class Cart extends Component {
         
         var content='';
         if(this.state.paramOther.type=='trip'){
-            
             content=<View><Text>{this.state.outputCart.dataCart.product.judul_trip}</Text></View>
+        }else if(this.state.paramOther.type=='hotel'){
+            content=<View><Text>{this.state.outputCart.dataCart.product.name_hotel}</Text></View>
         }else{
             content=<Animated.FlatList
             contentContainerStyle={{
@@ -534,28 +535,28 @@ export default class Cart extends Component {
                     redirect: 'follow'
                     };
 
-                    // fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
-                    // .then(response => response.json())
-                    // .then((result) => {
-                    //     var dataOrderSubmit=result;
-                    //     console.log("---------------status carts-------------");
-                    //     console.log(JSON.stringify(dataOrderSubmit));
-                    //         this.setState({ loading: false });
+                    fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
+                    .then(response => response.json())
+                    .then((result) => {
+                        var dataOrderSubmit=result;
+                        console.log("---------------status carts-------------");
+                        console.log(JSON.stringify(dataOrderSubmit));
+                            this.setState({ loading: false });
                             
 
-                    //             id_order=result.id_order;
-                    //             pay=result.pay;
+                                id_order=result.id_order;
+                                pay=result.pay;
 
-                    //             var redirect='Pembayaran';
-                    //             setTimeout(() => {
-                    //                 var id_order=dataOrderSubmit.id_order;
-                    //                 //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
-                    //                 this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
-                    //             }, 500);
+                                var redirect='Pembayaran';
+                                setTimeout(() => {
+                                    var id_order=dataOrderSubmit.id_order;
+                                    //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
+                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
+                                }, 500);
 
 
-                    //             //this.getVa(dataOrderSubmit);
-                    // });
+                                //this.getVa(dataOrderSubmit);
+                    });
 
                 }
             });

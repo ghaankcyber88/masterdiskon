@@ -128,12 +128,19 @@ export default class Summary extends Component {
             product=this.props.navigation.state.params.product;
             console.log('dataProduct',JSON.stringify(product));
         }
+        
+        var productPart=[];
+        if(this.props.navigation.state.params.productPart){
+            productPart=this.props.navigation.state.params.productPart;
+            console.log('dataProductPart',JSON.stringify(productPart));
+        }
         //------------------------parameter untuk non flight-------------------//
         
         //------------------------parameter inti------------------------//
         var param=this.props.navigation.state.params.param;
         var paramOther=this.props.navigation.state.params.paramOther;
         var product=this.props.navigation.state.params.product;
+        var productPart=this.props.navigation.state.params.productPart;
         
         
         
@@ -158,6 +165,7 @@ export default class Summary extends Component {
             param:param,
             paramOther:paramOther,
             product:product,
+            productPart:productPart,
             typeFlight:'',
 
             selectDataDeparture:selectDataDeparture,
@@ -314,7 +322,7 @@ export default class Summary extends Component {
 
 
     totalPrice(){
-        let {param,paramOther,product}=this.state;
+        let {param,paramOther,product,productPart}=this.state;
         var total_price=0;
         if(paramOther.type=='trip'){
             var date1 = param.DepartureDate;
@@ -324,6 +332,29 @@ export default class Summary extends Component {
             var biayaAdult=(parseInt(param.Adults)*parseInt(product.harga))*parseInt(duration);
             var biayaChildren=(parseInt(param.Children)*parseInt(product.harga))*parseInt(duration);
             var biayaInfants=(parseInt(param.Infants)*(parseInt(product.harga)*0.2))*parseInt(duration);
+            total_price=parseInt(biayaAdult)+parseInt(biayaChildren)+parseInt(biayaInfants);
+            //this.setState({total_price:total_price});
+            
+            
+            var dataPrice={      
+                required_dob:true,
+                required_passport:false,
+                total_price:total_price,
+                nett_price:0,
+                insurance_total:1000,
+                transaction_fee:0
+            };
+            this.setState({dataPrice:dataPrice});
+            this.setState({total_all:dataPrice.total_price});
+            
+        }else if(paramOther.type=='hotel'){
+            var date1 = param.DepartureDate;
+            var date2 = param.ReturnDate;
+            var duration=this.convertDuration(date1,date2);
+
+            var biayaAdult=(parseInt(param.Adults)*parseInt(productPart.price))*parseInt(duration);
+            var biayaChildren=(parseInt(param.Children)*parseInt(productPart.price))*parseInt(duration);
+            var biayaInfants=0;
             total_price=parseInt(biayaAdult)+parseInt(biayaChildren)+parseInt(biayaInfants);
             //this.setState({total_price:total_price});
             
@@ -431,116 +462,11 @@ export default class Summary extends Component {
             var param=this.state.param;
             var paramOther=this.state.paramOther;
             var dataPrice=this.state.dataPrice;
-
-            
-
-            // AsyncStorage.getItem('userSession', (error, result) => {
-            //     if (result) {
-            //         let userSession = JSON.parse(result);
-    
-            //             var participant = [];
-            //             var customer=this.state.listdata_customer;
-            //             var product= this.state.product;
-            //             var guest=this.state.listdata_participant;
-                           
-            //             var participant = [];
-            //             var a=1;
-            //             guest.map(item => {
-            //                 var obj = {};
-            //                 obj['type'] = item.old;
-            //                 obj['fullname'] = item.fullname;
-            //                 obj['firstname'] = item.firstname;
-            //                 obj['lastname'] = item.lastname;
-            //                 obj['birthday'] = item.birthday;
-            //                 obj['nationality'] = item.nationality;
-            //                 obj['passport_number'] = item.passport_number;
-            //                 obj['passport_country'] = item.passport_country;
-            //                 obj['passport_expire'] = item.passport_expire;
-            //                 obj['phone'] = item.phone;
-            //                 obj['title'] = item.title;
-            //                 obj['email'] = item.email;
-            //                 obj['nationality_id'] = item.nationality_id;
-            //                 obj['nationality_phone_code'] = item.nationality_phone_code;
-            //                 obj['passport_country_id'] = item.passport_country_id;
-            //                 participant.push(obj);
-            //                 a++;
-            //             });
-    
-            //                 var contact= {
-            //                 "title": customer[0].title,
-            //                 "first_name": customer[0].firstname,
-            //                 "last_name": customer[0].lastname,
-            //                 "country": customer[0].nationality_id,
-            //                 "area_phone_code": customer[0].nationality_phone_code,
-            //                 "phone_number": customer[0].phone,
-            //                 "email": customer[0].email
-            //                 };
-    
-            //                     const data={  
-            //                         "type": this.state.paramOther.type,
-            //                         "order_code": "",
-            //                         "payment_code": "",
-            //                         "promo_code": "",
-            //                         "id_user": userSession.id_user,
-            //                         "user_token": "",
-            //                         "pax": this.state.jumlahPenumpang,
-            //                         "adult": this.state.param.Adults,
-            //                         "children": this.state.param.Children,
-            //                         "baby": this.state.param.Infants,
-            //                         "payment_method": "",
-            //                         "payment_expired": "",
-            //                         "subtotal": this.state.dataPrice.total_price,
-            //                         "start_date": this.state.param.DepartureDate,
-            //                         "ret_date": this.state.param.ReturnDate,
-            //                         "a": "",
-            //                         "d": "",
-            //                         "insurance": "",
-            //                         "pp": "",
-            //                         "total_price":this.state.dataPrice.total_price,
-            //                         "tax":"",
-            //                         "contact":contact,
-            //                         "product":product,
-            //                         "participant":participant
-            //                     }
-            //                 const param={"param":data}
-                            
-            //                 console.log("------------------data param submit order trip--------------");
-            //                 console.log(JSON.stringify(param));
-    
-            //                 PostData('submitbook_order_new',param)
-            //                     .then((result) => {
-            //                         id_order=result.id_order;
-            //                         pay=result.pay;
-            //                         this.props.navigation.navigate('CartTour',
-            //                         {
-            //                             dataOrderSubmit:result,
-            //                             dataOrder:data
-            //                         }
-            //                         );
-    
-            //                     },
-            //                     (error) => {
-            //                         this.setState({ error });
-            //                     }
-            //                     );
-    
-            //         }
-                
-            //     });
-            
-            
-                       //                 var contact= {
-            //                 "title": customer[0].title,
-            //                 "first_name": customer[0].firstname,
-            //                 "last_name": customer[0].lastname,
-            //                 "country": customer[0].nationality_id,
-            //                 "area_phone_code": customer[0].nationality_phone_code,
-            //                 "phone_number": customer[0].phone,
-            //                 "email": customer[0].email
-            //                 };
             
                 var dataCart={
                     id:this.state.dataCart.id,
+                    departure_date:param.DepartureDate,
+                    return_date:param.ReturnDate,
                     adult: param.Adults,
                     child: param.Children,
                     infant:param.Infants,
@@ -550,6 +476,7 @@ export default class Summary extends Component {
                     insurance_total: 0,
                     transaction_fee: 1080,
                     time_limit: "2020-06-17T13:37:00",
+                    qty:param.Qty,
                     contact: {
                         title: customer[0].title,
                         first_name: customer[0].firstname,
@@ -576,6 +503,62 @@ export default class Summary extends Component {
                 AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
                 AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
                 
+                setTimeout(() => {
+                    this.props.navigation.navigate("Cart",
+                    {
+                        outputCart:outputCart
+                    }); 
+                    this.setState({ loading: false });
+                }, 500);
+        
+        }else if(paramOther.type=='hotel'){
+            var customer=this.state.listdata_customer;
+            var product= this.state.product;
+            var guest=this.state.listdata_participant;
+            var param=this.state.param;
+            var paramOther=this.state.paramOther;
+            var dataPrice=this.state.dataPrice;
+            
+                var dataCart={
+                    id:this.state.dataCart.id,
+                    departure_date:param.DepartureDate,
+                    return_date:param.ReturnDate,
+                    adult: param.Adults,
+                    child: param.Children,
+                    infant:param.Infants,
+                    nett_price: dataPrice.total_price,
+                    discount: 0,
+                    total_price: this.state.total_all,
+                    insurance_total: 0,
+                    transaction_fee: 1080,
+                    time_limit: "2020-06-17T13:37:00",
+                    qty:param.Qty,
+                    contact: {
+                        title: customer[0].title,
+                        first_name: customer[0].firstname,
+                        last_name: customer[0].lastname,
+                        country_id: customer[0].nationality_id,
+                        country_name: customer[0].nationality,
+                        phone_code: customer[0].nationality_phone_code,
+                        phone_number: customer[0].phone,
+                        email: customer[0].email
+                    },
+                    product:this.state.product,
+                    productPart:this.state.productPart
+                }
+                
+                var outputCart={
+                    dataCart:dataCart,
+                    listdata_customer:this.state.listdata_customer,
+                    listdata_participant:this.state.listdata_participant,
+                    otherUser:this.state.otherUser,
+                    paramOther:this.state.paramOther
+                };
+                
+                console.log('outputCartFlight',JSON.stringify(outputCart));
+                var newcart=[dataCart];
+                AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
+                AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
                 
                 setTimeout(() => {
                     this.props.navigation.navigate("Cart",
@@ -584,9 +567,7 @@ export default class Summary extends Component {
                     }); 
                     this.setState({ loading: false });
                 }, 500);
-                
-                
-            
+        
         }else{
 
             var param=this.state.param;
@@ -1518,6 +1499,17 @@ export default class Summary extends Component {
                     {this.state.product['judul_trip']}
                 </Text>
             </View>
+        }else if(this.state.paramOther.type=='hotel'){
+            contentProduct=<View><Text title3 style={{ paddingVertical: 10 }}>
+            Product hotel
+            </Text>
+                <Text body1 semibold>
+                    HOTEL {this.state.product['name_hotel']}
+                </Text>
+                <Text body1 semibold>
+                    Room {this.state.productPart['room_type']}
+                </Text>
+            </View>
 
         }else{
         
@@ -1800,7 +1792,7 @@ export default class Summary extends Component {
                                 backgroundColor:this.state.colorButton
                             }}
                 >
-                Books Now
+                Book Now
                 </Button>
                 </View> 
                 </TouchableOpacity>

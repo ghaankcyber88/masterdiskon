@@ -100,7 +100,8 @@ export default class HotelSearch extends Component {
             round: true,
             dewasa:'2',
             anak:'1',
-            bayi:'1',
+            bayi:'0',
+            qty:'1',
             tglAwal:tglAwal,
             tglAkhir:tglAkhir,
         
@@ -123,6 +124,7 @@ export default class HotelSearch extends Component {
         this.setJumlahBayi = this.setJumlahBayi.bind(this);
         this.setBookingTime = this.setBookingTime.bind(this);
         this.setCity = this.setCity.bind(this);
+        this.setqty=this.setqty.bind(this);
 
     }
 
@@ -169,7 +171,17 @@ export default class HotelSearch extends Component {
     }
     
     
+    setDate(date) {
     
+        var date = new Date(date);
+        var tempoMonth = (date.getMonth()+1);
+        var tempoDate = (date.getDate());
+        var finaldate="";
+        if (tempoMonth < 10) tempoMonth = '0' + tempoMonth;
+        if (tempoDate < 10) tempoDate = '0' + tempoDate;
+    
+        return finaldate = date.getFullYear()  + '-' +  tempoMonth  + '-' +  tempoDate;
+    };
     
     onSubmit() {
       
@@ -179,13 +191,49 @@ export default class HotelSearch extends Component {
         var checkout=this.state.tglAkhir;
         var adults=this.state.dewasa;
         var children=this.state.anak;
+        var qty=this.state.qty;
         
-        var param='checkin='+checkin+'&checkout='+checkout+'&adults='+adults+'&children='+children+'&room=1';
+        var tgl_akhir='';
+        if(this.state.round==true){
+            tgl_akhir=this.state.tglAkhir;
+        }
+        
+        var param = {
+            "Origin":'',
+            "Destination":'',
+            "DepartureDate":this.setDate(this.state.tglAwal),
+            "Adults":this.state.dewasa,
+            "Children":this.state.anak,
+            "Infants":this.state.bayi,
+            "ReturnDate":tgl_akhir,
+            "IsReturn":true,
+            "CabinClass":[],
+            "CorporateCode":"",
+            "Subclasses":false,
+            "Airlines": [],
+            "Qty":this.state.qty
+            }
+            console.log('param',JSON.stringify(param));
+    
+            var paramOther={
+            "bandaraAsalLabel":'',
+            "bandaraTujuanLabel":'',
+            "type":'hotel'
+            }
+            
+            console.log('paramOther',JSON.stringify(paramOther));
+    
+    
+    
+        
+        var paramUrl='checkin='+checkin+'&checkout='+checkout+'&adults='+adults+'&children='+children+'&room='+qty;
         console.log('paramHotale',param);
         this.props.navigation.navigate('Hotel',
         {
             city:cityId,
+            paramUrl:paramUrl,
             param:param,
+            paramOther:paramOther
         });
 
 
@@ -281,7 +329,11 @@ export default class HotelSearch extends Component {
         console.log(jml);
         this.setState({bayi:jml});
     }
-  
+    
+    setqty(jml){
+        console.log(jml);
+        this.setState({qty:jml});
+    }
     
     render() {
         const { round, from, to, loading,login  } = this.state;
@@ -378,10 +430,10 @@ export default class HotelSearch extends Component {
                             typeOld="2"
                         />
                         <QuantityPicker
-                            label="Infants"
-                            detail="<= 2 years"
-                            value={this.state.bayi}
-                            setJumlahBayi={this.setJumlahBayi}
+                            label="Rooms"
+                            detail=""
+                            value={this.state.qty}
+                            setJumlahBayi={this.setqty}
                             typeOld="3"
                         />
                     </View>
