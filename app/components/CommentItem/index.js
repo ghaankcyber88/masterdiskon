@@ -162,7 +162,7 @@ export default class CommentItem extends Component {
                                     color={BaseColor.primaryColor}
                                     size={18}
                                     solid
-                                    style={{ marginLeft: -10,marginTop:10,position:'absolute',width:40,height:40,
+                                    style={{ marginLeft: -10,marginTop:20,position:'absolute',width:40,height:40,
                                     backgroundColor: "#fff",
                                     borderRadius: 18,
                                     shadowColor: "#000",
@@ -176,13 +176,33 @@ export default class CommentItem extends Component {
                                     padding:10,
                                          }}
                                 />
-    }else{
+    }else if(item.product=='Trip'){
         icon=<Icon
                                     name={'suitcase'}
                                     color={BaseColor.primaryColor}
                                     size={18}
                                     solid
-                                    style={{ marginLeft: -10,marginTop:10,position:'absolute',width:40,height:40,
+                                    style={{ marginLeft: -10,marginTop:25,position:'absolute',width:40,height:40,
+                                    backgroundColor: "#fff",
+                                    borderRadius: 18,
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3.84,
+                                    elevation: 5,
+                                    padding:10,
+                                         }}
+                                />
+    }else if(item.product=='Hotel'){
+        icon=<Icon
+                                    name={'hotel'}
+                                    color={BaseColor.primaryColor}
+                                    size={18}
+                                    solid
+                                    style={{ marginLeft: -10,marginTop:20,position:'absolute',width:40,height:40,
                                     backgroundColor: "#fff",
                                     borderRadius: 18,
                                     shadowColor: "#000",
@@ -203,13 +223,17 @@ export default class CommentItem extends Component {
     var title_product='';
     if(item.product=='Flight'){
         title_product=<Text headline semibold style={{fontSize:12}}>
-               {item.detail[0].order_flight_detail[0].airline_name} - {item.detail[0].product_name} 
+               {item.detail[0].order_flight_detail[0].airline_name} - {item.product_name} 
             </Text>
-    }else{
+    }else if(item.product=='Trip'){
         title_product=<Text headline semibold style={{fontSize:12}}>
-                asd
+                {item.product_name} 
             </Text>
-
+    }else if(item.product=='Hotel'){
+        title_product=<Text headline semibold style={{fontSize:12}}>
+                {item.product_name} 
+            </Text>
+    
     }
 
     var content='';

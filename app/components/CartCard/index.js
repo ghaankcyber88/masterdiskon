@@ -72,6 +72,15 @@ export default class CartCard extends Component {
     }
 
     componentDidMount() {
+        var currentdate = new Date(); 
+        var datetime = "Last Sync: " + currentdate.getDate() + "/"
+                        + (currentdate.getMonth()+1)  + "/" 
+                        + currentdate.getFullYear() + " @ "  
+                        + currentdate.getHours() + ":"  
+                        + currentdate.getMinutes() + ":" 
+                        + currentdate.getSeconds();        
+        console.log('dates',datetime);
+        //time_limit: "2020-06-17T13:37:00",
         var timeLimit=this.props.timeLimit;
         if(timeLimit===0){
             this.setState({backgroundColor:'red'});
@@ -137,7 +146,11 @@ export default class CartCard extends Component {
             idCart,
             departure,
             returns,
-            onPress
+            onPress,
+            
+            
+            item,
+            typeProduct
         } = this.props;
 
         // if(route==0){
@@ -162,19 +175,198 @@ export default class CartCard extends Component {
 
         var numTimeLimit=Math.floor(Math.random() * 60) + 1;
         
+        
+        var contentCountDown='';
+        contentCountDown=<View style={styles.contentTop}>
+            <View style={{ flex: 1 }}>
+            </View>
+            <View style={{ flex: 1.5, alignItems: "center" }}>
+                <Text caption1 light>
+                    Batas Order
+                </Text>
+                <CountDown
+                        size={10}
+                        //until={this.duration('2020-02-17T16:30:28')}
+                        
+                        until={this.duration(timeLimit)}
+                        //until={numTimeLimit}
+                        onFinish={() => this.timeOut(1)}
+                        style={{float:'left'}}
+                        digitStyle={{backgroundColor: BaseColor.fieldColor, borderWidth: 2, borderColor: BaseColor.fieldColor}}
+                        digitTxtStyle={{color: BaseColor.primaryColor}}
+                        timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
+                        separatorStyle={{color: BaseColor.primaryColor}}
+                        timeToShow={['H', 'M', 'S']}
+                        timeLabels={{m: null, s: null}}
+                        showSeparator
+                    />
+            </View>
+            <View style={{ flex: 1, alignItems: "flex-end" }}>
+            </View>
+        </View>
+        
+        var contentProduct='';
+        if(typeProduct=='flight'){
+            contentProduct=<View style={styles.contentTop}>
+            <View style={{ flex: 1 }}>
+                <Text title2>{fromFlight}</Text>
+                <Text footnote light>
+                    {from}
+                </Text>
+            </View>
+            <View style={{ flex: 1.5, alignItems: "center" }}>
+                <Text caption1 light>
+                   Flight Type
+                </Text>
+                <View style={styles.contentLine}>
+                    <View style={styles.lineFlight} />
+                    <Icon
+                        name="plane"
+                        color={BaseColor.dividerColor}
+                        size={24}
+                        solid
+                    />
+                    <View style={styles.dot} />
+                </View>
+                <Text caption1 light>
+                    {type}
+                </Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "flex-end" }}>
+                <Text title2>{toFlight}</Text>
+                <Text footnote light style={{textAlign:'right'}}>
+                    {to}
+                </Text>
+            </View>
+        </View>
+        
+        }else if(typeProduct=='trip'){  
+            contentProduct=<View style={styles.contentTop}>
+            <View style={{ flex: 1 }}>
+                <Text title2>dfg</Text>
+                <Text footnote light>
+                  dfgdfg
+                </Text>
+            </View>
+            <View style={{ flex: 1.5, alignItems: "center" }}>
+                <Text caption1 light>
+                   Flight Type
+                </Text>
+                <View style={styles.contentLine}>
+                    <View style={styles.lineFlight} />
+                    <Icon
+                        name="plane"
+                        color={BaseColor.dividerColor}
+                        size={24}
+                        solid
+                    />
+                    <View style={styles.dot} />
+                </View>
+                <Text caption1 light>
+                    asasd
+                </Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "flex-end" }}>
+                <Text title2>asdasd</Text>
+                <Text footnote light style={{textAlign:'right'}}>
+                    aaasd
+                </Text>
+            </View>
+        </View>
+            
+        }else if(typeProduct=='hotel'){
+            contentProduct=<View><Text>hotel</Text></View>
+        }
+        
+        
+        var contentContact='';
+        contentContact=<View><View style={styles.contentBottom}>
+                            <View style={styles.bottomLeft}>
+                                <View>
+                                    <Text caption2 light>
+                                       Contact Name
+                                    </Text>
+                                </View>
+                            </View>
+                            <View
+                                style={{ flexDirection: "row", alignItems: "flex-end" }}
+                            >
+                                <Text caption1 light style={{ marginLeft: 5 }}>
+                                    asda
+                                </Text>
+                            </View>
+                        </View>
+                    
+                        <View style={styles.contentBottom}>
+                            <View style={styles.bottomLeft}>
+                                <View>
+                                    <Text caption2 light>
+                                        Contact Phone
+                                    </Text>
+                                </View>
+                            </View>
+                            <View
+                                style={{ flexDirection: "row", alignItems: "flex-end" }}
+                            >
+                                <Text caption1 light style={{ marginLeft: 5 }}>
+                                    adsad
+                                </Text>
+                            </View>
+                        </View>
+                        </View>
+        
+        var amenitiesArray=[];
+        var contectParticipant='';
+        // item.dataSavePerson.participant.map(item => {
+            
+        //     <View style={styles.contentBottom}>
+        //         <View style={styles.bottomLeft}>
+        //             <View>
+        //                 <Text caption2 light>
+        //                    Contact Name
+        //                 </Text>
+        //             </View>
+        //         </View>
+        //         <View
+        //             style={{ flexDirection: "row", alignItems: "flex-end" }}
+        //         >
+        //             <Text caption1 light style={{ marginLeft: 5 }}>
+        //                 asda
+        //             </Text>
+        //         </View>
+        //     </View>
+        
+        //     <View style={styles.contentBottom}>
+        //         <View style={styles.bottomLeft}>
+        //             <View>
+        //                 <Text caption2 light>
+        //                     Contact Phone
+        //                 </Text>
+        //             </View>
+        //         </View>
+        //         <View
+        //             style={{ flexDirection: "row", alignItems: "flex-end" }}
+        //         >
+        //             <Text caption1 light style={{ marginLeft: 5 }}>
+        //                 adsad
+        //             </Text>
+        //         </View>
+        //     </View>
+        
+        // });
+        
         return (
             <View style={{padding: 10,
                 borderRadius: 8,
                 backgroundColor: this.state.backgroundColor}}>
-     
-                <View style={styles.contentTop}>
-                    <View style={{ flex: 1 }}>
-                    </View>
+                
+                {/*--------------countdown--------------/*}
+                {/* <View style={styles.contentTop}>
+                    <View style={{ flex: 1 }}></View>
                     <View style={{ flex: 1.5, alignItems: "center" }}>
                         <Text caption1 light>
                             Batas Order
                         </Text>
-                       
                         <CountDown
                                 size={10}
                                 //until={this.duration('2020-02-17T16:30:28')}
@@ -192,45 +384,16 @@ export default class CartCard extends Component {
                                 showSeparator
                             />
                     </View>
-                    <View style={{ flex: 1, alignItems: "flex-end" }}>
-                    </View>
-                </View>
+                    <View style={{ flex: 1, alignItems: "flex-end" }}></View>
+                </View> */}
+                
                 <View style={styles.line} />
-
-                <View style={styles.contentTop}>
-                    <View style={{ flex: 1 }}>
-                        <Text title2>{fromFlight}</Text>
-                        <Text footnote light>
-                            {from}
-                        </Text>
-                    </View>
-                    <View style={{ flex: 1.5, alignItems: "center" }}>
-                        <Text caption1 light>
-                           Flight Type
-                        </Text>
-                        <View style={styles.contentLine}>
-                            <View style={styles.lineFlight} />
-                            <Icon
-                                name="plane"
-                                color={BaseColor.dividerColor}
-                                size={24}
-                                solid
-                            />
-                            <View style={styles.dot} />
-                        </View>
-                        <Text caption1 light>
-                            {type}
-                        </Text>
-                    </View>
-                    <View style={{ flex: 1, alignItems: "flex-end" }}>
-                        <Text title2>{toFlight}</Text>
-                        <Text footnote light style={{textAlign:'right'}}>
-                            {to}
-                        </Text>
-                    </View>
-                </View>
-
-                <View style={styles.contentTop}>
+                {contentProduct}
+                {contentContact}
+           
+                
+                
+                {/* <View style={styles.contentTop}>
                     <View style={{ flex: 1 }}>
                         <Text title4>Adult</Text>
                         <Text footnote light>
@@ -249,41 +412,9 @@ export default class CartCard extends Component {
                             {infant}
                         </Text>
                     </View>
-                </View>
+                </View> */}
                 
-                <View style={styles.contentBottom}>
-                    <View style={styles.bottomLeft}>
-                        <View>
-                            <Text caption2 light>
-                               Contact Name
-                            </Text>
-                        </View>
-                    </View>
-                    <View
-                        style={{ flexDirection: "row", alignItems: "flex-end" }}
-                    >
-                        <Text caption1 light style={{ marginLeft: 5 }}>
-                            {contactName}
-                        </Text>
-                    </View>
-                </View>
-
-                <View style={styles.contentBottom}>
-                    <View style={styles.bottomLeft}>
-                        <View>
-                            <Text caption2 light>
-                                Contact Phone
-                            </Text>
-                        </View>
-                    </View>
-                    <View
-                        style={{ flexDirection: "row", alignItems: "flex-end" }}
-                    >
-                        <Text caption1 light style={{ marginLeft: 5 }}>
-                            {contactPhone}
-                        </Text>
-                    </View>
-                </View>
+                
 
                 {/* <View style={styles.contentBottom}>
                     <View style={styles.bottomLeft}>
@@ -303,7 +434,7 @@ export default class CartCard extends Component {
                 </View> */}
 
 
-                <View style={styles.contentBottom}>
+                {/* <View style={styles.contentBottom}>
                     <View style={styles.bottomLeft}>
                         <View>
                             <Text caption2 light>
@@ -335,7 +466,7 @@ export default class CartCard extends Component {
                             {idCart}
                         </Text>
                     </View>
-                </View>
+                </View> */}
 
                 {/* <View style={styles.contentBottom}>
                     <View style={styles.bottomLeft}>
@@ -406,7 +537,12 @@ CartCard.propTypes = {
     idCart: PropTypes.object,
     departure: PropTypes.object,
     returns: PropTypes.object,
-    onPress: PropTypes.func
+    onPress: PropTypes.func,
+    
+    
+    item: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    typeProduct:PropTypes.string,
+    dataPerson:PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
 
 };
 
@@ -451,4 +587,9 @@ CartCard.defaultProps = {
     departure: 'xx',
     returns: 'xx',
     onPress: () => { },
+    
+    item:{},
+    typeProduct:'flight',
+    dataPerson:{}
+    
 };

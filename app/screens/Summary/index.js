@@ -405,7 +405,7 @@ export default class Summary extends Component {
                                     redirect: 'follow'
                                     };
 
-                                    fetch("https://dev-api.megaelectra.co.id/flight/Price/v3", requestOptions)
+                                    fetch("https://staging-api.megaelectra.co.id/flight/Price/v3", requestOptions)
                                     .then((response) => response.json())
                                     .then((result) => {
                                         this.setState({ loading_spinner: false });
@@ -742,7 +742,7 @@ export default class Summary extends Component {
                         redirect: 'follow'
                         };
         
-                        fetch("https://dev-api.megaelectra.co.id/flight/Cart", requestOptions)
+                        fetch("https://staging-api.megaelectra.co.id/flight/Cart", requestOptions)
                         .then(response => response.json())
                         .then(result => {
                             console.log("---------------cart  ------------");

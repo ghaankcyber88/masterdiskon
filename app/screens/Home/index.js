@@ -167,17 +167,28 @@ export default class Home extends Component {
     }
 
     getToken(){
-         var details = {
-            "grant_type":"password",
-            "client_id":"website.2",
-            "client_secret":"4bUbd9IH",
-            "username":"external@agent.com",
-            "password":"123456",
-            "timezone":"Asia/Jakarta",
-            "lang":"en_US",
-            "is_agent":"true",
-        };
+        //  var details = {
+        //     "grant_type":"password",
+        //     "client_id":"website.2",
+        //     "client_secret":"4bUbd9IH",
+        //     "username":"external@agent.com",
+        //     "password":"123456",
+        //     "timezone":"Asia/Jakarta",
+        //     "lang":"en_US",
+        //     "is_agent":"true",
+        // };
         
+        var details = {
+                "grant_type":"password",
+                "client_id":"website.UVJ",
+                "client_secret":"Djlb5JDp",
+                "username":"vasubagent@gmail.com",
+                "password":"PU8FDHK0",
+                "timezone":"Asia/Jakarta",
+                "lang":"en_US",
+                "is_agent":"true",
+            };
+            
         var formBody = [];
         for (var property in details) {
           var encodedKey = encodeURIComponent(property);
@@ -188,7 +199,8 @@ export default class Home extends Component {
 
 
         /*untuk mendapatkan token*/
-        fetch('https://dev-api.megaelectra.co.id/connect/token', {
+        //fetch('https://dev-api.megaelectra.co.id/connect/token', {
+        fetch('https://staging-api.megaelectra.co.id/connect/token', {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -454,13 +466,13 @@ export default class Home extends Component {
         
         
         
-        // this.getPopularDestination();
-        // this.getTripDomestic();
-        // this.getBlog();
-        // this.getAssets();
-        // this.getPromo();
-        // this.getMusium();
-        // this.getculture();
+        this.getPopularDestination();
+        this.getTripDomestic();
+        this.getBlog();
+        this.getAssets();
+        this.getPromo();
+        this.getMusium();
+        this.getculture();
      }
 
      

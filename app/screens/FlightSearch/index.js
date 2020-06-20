@@ -226,46 +226,46 @@ export default class FlightSearch extends Component {
 
 
 
-    getProduct(param,paramOther) {
-        console.log("-------param------");
-        console.log(JSON.stringify(param));
-        this.setState({ loading: true }, () => {
-            AsyncStorage.getItem('tokenAgi', (error, result) => {
-                if (result) {    
+    // getProduct(param,paramOther) {
+    //     console.log("-------param------");
+    //     console.log(JSON.stringify(param));
+    //     this.setState({ loading: true }, () => {
+    //         AsyncStorage.getItem('tokenAgi', (error, result) => {
+    //             if (result) {    
 
-                            var access_token=result;
-                            var myHeaders = new Headers();
-                            myHeaders.append("Content-Type", "application/json");
-                            myHeaders.append("Authorization", "Bearer "+access_token);
+    //                         var access_token=result;
+    //                         var myHeaders = new Headers();
+    //                         myHeaders.append("Content-Type", "application/json");
+    //                         myHeaders.append("Authorization", "Bearer "+access_token);
 
-                            var raw = JSON.stringify(param);
-                            var requestOptions = {
-                            method: 'POST',
-                            headers: myHeaders,
-                            body: raw,
-                            redirect: 'follow'
-                            };
+    //                         var raw = JSON.stringify(param);
+    //                         var requestOptions = {
+    //                         method: 'POST',
+    //                         headers: myHeaders,
+    //                         body: raw,
+    //                         redirect: 'follow'
+    //                         };
 
-                            fetch("https://dev-api.megaelectra.co.id/flight/search/v2", requestOptions)
-                            .then((response) => response.json())
-                            .then((result) => {
-                                this.setState({ loading: false });
-                                var listdata_departure=this.rebuild(result.data.departure);
-                                var listdata_return=this.rebuild(result.data.return);
-                                this.props.navigation.navigate('FlightResult',
-                                {
-                                param:param,
-                                paramOther:paramOther,
-                                listdata_departure:listdata_departure,
-                                listdata_return:listdata_return,
-                                });
-                            })
-                            .catch(error => console.log('error', error));
-                        }
-                });
+    //                         fetch("https://dev-api.megaelectra.co.id/flight/search/v2", requestOptions)
+    //                         .then((response) => response.json())
+    //                         .then((result) => {
+    //                             this.setState({ loading: false });
+    //                             var listdata_departure=this.rebuild(result.data.departure);
+    //                             var listdata_return=this.rebuild(result.data.return);
+    //                             this.props.navigation.navigate('FlightResult',
+    //                             {
+    //                             param:param,
+    //                             paramOther:paramOther,
+    //                             listdata_departure:listdata_departure,
+    //                             listdata_return:listdata_return,
+    //                             });
+    //                         })
+    //                         .catch(error => console.log('error', error));
+    //                     }
+    //             });
 
-        });
-    }
+    //     });
+    // }
 
     rebuild(listdata){
         var listdata_new = [];

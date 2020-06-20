@@ -326,7 +326,62 @@ class OrderTab extends Component {
         var product=this.props.product;
         //alert(product);
         this.state = {
-            dataBooking: [],
+            dataBooking: [
+                {
+                    "id_order": "2789",
+                    "order_code": "MD2006180015",
+                    "order_expired": "2020-06-17 13:37:00",
+                    "order_status": "new",
+                    "order_status_name": "New Order",
+                    "aero_status": "0",
+                    "product": "Trip",
+                    "total_price": "2800000",
+                    "pax_people": "0",
+                    "status_payment": "belum_lunas",
+                    "current_payment": {
+                        "expired": null,
+                        "amount": "2800000",
+                        "datetime": "2020-06-18 17:09:31",
+                        "status": "not_paid"
+                    },
+                    "order_payment": [
+                        {
+                            "expired": null,
+                            "amount": "2800000",
+                            "datetime": "2020-06-18 17:09:31",
+                            "status": "not_paid"
+                        }
+                    ],
+                    "detail": [
+                        {
+                            "type": "Trip",
+                            "product_name": "EXPLORE SILANGIT – TOBA – BRASTAGI – MEDAN 3HARI 2MALAM",
+                            "pax": [
+                                {
+                                    "title": "Mr",
+                                    "first_name": "arifinss",
+                                    "last_name": "hendra",
+                                    "type": null
+                                }
+                            ],
+                            "order_product": [
+                                {
+                                    "product_name": "EXPLORE SILANGIT – TOBA – BRASTAGI – MEDAN 3HARI 2MALAM",
+                                    "qty": "1",
+                                    "price": "2800000",
+                                    "product_total": "2800000"
+                                }
+                            ],
+                            "order_product_trip": []
+                        }
+                    ],
+                    "payment": [],
+                    "contact": {
+                        "contact_name": "arifinss hendra",
+                        "contact_phone": "6666666",
+                        "contact_email": "matadesaindotcom@gmail.com"
+                    }
+                }],
             button:[
                 {
                     title: "New Order",

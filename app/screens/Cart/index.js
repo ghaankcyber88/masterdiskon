@@ -160,7 +160,7 @@ export default class Cart extends Component {
         AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
             if (result) {
                 let dataCartArrayReal = JSON.parse(result);
-                console.log("---------------data cart array cart page  ------------");
+                console.log("---------------dataCartArrayReal page  ------------");
                 console.log(JSON.stringify(dataCartArrayReal));
 
                 var totalCartPriceReal=0;
@@ -178,7 +178,7 @@ export default class Cart extends Component {
         AsyncStorage.getItem('dataCartArray', (error, result) => {
             if (result) {
                 let dataCartArray = JSON.parse(result);
-                console.log("---------------data cart array cart page  ------------");
+                console.log("---------------dataCartArray page  ------------");
                 console.log(JSON.stringify(dataCartArray));
         
                 var totalCartPrice=0;
@@ -250,23 +250,96 @@ export default class Cart extends Component {
         
         var content='';
         if(this.state.paramOther.type=='trip'){
-            content=<View><Text>{this.state.outputCart.dataCart.product.judul_trip}</Text></View>
+            content=<Animated.FlatList
+                contentContainerStyle={{
+                    paddingTop: 10,
+                    paddingBottom: 20
+                }}
+                
+                scrollEventThrottle={1}
+                onScroll={Animated.event(
+                    [
+                        {
+                            nativeEvent: {
+                                contentOffset: {
+                                    y: this.state.scrollAnim
+                                }
+                            }
+                        }
+                    ],
+                    { useNativeDriver: true }
+                )}
+                data={this.state.dataCartArray}
+                keyExtractor={(item, index) => item.id}
+                renderItem={({ item, index }) => (
+                    <View style={{marginBottom:20}}> 
+                        <Text>asd</Text>
+                        <CartCard
+                        item={item}
+                        typeProduct={this.state.paramOther.type}
+                        dataPerson={this.state.dataPersonSave}
+                        />
+                    </View>
+                )}
+            />
         }else if(this.state.paramOther.type=='hotel'){
-            content=<View><Text>{this.state.outputCart.dataCart.product.name_hotel}</Text></View>
+                content=<Animated.FlatList
+                contentContainerStyle={{
+                    paddingTop: 10,
+                    paddingBottom: 20
+                }}
+                
+                scrollEventThrottle={1}
+                onScroll={Animated.event(
+                    [
+                        {
+                            nativeEvent: {
+                                contentOffset: {
+                                    y: this.state.scrollAnim
+                                }
+                            }
+                        }
+                    ],
+                    { useNativeDriver: true }
+                )}
+                data={this.state.dataCartArray}
+                keyExtractor={(item, index) => item.id}
+                renderItem={({ item, index }) => (
+                    <View style={{marginBottom:20}}> 
+                        <Text>asd</Text>
+                        
+                        <CartCard
+                        item={item}
+                        typeProduct={this.state.paramOther.type}
+                        />
+                        {/* <Button
+                            style={{ height: 46 }}
+                            full
+                            onPress={() => {  
+                               //this.deleteCart(item.id,this.state.dataCartArrayReal);
+                               Alert.alert(
+                                'Remove Cart',
+                                'Yakin ingin mau di hapus ?',
+                                [
+                                  {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                  {text: 'YES', onPress: () => this.deleteCart(item.id)},
+                                ]
+                              );
+                            }}
+                        >
+                            Delete
+                        </Button> */}
+                    
+                    </View>
+                )}
+            />
         }else{
             content=<Animated.FlatList
             contentContainerStyle={{
                 paddingTop: 10,
                 paddingBottom: 20
             }}
-            // refreshControl={
-            //     <RefreshControl
-            //         colors={[BaseColor.primaryColor]}
-            //         tintColor={BaseColor.primaryColor}
-            //         refreshing={refreshing}
-            //         onRefresh={() => {}}
-            //     />
-            // }
+            
             scrollEventThrottle={1}
             onScroll={Animated.event(
                 [
@@ -285,7 +358,9 @@ export default class Cart extends Component {
             renderItem={({ item, index }) => (
                 <View style={{marginBottom:20}}> 
                 <CartCard
-                    //timeLimit={100}
+                    item={item}
+                    typeProduct={this.state.paramOther.type}
+                    
                     dataCartArrayReal={this.state.dataCartArrayReal}
                     timeLimit={item.time_limit}
                     fromFlight={item.origin.id}
@@ -535,28 +610,26 @@ export default class Cart extends Component {
                     redirect: 'follow'
                     };
 
-                    fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
-                    .then(response => response.json())
-                    .then((result) => {
-                        var dataOrderSubmit=result;
-                        console.log("---------------status carts-------------");
-                        console.log(JSON.stringify(dataOrderSubmit));
-                            this.setState({ loading: false });
+                    // fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
+                    // .then(response => response.json())
+                    // .then((result) => {
+                    //     var dataOrderSubmit=result;
+                    //     console.log("---------------status carts-------------");
+                    //     console.log(JSON.stringify(dataOrderSubmit));
+                    //         this.setState({ loading: false });
                             
 
-                                id_order=result.id_order;
-                                pay=result.pay;
+                    //             id_order=result.id_order;
+                    //             pay=result.pay;
 
-                                var redirect='Pembayaran';
-                                setTimeout(() => {
-                                    var id_order=dataOrderSubmit.id_order;
-                                    //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
-                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
-                                }, 500);
-
-
-                                //this.getVa(dataOrderSubmit);
-                    });
+                    //             var redirect='Pembayaran';
+                    //             setTimeout(() => {
+                    //                 var id_order=dataOrderSubmit.id_order;
+                    //                 //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
+                    //                 this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
+                    //             }, 500);
+                    //             //this.getVa(dataOrderSubmit);
+                    // });
 
                 }
             });
@@ -775,7 +848,8 @@ export default class Cart extends Component {
 
                 <Header
                     title="Cart"
-                    subTitle={this.state.countCartReal+' Cart'}
+                    //subTitle={this.state.countCartReal+' Cart'}
+                    subTitle={this.state.paramOther.type}
                     renderLeft={() => {
                         return (
                             <Icon

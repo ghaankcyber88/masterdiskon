@@ -325,14 +325,14 @@ export default class FlightResult extends Component {
                             redirect: 'follow'
                             };
 
-                            fetch("https://dev-api.megaelectra.co.id/flight/search/v2", requestOptions)
+                            fetch("https://staging-api.megaelectra.co.id/flight/search/v2", requestOptions)
                             .then((response) => response.json())
                             .then((result) => {
                                 this.setState({ loading_spinner: false });
                                 var listdata_departure=this.rebuild(result.data.departure);
                                 var listdata_return=this.rebuild(result.data.return);  
-
-                                console.log('listdata_departure',JSON.stringify(listdata_departure)); 
+                                console.log('listdata_departure_asli',JSON.stringify(result)); 
+                                //console.log('listdata_departures',JSON.stringify(listdata_departure)); 
 
                                 this.setState({ listdata_departure: listdata_departure });
                                 this.setState({ listdata_return: listdata_return });
