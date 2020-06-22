@@ -25,7 +25,7 @@ import {
     GoogleSigninButton,
     statusCodes,
   } from '@react-native-community/google-signin';
-
+  import NotYetLogin from "../../components/NotYetLogin";
 
 class Profile extends Component {
     constructor(props) {
@@ -516,58 +516,8 @@ class Profile extends Component {
           
                 </View>
                  :
-                 <View>
-                         <View style={{ padding: 20, alignItems: "center" }}>
-                             <Icon
-                                 name="lock"
-                                 size={72}
-                                 color={BaseColor.lightPrimaryColor}
-                                 style={{ paddingTop: 50, paddingBottom: 20 }}
-                             />
-                             <Text title3 style={{ marginVertical: 0 }} semibold>
-                                 Your Profile
-                             </Text>
-                             <Text body1 grayColor style={{ textAlign: "center" }}>
-                                 Log in to start planning your next trip
-                             </Text>
-                             
-                             <Button
-                                 full
-                                 style={{ marginTop: 20 }}
-                                 loading={this.state.loading}
-                                 onPress={() => navigation.navigate("SignIn",{redirect:'Profile'})}
-                             >
-                                 Sign In
-                             </Button>
-{/* 
-                             <Button
-                                 full
-                                 style={{ marginTop: 20 }}
-                                 loading={this.state.loading}
-                                 onPress={this._signOut}
-                             >
-                                 Sign Out
-                             </Button> */}
-
-                             <View style={styles.contentActionBottom}>
-                                 <TouchableOpacity
-                                     onPress={() => navigation.navigate("SignUp")}
-                                 >
-                                     <Text body1 grayColor>
-                                         Havenâ€™t registered yet?
-                                     </Text>
-                                 </TouchableOpacity>
- 
-                                 <TouchableOpacity
-                                     onPress={() => navigation.navigate("SignUp")}
-                                 >
-                                     <Text body1 primaryColor>
-                                         Join Now
-                                     </Text>
-                                 </TouchableOpacity>
-                             </View>
-                         </View>    
-                     </View> 
+                  <NotYetLogin redirect={'Profile'} navigation={navigation} />
+                 
       
      }
 

@@ -15,19 +15,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "254255805430-00dfuk2jo5q6ll01mak7jph3f8n9k79u.apps.googleusercontent.com",
+          "client_id": "254255805430-jbvv4632nc7o1r4n57o1l6bmgn7gdsqb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.masterdiskon",
-            "certificate_hash": "1a98b7b7fa257557e6bd091952eb6a198d427245"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
-          "client_id": "254255805430-n420so6nklgjgv09uh4j5obrudiobq37.apps.googleusercontent.com",
+          "client_id": "254255805430-1jrrrp6kopllmplgk83jmb83rjnfvn5f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.masterdiskon",
-            "certificate_hash": "f6571934260035d63eaf963b03800bcbeef0dea1"
+            "certificate_hash": "1b93bdefe7f5fb187d4dc6e36d0955ff38426f43"
           }
         },
         {

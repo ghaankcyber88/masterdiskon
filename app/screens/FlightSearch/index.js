@@ -14,7 +14,7 @@ import {
 } from "@components";
 import styles from "./styles";
 import { Image } from "@components";
-
+import NotYetLogin from "../../components/NotYetLogin";
 export default class FlightSearch extends Component {
     constructor(props) {
         super(props);
@@ -564,45 +564,8 @@ export default class FlightSearch extends Component {
                 </ScrollView>
 
                 :
-
-                <View
-                style={{flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100%',padding: 20}}
-                >       
-                <Image
-                    source={Images.login}
-                    style={{ width: "60%", height: "60%" }}
-                    resizeMode="cover"
-                />
-                <View><Text>Anda Belum Login</Text></View>
-                <Button
-                            full
-                            
-                            loading={this.state.loading}
-                            onPress={() => navigation.navigate("SignIn",{redirect:'FlightSearch'})}
-                        >
-                            Sign In
-                        </Button>
-                <View style={styles.contentActionBottom}>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate("SignUp")}
-                            >
-                                <Text body1 grayColor>
-                                    Haven’t registered yet?
-                                </Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate("SignUp")}
-                            >
-                                <Text body1 primaryColor>
-                                    Join Now
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-            </View>
+                <NotYetLogin redirect={'FlightSearch'} navigation={navigation} />
+                
     }
 
                 {/* <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>

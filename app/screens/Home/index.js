@@ -26,6 +26,7 @@ import * as Utils from "@utils";
 import styles from "./styles";
 
 import {PostData} from '../../services/PostData';
+import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
 
 
@@ -43,6 +44,7 @@ import {
   PlaceholderLine,
   Fade
 } from "rn-placeholder";
+import { cos } from "react-native-reanimated";
 
 
 const renderPagination = (index, total, context) => {
@@ -166,61 +168,9 @@ export default class Home extends Component {
         
     }
 
-    getToken(){
-        //  var details = {
-        //     "grant_type":"password",
-        //     "client_id":"website.2",
-        //     "client_secret":"4bUbd9IH",
-        //     "username":"external@agent.com",
-        //     "password":"123456",
-        //     "timezone":"Asia/Jakarta",
-        //     "lang":"en_US",
-        //     "is_agent":"true",
-        // };
-        
-        var details = {
-                "grant_type":"password",
-                "client_id":"website.UVJ",
-                "client_secret":"Djlb5JDp",
-                "username":"vasubagent@gmail.com",
-                "password":"PU8FDHK0",
-                "timezone":"Asia/Jakarta",
-                "lang":"en_US",
-                "is_agent":"true",
-            };
-            
-        var formBody = [];
-        for (var property in details) {
-          var encodedKey = encodeURIComponent(property);
-          var encodedValue = encodeURIComponent(details[property]);
-          formBody.push(encodedKey + "=" + encodedValue);
-        }
-        formBody = formBody.join("&");
-
-
-        /*untuk mendapatkan token*/
-        //fetch('https://dev-api.megaelectra.co.id/connect/token', {
-        fetch('https://staging-api.megaelectra.co.id/connect/token', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: formBody
-        })
-        .then(response => response.json())
-        .then(result => {
-            var access_token=result.access_token;
-            console.log("-------token------");
-            console.log(access_token);
-            AsyncStorage.setItem('tokenAgi', access_token);    
-        })
-        .catch(error => console.log('error', error));
-    }
 
     getFeaturedDestination(){
         this.setState({ loading_featured: true }, () => {
-       
             PostData('get_featured_destination')
                     .then((result) => {
                         console.log('listdata_featured_destination',JSON.stringify(result));
@@ -368,7 +318,17 @@ export default class Home extends Component {
              ); 
         });
      }
-
+    
+    
+    getConfig(){
+        AsyncStorage.getItem('config', (error, result) => {
+            if (result) {    
+                let config = JSON.parse(result);
+                console.log('dataConfig',JSON.stringify(config));
+            }
+        });
+    
+    }
 
     addDate(dt, amount, dateType) {
         switch (dateType) {
@@ -456,18 +416,17 @@ export default class Home extends Component {
         console.log(this.getAge("1987-09-18"));
 
         
-        this.getToken();
+        //this.getToken();
         
         //gak kepake
         // this.getPayment();
         //this.getFeaturedDestination();
         //this.getTripDunia();
 
+        this.getConfig();
         
-        
-        
-        this.getPopularDestination();
-        this.getTripDomestic();
+        //this.getPopularDestination();
+        //this.getTripDomestic();
         this.getBlog();
         this.getAssets();
         this.getPromo();
@@ -875,7 +834,7 @@ export default class Home extends Component {
                                 />
                             </View>
                                 
-                            <View>
+                            {/* <View>
                                 <View style={styles.contentHiking}>
                                     <Text title3 semibold>
                                     Domestic
@@ -934,7 +893,7 @@ export default class Home extends Component {
                                         </Card>
                                     )}
                                 />
-                            </View>
+                            </View> */}
                         
                             
 
@@ -1041,7 +1000,7 @@ export default class Home extends Component {
                             </View>
                                 
                             
-                            <View
+                            {/* <View
                                 style={{
                                     padding: 20,
                                     height: wp("75%"),
@@ -1092,14 +1051,14 @@ export default class Home extends Component {
                                 </Swiper>
                                 }
 
-                            </View>
+                            </View> */}
 
 
 
                         
                            
 
-                            <View style={styles.contentHiking}>
+                            {/* <View style={styles.contentHiking}>
                                     <Text title3 semibold>
                                         BLOG
                                     </Text>
@@ -1131,11 +1090,11 @@ export default class Home extends Component {
                                         />
                                     )}
                                 />
-                            </View>
+                            </View> */}
 
 
                             
-                            <View
+                            {/* <View
                                 style={{
                                     padding: 20,
                                     height: wp("75%"),
@@ -1185,7 +1144,7 @@ export default class Home extends Component {
 
                                 </Swiper>
                                 }
-                            </View>
+                            </View> */}
                                 
 
                          

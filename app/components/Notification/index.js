@@ -16,7 +16,7 @@ import {
   PlaceholderLine,
   Fade
 } from "rn-placeholder";
-import NotYetLogin from "../../components/NotYetLogin";
+
 export default class Notification extends Component {
     constructor(props) {
         super(props);
@@ -135,7 +135,55 @@ export default class Notification extends Component {
                             )}
                         /> 
                 :
-                <NotYetLogin redirect={'Notification'} navigation={navigation} />
+                <View
+                    style={{flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100%',padding: 20}}
+                    >       
+                    <Image
+                        source={Images.login}
+                        style={{ width: "60%", height: "60%" }}
+                        resizeMode="cover"
+                    />
+                    <View><Text>Anda Belum Login</Text></View>
+                    <Button
+                                full
+                                style={{ 
+                                     marginTop: 20,
+                                    borderRadius: 18,
+                                // backgroundColor: BaseColor.fieldColor,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5 }}
+                                loading={this.state.loading}
+                                onPress={() => navigation.navigate("SignIn",{redirect:'Booking'})}
+                            >
+                                Sign In
+                            </Button>
+                            <View style={styles.contentActionBottom}>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate("SignUp")}
+                                >
+                                    <Text body1 grayColor>
+                                        Haven’t registered yet?
+                                    </Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate("SignUp")}
+                                >
+                                    <Text body1 primaryColor>
+                                        Join Now
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                </View>
                 }
                 
             </SafeAreaView>

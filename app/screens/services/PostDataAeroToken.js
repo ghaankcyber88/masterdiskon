@@ -1,19 +1,10 @@
-export function PostData(type,userData){
+export function PostDataAeroToken(BaseUrl,type,param){
 	let BaseUrl='https://masterdiskon.com/front/api/api/';
 	console.log('--------url'+type+'------');
 	console.log(BaseUrl+type);
 	return new Promise((resolve,reject)=>{ 
 
-	    fetch(BaseUrl+type,
-		    	{
-				  method: 'POST',
-				  headers: {
-				    Accept: 'application/json',
-				    'Content-Type': 'application/json',
-				  },
-				  body: JSON.stringify(userData),
-				}
-			)
+	    fetch(BaseUrl+type,param)
 		    .then((response) => response.json())
 		    .then((responseJson) => {
 		      resolve(responseJson);
