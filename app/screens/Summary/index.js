@@ -410,18 +410,18 @@ export default class Summary extends Component {
                                     };
 
                                     
-                                    PostDataNew(url,'flight/Price/v3',requestOptions)
-                                     .then((result) => {
+                                    // PostDataNew(url,'flight/Price/v3',requestOptions)
+                                    //  .then((result) => {
                                         
-                                        this.setState({ loading_spinner: false });
-                                        console.log('data pricess',JSON.stringify(result));
-                                        this.setState({dataPrice:result.data});
-                                        this.setState({total_all:result.data.total_price});
-                                     },
-                                     (error) => {
-                                         this.setState({ error });
-                                     }
-                            ); 
+                                    //     this.setState({ loading_spinner: false });
+                                    //     console.log('data pricess',JSON.stringify(result));
+                                    //     this.setState({dataPrice:result.data});
+                                    //     this.setState({total_all:result.data.total_price});
+                                    //  },
+                                    //  (error) => {
+                                    //      this.setState({ error });
+                                    //  }
+                                    // ); 
                             
                             
                         }
