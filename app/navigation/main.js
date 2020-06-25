@@ -152,7 +152,18 @@ const routeConfigs = {
     Booking: {
         screen: Booking,
         navigationOptions: ({ navigation }) => ({
-            title: "Booking",
+            title: "Order",
+            tabBarIcon: ({ focused, tintColor }) => {
+                return (
+                    <Icon color={tintColor} name="bookmark" size={20} solid />
+                );
+            }
+        })
+    },
+    Cart: {
+        screen: Cart,
+        navigationOptions: ({ navigation }) => ({
+            title: "Cart",
             tabBarIcon: ({ focused, tintColor }) => {
                 return (
                     <Icon color={tintColor} name="bookmark" size={20} solid />

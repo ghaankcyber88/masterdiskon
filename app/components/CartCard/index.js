@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, Image,StyleSheet } from "react-native";
+import { View, TouchableOpacity, Image,StyleSheet,Alert } from "react-native";
 import PropTypes from "prop-types";
 import { Text, Icon, Button } from "@components";
 import { BaseColor, Images } from "@config";
@@ -64,7 +64,7 @@ export default class CartCard extends Component {
 
 
         this.state = {
-            backgroundColor:BaseColor.fieldColor,
+            backgroundColor:BaseColor.primaryColor,
             loading:false
          
         };
@@ -83,7 +83,7 @@ export default class CartCard extends Component {
         //time_limit: "2020-06-17T13:37:00",
         var timeLimit=this.props.timeLimit;
         if(timeLimit===0){
-            this.setState({backgroundColor:'red'});
+            this.setState({backgroundColor:'grey'});
             var idCart=this.props.idCart;
             this.props.updatePrice(idCart);
            
@@ -107,7 +107,7 @@ export default class CartCard extends Component {
     timeOut(value)
     {   
         if(value===1){
-            this.setState({backgroundColor:'red'});
+            this.setState({backgroundColor:'grey'});
             var idCart=this.props.idCart;
             this.props.updatePrice(idCart);
            
@@ -150,7 +150,8 @@ export default class CartCard extends Component {
             
             
             item,
-            typeProduct
+            typeProduct,
+            detail
         } = this.props;
 
         // if(route==0){
@@ -176,42 +177,40 @@ export default class CartCard extends Component {
         var numTimeLimit=Math.floor(Math.random() * 60) + 1;
         
         
-        var contentCountDown='';
-        contentCountDown=<View style={styles.contentTop}>
-            <View style={{ flex: 1 }}>
-            </View>
-            <View style={{ flex: 1.5, alignItems: "center" }}>
-                <Text caption1 light>
-                    Batas Order
-                </Text>
-                <CountDown
-                        size={10}
-                        //until={this.duration('2020-02-17T16:30:28')}
-                        
-                        until={this.duration(timeLimit)}
-                        //until={numTimeLimit}
-                        onFinish={() => this.timeOut(1)}
-                        style={{float:'left'}}
-                        digitStyle={{backgroundColor: BaseColor.fieldColor, borderWidth: 2, borderColor: BaseColor.fieldColor}}
-                        digitTxtStyle={{color: BaseColor.primaryColor}}
-                        timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
-                        separatorStyle={{color: BaseColor.primaryColor}}
-                        timeToShow={['H', 'M', 'S']}
-                        timeLabels={{m: null, s: null}}
-                        showSeparator
-                    />
-            </View>
-            <View style={{ flex: 1, alignItems: "flex-end" }}>
-            </View>
-        </View>
+        // var contentCountDown='';
+        // contentCountDown=<View style={styles.contentTop}>
+        //                     <View style={{ flex: 1 }}></View>
+        //                     <View style={{ flex: 1.5, alignItems: "center" }}>
+        //                         <Text caption1 light>
+        //                             Batas Order
+        //                         </Text>
+        //                         <CountDown
+        //                                 size={10}
+        //                                 //until={this.duration('2020-02-17T16:30:28')}
+                                        
+        //                                 until={this.duration(timeLimit)}
+        //                                 //until={numTimeLimit}
+        //                                 onFinish={() => this.timeOut(1)}
+        //                                 style={{float:'left'}}
+        //                                 digitStyle={{backgroundColor: BaseColor.fieldColor, borderWidth: 2, borderColor: BaseColor.fieldColor}}
+        //                                 digitTxtStyle={{color: BaseColor.primaryColor}}
+        //                                 timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
+        //                                 separatorStyle={{color: BaseColor.primaryColor}}
+        //                                 timeToShow={['H', 'M', 'S']}
+        //                                 timeLabels={{m: null, s: null}}
+        //                                 showSeparator
+        //                             />
+        //                     </View>
+        //                     <View style={{ flex: 1, alignItems: "flex-end" }}></View>
+        //                 </View>
         
-        var contentProduct='';
-        if(typeProduct=='flight'){
+        var contentProduct=<View></View>;
+        if(item.typeProduct=='flight'){
             contentProduct=<View style={styles.contentTop}>
             <View style={{ flex: 1 }}>
-                <Text title2>{fromFlight}</Text>
+                <Text title2>{item.origin.id}</Text>
                 <Text footnote light>
-                    {from}
+                    {item.origin.name}
                 </Text>
             </View>
             <View style={{ flex: 1.5, alignItems: "center" }}>
@@ -229,18 +228,18 @@ export default class CartCard extends Component {
                     <View style={styles.dot} />
                 </View>
                 <Text caption1 light>
-                    {type}
+                {item.type_name}
                 </Text>
             </View>
             <View style={{ flex: 1, alignItems: "flex-end" }}>
-                <Text title2>{toFlight}</Text>
+                <Text title2>{item.destination.id}</Text>
                 <Text footnote light style={{textAlign:'right'}}>
-                    {to}
+                {item.destination.name}
                 </Text>
             </View>
         </View>
         
-        }else if(typeProduct=='trip'){  
+        }else if(item.typeProduct=='trip'){  
             contentProduct=<View style={styles.contentTop}>
             <View style={{ flex: 1 }}>
                 <Text title2>dfg</Text>
@@ -274,7 +273,7 @@ export default class CartCard extends Component {
             </View>
         </View>
             
-        }else if(typeProduct=='hotel'){
+        }else if(item.typeProduct=='hotel'){
             contentProduct=<View><Text>hotel</Text></View>
         }
         
@@ -356,9 +355,22 @@ export default class CartCard extends Component {
         // });
         
         return (
-            <View style={{padding: 10,
-                borderRadius: 8,
-                backgroundColor: this.state.backgroundColor}}>
+            <View style={{
+                //borderRadius: 8,
+                //backgroundColor: this.state.backgroundColor,
+                padding: 10,
+                backgroundColor: "#fff",
+                borderRadius: 18,
+                shadowColor: "#000",
+                shadowOffset: {
+                    width: 0,
+                    height: 2,
+                    },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5
+                
+                }}>
                 
                 {/*--------------countdown--------------/*}
                 {/* <View style={styles.contentTop}>
@@ -387,10 +399,52 @@ export default class CartCard extends Component {
                     <View style={{ flex: 1, alignItems: "flex-end" }}></View>
                 </View> */}
                 
-                <View style={styles.line} />
+                {/* <View style={styles.line} /> */}
+                {/* {contentCountDown} */}
                 {contentProduct}
-                {contentContact}
-           
+                {/* {contentContact} */}
+                
+                    <View style={{flexDirection:'row',justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center",marginRight:5}}>
+                                    <Button
+                                    style={{ height: 46,backgroundColor:this.state.backgroundColor}}
+                                    full
+                                    onPress={() => {  
+                                        this.props.checkout(item)
+                                    //    Alert.alert(
+                                    //     'Remove Cart',
+                                    //     'Book ini mau dibayar ?',
+                                    //     [
+                                    //       {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                    //       {text: 'YES', onPress: () => this.props.checkout(item)},
+                                    //     ]
+                                    //   );
+                                    }}
+                                >
+                                    Bayar
+                                </Button>
+                        </View>
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end",marginLeft:5}}>
+                                <Button
+                                style={{ height: 46,backgroundColor:BaseColor.thirdColor}}
+                                full
+                                onPress={() => {  
+                                   Alert.alert(
+                                    'Remove Cart',
+                                    'Yakin ingin mau di hapus ?',
+                                    [
+                                      {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                      {text: 'YES', onPress: () => this.props.deleteCart(item.id)},
+                                    ]
+                                  );
+                                }}
+                            >
+                                Delete
+                            </Button>
+                                
+                        </View>
+                    </View>
+                
                 
                 
                 {/* <View style={styles.contentTop}>
@@ -538,6 +592,7 @@ CartCard.propTypes = {
     departure: PropTypes.object,
     returns: PropTypes.object,
     onPress: PropTypes.func,
+    detail:PropTypes.bool,
     
     
     item: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
@@ -590,6 +645,7 @@ CartCard.defaultProps = {
     
     item:{},
     typeProduct:'flight',
-    dataPerson:{}
+    dataPerson:{},
+    detail:true
     
 };

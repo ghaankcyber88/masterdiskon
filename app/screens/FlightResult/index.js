@@ -20,6 +20,7 @@ import styles from "./styles";
 import { FlightData,DataLoading } from "@data";
 import { FlightSearch } from "@data";
 import {PostData} from '../../services/PostData';
+import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
 import Modal from "react-native-modal";
 
@@ -41,18 +42,10 @@ export default class FlightResult extends Component {
         
         var param=this.props.navigation.state.params.param;
         var paramOther=this.props.navigation.state.params.paramOther;
-        // var listdata_departure=this.props.navigation.state.params.listdata_departure;
-        // var listdata_return=this.props.navigation.state.params.listdata_return;
-
-
-        // console.log("----------------array departure ------------------------------------");
-        // console.log(listdata_departure);
-
+  
         var listdata_departure_original=[];
         var listdata_return_original=[];
 
-        // console.log('---------------DATA DEPARTURE---------------')
-        // console.log(JSON.stringify(listdata_departure));
       
         this.state = {
             refreshing: false,
@@ -72,13 +65,6 @@ export default class FlightResult extends Component {
                 40
             ),
 
-
-            // param:param,
-            // paramOther:paramOther,
-            // listdata_departure:listdata_departure,
-            // listdata_return:listdata_return,
-
-            
             param:param,
             paramOther:paramOther,
             listdata_departure:[
@@ -308,10 +294,13 @@ export default class FlightResult extends Component {
         console.log("-------param------");
         console.log(JSON.stringify(param));
         this.setState({ loading_spinner: true }, () => {
-            AsyncStorage.getItem('tokenAgi', (error, result) => {
+            AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
 
-                            var access_token=result;
+                            let config = JSON.parse(result);
+                            var access_token=config.token;
+                            var url=config.aeroUrl;
+
                             var myHeaders = new Headers();
                             myHeaders.append("Content-Type", "application/json");
                             myHeaders.append("Authorization", "Bearer "+access_token);
@@ -325,33 +314,27 @@ export default class FlightResult extends Component {
                             redirect: 'follow'
                             };
 
-                            fetch("https://staging-api.megaelectra.co.id/flight/search/v2", requestOptions)
-                            .then((response) => response.json())
-                            .then((result) => {
-                                this.setState({ loading_spinner: false });
-                                var listdata_departure=this.rebuild(result.data.departure);
-                                var listdata_return=this.rebuild(result.data.return);  
-                                console.log('listdata_departure_asli',JSON.stringify(result)); 
-                                //console.log('listdata_departures',JSON.stringify(listdata_departure)); 
-
-                                this.setState({ listdata_departure: listdata_departure });
-                                this.setState({ listdata_return: listdata_return });
-
-                                this.setState({ listdata_departure_original: listdata_departure });
-                                this.setState({ listdata_return_original: listdata_return });
-
-
-                                // this.props.navigation.navigate('FlightResult',
-                                // {
-                                // param:param,
-                                // paramOther:paramOther,
-                                // listdata_departure:listdata_departure,
-                                // listdata_return:listdata_return,
-                                // });
-                            })
-                            .catch(error => console.log('error', error));
-                        }
-                });
+                            
+                            PostDataNew(url,'flight/search/v2',requestOptions)
+                                     .then((result) => {
+                                        
+                                        this.setState({ loading_spinner: false });
+                                        var listdata_departure=this.rebuild(result.data.departure);
+                                        var listdata_return=this.rebuild(result.data.return);  
+                                        console.log('listdata_departure_asli',JSON.stringify(result)); 
+        
+                                        this.setState({ listdata_departure: listdata_departure });
+                                        this.setState({ listdata_return: listdata_return });
+        
+                                        this.setState({ listdata_departure_original: listdata_departure });
+                                        this.setState({ listdata_return_original: listdata_return });
+                                     },
+                                     (error) => {
+                                         this.setState({ error });
+                                     }
+                            ); 
+                }
+            });
 
         });
     }
@@ -460,37 +443,21 @@ export default class FlightResult extends Component {
     
     sortProcess(filter)
     {   
-        ///this.onClear();
        
-            this.setState({listdata_departure:this.state.listdata_departure_original});
+        this.setState({listdata_departure:this.state.listdata_departure_original});
         var filter=filter;
         setTimeout(() => {
 
-        // setTimeout(() => {
             console.log("----------------sortProcess------------------------------------");
             console.log(filter);
     
-            // var filter=filter;
             const products =this.state.listdata_departure_original;
-         
-            // products.sort( function (a, b) {
-            //     var A = a['num'], B = b['num'];
-                
-            //     if (filter.indexOf(A) > filter.indexOf(B)) {
-            //       return 1;
-            //     } else {
-            //       return -1;
-            //     }
-                
-            //   });
-            //   console.log('listdataSort',JSON.stringify(products));
-            //   this.setState({listdata_departure:products});
-        // }, 100);
         
-        ordered_array = this.mapOrder(products, filter, 'nums');
-        console.log('listdataSort',JSON.stringify(ordered_array));
-        this.setState({listdata_departure:products});
-    }, 50);
+        
+            ordered_array = this.mapOrder(products, filter, 'nums');
+            console.log('listdataSort',JSON.stringify(ordered_array));
+            this.setState({listdata_departure:products});
+        }, 50);
         
     }
     
@@ -510,23 +477,8 @@ export default class FlightResult extends Component {
         return array;
       };
       
-      
-
-
-
-    /**
-     * @description Open modal when view mode is pressed
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     */
     onChangeView() {}
 
-    /**
-     * @description Render container view
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     * @returns
-     */
 
     removePrice(dataObj)
     {
@@ -676,143 +628,12 @@ export default class FlightResult extends Component {
   
     componentDidMount() {
         this.getProduct();
-        const find = (needle, haystack) => {
-            const result = [];
-            const stack = [[haystack, haystack]];
-          
-            while (stack.length) {
-              const [curr, parent] = stack.pop();
-          
-              for (const o of curr) {
-                for (const k in o) {
-                  if (Array.isArray(o[k])) {
-                    stack.push([o[k], o]);
-                  } 
-                  else if (o[k].includes(needle)) {
-                    result.push("items" in o ? o : parent);
-                  }
-                }
-              }
-            }
-          
-            return result;
-          };
-
-          //var obj =  this.statelistdata_departure;
-          
-        //   const data = [{
-        //       "id": "1234",
-        //       "desc": "sample1",
-        //       "items": [{
-        //         "item1": "testItem1",
-        //         "item2": "testItem2"
-        //       }]
-        //     },
-        //     {
-        //       "id": "3456",
-        //       "desc": "sample2",
-        //       "items": [{
-        //         "item1": "testItem12",
-        //         "item2": "testItem23"
-        //       }]
-        //     }
-        //   ];
-          
-        //   console.log(find("sample", data));
-        //   console.log(find("1234", data));
-        //   console.log(find("testItem12", data));
-
-
-        var obj=[{"airline": "SJ", "baggage": true, "entertainment": false, "meal": "0", "num": 1, "price": 606180, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 2, "price": 1007180, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 3, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 4, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 5, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 6, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 7, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 8, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 9, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 10, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 11, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 12, "price": 1408680, "transit": 0}, {"airline": "QG", "baggage": true, "entertainment": false, "meal": "0", "num": 13, "price": 1408680, "transit": 0}, {"airline": "SJ", "baggage": true, "entertainment": false, "meal": "0", "num": 14, "price": 2062080, "transit": 0}]
-       
-        var newArray = obj.filter(function (el) {
-          return el.num === 1; 
-
-                //  return el.price <= 1000 &&
-                //  el.sqft >= 500 &&
-                //  el.num_of_beds >= 2 &&
-                //  el.num_of_baths >= 1.5; 
-        });
-
-        console.log("----------------list filter------------------------------------");
-        console.log(newArray);
-
-        
-    
-        
-        
-        // var param=this.state.param;
-        // this.setState({ loading_spinner: true }, () => {
-        //     AsyncStorage.getItem('tokenAgi', (error, result) => {
-        //         if (result) {    
-
-        //                     var access_token=result;
-        //                     var myHeaders = new Headers();
-        //                     myHeaders.append("Content-Type", "application/json");
-        //                     myHeaders.append("Authorization", "Bearer "+access_token);
-
-        //                     var raw = JSON.stringify(param);
-
-        //                     var requestOptions = {
-        //                     method: 'POST',
-        //                     headers: myHeaders,
-        //                     body: raw,
-        //                     redirect: 'follow'
-        //                     };
-
-        //                     fetch("https://dev-api.megaelectra.co.id/flight/search/v2", requestOptions)
-        //                     .then((response) => response.json())
-        //                     .then((result) => {
-        //                         this.setState({ loading_spinner: false });
-        //                         var listdata_departure=result.data.departure;
-        //                         var listdata_return=result.data.return;
-        //                         this.setState({listdata_departure:listdata_departure});
-        //                         this.setState({listdata_return:listdata_return});
-        //                     })
-        //                     .catch(error => console.log('error', error));
-        //                 }
-        //         });
-
-        // });
+ 
     }
     
     
-    openModal() {
-        //const { option, value } = this.state;
-        var data_timeline=[
-            {time: '09:00', title: 'Event 1', description: 'Event 1 Description'},
-            {time: '10:45', title: 'Event 2', description: 'Event 2 Description'},
-            {time: '12:00', title: 'Event 3', description: 'Event 3 Description'},
-            {time: '14:00', title: 'Event 4', description: 'Event 4 Description'},
-            {time: '16:30', title: 'Event 5', description: 'Event 5 Description'}
-        ];
-        this.setState({data_timeline:data_timeline});
-        this.setState({modalVisible: true});
-        setTimeout(() => {
-            alert(JSON.stringify(data_timeline));
-        }, 200);
-      
-    }
 
-    // onSelect(select) {
-    //     this.setState({
-    //         option: this.state.option.map(item => {
-    //             return {
-    //                 ...item,
-    //                 checked: item.value == select.value
-    //             };
-    //         })
-    //     });
-        
 
-    //     this.props.setKelasPesawat(select.text,select.value);
-    //         this.setState(
-    //             {
-    //                 value: select.value,
-    //                 modalVisible: false
-    //             }
-    //         );
-    // }
 
     render() {
         const { navigation} = this.props;
@@ -914,14 +735,7 @@ export default class FlightResult extends Component {
                             })}
                         </View>
                         <View style={{flex:1}}>
-                        <Text>{JSON.stringify(this.state.data_timeline)}</Text>
-                        {/* <Timeline
-                            data={this.state.data_timeline}
-                            innerCircle={'dot'}
-                            options={{
-                                removeClippedSubviews: false
-                              }}
-                        /> */}
+                            <Text>{JSON.stringify(this.state.data_timeline)}</Text>
                         </View>
                     </View>
                 </Modal>

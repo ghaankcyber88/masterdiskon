@@ -1,191 +1,416 @@
 import React, { Component } from "react";
-import { View, TextInput, ScrollView,ActivityIndicator } from "react-native";
+import {
+    FlatList,
+    RefreshControl,
+    View,
+    Animated,
+    Platform,
+    ActivityIndicator,
+    ScrollView,
+    Alert,
+    TouchableOpacity
+} from "react-native";
+
 import { BaseStyle, BaseColor } from "@config";
-import { Header, SafeAreaView, Icon, Text, Button } from "@components";
+import {
+    Header,
+    SafeAreaView,
+    Icon,
+    FilterSort,Text,Button
+} from "@components";
 import styles from "./styles";
+import { FlightData } from "@data";
+import {PostData} from '../../services/PostData';
 import {AsyncStorage} from 'react-native';
+import CartCard from "../../components/CartCard";
+import ActionCart from "../../components/ActionCart";
+import DropdownAlert from 'react-native-dropdownalert';
+import ButtonOrder from "../../components/ButtonOrder";
+
 import moment from 'moment';
-import CountDown from 'react-native-countdown-component';
+import { cos } from "react-native-reanimated";
+
+
 
 export default class CheckOut extends Component {
     constructor(props) {
         super(props);
+        item=this.props.navigation.state.params.item;
+        
+        
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {
+                let userSession = JSON.parse(result);
+                console.log("---------------data session user  ------------");
+                console.log(JSON.stringify(userSession));
+                this.setState({userSession:userSession});
+                this.setState({login:true});
 
-        var selectDataDeparture=this.props.navigation.state.params.selectDataDeparture;
-        var selectDataReturn=this.props.navigation.state.params.selectDataReturn;
-        var param=this.props.navigation.state.params.param;
-        var paramOther=this.props.navigation.state.params.paramOther;
-        var departurePost=this.props.navigation.state.params.departurePost;
-        var returnPost=this.props.navigation.state.params.returnPost;
-        var dataPrice=this.props.navigation.state.params.dataPrice;
-        var listdata_customer=this.props.navigation.state.params.listdata_customer;
-        var listdata_participant=this.props.navigation.state.params.listdata_participant;
-        var dataCart=this.props.navigation.state.params.dataCart;
-        var dataPayment=this.props.navigation.state.params.dataPayment;
-        var amount = parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
+                // var id_user='9';
+                var id_user=userSession.id_user;
+                this.setState({id_user:id_user});
+               
+             }
+            
+        });
 
-
-
-        // Temp data define
         this.state = {
-            selectDataDeparture:selectDataDeparture,
-            selectDataReturn:selectDataReturn,
-            param:param,
-            paramOther:paramOther,
-            departurePost:departurePost,
-            returnPost:returnPost,
-            dataPrice:dataPrice,
-            listdata_customer:listdata_customer,
-            listdata_participant:listdata_participant,
-            dataCart:dataCart,
-            dataPayment:dataPayment,
-            jumlahPenumpang:amount,
+            item:item
         };
-    }
-
-    convertTime(timeLimit)
-    {
-
         
-    var date = moment()
-    // .utcOffset('+05:30')
-    // .format('YYYY-MM-DD hh:mm:ss');
-    //Getting the current date-time with required formate and UTC   
-    
-    var expirydate = timeLimit;//You can set your own date-time
-    //Let suppose we have to show the countdown for above date-time 
-
-    var diffr = moment.duration(moment(expirydate).diff(moment(date)));
-    //difference of the expiry date-time given and current date-time
-
-    var hours = parseInt(diffr.asHours());
-    var minutes = parseInt(diffr.minutes());
-    var seconds = parseInt(diffr.seconds());
-    
-    var d = hours * 60 * 60 + minutes * 60 + seconds;
-    //converting in seconds
-
-    return d;
-    
-
-
-    
-
-    }
-
-
-
-    componentDidMount(){
+        this.onSubmit = this.onSubmit.bind(this);
        
-                            // var timeLimit="2020-02-04T16:09:52";
-                            // console.log("---------------Time Limit------------");
-                            // console.log(this.convertTime(timeLimit));
-                            // var numTimeLimit=this.convertTime(timeLimit);
-                            // this.setState({numTimeLimit:numTimeLimit});
-
-        var param=this.state.param;
-        var customer=this.state.listdata_customer;
-        var guest=this.state.listdata_participant;
-        var departurePost=this.state.departurePost;
-        var returnPost=this.state.returnPost;
-        var selectDataDeparture=this.state.selectDataDeparture;
-        var selectDataReturn=this.state.selectDataReturn;
-
-        var dataPrice=this.state.dataPrice;
-        var departurePrice=dataPrice.data.detail_price[0];
-        var returnPrice=dataPrice.data.detail_price[1];
-        var paramOther=this.state.paramOther;
-        var dataCart=this.state.dataCart;
-        var cart_id=dataCart.id;
-
-        var dataPayment=this.state.dataPayment;
-        var paymentFlight=dataPayment.data.flight[0].data;
-        var orderId=paymentFlight.orderid;
         
-        var url="https://dev-api.megaelectra.co.id/crm/MyOrder/v2/"+orderId;
-        console.log("---------------url ------------");
-        console.log(url);
-        
+    }
 
-        this.setState({ loading_spinner: true }, () => {
-            AsyncStorage.getItem('tokenAgi', (error, result) => {
-                if (result) {    
-                        
-                        var access_token=result;
-                        console.log("---------------token ------------");
-                        console.log(access_token);
-                        //get payment
-                        var myHeaders = new Headers();
-                        myHeaders.append("Content-Type", "application/json");
-                        myHeaders.append("Authorization", "Bearer "+access_token);
-                       
-                        var requestOptions = {
-                        method: 'GET',
-                        headers: myHeaders,
-                        // body: raw,
-                        redirect: 'follow'
-                        };
     
-                        fetch(url, requestOptions)
-                        .then(response => response.json())
-                        .then(result => {
-                            this.setState({ loading_spinner: false });
-                            console.log("---------------Data Order------------");
-                            console.log(JSON.stringify(result));
-                            var dataOrder=result;
-                            var timeLimit=dataOrder.data.timeLimitPayment;
-                            console.log("---------------Time Limit------------");
-                            console.log(this.convertTime(timeLimit));
-                            var numTimeLimit=this.convertTime(timeLimit);
-                            this.setState({numTimeLimit:numTimeLimit});
-                        })
-                        .catch(error => console.log('error', error));
-                        //get payment
-                        
+    
+
+
+    
+
+
+  
+    componentDidMount() {
+        
+    }
+    
+    
+    deleteCart(idCart){
+        AsyncStorage.getItem('dataCartArray', (error, result) => {
+            if (result) {
+                let dataCartArray = JSON.parse(result);
+                dataCartArray = dataCartArray.filter(item => item.id != idCart);
+                AsyncStorage.setItem('dataCartArray', JSON.stringify(dataCartArray));
+                AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(dataCartArray));
+                
+             }
+            
+        });
+    }
+
+    onSubmit(){
+        this.setState({ loading: true }, () => {
+            AsyncStorage.getItem('config', (error, result) => {
+                if (result) {    
+                    
+                    
+                    let config = JSON.parse(result);
+                    var access_token=config.token;
+                    var url=config.aeroUrl;
+                    
+                    
+                    var dataCartArrayRealSend={
+                    "cart_select":[this.state.item],
+                    "token":access_token,
+                    "id_user":this.state.id_user,
+                    "dataCart":this.state.item,
+                    "dataSavePerson":{
+                        "participant":this.state.item.participant
+                    },
+                    "paramOther":{
+                        "type":this.state.item.typeProduct
+                        },
+                    }
+                    
+                    console.log("---------------data cart array cart kirim  ------------");
+                    console.log(JSON.stringify(dataCartArrayRealSend));
+
+             
+                    
+                    var myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+
+
+                    var raw = JSON.stringify(dataCartArrayRealSend);
+                    var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                    };
+
+                    fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
+                    .then(response => response.json())
+                    .then((result) => {
+                        var dataOrderSubmit=result;
+                        console.log("---------------status carts-------------");
+                        console.log(JSON.stringify(dataOrderSubmit));
+                            this.setState({ loading: false });
+                            
+                                
+                                
+                                id_order=result.id_order;
+                                pay=result.pay;
+    
+                                var redirect='Pembayaran';
+                                setTimeout(() => {
+                                    var idCart=this.state.item.id;
+                                    this.deleteCart(idCart);
+                                    var id_order=dataOrderSubmit.id_order;
+                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
+                                }, 500);
+                               
+                    });
+
                 }
             });
         });
-    
+
     }
-    // onCheckOut() {
-    //     const { navigation } = this.props;
-    //     const bookingType = navigation.getParam("bookingType");
-    //     this.setState(
-    //         {
-    //             loading: true
-    //         },
-    //         () => {
-    //             setTimeout(() => {
-    //                 this.setState({
-    //                     loading: false
-    //                 });
-    //                 switch (bookingType) {
-    //                     case "Event":
-    //                         navigation.navigate("EventTicket");
-    //                         break;
-    //                     case "Bus":
-    //                         navigation.navigate("BusTicket");
-    //                         break;
-    //                     default:
-    //                         navigation.navigate("BookingDetail");
-    //                         break;
-    //                 }
-    //             }, 500);
-    //         }
-    //     );
-    // }
+
+
+
+
+
+    setPayment(payment_method,payment_method_title){
+        this.setState({payment_method: payment_method});
+        this.setState({payment_method_title: payment_method_title});
+    }
+    
+    
+    renderContent() {
+        var item=this.state.item;
+        
+        var content=<View></View>
+        if(item.typeProduct=="flight"){
+            content=this.renderContentFlight();
+        }
+        return (
+            <View style={{ flex: 1 }}>
+                {content}
+                
+            </View>
+        );
+    }
+
+    convertDate(date){
+        var d = new Date(date);
+        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        return days[d.getDay()]+", "+d.getDate()+" "+months[d.getMonth()]+" "+d.getFullYear();
+    }
+    
+    renderContentFlight(){
+        var item=this.state.item;
+        
+        var content_return_flight=<View></View>
+        if(item.return_flight != null){
+            content_return_flight=<View>
+            <View style={{ marginTop: '2%', }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Return Information</Text>
+            </View>
+            
+            <View style={{ borderBottomWidth: 0.5, borderColor: 'grey', paddingVertical: '4%' }}>
+                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row', marginBottom: '2%' }}>
+                    <Text>DEPARTURE</Text>
+                    <Text>ARRIVAL</Text>
+                </View>
+                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                    <Text style={{ fontWeight: 'bold' }}>{this.convertDate(item.return_flight.schedules[0].departure_date)}</Text>
+                    <Text style={{ fontWeight: 'bold' }}>{this.convertDate(item.return_flight.schedules[0].arrival_date)}</Text>
+                </View>
+                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 15 }}>{item.return_flight.schedules[0].departure_time}</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 15, }}>{item.return_flight.schedules[0].arrival_time}</Text>
+                </View>
+            </View>
+            
+            <View style={{ borderBottomWidth: 0.5, borderColor: 'grey',paddingVertical: '4%' }}>
+                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row', marginBottom: '2%' }}>
+                    <Text>DURATION</Text>
+                    <Text>CABIN</Text>
+                </View>
+                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                    <Text style={{ fontWeight: 'bold' }}>{item.return_flight.duration}</Text>
+                    <Text style={{ fontWeight: 'bold' }}>{item.return_flight.cabin_code} / {item.return_flight.cabin_name}</Text>
+                </View>
+            </View>
+            
+            <View style={{ paddingVertical: '4%' }}>
+                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row', marginBottom: '2%' }}>
+                    <Text>FLIGHT CODE</Text>
+                    <Text>FLIGHT NUMBER</Text>
+                    <Text>SUB CLASS</Text>
+                </View>
+                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                    <Text style={{ fontWeight: 'bold' }}>{item.return_flight.schedules[0].flight_code}</Text>
+                    <Text style={{ fontWeight: 'bold' }}>{item.return_flight.schedules[0].flight_number}</Text>
+                    <Text style={{ fontWeight: 'bold' }}>{item.return_flight.schedules[0].sub_class}</Text>
+                </View>
+            </View>
+        </View>
+        }
+        
+        
+        var content_passanger=<View></View>
+        var content_passanger = [];
+        item.pax.map(item => {
+            content_passanger.push(<View style={{ paddingVertical: '4%' }}>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row', marginBottom: '2%' }}>
+                                    <Text>NAME</Text>
+                                    <Text>TYPE</Text>
+                                </View>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.title} {item.first_name} {item.last_name}</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.type_name}</Text>
+                                </View>
+                            </View>)
+        });
+        var content=<View style={styles.contain}>
+                        <View style={{ marginTop: '2%', }}>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Flight Information</Text>
+                        </View>
+                
+                        {/* <View style={{ borderBottomWidth: 0.5, borderColor: 'grey', paddingVertical: '4%' }}>
+                            <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                                <Text>11057</Text>
+                                <Text>TICKET FARE</Text>
+                            </View>
+                            <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 17 }}>CSMT ASR EXPRESS</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 17, color: 'green' }}>1.310.98</Text>
+                            </View>
+                        </View> */}
+                        
+                        <View style={styles.contentTop}>
+                            <View style={{ flex: 1 }}>
+                                <Text title2>{item.origin.id}</Text>
+                                <Text footnote light>
+                                    {item.origin.name}
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1.5, alignItems: "center" }}>
+                                <Text caption1 light>
+                                   Flight Type
+                                </Text>
+                                <View style={styles.contentLine}>
+                                    <View style={styles.lineFlight} />
+                                    <Icon
+                                        name="plane"
+                                        color={BaseColor.dividerColor}
+                                        size={24}
+                                        solid
+                                    />
+                                    <View style={styles.dot} />
+                                </View>
+                                <Text caption1 light>
+                                {item.type_name}
+                                </Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: "flex-end" }}>
+                                <Text title2>{item.destination.id}</Text>
+                                <Text footnote light style={{textAlign:'right'}}>
+                                    {item.destination.name}
+                                </Text>
+                            </View>
+                        </View>
+                        
+                        
+                        
+                        <View>
+                            <View style={{ marginTop: '2%', }}>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Departure Information</Text>
+                            </View>
+                            
+                            <View style={{ borderBottomWidth: 0.5, borderColor: 'grey', paddingVertical: '4%' }}>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row', marginBottom: '2%' }}>
+                                    <Text>DEPARTURE</Text>
+                                    <Text>ARRIVAL</Text>
+                                </View>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                                    <Text style={{ fontWeight: 'bold' }}>{this.convertDate(item.departure_flight.schedules[0].departure_date)}</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{this.convertDate(item.departure_flight.schedules[0].arrival_date)}</Text>
+                                </View>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 15 }}>{item.departure_flight.schedules[0].departure_time}</Text>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 15, }}>{item.departure_flight.schedules[0].arrival_time}</Text>
+                                </View>
+                            </View>
+                            
+                            <View style={{ borderBottomWidth: 0.5, borderColor: 'grey',paddingVertical: '4%' }}>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row', marginBottom: '2%' }}>
+                                    <Text>DURATION</Text>
+                                    <Text>CABIN</Text>
+                                </View>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.departure_flight.duration}</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.departure_flight.cabin_code} / {item.departure_flight.cabin_name}</Text>
+                                </View>
+                            </View>
+                            
+                            <View style={{ paddingVertical: '4%' }}>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row', marginBottom: '2%' }}>
+                                    <Text>FLIGHT CODE</Text>
+                                    <Text>FLIGHT NUMBER</Text>
+                                    <Text>SUB CLASS</Text>
+                                </View>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.departure_flight.schedules[0].flight_code}</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.departure_flight.schedules[0].flight_number}</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.departure_flight.schedules[0].sub_class}</Text>
+                                </View>
+                            </View>
+                        </View>
+                        
+                        {content_return_flight}
+                            
+                        
+                        <View>
+                            <View style={{ marginTop: '2%', }}>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Contact Information</Text>
+                            </View>
+                    
+                            <View style={{ paddingVertical: '4%' }}>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row', marginBottom: '2%' }}>
+                                    <Text>NAME</Text>
+                                    <Text>COUNTRY</Text>
+                                    <Text>PHONE</Text>
+                                </View>
+                                <View style={{ alignItems: 'stretch', justifyContent: 'space-between', flexDirection: 'row' }}>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.contact.title} {item.contact.first_name} {item.contact.last_name}</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.contact.country_name}</Text>
+                                    <Text style={{ fontWeight: 'bold' }}>{item.contact.phone_code} {item.contact.phone_number}</Text>
+                                </View>
+                            </View>
+                        </View>
+                        
+                        
+                        <View>
+                            <View style={{ marginTop: '2%', }}>
+                                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Passanger Information</Text>
+                            </View>
+                    
+                            {content_passanger}
+                        </View>
+                    </View>
+                    
+                    
+                    return (
+                        <View style={{ flex: 1 }}>
+                            {content}
+                        </View>
+                    );
+    }
 
     render() {
-        const { navigation } = this.props;
-        const { loading_spinner } =this.state;
+        const { navigation} = this.props;
+        let { loading_spinner,loading } = this.state;
+        var title='Cart';
+        var subTitle='asd';
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
 
         return (
             <SafeAreaView
                 style={BaseStyle.safeAreaView}
                 forceInset={{ top: "always" }}
             >
+               
+
                 <Header
-                    title="Check Out"
+                    title="Checkout"
+                    //subTitle={this.state.countCartReal+' Cart'}
                     renderLeft={() => {
                         return (
                             <Icon
@@ -197,59 +422,54 @@ export default class CheckOut extends Component {
                     }}
                     renderRight={() => {
                         return (
-                            <Text headline primaryColor>
-                                Reset
-                            </Text>
+                            <Icon
+                                name="home"
+                                size={24}
+                                color={BaseColor.primaryColor}
+                            />
                         );
                     }}
+                
                     onPressLeft={() => {
                         navigation.goBack();
                     }}
-                    onPressRight={() => {}}
+                    onPressRight={() => {
+                        navigation.navigate("Home");
+                    }}
                 />
+
+
                 <ScrollView>
-                {
-                loading_spinner ? 
-                    <ActivityIndicator
-                        size="large"
-                        color={BaseColor.primaryColor}
-                    /> 
-                :
-                    <View
-                        style={[
-                            BaseStyle.bodyPaddingDefault,
-                            { marginBottom: 20 }
-                        ]}
-                    >
-                        <Text headline semibold style={{ marginTop: 20 }}>
-                            Credit Card Details
-                        </Text>
-                        <CountDown
-                            size={15}
-                            until={this.state.numTimeLimit}
-                            onFinish={() => alert('Finished')}
-                            digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
-                            digitTxtStyle={{color: BaseColor.primaryColor}}
-                            timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
-                            separatorStyle={{color: BaseColor.primaryColor}}
-                            timeToShow={['H', 'M', 'S']}
-                            timeLabels={{m: null, s: null}}
-                            showSeparator
-                        />
-                    </View>
-                }
+                    {this.renderContent()}
                 </ScrollView>
-                {/* <View style={{ margin: 20 }}>
+                
+            
+                    
+                <View style={styles.contentButtonBottom}>
+                    <View>
+                        <Text caption1 semibold>
+                            Total Price
+                        </Text>
+                        <Text title3 primaryColor semibold>
+                            IDR {priceSplitter(this.state.item.total_price)}
+                        </Text>
+                    </View>
+
+                    
                     <Button
+                        style={{ height: 46 }}
+
                         loading={loading}
-                        full
-                        onPress={() => {
-                            this.onCheckOut();
+                        onPress={() => {  
+                            this.onSubmit();
                         }}
                     >
-                        Check Out
+                       Bayar Sekarang
                     </Button>
-                </View> */}
+                 
+                </View>
+                <DropdownAlert ref={ref => this.dropdown = ref} messageNumOfLines={10} closeInterval={10000} />
+
             </SafeAreaView>
         );
     }

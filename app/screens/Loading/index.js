@@ -34,29 +34,7 @@ class Loading extends Component {
                 },
                 body: JSON.stringify(),
               }
-            // PostData('isProduction')
-            //      .then((result) => {
-            //         var status=result.status;
-            //         var url=result.url;
-            //         if(status==false){
-            //             var details=this.state.DataMasterDiskon.aeroStag;
-            //         }else{
-            //             var details=this.state.DataMasterDiskon.aeroProd;
-            //         }
-            //         console.log('detailsparam',JSON.stringify(details));
-            //         this.getToken(details,url);
-                    
-            //         console.log('isProduction',JSON.stringify(result));
-            //         AsyncStorage.setItem('isProduction',JSON.stringify(result));
-            //         this.setState({isProduction:result});
-                   
-            //      },
-            //      (error) => {
-            //          this.setState({ error });
-            //      }
-            //  ); 
-             
-             
+           
              var url=this.state.DataMasterDiskon.site;
              console.log('baseUrl',url);
              
@@ -72,10 +50,11 @@ class Loading extends Component {
                         var details=this.state.DataMasterDiskon.aeroProd;
                     }
                     console.log('detailsparam',JSON.stringify(details));
-                    this.getToken(details,aeroUrl);
-                    
-                    AsyncStorage.setItem('config',JSON.stringify(result));
-                    this.setState({config:result});
+                    var config=result;
+
+                    this.getToken(details,aeroUrl,config);
+                    // AsyncStorage.setItem('config',JSON.stringify(result));
+                    // this.setState({config:result});
                     
                     
                  },
@@ -89,7 +68,7 @@ class Loading extends Component {
     
     }
     
-    getToken(details,url){
+    getToken(details,url,config){
         let { navigation, auth } = this.props;
         let status = auth.login.success;
         var formBody = [];
@@ -99,27 +78,7 @@ class Loading extends Component {
           formBody.push(encodedKey + "=" + encodedValue);
         }
         formBody = formBody.join("&");
-        
-       
-        // fetch(url+'connect/token', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Accept': 'application/json',
-        //     'Content-Type': 'application/x-www-form-urlencoded'
-        //   },
-        //   body: formBody
-        // })
-        // .then(response => response.json())
-        // .then(result => {
-        //     var access_token=result.access_token;
-        //     console.log("-------token agi loading------");
-        //     console.log(access_token);
-        //     AsyncStorage.setItem('tokenAgi', access_token); 
-            
-        //     navigation.navigate("Home");
-        // })
-        // .catch(error => console.log('error', error));
-        
+                
         
         var param={
             method: 'POST',
@@ -134,8 +93,11 @@ class Loading extends Component {
         PostDataNew(url,'connect/token',param)
                  .then((result) => {
                     var access_token=result.access_token;
-                    console.log('token agi loading',access_token);
-                    AsyncStorage.setItem('tokenAgi', access_token); 
+                    
+                    config.token=access_token;
+                    console.log('dataConfif',JSON.stringify(config));
+                    // console.log('token agi loading',access_token);
+                    AsyncStorage.setItem('config', JSON.stringify(config)); 
                     navigation.navigate("Home");
                     
                  },

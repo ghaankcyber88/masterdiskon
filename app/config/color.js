@@ -12,6 +12,7 @@ let OrangeColor = {
 let BlueColor = {
     primaryColor: "#0070BA",
     secondColor: "#FFCD02",
+    thirdColor: "#cf000f",
     darkPrimaryColor: "#1281ac",
     lightPrimaryColor: "#B4D5F9",
     accentColor: "#FF8A65",

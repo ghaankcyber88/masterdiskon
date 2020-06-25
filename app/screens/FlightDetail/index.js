@@ -129,7 +129,8 @@ export default class FlightDetail extends Component {
               {
                 time: select.flight_schedule[0].departure_time, 
                 title: select.flight_schedule[0].from+' - '+select.flight_schedule[0].from_name, 
-                description: 'Dioperasikan oleh '+select.flight_schedule[0].airline_name+', '+'Departure at :'+select.flight_schedule[0].departure_date+' '+select.flight_schedule[0].departure_time,
+                operation:'Dioperasikan oleh '+select.flight_schedule[0].airline_name,
+                description:'Departure at :'+select.flight_schedule[0].departure_date+' '+select.flight_schedule[0].departure_time,
                 lineColor:'#009688', 
                 icon: Images.dot,
                 imageUrl: select.flight_schedule[0].airline_logo,
@@ -141,6 +142,7 @@ export default class FlightDetail extends Component {
               {
                 time: select.flight_schedule[0].arrival_time, 
                 title: select.flight_schedule[0].to+' - '+select.flight_schedule[0].to_name, 
+                operation:'',
                 description: 'Arrive at :'+select.flight_schedule[0].arrival_date+' '+select.flight_schedule[0].arrival_time, 
                 icon: Images.dot,
                 imageUrl: select.flight_schedule[0].airline_logo,
@@ -170,6 +172,7 @@ export default class FlightDetail extends Component {
               <View style={styles.descriptionContainer}>   
                 <Image source={{uri: rowData.imageUrl}} style={styles.image} resizeMode="contain"/>
                 <Text style={[styles.textDescription]}>{rowData.description}</Text>
+                <Text style={[styles.textDescription]}>{rowData.operation}</Text>
               </View>
             )
         }else{
@@ -322,18 +325,18 @@ export default class FlightDetail extends Component {
                   <View style={styles.container}>
          
                     <Timeline 
-                        style={styles.list}
+                        //style={styles.list}
                         data={this.state.data_timeline}
                         circleSize={20}
-                        circleColor='rgba(0,0,0,0)'
-                        lineColor='rgb(45,156,219)'
+                        circleColor={BaseColor.primaryColor}
+                        lineColor={BaseColor.primaryColor}
                         timeContainerStyle={{minWidth:52, marginTop: 0}}
                         timeStyle={{textAlign: 'center', backgroundColor:'#ff9797', color:'white', padding:5, borderRadius:13}}
                         descriptionStyle={{color:'gray'}}
                         options={{
                           style:{paddingTop:5}
                         }}
-                        innerCircle={'icon'}
+                        //innerCircle={'icon'}
                         onEventPress={this.onEventPress}
                         renderDetail={this.renderDetail}
                     />

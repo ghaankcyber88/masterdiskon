@@ -18,6 +18,7 @@ import FormOptionEdit from "../../components/FormOptionEdit";
 import {AsyncStorage} from 'react-native';
 import { PackageData } from "@data";
 import {PostData} from '../../services/PostData';
+import {PostDataNew} from '../../services/PostDataNew';
 import DropdownAlert from 'react-native-dropdownalert';
 import { UserData } from "@data";
 
@@ -388,10 +389,13 @@ export default class Summary extends Component {
             console.log("---------------param price------------");
             console.log(JSON.stringify(paramGetPrice));
             this.setState({ loading_spinner: true }, () => {
-                    AsyncStorage.getItem('tokenAgi', (error, result) => {
+                    AsyncStorage.getItem('config', (error, result) => {
                         if (result) {    
-
-                                    var access_token=result;
+                                    let config = JSON.parse(result);
+                                    var access_token=config.token;
+                                    var url=config.aeroUrl;
+                            
+                                   
                                     var myHeaders = new Headers();
                                     myHeaders.append("Content-Type", "application/json");
                                     myHeaders.append("Authorization", "Bearer "+access_token);
@@ -405,15 +409,21 @@ export default class Summary extends Component {
                                     redirect: 'follow'
                                     };
 
-                                    fetch("https://staging-api.megaelectra.co.id/flight/Price/v3", requestOptions)
-                                    .then((response) => response.json())
-                                    .then((result) => {
+                                    
+                                    PostDataNew(url,'flight/Price/v3',requestOptions)
+                                     .then((result) => {
+                                        
                                         this.setState({ loading_spinner: false });
                                         console.log('data pricess',JSON.stringify(result));
                                         this.setState({dataPrice:result.data});
                                         this.setState({total_all:result.data.total_price});
-                                    })
-                                    .catch(error => console.log('error', error));
+                                     },
+                                     (error) => {
+                                         this.setState({ error });
+                                     }
+                            ); 
+                            
+                            
                         }
                     });
                 });    
@@ -725,9 +735,13 @@ export default class Summary extends Component {
 
             
             this.setState({ loading: true }, () => {
-                AsyncStorage.getItem('tokenAgi', (error, result) => {
+                AsyncStorage.getItem('config', (error, result) => {
                     if (result) {    
-                        var access_token=result;
+                        
+                        
+                        let config = JSON.parse(result);
+                        var access_token=config.token;
+                        var url=config.aeroUrl;
         
                         var myHeaders = new Headers();
                         myHeaders.append("Content-Type", "application/json");
@@ -741,78 +755,92 @@ export default class Summary extends Component {
                         body: raw,
                         redirect: 'follow'
                         };
-        
-                        fetch("https://staging-api.megaelectra.co.id/flight/Cart", requestOptions)
-                        .then(response => response.json())
-                        .then(result => {
-                            console.log("---------------cart  ------------");
-                            console.log(JSON.stringify(result));
-                            if(result.errors){
-                                this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.errors));
-                                this.setState({ loading: false });
-                            }else if(result.status==="error"){
-                                this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
-                                this.setState({ loading: false });
-                            }else if(result.status==="success"){
-                                var dataCartArray = [];
-                                var dataCart = {};
-                                var dataCart=result.data;
-    
-
-                                    const cartToBeSaved = dataCart;
-                                    var newcart=[cartToBeSaved];
-                                    
-                                    var outputCart={
-                                        dataCart:dataCart,
-                                        listdata_customer:this.state.listdata_customer,
-                                        listdata_participant:this.state.listdata_participant,
-                                        otherUser:this.state.otherUser,
-                                        paramOther:this.state.paramOther
-                                    };
-                                    
-                                    console.log('outputCartFlight',JSON.stringify(outputCart));
-                                    var newcart=[dataCart];
-                                    AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
-                                    AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
-                                    
-                                    
-                                    setTimeout(() => {
-                                        this.props.navigation.navigate("Cart",
-                                        {
-                                            outputCart:outputCart
-                                        }); 
-                                        this.setState({ loading: false });
-                                    }, 500);
-                                    
-                                    
-                                    
-                                    
-
-                                    //untuk membuat cart
-                                    
-                                    // AsyncStorage.getItem('dataCartArray', (err, result) => {
-                                    // let newcart = JSON.parse(result);
-                                    // console.log('cartopp',JSON.stringify(newcart));
-
-                                    // if(!newcart){
-                                    // newcart=[]
-                                    // }
-                                
-                                    // newcart.push(cartToBeSaved);
-                                    //     setTimeout(() => {
-                                    //         AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
-                                    //         AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
-                                    //         this.props.navigation.navigate("Cart",{dataCart:dataCart}); 
-                                    //         this.setState({ loading: false });
-                                    //     }, 500);
-                                    // });  
+                        
+                        PostDataNew(url,'flight/Cart',requestOptions)
+                                     .then((result) => {
+                                        
+                                        console.log("---------------cart  ------------");
+                                        console.log(JSON.stringify(result));
+                                        if(result.errors){
+                                            this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.errors));
+                                            this.setState({ loading: false });
+                                        }else if(result.status==="error"){
+                                            this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
+                                            this.setState({ loading: false });
+                                        }else if(result.status==="success"){
+                                            var dataCartArray = [];
+                                            var dataCart = {};
+                                            var dataCart=result.data;
                 
-                            }
-                        })
-                        .catch(error => console.log('error', error));
+            
+                                                var cartToBeSaved = dataCart;
+                                                cartToBeSaved.participant=this.state.listdata_participant;
+                                                cartToBeSaved.typeProduct=this.state.paramOther.type;
+                                                
+                                                
+                                                // var outputCart={
+                                                //     dataCart:dataCart,
+                                                //     listdata_customer:this.state.listdata_customer,
+                                                //     listdata_participant:this.state.listdata_participant,
+                                                //     otherUser:this.state.otherUser,
+                                                //     paramOther:this.state.paramOther
+                                                // };
+                                                
+                                                //untuk membuat cart satu aja
+                                                // var newcart=[cartToBeSaved];
+                                                // console.log('outputCartFlight',JSON.stringify(outputCart));
+                                                // var newcart=[dataCart];
+                                                // AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
+                                                // AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
+                                                
+                                                
+                                                // setTimeout(() => {
+                                                //     this.props.navigation.navigate("Cart",
+                                                //     {
+                                                //         outputCart:outputCart
+                                                //     }); 
+                                                //     this.setState({ loading: false });
+                                                // }, 500);
+                                                
+                                                
+                                                
+                                                
+            
+                                                //untuk membuat cart
+                                                
+                                                AsyncStorage.getItem('dataCartArray', (err, result) => {
+                                                let newcart = JSON.parse(result);
+                                                console.log('cartopp',JSON.stringify(newcart));
+            
+                                                if(!newcart){
+                                                newcart=[]
+                                                }
+                                            
+                                                newcart.push(cartToBeSaved);
+                                                this.updateUserSession();
+                                                    setTimeout(() => {
+                                                    console.log('newcart',JSON.stringify(newcart));
+                                                        
+                                                        AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
+                                                        AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
+                                                        //this.props.navigation.navigate("Cart"); 
+                                                        this.props.navigation.navigate("Loading",{redirect:'Cart'});
+                                                        this.setState({ loading: false });
+                                                    }, 500);
+                                                });  
+                            
+                                        }
+                                     },
+                                     (error) => {
+                                         this.setState({ error });
+                                     }
+                        ); 
         
-                            }
-                        });
+                        
+                        
+                        
+                    }
+                });
 
             });
 
@@ -821,6 +849,98 @@ export default class Summary extends Component {
       
         
     }
+    
+    
+    
+    updateUserSession(){
+        
+        //alert(otherUser);
+
+       
+            AsyncStorage.getItem('userSession', (error, result) => {
+                if (result) {  
+                    let userSession = JSON.parse(result);
+                    console.log('userSession',JSON.stringify(userSession));
+                    
+                    
+                    var customer=this.state.listdata_customer[0];
+                    console.log('data contact',JSON.stringify(customer));
+
+                    var otherUser=this.state.otherUser;
+                    if(otherUser){
+                        var newUserSession={
+                            id_user: userSession.id_user,
+                            fullname: userSession.fullname,
+                            firstname: userSession.firstname,
+                            lastname: userSession.lastname,
+                            birthday: userSession.birthday,
+                            nationality: userSession.nationality,
+                            passport_number: userSession.passport_number,
+                            passport_country: userSession.passport_country,
+                            passport_expire: userSession.passport_expire,
+                            phone: userSession.phone,
+                            title: userSession.title,
+                            email: userSession.email,
+                            nationality_id: userSession.nationality_id,
+                            nationality_phone_code:userSession.nationality_phone_code,
+                            passport_country_id: userSession.passport_country_id,
+                            username: userSession.username,
+                            gender:userSession.gender,
+                            un_nationality: userSession.un_nationality,
+                            id_city: userSession.id_city,
+                            city_name: userSession.city_name,
+                            address: userSession.address,
+                            postal_code: userSession.postal_code,
+                            avatar: userSession.avatar,
+                            cart: userSession.cart,
+                            status: userSession.status,
+                            loginVia: userSession.loginVia,
+                        }
+                       
+                    }else{
+                        
+
+                        var newUserSession={
+                            id_user: userSession.id_user,
+                            fullname: customer['fullname'],
+                            firstname: customer['firstname'],
+                            lastname: customer['lastname'],
+                            birthday: customer['birthday'],
+                            nationality: customer['nationality'],
+                            passport_number: customer['passport_number'],
+                            passport_country: customer['passport_country'],
+                            passport_expire: customer['passport_expire'],
+                            phone: customer['phone'],
+                            title: customer['title'],
+                            email: userSession.email,
+                            nationality_id: customer['nationality_id'],
+                            nationality_phone_code: customer['nationality_phone_code'],
+                            passport_country_id: customer['passport_country_id'],
+                            username: userSession.username,
+                            gender:userSession.gender,
+                            un_nationality: userSession.un_nationality,
+                            id_city: userSession.id_city,
+                            city_name: userSession.city_name,
+                            address: userSession.address,
+                            postal_code: userSession.postal_code,
+                            avatar: userSession.avatar,
+                            cart: userSession.cart,
+                            status: userSession.status,
+                            loginVia: userSession.loginVia,
+                        }
+
+
+                    }
+                
+                    
+                    console.log('newUserSession',JSON.stringify(newUserSession))
+                    AsyncStorage.setItem('userSession', JSON.stringify(newUserSession));
+
+                }
+            });
+        
+    }
+
 
 
     saveParticipant(){

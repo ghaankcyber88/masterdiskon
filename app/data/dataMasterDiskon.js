@@ -23,6 +23,12 @@ const DataMasterDiskon = [
             timezone:"Asia/Jakarta",
             lang:"en_US",
             is_agent:"true",
+        },
+        config:{
+            aeroStatus: false,
+            aeroUrl: "https://staging-api.megaelectra.co.id/",
+            baseUrl: "https://masterdiskon.co.id/",
+            banner: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80"
         }
     },
    

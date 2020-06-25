@@ -180,24 +180,31 @@ export default class Booking extends Component {
   
 
     componentDidMount() {
-        this.setState({ loading_spinner: true }, () => {
+       
+        
+        const {navigation} = this.props;
+        navigation.addListener ('willFocus', () =>{
+            this.setState({ loading_spinner: true }, () => {
 
-            AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
-                this.setState({userSession:userSession});
-                this.setState({login:true});
-                this.setState({ loading_spinner: false });
-
-             }else{
-                this.setState({login:false});
-
-             }
-            
+                AsyncStorage.getItem('userSession', (error, result) => {
+                if (result) {
+                    let userSession = JSON.parse(result);
+                    console.log("---------------data session user  ------------");
+                    console.log(JSON.stringify(userSession));
+                    this.setState({userSession:userSession});
+                    this.setState({login:true});
+                    this.setState({ loading_spinner: false });
+    
+                 }else{
+                    this.setState({login:false});
+    
+                 }
+                
+                });
             });
         });
+        
+        
     }
 
 

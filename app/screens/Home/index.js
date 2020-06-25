@@ -169,162 +169,122 @@ export default class Home extends Component {
     }
 
 
-    getFeaturedDestination(){
-        this.setState({ loading_featured: true }, () => {
-            PostData('get_featured_destination')
-                    .then((result) => {
-                        console.log('listdata_featured_destination',JSON.stringify(result));
-                        this.setState({loading_featured: false });
-                        this.setState({listdata_featured_destination: result});
-                    }
-                );
-            });
+    // getFeaturedDestination(){
+    //     this.setState({ loading_featured: true }, () => {
+    //         PostData('get_featured_destination')
+    //                 .then((result) => {
+    //                     console.log('listdata_featured_destination',JSON.stringify(result));
+    //                     this.setState({loading_featured: false });
+    //                     this.setState({listdata_featured_destination: result});
+    //                 }
+    //             );
+    //         });
         
-    }
+    // }
 
-    getPopularDestination(){
-        this.setState({ loading_popular: true }, () => {
-            const data={
-                "id_trip":"",
-                "id_country":"0",
-                "harga_min":"","harga_max":""
-            }
-            const param={"param":data}
-            console.log('-------------param trip-------------');
-            console.log(JSON.stringify(param));
-            PostData('trip',param)
-                 .then((result) => {
-                    this.setState({loading_popular: false });
-                     this.setState({listdata_popular_destination: result});
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
-             ); 
-        });
-    }
+    // getPopularDestination(){
+    //     this.setState({ loading_popular: true }, () => {
+    //         const data={
+    //             "id_trip":"",
+    //             "id_country":"0",
+    //             "harga_min":"","harga_max":""
+    //         }
+    //         const param={"param":data}
+    //         console.log('-------------param trip-------------');
+    //         console.log(JSON.stringify(param));
+    //         PostData('trip',param)
+    //              .then((result) => {
+    //                 this.setState({loading_popular: false });
+    //                  this.setState({listdata_popular_destination: result});
+    //              },
+    //              (error) => {
+    //                  this.setState({ error });
+    //              }
+    //          ); 
+    //     });
+    // }
     
 
-    getTripDomestic(){
-        this.setState({ loading_domestic: true }, () => {
-            const data={
-                "id_trip":"",
-                "id_country":"193",
-                "harga_min":"","harga_max":""
-            }
-            const param={"param":data}
-            console.log('-------------param trip-------------');
-            console.log(JSON.stringify(param));
-            PostData('trip',param)
-                 .then((result) => {
-                    this.setState({loading_domestic: false });
-                     this.setState({listdata_trip_domestic: result});
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
-             ); 
-        });
-     }
+    // getTripDomestic(){
+    //     this.setState({ loading_domestic: true }, () => {
+    //         const data={
+    //             "id_trip":"",
+    //             "id_country":"193",
+    //             "harga_min":"","harga_max":""
+    //         }
+    //         const param={"param":data}
+    //         console.log('-------------param trip-------------');
+    //         console.log(JSON.stringify(param));
+    //         PostData('trip',param)
+    //              .then((result) => {
+    //                 this.setState({loading_domestic: false });
+    //                  this.setState({listdata_trip_domestic: result});
+    //              },
+    //              (error) => {
+    //                  this.setState({ error });
+    //              }
+    //          ); 
+    //     });
+    //  }
 
-     getTripDunia(){
-        this.setState({ loading_dunia: true }, () => {
-            const data={"id_trip":"","id_country":"","harga_min":"","harga_max":""}
-            const param={"param":data}
-            console.log('getTripDunia',JSON.stringify(param));
-            PostData('trip',param)
-                 .then((result) => {
-                    this.setState({loading_dunia: false });
-                     this.setState({listdata_trip_dunia: result});
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
-             ); 
-        });
+    //  getTripDunia(){
+    //     this.setState({ loading_dunia: true }, () => {
+    //         const data={"id_trip":"","id_country":"","harga_min":"","harga_max":""}
+    //         const param={"param":data}
+    //         console.log('getTripDunia',JSON.stringify(param));
+    //         PostData('trip',param)
+    //              .then((result) => {
+    //                 this.setState({loading_dunia: false });
+    //                  this.setState({listdata_trip_dunia: result});
+    //              },
+    //              (error) => {
+    //                  this.setState({ error });
+    //              }
+    //          ); 
+    //     });
 
-     }
+    //  }
 
-    getBlog(){
-        this.setState({ loading_blog: true }, () => {
-            PostData('get_blog_new')
-                .then((result) => {
-                    this.setState({loading_blog: false });
-                    this.setState({listdata_blog_new: result});
-                },
-                (error) => {
-                    this.setState({ error });
-                }
-            );   
-        });
-    }
+    
 
-    getPromo(){
-        this.setState({ loading_promo: true }, () => {
-            PostData('get_promo')
-                .then((result) => {
-                    this.setState({loading_promo: false });
-                    this.setState({listdata_promo: result});
-                },
-                (error) => {
-                    this.setState({ error });
-                }
-            );   
-        });
-    }
+    // getPromo(){
+    //     this.setState({ loading_promo: true }, () => {
+    //         PostData('get_promo')
+    //             .then((result) => {
+    //                 this.setState({loading_promo: false });
+    //                 this.setState({listdata_promo: result});
+    //             },
+    //             (error) => {
+    //                 this.setState({ error });
+    //             }
+    //         );   
+    //     });
+    // }
 
 
-    getMusium(){
-        this.setState({ loading_musium: true }, () => {
-            PostData('get_musium')
-                .then((result) => {
-                    console.log(JSON.stringify(result));
-                    this.setState({loading_musium: false });
-                    this.setState({listdata_musium: result});
-                },
-                (error) => {
-                    this.setState({ error });
-                }
-            );   
-        });
-    }
+   
 
-    getculture(){
-        this.setState({ loading_culture: true }, () => {
-            PostData('get_culture')
-                .then((result) => {
-                    console.log(JSON.stringify(result));
-                    this.setState({loading_culture: false });
-                    this.setState({listdata_culture: result});
-                },
-                (error) => {
-                    this.setState({ error });
-                }
-            );   
-        });
-    }
-
-    getAssets(){
-        this.setState({ loading_assets: true }, () => {
+    // getAssets(){
+    //     this.setState({ loading_assets: true }, () => {
           
-            PostData('get_assets')
-                 .then((result) => {
-                    this.setState({loading_assets: false });
-                    this.setState({listdata_assets: result});
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
-             ); 
-        });
-     }
+    //         PostData('get_assets')
+    //              .then((result) => {
+    //                 this.setState({loading_assets: false });
+    //                 this.setState({listdata_assets: result});
+    //              },
+    //              (error) => {
+    //                  this.setState({ error });
+    //              }
+    //          ); 
+    //     });
+    //  }
     
     
     getConfig(){
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                console.log('dataConfig',JSON.stringify(config));
+                console.log('dataConfigHome',JSON.stringify(config));
             }
         });
     
@@ -402,6 +362,50 @@ export default class Home extends Component {
         return age;
     }
     
+    
+    getMusium(){
+        this.setState({ loading_musium: true }, () => {
+            PostData('get_musium')
+                .then((result) => {
+                    console.log(JSON.stringify(result));
+                    this.setState({loading_musium: false });
+                    this.setState({listdata_musium: result});
+                },
+                (error) => {
+                    this.setState({ error });
+                }
+            );   
+        });
+    }
+
+    getculture(){
+        this.setState({ loading_culture: true }, () => {
+            PostData('get_culture')
+                .then((result) => {
+                    console.log(JSON.stringify(result));
+                    this.setState({loading_culture: false });
+                    this.setState({listdata_culture: result});
+                },
+                (error) => {
+                    this.setState({ error });
+                }
+            );   
+        });
+    }
+    
+    getBlog(){
+        this.setState({ loading_blog: true }, () => {
+            PostData('get_blog_new')
+                .then((result) => {
+                    this.setState({loading_blog: false });
+                    this.setState({listdata_blog_new: result});
+                },
+                (error) => {
+                    this.setState({ error });
+                }
+            );   
+        });
+    }
 
 
     componentDidMount() {
@@ -424,14 +428,16 @@ export default class Home extends Component {
         //this.getTripDunia();
 
         this.getConfig();
+        this.getMusium();
+        this.getculture();
+        this.getBlog();
+
+
         
         //this.getPopularDestination();
         //this.getTripDomestic();
-        this.getBlog();
-        this.getAssets();
-        this.getPromo();
-        this.getMusium();
-        this.getculture();
+        //this.getAssets();
+        //this.getPromo();
      }
 
      
@@ -773,7 +779,7 @@ export default class Home extends Component {
                                     
                             </View> */}
 
-                            <View>
+                            {/* <View>
                                 <View style={styles.contentHiking}>
                                     <Text title3 semibold>
                                         Rekomendasi
@@ -832,7 +838,7 @@ export default class Home extends Component {
                                         </Card>
                                     )}
                                 />
-                            </View>
+                            </View> */}
                                 
                             {/* <View>
                                 <View style={styles.contentHiking}>

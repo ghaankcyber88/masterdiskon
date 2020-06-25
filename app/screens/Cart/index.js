@@ -10,6 +10,7 @@ import {
     Alert,
     TouchableOpacity
 } from "react-native";
+import NotYetLogin from "../../components/NotYetLogin";
 
 import { BaseStyle, BaseColor } from "@config";
 import {
@@ -46,7 +47,6 @@ export default class Cart extends Component {
                 this.setState({userSession:userSession});
                 this.setState({login:true});
 
-                // var id_user='9';
                 var id_user=userSession.id_user;
                 this.setState({id_user:id_user});
                
@@ -57,14 +57,6 @@ export default class Cart extends Component {
 
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
-        var outputCart=this.props.navigation.state.params.outputCart;
-        
-        
-        // var dataCart=this.props.navigation.state.params.dataCart;
-        // var listdata_customer=this.props.navigation.state.params.listdata_customer;
-        // var listdata_participant=this.props.navigation.state.params.listdata_participant;
-        // // var saveContact=this.props.navigation.state.params.saveContact;
-        // var otherUser=this.props.navigation.state.params.otherUser;
       
         this.state = {
             refreshing: false,
@@ -85,82 +77,28 @@ export default class Cart extends Component {
             ),
             loading: false,
             
-            //dataCart:dataCart,
             payment_method:'013',
             payment_method_title:'Permata ATM',
-            //listdata_customer:listdata_customer,
-            //listdata_participant:listdata_participant,
-            //otherUser:otherUser
-            outputCart:outputCart,
-            dataCart:outputCart.dataCart,
-            listdata_customer:outputCart.listdata_customer,
-            listdata_participant:outputCart.listdata_participant,
-            otherUser:outputCart.otherUser,
-            paramOther:outputCart.paramOther
 
         };
-        this.onChangeView = this.onChangeView.bind(this);
-        this.onFilter = this.onFilter.bind(this);
-        this.onChangeSort = this.onChangeSort.bind(this);
+        
         this.onSubmit = this.onSubmit.bind(this);
         this.updatePrice=this.updatePrice.bind(this);
         this.deleteCart=this.deleteCart.bind(this);
-        this.setPayment = this.setPayment.bind(this);
-        //this.midtrans = this.midtrans.bind(this);
-    }
-
-    onChangeSort() {}
-
-    /**
-     * @description Open modal when filterring mode is applied
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     */
-    onFilter() {
-        const { navigation } = this.props;
-        navigation.navigate("FlightFilter");
-    }
-
-    /**
-     * @description Open modal when view mode is pressed
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     */
-    onChangeView() {}
-
-    /**
-     * @description Render container view
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     * @returns
-     */
-
-    removePrice(dataObj)
-    {
-        var array = {};
-        for (var key in dataObj) {
-            var obj = {};
-            if(key!='price'){
-                array[key] = dataObj[key];
-            }
-        }
-        return array;
+        this.checkout=this.checkout.bind(this);
         
     }
 
-    onSelect(select) {
-        
+    
 
-    }
 
 
     fetchData() {
     
-        console.log('outputCart',JSON.stringify(this.state.outputCart));
         AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
             if (result) {
                 let dataCartArrayReal = JSON.parse(result);
-                console.log("---------------dataCartArrayReal page  ------------");
+                console.log("---------------dataCartArrayReal pagez  ------------");
                 console.log(JSON.stringify(dataCartArrayReal));
 
                 var totalCartPriceReal=0;
@@ -205,11 +143,14 @@ export default class Cart extends Component {
             this.fetchData();
         }, 500);
     }
+    
+    checkout(item){
+        const { navigation } = this.props;
+        console.log('checkout',JSON.stringify(item));
+        navigation.navigate("CheckOut",{item:item}); 
+    }
 
-    // updatePrice(dataCartArrayReal,totalReal=0,countReal=0){
-    //             this.setState({totalCartPriceReal:totalReal});
-
-    // }
+  
 
     deleteCart(idCart){
         setTimeout(() => {
@@ -225,16 +166,7 @@ export default class Cart extends Component {
     }
 
    
-    alert() {
-        Alert.alert(
-            'Remove Cart',
-            'Yakin ingin mau di hapus ?',
-            [
-              {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
-              {text: 'YES', onPress: () => console.warn('YES Pressed')},
-            ]
-          );
-    }
+    
 
 
     renderContent() {
@@ -249,91 +181,6 @@ export default class Cart extends Component {
         }); 
         
         var content='';
-        if(this.state.paramOther.type=='trip'){
-            content=<Animated.FlatList
-                contentContainerStyle={{
-                    paddingTop: 10,
-                    paddingBottom: 20
-                }}
-                
-                scrollEventThrottle={1}
-                onScroll={Animated.event(
-                    [
-                        {
-                            nativeEvent: {
-                                contentOffset: {
-                                    y: this.state.scrollAnim
-                                }
-                            }
-                        }
-                    ],
-                    { useNativeDriver: true }
-                )}
-                data={this.state.dataCartArray}
-                keyExtractor={(item, index) => item.id}
-                renderItem={({ item, index }) => (
-                    <View style={{marginBottom:20}}> 
-                        <Text>asd</Text>
-                        <CartCard
-                        item={item}
-                        typeProduct={this.state.paramOther.type}
-                        dataPerson={this.state.dataPersonSave}
-                        />
-                    </View>
-                )}
-            />
-        }else if(this.state.paramOther.type=='hotel'){
-                content=<Animated.FlatList
-                contentContainerStyle={{
-                    paddingTop: 10,
-                    paddingBottom: 20
-                }}
-                
-                scrollEventThrottle={1}
-                onScroll={Animated.event(
-                    [
-                        {
-                            nativeEvent: {
-                                contentOffset: {
-                                    y: this.state.scrollAnim
-                                }
-                            }
-                        }
-                    ],
-                    { useNativeDriver: true }
-                )}
-                data={this.state.dataCartArray}
-                keyExtractor={(item, index) => item.id}
-                renderItem={({ item, index }) => (
-                    <View style={{marginBottom:20}}> 
-                        <Text>asd</Text>
-                        
-                        <CartCard
-                        item={item}
-                        typeProduct={this.state.paramOther.type}
-                        />
-                        {/* <Button
-                            style={{ height: 46 }}
-                            full
-                            onPress={() => {  
-                               //this.deleteCart(item.id,this.state.dataCartArrayReal);
-                               Alert.alert(
-                                'Remove Cart',
-                                'Yakin ingin mau di hapus ?',
-                                [
-                                  {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
-                                  {text: 'YES', onPress: () => this.deleteCart(item.id)},
-                                ]
-                              );
-                            }}
-                        >
-                            Delete
-                        </Button> */}
-                    
-                    </View>
-                )}
-            />
-        }else{
             content=<Animated.FlatList
             contentContainerStyle={{
                 paddingTop: 10,
@@ -359,51 +206,19 @@ export default class Cart extends Component {
                 <View style={{marginBottom:20}}> 
                 <CartCard
                     item={item}
-                    typeProduct={this.state.paramOther.type}
-                    
-                    dataCartArrayReal={this.state.dataCartArrayReal}
-                    timeLimit={item.time_limit}
-                    fromFlight={item.origin.id}
-                    toFlight={item.destination.id}
-                    from={item.origin.name}
-                    to={item.destination.name}
-                    type={'aa'}
-                    adult={item.adult+' person'}
-                    children={item.child+' person'}
-                    infant={item.infant+' person'}
-                    contactName={item.contact.title+item.contact.first_name+item.contact.last_name}
-                    contactPhone={'('+item.contact.phone_code+')'+item.contact.phone_number}
-                    total={item.total_price}
-                    idCart={item.id}
-                    departure={item.id}
-                    returns={'aa'}
-                    type={item.type_name}
                     deleteCart={this.deleteCart}
                     updatePrice={this.updatePrice}
+                    checkout={this.checkout}
                     onPress={() => this.onSelect(item)}
-                />
-                    {/* <Button
-                        style={{ height: 46 }}
-                        full
-                        onPress={() => {  
-                           //this.deleteCart(item.id,this.state.dataCartArrayReal);
-                           Alert.alert(
-                            'Remove Cart',
-                            'Yakin ingin mau di hapus ?',
-                            [
-                              {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
-                              {text: 'YES', onPress: () => this.deleteCart(item.id)},
-                            ]
-                          );
-                        }}
-                    >
-                        Delete
-                    </Button> */}
+                    detail={false}
+                />  
+                    
+                    
                 </View>
             )}
         />
         
-        }
+       
       
         return (
             <View style={{ flex: 1 }}>
@@ -414,171 +229,24 @@ export default class Cart extends Component {
                         { transform: [{ translateY: navbarTranslate }] }
                     ]}
                 >
-                    {/* <FilterSort
-                        labelCustom="204 results"
-                        onChangeSort={this.onChangeSort}
-                        onFilter={this.onFilter}
-                    /> */}
                 </Animated.View>
             </View>
         );
     }
 
-    convertOld(dateString){
 
-        var age = parseInt(moment().diff(dateString,'years',true));
-        var old="";
-        if(age < 2){
-            old="INF";
-        }else if(age>=2 && age<=11){
-            old="CHD";
-        }else{
-            old="ADT";
-        }
-        return old;
-    }
-    
-
-    
-    updatePerson(){
-
-        AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
-                var id_user=userSession.id_user;
-
-                var participant = [];
-                this.state.listdata_participant.map(item => {
-                    var obj = {};
-                    obj['id_user'] = id_user;
-                    obj['fullname'] = item.title+' '+item.firstname+' '+item.lastname;
-                    obj['firstname'] = item.firstname;
-                    obj['lastname'] = item.lastname;
-                    obj['birthday'] = item.birthday;
-                    obj['nationality'] = item.nationality;
-                    obj['passport_number'] = item.passport_number;
-                    obj['passport_country'] = item.passport_country;
-                    obj['passport_expire'] = item.passport_expire;
-                    obj['phone'] = item.phone;
-                    obj['title'] = item.title;
-                    obj['email'] = item.email;
-                    obj['nationality_id'] = item.nationality_id;
-                    obj['nationality_phone_code'] = item.nationality_phone_code;
-                    obj['passport_country_id'] = item.passport_country_id;
-                    obj['type'] = this.convertOld(item.birthday);
-                    participant.push(obj);
-                });
-
-
-                var customer = [];
-                this.state.listdata_customer.map(item => {
-                    var obj = {};
-                    obj['id_user'] = id_user;
-                    obj['fullname'] = item.title+' '+item.firstname+' '+item.lastname;
-                    obj['firstname'] = item.firstname;
-                    obj['lastname'] = item.lastname;
-                    obj['birthday'] = item.birthday;
-                    obj['nationality'] = item.nationality;
-                    obj['passport_number'] = item.passport_number;
-                    obj['passport_country'] = item.passport_country;
-                    obj['passport_expire'] = item.passport_expire;
-                    obj['phone'] = item.phone;
-                    obj['title'] = item.title;
-                    obj['email'] = item.email;
-                    obj['nationality_id'] = item.nationality_id;
-                    obj['nationality_phone_code'] = item.nationality_phone_code;
-                    obj['passport_country_id'] = item.passport_country_id;
-                    obj['type'] = this.convertOld(item.birthday);
-                    customer.push(obj);
-                });
-
-
-
-                const data={  
-                    "participant": participant,
-                    "customer":customer,
-                    // "saveContact":this.state.saveContact
-                  
-                }
-                const param={"param":data}
-
-                this.setState({dataPersonSave:data});
-                console.log("------------------data param update person--------------");
-                console.log(JSON.stringify(param));
-
-                // PostData('update_participant_order',param)
-                //     .then((result) => {
-                //         console.log("------------------result update participant--------------");
-                //         console.log(JSON.stringify(result));
-                //         //this.redirect('ProfileSmart');
-                //     },
-                //     (error) => {
-                //         this.setState({ error });
-                //     }
-                // );
-
-            }
-        });  
-
-        
-    }
 
   
     componentDidMount() {
-        this.updatePerson();
-        this.fetchData();
-        
-        // AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
-        //     if (result) {
-        //         let dataCartArrayReal = JSON.parse(result);
-        //         console.log("---------------data cart array cart page  ------------");
-        //         console.log(JSON.stringify(dataCartArrayReal));
-
-        //         var totalCartPriceReal=0;
-        //         dataCartArrayReal.map(item => {
-        //             totalCartPriceReal=totalCartPriceReal+item.total_price;
-        //         });
-        //         this.setState({totalCartPriceReal:totalCartPriceReal});
-        //         this.setState({dataCartArrayReal:dataCartArrayReal});
-        //         this.setState({countCart:dataCartArrayReal.length});
-        //      }
-            
-        // });
-      
-
- }
-
-    duration(expirydate)
-    {
-        
-        var date = moment()
-        var diffr = moment.duration(moment(expirydate).diff(moment(date)));
-        var hours = parseInt(diffr.asHours());
-        var minutes = parseInt(diffr.minutes());
-        var seconds = parseInt(diffr.seconds());
-        var d = hours * 60 * 60 + minutes * 60 + seconds;
-        return d;
-        //this.setState({ totalDuration: d });
-    
-    }
-
-    searhMinTimeLimit(){
-        var timeLimits=[];
-        this.state.dataCartArrayReal.map(item => {
-            //item.time_limit;
-            timeLimits.push(this.duration(item.time_limit));
+        const {navigation} = this.props;
+        navigation.addListener ('willFocus', () =>{
+            this.fetchData();
         });
-        return Math.min(...timeLimits);
-
+       
     }
 
 
     onSubmit(){
-        // var minTimeLimit=this.searhMinTimeLimit();
-        // this.setState({minTimeLimit:minTimeLimit});
-
         this.setState({ loading: true }, () => {
             AsyncStorage.getItem('tokenAgi', (error, result) => {
                 if (result) {    
@@ -595,7 +263,6 @@ export default class Cart extends Component {
                     console.log("---------------data cart array cart kirim  ------------");
                     console.log(JSON.stringify(dataCartArrayRealSend));
 
-                    this.updateUserSession();
              
                     
                     var myHeaders = new Headers();
@@ -637,188 +304,18 @@ export default class Cart extends Component {
 
     }
 
-    updateUserSession(){
-        
-        //alert(otherUser);
-
-       
-            AsyncStorage.getItem('userSession', (error, result) => {
-                if (result) {  
-                    let userSession = JSON.parse(result);
-                    console.log('userSession',JSON.stringify(userSession));
-                    
-                    
-                    var customer=this.state.listdata_customer[0];
-                    console.log('data contact',JSON.stringify(customer));
-
-                    var otherUser=this.state.otherUser;
-                    if(otherUser){
-                        var newUserSession={
-                            id_user: userSession.id_user,
-                            fullname: userSession.fullname,
-                            firstname: userSession.firstname,
-                            lastname: userSession.lastname,
-                            birthday: userSession.birthday,
-                            nationality: userSession.nationality,
-                            passport_number: userSession.passport_number,
-                            passport_country: userSession.passport_country,
-                            passport_expire: userSession.passport_expire,
-                            phone: userSession.phone,
-                            title: userSession.title,
-                            email: userSession.email,
-                            nationality_id: userSession.nationality_id,
-                            nationality_phone_code:userSession.nationality_phone_code,
-                            passport_country_id: userSession.passport_country_id,
-                            username: userSession.username,
-                            gender:userSession.gender,
-                            un_nationality: userSession.un_nationality,
-                            id_city: userSession.id_city,
-                            city_name: userSession.city_name,
-                            address: userSession.address,
-                            postal_code: userSession.postal_code,
-                            avatar: userSession.avatar,
-                            cart: userSession.cart,
-                            status: userSession.status,
-                            loginVia: userSession.loginVia,
-                        }
-                       
-                    }else{
-                        
-
-                        var newUserSession={
-                            id_user: userSession.id_user,
-                            fullname: customer['fullname'],
-                            firstname: customer['firstname'],
-                            lastname: customer['lastname'],
-                            birthday: customer['birthday'],
-                            nationality: customer['nationality'],
-                            passport_number: customer['passport_number'],
-                            passport_country: customer['passport_country'],
-                            passport_expire: customer['passport_expire'],
-                            phone: customer['phone'],
-                            title: customer['title'],
-                            email: userSession.email,
-                            nationality_id: customer['nationality_id'],
-                            nationality_phone_code: customer['nationality_phone_code'],
-                            passport_country_id: customer['passport_country_id'],
-                            username: userSession.username,
-                            gender:userSession.gender,
-                            un_nationality: userSession.un_nationality,
-                            id_city: userSession.id_city,
-                            city_name: userSession.city_name,
-                            address: userSession.address,
-                            postal_code: userSession.postal_code,
-                            avatar: userSession.avatar,
-                            cart: userSession.cart,
-                            status: userSession.status,
-                            loginVia: userSession.loginVia,
-                        }
 
 
-                    }
-                
-                    
-                    console.log('newUserSession',JSON.stringify(newUserSession))
-                    AsyncStorage.setItem('userSession', JSON.stringify(newUserSession));
 
-                }
-            });
-        
-    }
-
-
-    getVa(dataOrderSubmit){
-        var id_order=dataOrderSubmit.id_order;
-        var pay=dataOrderSubmit.pay;
-        var payment_method='013';
-
-        this.setState({ loading: true }, () => {
-
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-          };
-          
-          //console.log("---------------URL GET VA------------");
-          //console.log("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay+"&payment_method="+this.state.payment_method);
-          
-          fetch("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay, requestOptions)
-            .then(response => response.json())
-            .then((result) => {
-                this.setState({ loading: false });
-                var id_order_payment=result.key;
-                console.log('statusss',JSON.stringify(result));
-                                var redirect='Pembayaran';
-                                setTimeout(() => {
-                                    var id_order=dataOrderSubmit.id_order;
-                                    //this.props.navigation.navigate("Pembayaran",{dataOrderSubmit:dataOrderSubmit});
-                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
-                                }, 500);
-            },
-            (error) => {
-                this.setState({ error });
-            }
-            );
-        });
-
-    }
-
-    confirm_wa(id_order_payment,id_order){
-        var minTimeLimit=this.searhMinTimeLimit();
-        
-        this.setState({ loading: true }, () => {
-            var requestOptions = {
-                method: 'GET',
-                redirect: 'follow'
-            };
-            
-            fetch("https://masterdiskon.com/front/order/bayar/confirmation_va_app/"+id_order_payment, requestOptions)
-            .then(response => response.json())
-            .then((result) => {
-                this.setState({ loading: false });
-                console.log("---------------Virtual Account------------");
-                console.log(JSON.stringify(result));
-                var expirydate=result.va.expired;
-                var expirydateNum=this.duration(expirydate);
-                var countDown=0;
-                if (expirydateNum < minTimeLimit)
-                {
-                    countDown=expirydateNum;
-                }else if (expirydateNum > minTimeLimit){
-                    countDown=minTimeLimit;
-                }else if (expirydateNum == minTimeLimit){
-                    countDown=expirydateNum;
-                }
-                console.log(expirydate);
-                // this.setState({dataVa:result.va});
-               
-                setTimeout(() => {
-                        AsyncStorage.removeItem('dataCartArray');
-                        AsyncStorage.removeItem('dataCartArrayReal');
-                        this.props.navigation.navigate("VirtualAccount",{countDown:countDown,id_order:id_order});
-                    //this.setState({ loading: false });
-                }, 500);
-                                
-                                
-                                //this.duration(expirydate);
-            },
-            (error) => {
-                this.setState({ error });
-            }
-            );
-        });
-
-    }
 
     setPayment(payment_method,payment_method_title){
-        //alert(payment_method_title);
         this.setState({payment_method: payment_method});
         this.setState({payment_method_title: payment_method_title});
     }
 
     render() {
         const { navigation} = this.props;
-        let { loading_spinner,loading } = this.state;
+        let { loading_spinner,loading,login } = this.state;
         var title='Cart';
         var subTitle='asd';
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
@@ -829,27 +326,11 @@ export default class Cart extends Component {
                 style={BaseStyle.safeAreaView}
                 forceInset={{ top: "always" }}
             >
-                {/* <Header
-                    title="Cart"
-                    subTitle={this.state.countCartReal+' Cart'}
-                    renderLeft={() => {
-                        return (
-                            <Icon
-                                name="arrow-left"
-                                size={20}
-                                color={BaseColor.primaryColor}
-                            />
-                        );
-                    }}
-                    onPressLeft={() => {
-                        navigation.goBack();
-                    }}
-                /> */}
+               
 
                 <Header
-                    title="Cart"
+                    title="Booking"
                     //subTitle={this.state.countCartReal+' Cart'}
-                    subTitle={this.state.paramOther.type}
                     renderLeft={() => {
                         return (
                             <Icon
@@ -868,50 +349,23 @@ export default class Cart extends Component {
                             />
                         );
                     }}
-                    // renderRightSecond={() => {
-                    //     return (
-                    //         <Icon
-                    //             name="envelope"
-                    //             size={24}
-                    //             color={BaseColor.primaryColor}
-                    //         />
-                    //     );
-                    // }}
+                
                     onPressLeft={() => {
                         navigation.goBack();
                     }}
                     onPressRight={() => {
                         navigation.navigate("Home");
                     }}
-                    // onPressRightSecond={() => {
-                    //     navigation.navigate("Messenger");
-                    // }}
                 />
 
-
+                
                 <ScrollView>
                     <View style={styles.contain}>
                        {this.renderContent(this.state.dataCartArrayReal)}
                     </View>
                 </ScrollView>
                 
-                {/* <View style={styles.contentButtonBottomBank}>
-                    <TouchableOpacity
-                    style={styles.itemPick}
-                    onPress={() => this.props.navigation.navigate('SelectPayment',
-                        {
-                        selected: this.state.payment_method,
-                        setPayment: this.setPayment
-                        }
-                    )}
-                    >
-                    <ActionCart
-                        labelCustom={this.state.payment_method_title}
-                        onChangeSort={this.onChangeSort}
-                        onFilter={this.onFilter}
-                    /> 
-                    </TouchableOpacity>
-                </View> */}
+            
                     
                 <View style={styles.contentButtonBottom}>
                     <View>
@@ -921,49 +375,9 @@ export default class Cart extends Component {
                         <Text title3 primaryColor semibold>
                             IDR {priceSplitter(this.state.totalCartPriceReal)}
                         </Text>
-                        {/* <Text caption1 semibold style={{ marginTop: 5 }}>
-                            All Charged Included
-                        </Text> */}
                     </View>
-
-                    
-                    <Button
-                        style={{ height: 46 }}
-
-                        loading={loading}
-                        onPress={() => {  
-                            this.onSubmit();
-                            // this.setState({ loading: true }, () => {
-                            //     setTimeout(() => {
-                            //         this.onSubmit();
-                            //         //navigation.navigate("FlightResult");
-                            //         this.setState({ loading: false });
-                            //     }, 500);
-                            // });
-                        }}
-                    >
-                       Pesan Sekarang
-                    </Button>
-                    {/* <Button
-                        style={{ height: 46 }}
-
-                        loading={loading}
-                        onPress={() => {  
-                            this.onSubmit();
-                            // this.setState({ loading: true }, () => {
-                            //     setTimeout(() => {
-                            //         this.onSubmit();
-                            //         //navigation.navigate("FlightResult");
-                            //         this.setState({ loading: false });
-                            //     }, 500);
-                            // });
-                        }}
-                    >
-                        Search Product
-                    </Button> */}
                 </View>
                 <DropdownAlert ref={ref => this.dropdown = ref} messageNumOfLines={10} closeInterval={10000} />
-
             </SafeAreaView>
         );
     }

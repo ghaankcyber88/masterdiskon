@@ -20,12 +20,9 @@ import NotYetLogin from "../../components/NotYetLogin";
 export default class Notification extends Component {
     constructor(props) {
         super(props);
-
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
              }
@@ -45,21 +42,21 @@ export default class Notification extends Component {
             AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
+                //console.log("---------------data session user  ------------");
+                //console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
                 
                 var id_user=userSession.id_user;
                 const data={"id_user":id_user}
                 const param={"param":data}
-                console.log('-------------param notif-------------');
-                console.log(JSON.stringify(param));
+                //console.log('-------------param notif-------------');
+                //console.log(JSON.stringify(param));
 
                     PostData('notif',param)
                                 .then((result) => {
-                                     console.log('-------------result notif-------------');
-                                    console.log(JSON.stringify(result));
+                                    //console.log('-------------result notif-------------');
+                                    //console.log(JSON.stringify(result));
                                     this.setState({loading_spinner: false });
                                     this.setState({notification:result});
                                 },
@@ -78,7 +75,10 @@ export default class Notification extends Component {
     }
 
     componentDidMount() {
-        this.getNotif();
+        const {navigation} = this.props;
+        navigation.addListener ('willFocus', () =>{
+            this.getNotif();
+        });
     }
 
     render() {
