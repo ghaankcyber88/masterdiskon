@@ -308,7 +308,14 @@ export default class CommentItem extends Component {
                     </View>
                 </View>
 
-    }
+    }   
+    
+        var page='';
+        if(item.order_status=='complete'){
+            page='Etiket';
+        }else{
+            page='Pembayaran';
+        }
 
         return (
             // <TouchableOpacity
@@ -319,7 +326,10 @@ export default class CommentItem extends Component {
 
              <TouchableOpacity
                 style={[styles.item, style]}
-                onPress={onPress}
+                //onPress={onPress}
+                onPress={() => {
+                    this.props.navigation.navigate(page,{param:item.id_order});
+                }}
                 activeOpacity={0.9}
             >
                 {content}

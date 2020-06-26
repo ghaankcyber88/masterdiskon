@@ -63,13 +63,6 @@ export default class CheckOut extends Component {
         
     }
 
-    
-    
-
-
-    
-
-
   
     componentDidMount() {
         

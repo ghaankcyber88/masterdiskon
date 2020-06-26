@@ -438,9 +438,9 @@ class OrderTab extends Component {
         this.fetch();
     }
 
-   
 
     render() {
+    const {navigation}=this.props;
         return (
             <View>
 
@@ -482,10 +482,11 @@ class OrderTab extends Component {
                         style={{ marginTop: 10 }}
                         item={item}
                         loading={this.state.loading_spinner}
-                        onPress={() => {
-                            //this.props.navigation.navigate("PreviewBooking",{item:item});
-                            this.props.navigation.navigate("Pembayaran",{param:item.id_order});
-                        }}
+                        navigation={navigation}
+                        // onPress={() => {
+                        //     //this.props.navigation.navigate("PreviewBooking",{item:item});
+                        //     this.props.navigation.navigate("Pembayaran",{param:item.id_order});
+                        // }}
                     />
                 )}
             />
