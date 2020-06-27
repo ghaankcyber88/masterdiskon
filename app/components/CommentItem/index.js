@@ -311,8 +311,9 @@ export default class CommentItem extends Component {
     }   
     
         var page='';
+        
         if(item.order_status=='complete'){
-            page='Etiket';
+            page='FlightTicket';
         }else{
             page='Pembayaran';
         }

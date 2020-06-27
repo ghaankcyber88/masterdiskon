@@ -56,6 +56,7 @@ import ChangeLanguage from "@screens/ChangeLanguage";
 import HotelInformation from "@screens/HotelInformation";
 import HotelRoom from "@screens/HotelRoom";
 import CheckOut from "@screens/CheckOut";
+import Eticket from "@screens/Eticket";
 import Currency from "@screens/Currency";
 import Coupons from "@screens/Coupons";
 import HotelDetail from "@screens/HotelDetail";
@@ -160,17 +161,17 @@ const routeConfigs = {
             }
         })
     },
-    Cart: {
-        screen: Cart,
-        navigationOptions: ({ navigation }) => ({
-            title: "Cart",
-            tabBarIcon: ({ focused, tintColor }) => {
-                return (
-                    <Icon color={tintColor} name="bookmark" size={20} solid />
-                );
-            }
-        })
-    },
+    // Cart: {
+    //     screen: Cart,
+    //     navigationOptions: ({ navigation }) => ({
+    //         title: "Cart",
+    //         tabBarIcon: ({ focused, tintColor }) => {
+    //             return (
+    //                 <Icon color={tintColor} name="bookmark" size={20} solid />
+    //             );
+    //         }
+    //     })
+    // },
     Messenger: {
         screen: Notification,
         navigationOptions: ({ navigation }) => ({
@@ -293,6 +294,9 @@ const StackNavigator = createStackNavigator(
         },
         CheckOut: {
             screen: CheckOut
+        },
+        Eticket: {
+            screen: Eticket
         },
         Currency: {
             screen: Currency

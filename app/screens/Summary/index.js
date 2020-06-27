@@ -21,6 +21,7 @@ import {PostData} from '../../services/PostData';
 import {PostDataNew} from '../../services/PostDataNew';
 import DropdownAlert from 'react-native-dropdownalert';
 import { UserData } from "@data";
+import AnimatedLoader from "react-native-animated-loader";
 
 const styles = StyleSheet.create({
     contain: {
@@ -93,6 +94,24 @@ const styles = StyleSheet.create({
 export default class Summary extends Component {
     constructor(props) {
         super(props);
+        
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {
+                let userSession = JSON.parse(result);
+                console.log("---------------data session user  ------------");
+                console.log(JSON.stringify(userSession));
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+
+                // var id_user='9';
+                var id_user=userSession.id_user;
+                this.setState({id_user:id_user});
+               
+             }
+            
+        });
+        
+        
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
         
@@ -734,7 +753,7 @@ export default class Summary extends Component {
             console.log('------------------');
 
             
-            this.setState({ loading: true }, () => {
+            this.setState({ loading_spinner: true }, () => {
                 AsyncStorage.getItem('config', (error, result) => {
                     if (result) {    
                         
@@ -763,21 +782,23 @@ export default class Summary extends Component {
                                         console.log(JSON.stringify(result));
                                         if(result.errors){
                                             this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.errors));
-                                            this.setState({ loading: false });
+                                            this.setState({ loading_spinner: false });
                                         }else if(result.status==="error"){
                                             this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
-                                            this.setState({ loading: false });
+                                            this.setState({ loading_spinner: false });
                                         }else if(result.status==="success"){
                                             var dataCartArray = [];
                                             var dataCart = {};
                                             var dataCart=result.data;
+                                            
+                                            
                 
             
                                                 var cartToBeSaved = dataCart;
                                                 cartToBeSaved.participant=this.state.listdata_participant;
                                                 cartToBeSaved.typeProduct=this.state.paramOther.type;
-                                                
-                                                
+                                                console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
+                                                this.onSubmitOrder(cartToBeSaved);
                                                 // var outputCart={
                                                 //     dataCart:dataCart,
                                                 //     listdata_customer:this.state.listdata_customer,
@@ -807,27 +828,25 @@ export default class Summary extends Component {
                                                 
             
                                                 //untuk membuat cart
-                                                
-                                                AsyncStorage.getItem('dataCartArray', (err, result) => {
-                                                let newcart = JSON.parse(result);
-                                                console.log('cartopp',JSON.stringify(newcart));
+                                                // AsyncStorage.getItem('dataCartArray', (err, result) => {
+                                                // let newcart = JSON.parse(result);
+                                                // console.log('cartopp',JSON.stringify(newcart));
             
-                                                if(!newcart){
-                                                newcart=[]
-                                                }
+                                                // if(!newcart){
+                                                // newcart=[]
+                                                // }
                                             
-                                                newcart.push(cartToBeSaved);
-                                                this.updateUserSession();
-                                                    setTimeout(() => {
-                                                    console.log('newcart',JSON.stringify(newcart));
+                                                // newcart.push(cartToBeSaved);
+                                                // this.updateUserSession();
+                                                //     setTimeout(() => {
+                                                //     console.log('newcart',JSON.stringify(newcart));
                                                         
-                                                        AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
-                                                        AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
-                                                        //this.props.navigation.navigate("Cart"); 
-                                                        this.props.navigation.navigate("Loading",{redirect:'Cart'});
-                                                        this.setState({ loading: false });
-                                                    }, 500);
-                                                });  
+                                                //         AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
+                                                //         AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
+                                                //         this.props.navigation.navigate("Loading",{redirect:'Cart'});
+                                                //         this.setState({ loading: false });
+                                                //     }, 500);
+                                                // });  
                             
                                         }
                                      },
@@ -849,6 +868,81 @@ export default class Summary extends Component {
       
         
     }
+    
+    
+    
+    
+    onSubmitOrder(cartToBeSaved){
+        var item=cartToBeSaved;
+        //this.setState({ loading: true }, () => {
+            AsyncStorage.getItem('config', (error, result) => {
+                if (result) {    
+                    
+                    
+                    let config = JSON.parse(result);
+                    var access_token=config.token;
+                    var url=config.aeroUrl;
+                    
+                    
+                    var dataCartArrayRealSend={
+                    "cart_select":[item],
+                    "token":access_token,
+                    "id_user":this.state.id_user,
+                    "dataCart":item,
+                    "dataSavePerson":{
+                        "participant":item.participant
+                    },
+                    "paramOther":{
+                        "type":item.typeProduct
+                        },
+                    }
+                    
+                    console.log("---------------data cart array cart kirim  ------------");
+                    console.log(JSON.stringify(dataCartArrayRealSend));
+
+             
+                    
+                    var myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+
+
+                    var raw = JSON.stringify(dataCartArrayRealSend);
+                    var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                    };
+
+                    fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
+                    .then(response => response.json())
+                    .then((result) => {
+                        var dataOrderSubmit=result;
+                        console.log("---------------status carts-------------");
+                        console.log(JSON.stringify(dataOrderSubmit));
+                            //this.setState({ loading_spinner: false });
+                            
+                                
+                                
+                                id_order=result.id_order;
+                                pay=result.pay;
+    
+                                var redirect='Pembayaran';
+                                //setTimeout(() => {
+                                    // var idCart=this.state.item.id;
+                                    // this.deleteCart(idCart);
+                                    var id_order=dataOrderSubmit.id_order;
+                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
+                                //}, 500);
+                               
+                    });
+
+                }
+            });
+        //});
+
+    }
+
     
     
     
@@ -1278,6 +1372,7 @@ export default class Summary extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {  
             let userSession = JSON.parse(result);
+            console.log('dataCustomer',JSON.stringify(userSession));
             var customer = [];
             for (var i=1; i<=1; i++) {
             var obj = {};
@@ -1364,6 +1459,9 @@ export default class Summary extends Component {
  
 
     toggleSwitch = value => {
+        
+        
+        
         this.setState({ reminders: value });
         var customer=this.state.listdata_customer[0];
         console.log('datacustomerswtich',JSON.stringify(customer));
@@ -1384,28 +1482,56 @@ export default class Summary extends Component {
         var nationality_id=customer.nationality_id;
         var nationality_phone_code=customer.nationality_phone_code;
         var passport_country_id=customer.passport_country_id;
-        // var passport_country_phone_code=customer.passport_country_phone_code;
         var type='guest';
-
-        this.updateParticipant(
-        key,
-        fullname,
-        firstname,
-        lastname,
-        birthday,
-        nationality,
-        passport_number,
-        passport_country,
-        passport_expire,
-        phone,
-        title,
-        email,
-        nationality_id,
-        nationality_phone_code,
-        passport_country_id,
-        // passport_country_phone_code,
-        type
-        );
+        
+        
+        var paraVal={
+            firstname:firstname,
+            lastname:lastname,
+            title:title,
+            email:email,
+            phone:phone,
+            nationality:nationality,
+            nationality_phone_code:nationality_phone_code,
+            
+            
+        }
+        console.log('paraVal',JSON.stringify(paraVal));
+        
+        if( 
+            firstname == "" || 
+            lastname =="" ||
+            title == null ||
+            email =="" ||
+            phone =="" ||
+            nationality == null ||
+            nationality_phone_code == null
+        ){
+        
+            alert('Pastikan Detail Pemesan Terisi Semua');
+            this.setState({ reminders: false });
+        }else{
+            this.updateParticipant(
+                key,
+                fullname,
+                firstname,
+                lastname,
+                birthday,
+                nationality,
+                passport_number,
+                passport_country,
+                passport_expire,
+                phone,
+                title,
+                email,
+                nationality_id,
+                nationality_phone_code,
+                passport_country_id,
+                type
+            );
+        }
+        
+        
 
         }else{
 
@@ -1471,6 +1597,7 @@ export default class Summary extends Component {
 
     toggleSwitchOtherUser = value => {
         this.setState({ remindersOtherUser: value });
+        console.log('status pengguna lain',value);
         if(value==true){
             this.setState({otherUser:true});
         }else{
@@ -1928,18 +2055,32 @@ export default class Summary extends Component {
             >   
                 {
                             loading_spinner ? 
-                            <ActivityIndicator
-                                    size="large"
-                                    color={BaseColor.primaryColor}
-                                    style={{position: 'absolute',
-                                    left: 0,
-                                    right: 0,
-                                    top: 0,
-                                    bottom: 0,
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
+                            
+                            <View style={{flex: 1,backgroundColor:  "#FFFFFF",justifyContent: "center",alignItems: "center"}}>
+                                <View
+                                    style={{
+                                        position: "absolute",
+                                        top: 220,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        justifyContent: "center",
+                                        alignItems: "center"
                                     }}
-                            /> 
+                                >
+                                    
+                                    <AnimatedLoader
+                                        visible={true}
+                                        overlayColor="rgba(255,255,255,0.75)"
+                                        source={require("app/assets/loader_jump.json")}
+                                        animationStyle={{width: 300,height: 300}}
+                                        speed={1}
+                                      />
+                                    <Text grayColor>
+                                        Connecting.. to Masterdiskon
+                                    </Text>
+                                </View>
+                            </View>
                             :
                 <View>
                 <Header

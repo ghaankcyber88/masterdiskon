@@ -12,5 +12,9 @@ export default StyleSheet.create({
     logo: {
         width: 120,
         height: 120
-    }
+    },
+    lottie: {
+        width: 300,
+        height: 300
+      }
 });

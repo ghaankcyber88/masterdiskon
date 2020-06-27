@@ -11,6 +11,8 @@ import {PostData} from '../../services/PostData';
 import {PostDataNew} from '../../services/PostDataNew';
 import { PromotionData, TourData, HotelData,FeaturedDestination,DataMasterDiskon, DataLoading } from "@data";
 import {AsyncStorage} from 'react-native';
+import AnimatedLoader from "react-native-animated-loader";
+
 class Loading extends Component {
     constructor(props) {
         super(props);
@@ -164,12 +166,7 @@ class Loading extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                {/* <Image
-                    source={Images.logo}
-                    style={styles.logo}
-                    resizeMode="contain"
-                /> */}
+            <View style={{flex: 1,backgroundColor:  "#FFFFFF",justifyContent: "center",alignItems: "center"}}>
                 <View
                     style={{
                         position: "absolute",
@@ -181,16 +178,17 @@ class Loading extends Component {
                         alignItems: "center"
                     }}
                 >
-                    {/* <Text title1 whiteColor semibold>
-                        MasterDiskon
-                    </Text> */}
-                    <ActivityIndicator
-                        size="large"
-                        // color={BaseColor.whiteColor}
-                        style={{
-                            marginTop: 20
-                        }}
-                    />
+                    
+                    <AnimatedLoader
+                        visible={true}
+                        overlayColor="rgba(255,255,255,0.75)"
+                        source={require("app/assets/loader_paperline.json")}
+                        animationStyle={{width: 300,height: 300}}
+                        speed={1}
+                      />
+                    <Text>
+                        Connecting.. to Masterdiskon
+                    </Text>
                 </View>
             </View>
         );
