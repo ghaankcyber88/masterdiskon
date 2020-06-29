@@ -18,6 +18,7 @@ let BlueColor = {
     accentColor: "#FF8A65",
     textWhite:"#fff",
     whiteColor: "#FFF",
+    greyColor:"grey"
 };
 
 let PinkColor = {

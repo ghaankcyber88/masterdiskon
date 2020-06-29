@@ -8,6 +8,8 @@ import { Header, SafeAreaView, Icon, Text, Button } from "@components";
 import styles from "./styles";
 import DropdownAlert from 'react-native-dropdownalert';
 import {PostData} from '../../services/PostData';
+import ValidationComponent from 'react-native-form-validator';
+import InputText from "../../components/InputText";
 
 import {
     GoogleSignin,
@@ -15,9 +17,10 @@ import {
     statusCodes,
   } from '@react-native-community/google-signin';
 
+  import { LoginButton, AccessToken } from 'react-native-fbsdk';
 
 
-class SignIn extends Component {
+class SignIn extends ValidationComponent {
     constructor(props) {
         super(props);
         var redirect="";
@@ -35,7 +38,12 @@ class SignIn extends Component {
                 password: true
             },
             redirect:redirect,
+            
+            
+            colorButton:BaseColor.greyColor,
+            disabledButton:true
         };
+        //this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
@@ -110,15 +118,6 @@ class SignIn extends Component {
 
 
         this.setState({ loading: true }, () => {
-            // var data={"email":email}
-            // const param={"param":data}
-
-            // "photo":"https://lh3.googleusercontent.com/a-/AOh14Gh8U83JP7mHjpzF1klP6J0AuWCOHRbna_BVgX6R=s96-c",
-            // "email":"matadesaindotcom@gmail.com",
-            // "familyName":"Desain",
-            // "givenName":"Mata",
-            // "name":"Mata Desain",
-
             var data={
                 "firstname":userInfo.user.givenName,
                 "lastname":userInfo.user.familyName,
@@ -173,18 +172,11 @@ class SignIn extends Component {
 
 
 
-onLogin() {
+onSubmit() {
     const { email, password, success,redirect } = this.state;
     const { navigation } = this.props;
-    if (email == "" || password == "") {
-        this.setState({
-            success: {
-                ...success,
-                email: false,
-                password: false
-            }
-        });
-    } else {
+    var errorMsg=this.validationSubmit();
+    if(errorMsg==''){
 
         this.setState({ loading: true }, () => {
             var data={"email":email,"password":password}
@@ -297,8 +289,6 @@ getBookingHistory(id_user) {
 }
 
 getNotification(id_user) {
- 
-            
     var id_user=id_user;
     var requestOptions = {
         method: 'GET',
@@ -355,8 +345,53 @@ getNotification(id_user) {
 
 
     
+    validationSubmit() {
+        this.validate({
+          email: {email: true,required: true},
+          password: {numbers: true,required: true},
+        });
+        
+        var errorMsg=this.getErrorMessages();
+        return errorMsg;
+    }
+      
 
+    validation(){
+    var email=this.state.email;
+    var password=this.state.password;
+    var errorMsg=this.getErrorMessages();
 
+        if(email != '' && password !='' ){
+                if(errorMsg !=''){
+                    console.log('not yet');
+                    this.setState({colorButton:BaseColor.greyColor});
+                    this.setState({disabledButton:true});
+                }else{
+                    console.log('perfect');
+                    this.setState({colorButton:BaseColor.primaryColor});
+                    this.setState({disabledButton:false});
+                }
+        }else{
+                console.log('not yet');
+                this.setState({colorButton:BaseColor.greyColor});
+                this.setState({disabledButton:true});
+          
+        }
+    }
+    
+  
+      
+    handleChange = (key, val,validate) => {
+        this.setState({ [key]: val});
+        if(val != '' ){
+            this.validate(validate);
+        }
+        
+        setTimeout(() => {
+            this.validation();
+        }, 500);
+    }
+      
     render() {
         const { navigation } = this.props;
         let { loading} = this.state;
@@ -383,69 +418,87 @@ getNotification(id_user) {
                 />
                 <ScrollView>
                     <View style={styles.contain}>
-                        <TextInput
-                            style={[BaseStyle.textInput, { marginTop: 65 }]}
-                            onChangeText={text => this.setState({ email: text })}
-                            onFocus={() => {
-                                this.setState({
-                                    success: {
-                                        ...this.state.success,
-                                        email: true
-                                    }
-                                });
-                            }}
-                            autoCorrect={false}
-                            placeholder="Email"
-                            placeholderTextColor={
-                                this.state.success.email
-                                    ? BaseColor.grayColor
-                                    : BaseColor.primaryColor
-                            }
+                        <InputText
+                            name="email"
+                            label="Email"
+                            placeholder="e.g.,email@address.com"
                             value={this.state.email}
-                            selectionColor={BaseColor.primaryColor}
-                        />
-                        <TextInput
-                            secureTextEntry={true}
-                            style={[BaseStyle.textInput, { marginTop: 10 }]}
-                            onChangeText={text =>
-                                this.setState({ password: text })
-                            }
-                            onFocus={() => {
-                                this.setState({
-                                    success: {
-                                        ...this.state.success,
-                                        password: true
+                            icon="envelope"
+                            onChangeText={(val)=> {
+                                this.handleChange('email',val,
+                                    {
+                                    email: {required: true,email: true},
                                     }
-                                });
+                                );
                             }}
-                            autoCorrect={false}
-                            placeholder="Password"
-                            secureTextEntry={true}
-                            placeholderTextColor={
-                                this.state.success.password
-                                    ? BaseColor.grayColor
-                                    : BaseColor.primaryColor
-                            }
-                            value={this.state.password}
-                            selectionColor={BaseColor.primaryColor}
+                            isFieldInError={this.isFieldInError('email')}
+                            getErrorsInField={this.getErrorsInField('email')}
+                        
                         />
+                        
+                        <InputText
+                            name="password"
+                            label="Password"
+                            placeholder="e.g., ******"
+                            value={this.state.password}
+                            icon="key"
+                            onChangeText={(val)=> {
+                                this.handleChange('password',val,
+                                    {
+                                    email: {required: true,email: true},
+                                    password: {required: true,numbers: true},
+                                    }
+                                );
+                            }}
+                            isFieldInError={this.isFieldInError('password')}
+                            getErrorsInField={this.getErrorsInField('password')}
+                        
+                        />
+                        
+                        <View>
+                            <TouchableOpacity  disabled={this.state.disabledButton} onPress={() => this.onSubmit()} >
+                                <View pointerEvents='none' style={styles.groupinput}>
+                                <Button
+                                    loading={this.state.loading}
+                                    style={{backgroundColor:this.state.colorButton}}
+                                    full
+                                >
+                                    Sign In
+                                </Button>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                      
+                      
                         <View style={{ width: "100%" }}>
-                            <Button
-                                full
-                                loading={loading}
-                                style={{ marginTop: 20 }}
-                                onPress={() => {
-                                    this.onLogin();
-                                }}
-                            >
-                                Sign In
-                            </Button>
                             <GoogleSigninButton
                             style={{ width: "100%", height: 48 }}
                             size={GoogleSigninButton.Size.Wide}
                             color={GoogleSigninButton.Color.Dark}
                             onPress={this._signIn}
                             disabled={this.state.isSigninInProgress} />
+                            
+                            {/* <LoginButton
+                              onLoginFinished={
+                                (error, result) => {
+                                  if (error) {
+                                    console.log("login has error: " + result.error);
+                                  } else if (result.isCancelled) {
+                                    console.log("login is cancelled.");
+                                  } else {
+                                    AccessToken.getCurrentAccessToken().then(
+                                      (data) => {
+                                        console.log(data.accessToken.toString())
+                                      }
+                                    )
+                                  }
+                                }
+                              }
+                              onLogoutFinished={() => console.log("logout.")}
+                              /> 
+                          
+                             */}
+                            
                         </View>
                         <TouchableOpacity
                             onPress={() => navigation.navigate("ResetPassword")}
@@ -477,3 +530,4 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(SignIn);
+

@@ -529,52 +529,12 @@ export default class DetailContact extends Component {
             nationality_id:nationality_id,
             passport_country_id:passport_country_id,
             nationality_phone_code:nationality_phone_code
-            // passport_country_phone_code:passport_country_phone_code,
         }
 
         console.log(JSON.stringify(dataForm));
 
-        // var contentFormComplete=<View style={{width:'100%'}}>
-        //                         {formFullName}
-        //                         {formTitle}
-        //                         {formBirthday}
-        //                         {formEmail}
-        //                         {formPhone}
-        //                         {formNationality}
-        //                         {formPassportNumber}
-        //                         {formPassportExpired}
-        //                         {formPassportCountry}
-        //                         </View>
-
-        // var contentFormCustomer=<View style={{width:'100%'}}>
-        //         {formFullName}
-        //         {formTitle}
-        //         {formEmail}
-        //         {formPhone}
-        //         {formNationality}
-        // </View>
-
-        // var contentFormGuestDomestic=<View style={{width:'100%'}}>
-        //         {formFullName}
-        //         {formTitle}
-        //         {formBirthday}
-              
-        // </View>
-
-        // var contentFormGuestInternational=<View style={{width:'100%'}}>
-        //         {formFullName}
-        //         {formTitle}
-        //         {formBirthday}
-        //         {formEmail}
-        //         {formPhone}
-        //         {formNationality}
-        //         {formPassportNumber}
-        //         {formPassportExpired}
-        // {formPassportCountry}
-        // </View>
 
         if(type=='customer'){
-            //contentForm=contentFormCustomer;
 
             if( 
                 firstname != '' && 
@@ -595,7 +555,6 @@ export default class DetailContact extends Component {
             }
         }else if(type=='guest'){
             if(typeFlight=='domestic' || typeProduct=='trip'){
-                //contentForm=contentFormGuestDomestic;
                 if( 
                     firstname != '' && 
                     lastname !='' &&
@@ -613,7 +572,6 @@ export default class DetailContact extends Component {
                     this.setState({handlerButton:true});
                 }
             }else{
-                //contentForm=contentFormComplete;
                 if( 
                     firstname != '' && 
                     lastname !='' &&
@@ -636,7 +594,6 @@ export default class DetailContact extends Component {
                 }
             }
         }else{
-            //contentForm=contentFormComplete;
             if( 
                 firstname != '' && 
                 lastname !='' &&
@@ -659,25 +616,6 @@ export default class DetailContact extends Component {
             }
         }
 
-
-        // if( firstname != '' && 
-        //     lastname !='' &&
-        //     // nationality !='' && 
-        //     // passport_number !='' &&
-        //     // passport_country !='' &&
-        //     // passport_expire !='' &&
-        //     // phone !='' &&
-        //     title !=''
-        //     // email !=''
-        // ){
-        //     console.log('perfect');
-        //     this.setState({colorButton:'red'});
-        //     this.setState({handlerButton:false});
-        // }else{
-        //     console.log('not yet');
-        //     this.setState({colorButton:'grey'});
-        //     this.setState({handlerButton:true});
-        // }
         
     }
 

@@ -28,6 +28,7 @@ import styles from "./styles";
 import {PostData} from '../../services/PostData';
 import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
+import AnimatedLoader from "react-native-animated-loader";
 
 
 
@@ -70,12 +71,14 @@ export default class Home extends Component {
                 {
                     icon: "calendar-alt",
                     name: "Hotel",
-                    route: "HotelSearch"
+                    route: "HotelSearch",
+                    iconAnimation:"hotel.json"
                 },
                 {
                     icon: "map-marker-alt",
                     name: "Tour",
-                    route: "Tour"
+                    route: "Tour",
+                    iconAnimation:"tour.json"
                     // <i class="fas fa-pencil-alt"></i>
                 },
                 // {
@@ -87,6 +90,7 @@ export default class Home extends Component {
                     icon: "plane",
                     name: "Flight",
                     route: "FlightSearch",
+                    iconAnimation:"flight.json"
                     // route: "BusSearch"
                 },
                 // {
@@ -469,6 +473,13 @@ export default class Home extends Component {
                                     color={BaseColor.primaryColor}
                                     solid
                                 />
+                                {/* <AnimatedLoader
+                                    visible={true}
+                                    overlayColor="rgba(255,255,255,0)"
+                                    source={require("app/assets/flight.json")}
+                                    animationStyle={{width: 50,height: 50}}
+                                    speed={1}
+                                  /> */}
                             </View>
                             <Text footnote>
                                 {item.name}

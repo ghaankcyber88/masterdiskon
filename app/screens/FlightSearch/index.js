@@ -30,18 +30,19 @@ export default class FlightSearch extends Component {
             login:true,
             round: false,
             loading: false,
-            from: {
-                id: "2",
-                name: "Indonesia",
-                value: "SIN",
-                image: Images.airline2
-            },
-            to: {
-                id: "3",
-                name: "Indonesia",
-                value: "SYN",
-                image: Images.airline3
-            },
+            
+            // from: {
+            //     id: "2",
+            //     name: "Indonesia",
+            //     value: "SIN",
+            //     image: Images.airline2
+            // },
+            // to: {
+            //     id: "3",
+            //     name: "Indonesia",
+            //     value: "SYN",
+            //     image: Images.airline3
+            // },
 
             //custom
             listdata:[],
@@ -206,7 +207,8 @@ export default class FlightSearch extends Component {
         "CabinClass":[this.state.kelasId],
         "CorporateCode":"",
         "Subclasses":false,
-        "Airlines": []
+        "Airlines": [],
+        "type":'flight'
         }
 
         var paramOther={
