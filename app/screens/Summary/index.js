@@ -158,7 +158,7 @@ export default class Summary extends Component {
         
         //------------------------parameter inti------------------------//
         var param=this.props.navigation.state.params.param;
-        var paramOther=this.props.navigation.state.params.paramOther;
+        //var param=this.props.navigation.state.params.param;
         var product=this.props.navigation.state.params.product;
         var productPart=this.props.navigation.state.params.productPart;
         
@@ -169,10 +169,10 @@ export default class Summary extends Component {
             param=this.props.navigation.state.params.param;
         }
 
-        var paramOther=[];
-        if(this.props.navigation.state.params.paramOther){
-            paramOther=this.props.navigation.state.params.paramOther;
-        }
+        // var param=[];
+        // if(this.props.navigation.state.params.param){
+        //     param=this.props.navigation.state.params.param;
+        // }
         
         //------------------------parameter inti------------------------//
 
@@ -183,7 +183,7 @@ export default class Summary extends Component {
 
         this.state = {
             param:param,
-            paramOther:paramOther,
+            //param:param,
             product:product,
             productPart:productPart,
             typeFlight:'',
@@ -342,9 +342,9 @@ export default class Summary extends Component {
 
 
     totalPrice(){
-        let {param,paramOther,product,productPart}=this.state;
+        let {param,product,productPart}=this.state;
         var total_price=0;
-        if(paramOther.type=='trip'){
+        if(param.type=='trip'){
             var date1 = param.DepartureDate;
             var date2 = param.ReturnDate;
             var duration=this.convertDuration(date1,date2);
@@ -367,7 +367,7 @@ export default class Summary extends Component {
             this.setState({dataPrice:dataPrice});
             this.setState({total_all:dataPrice.total_price});
             
-        }else if(paramOther.type=='hotel'){
+        }else if(param.type=='hotel'){
             var date1 = param.DepartureDate;
             var date2 = param.ReturnDate;
             var duration=this.convertDuration(date1,date2);
@@ -482,14 +482,14 @@ export default class Summary extends Component {
 
     onSubmit() {
 
-        var paramOther=this.state.paramOther;
+        var param=this.state.param;
         this.saveParticipant();
-        if(paramOther.type=='trip'){
+        if(param.type=='trip'){
             var customer=this.state.listdata_customer;
             var product= this.state.product;
             var guest=this.state.listdata_participant;
             var param=this.state.param;
-            var paramOther=this.state.paramOther;
+            var param=this.state.param;
             var dataPrice=this.state.dataPrice;
             
                 var dataCart={
@@ -524,7 +524,7 @@ export default class Summary extends Component {
                     listdata_customer:this.state.listdata_customer,
                     listdata_participant:this.state.listdata_participant,
                     otherUser:this.state.otherUser,
-                    paramOther:this.state.paramOther
+                    param:this.state.param
                 };
                 
                 console.log('outputCartFlight',JSON.stringify(outputCart));
@@ -540,12 +540,12 @@ export default class Summary extends Component {
                     this.setState({ loading: false });
                 }, 500);
         
-        }else if(paramOther.type=='hotel'){
+        }else if(param.type=='hotel'){
             var customer=this.state.listdata_customer;
             var product= this.state.product;
             var guest=this.state.listdata_participant;
             var param=this.state.param;
-            var paramOther=this.state.paramOther;
+            var param=this.state.param;
             var dataPrice=this.state.dataPrice;
             
                 var dataCart={
@@ -581,7 +581,7 @@ export default class Summary extends Component {
                     listdata_customer:this.state.listdata_customer,
                     listdata_participant:this.state.listdata_participant,
                     otherUser:this.state.otherUser,
-                    paramOther:this.state.paramOther
+                    param:this.state.param
                 };
                 
                 console.log('outputCartFlight',JSON.stringify(outputCart));
@@ -796,7 +796,7 @@ export default class Summary extends Component {
             
                                                 var cartToBeSaved = dataCart;
                                                 cartToBeSaved.participant=this.state.listdata_participant;
-                                                cartToBeSaved.typeProduct=this.state.paramOther.type;
+                                                cartToBeSaved.typeProduct=this.state.param.type;
                                                 console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
                                                 this.onSubmitOrder(cartToBeSaved);
                                                 // var outputCart={
@@ -804,7 +804,7 @@ export default class Summary extends Component {
                                                 //     listdata_customer:this.state.listdata_customer,
                                                 //     listdata_participant:this.state.listdata_participant,
                                                 //     otherUser:this.state.otherUser,
-                                                //     paramOther:this.state.paramOther
+                                                //     param:this.state.param
                                                 // };
                                                 
                                                 //untuk membuat cart satu aja
@@ -877,24 +877,19 @@ export default class Summary extends Component {
         //this.setState({ loading: true }, () => {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
-                    
-                    
                     let config = JSON.parse(result);
                     var access_token=config.token;
                     var url=config.aeroUrl;
                     
-                    
                     var dataCartArrayRealSend={
-                    "cart_select":[item],
+                    //"cart_select":[item],
                     "token":access_token,
                     "id_user":this.state.id_user,
                     "dataCart":item,
-                    "dataSavePerson":{
-                        "participant":item.participant
-                    },
-                    "paramOther":{
-                        "type":item.typeProduct
-                        },
+                    // "dataSavePerson":{
+                    //     "participant":item.participant
+                    // },
+                    "type":item.typeProduct
                     }
                     
                     console.log("---------------data cart array cart kirim  ------------");
@@ -1343,12 +1338,12 @@ export default class Summary extends Component {
 
     componentDidMount() {
 
-        var paramOther=this.state.paramOther;
-        var typeProduct=paramOther.type;
+        var param=this.state.param;
+        var typeProduct=param.type;
         var typeFlight=this.state.typeFlight;
         this.totalPrice();
 
-        if(paramOther.type=='flight'){
+        if(param.type=='flight'){
             this.typeFlight();
         }
 
@@ -1608,7 +1603,7 @@ export default class Summary extends Component {
 
     render() {
         const { navigation } = this.props;
-        let { paramOther,selectDataDeparture,selectDataReturn,param,dataPrice, packageItem, packageItemDetail,loading, loading_spinner,userData } = this.state;
+        let { param,selectDataDeparture,selectDataReturn,dataPrice, packageItem, packageItemDetail,loading, loading_spinner,userData } = this.state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
         var jumlahPenumpang=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
         const { flights, refreshing, clampedScroll } = this.state;
@@ -1643,7 +1638,7 @@ export default class Summary extends Component {
                         updateParticipant: this.updateParticipant,
                         type:'customer',
                         old:item.old,
-                        typeProduct:this.state.paramOther.type
+                        typeProduct:this.state.param.type
       
                       })}
                     viewImage={false}
@@ -1705,7 +1700,7 @@ export default class Summary extends Component {
                         type:'guest',
                         old:item.old,
                         typeFlight:this.state.typeFlight,
-                        typeProduct:this.state.paramOther.type
+                        typeProduct:this.state.param.type
       
                       })}
                     viewImage={false}
@@ -1737,7 +1732,7 @@ export default class Summary extends Component {
         
 
         var contentProduct=<View></View>
-        if(this.state.paramOther.type=='trip')
+        if(this.state.param.type=='trip')
         {
             contentProduct=<View><Text title3 style={{ paddingVertical: 10 }}>
             Product Trip
@@ -1746,7 +1741,7 @@ export default class Summary extends Component {
                     {this.state.product['judul_trip']}
                 </Text>
             </View>
-        }else if(this.state.paramOther.type=='hotel'){
+        }else if(this.state.param.type=='hotel'){
             contentProduct=<View><Text title3 style={{ paddingVertical: 10 }}>
             Product hotel
             </Text>
@@ -1824,8 +1819,8 @@ export default class Summary extends Component {
                             round={this.state.param.IsReturn}
                             fromCode={this.state.param.Origin}
                             toCode={this.state.param.Destination}
-                            from={this.state.paramOther.bandaraAsalLabel}
-                            to={this.state.paramOther.bandaraTujuanLabel}
+                            from={this.state.param.bandaraAsalLabel}
+                            to={this.state.param.bandaraTujuanLabel}
                         />
                         
                             
@@ -1839,7 +1834,7 @@ export default class Summary extends Component {
 
 
         var contentPrice=<View></View>
-        if(this.state.paramOther.type=='trip')
+        if(this.state.param.type=='trip')
         {
             contentPrice=<View>
                 <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >

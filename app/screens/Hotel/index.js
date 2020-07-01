@@ -15,11 +15,11 @@ export default class Hotel extends Component {
         super(props);
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
-        var paramUrl=this.props.navigation.state.params.paramUrl;
-        var paramOther=this.props.navigation.state.params.paramOther;
+        //var paramUrl=this.props.navigation.state.params.paramUrl;
+        //var paramOther=this.props.navigation.state.params.paramOther;
         var param=this.props.navigation.state.params.param;
-        var city=this.props.navigation.state.params.city;
-        console.log('paramHotel',JSON.stringify(paramUrl));
+        console.log('PARAM hotel',JSON.stringify(param));
+        //var city=this.props.navigation.state.params.city;
         // Temp data define
         this.state = {
             refreshing: false,
@@ -40,10 +40,10 @@ export default class Hotel extends Component {
             ),
             modeView: "list",
             hotels: HotelData,
-            paramUrl:paramUrl,
-            city:city,
+            // paramUrl:paramUrl,
+            // city:city,
             param:param,
-            paramOther:paramOther,
+            //paramOther:paramOther,
             DataMasterDiskon:DataMasterDiskon[0],
         };
 
@@ -54,10 +54,14 @@ export default class Hotel extends Component {
     
     
     getHotel(){
-        var paramUrl=this.state.paramUrl;
-        var city=this.state.city;
+        var param=this.state.param;
+        //var paramUrl=this.state.paramUrl;
+        //var city=this.state.city;
+        var paramUrl='checkin='+param.DepartureDate+'&checkout='+param.ReturnDate+'&adults='+param.Adults+'&children='+param.Children+'&room='+param.Qty;
+        param.paramUrl=paramUrl;
+        this.setState({param:param});
         this.setState({ loading_spinner: true }, () => {
-            PostDataProduct('hotel/search_app?city='+city+'&'+paramUrl)
+            PostDataProduct('hotel/search_app?city='+param.cityId+'&'+paramUrl)
             .then((result) => {
                     this.setState({ loading_spinner: false });
                   
@@ -78,9 +82,22 @@ export default class Hotel extends Component {
         });
     }
     componentDidMount(){
-    
-    this.getHotel();
+        this.getHotel();
     }
+    onSelect(item){
+        const{param}=this.state;
+        
+        param.slug=item.slug_hotel;
+        
+        this.props.navigation.navigate(
+            "HotelDetail",{
+            param:param,
+            product:item
+            }
+        );
+    }
+    
+    
     onChangeSort() {}
 
     /**
@@ -340,15 +357,8 @@ export default class Hotel extends Component {
                                         marginBottom: 20
                                     }}
                                     onPress={() => {
-                                        this.props.navigation.navigate(
-                                            "HotelDetail",{
-                                            slug:item.slug_hotel,
-                                            paramUrl:this.state.paramUrl,
-                                            param:this.state.param,
-                                            paramOther:this.state.paramOther,
-                                            product:item
-                                            }
-                                        );
+                                        this.onSelect(item);
+                                        
                                     }}
                                 />
                             )}

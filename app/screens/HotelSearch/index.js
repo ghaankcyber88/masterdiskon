@@ -301,7 +301,7 @@ export default class HotelSearch extends Component {
     
     
     componentDidMount() {
-        this.getHotels();
+        //this.getHotels();
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 this.setState({login:true});

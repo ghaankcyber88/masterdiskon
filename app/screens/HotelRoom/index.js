@@ -61,25 +61,25 @@ export default class HotelRoom extends Component {
     constructor(props) {
         super(props);
         var hotelData=this.props.navigation.state.params.hotelData;
-        var hotelDetail=hotelData.hotel;
-        var hotelRoom=hotelData.room;
-        var hotelReview=hotelData.review;
-        var hotelReviewCustomer=hotelData.review_teks;
+        // var hotelDetail=hotelData.hotel;
+        // var hotelRoom=hotelData.room;
+        // var hotelReview=hotelData.review;
+        // var hotelReviewCustomer=hotelData.review_teks;
         
         
         var param=this.props.navigation.state.params.param;
-        var paramOther=this.props.navigation.state.params.paramOther;
+        //var paramOther=this.props.navigation.state.params.paramOther;
         var product=this.props.navigation.state.params.product;
         
         
         // Temp data define
         this.state = {
             userData: UserData[0],
-            hotelRoom:hotelRoom,
+            hotelData:hotelData,
             DataMasterDiskon:DataMasterDiskon[0],
             
             param:param,
-            paramOther:paramOther,
+            //paramOther:paramOther,
             product:product
             
             
@@ -127,7 +127,7 @@ export default class HotelRoom extends Component {
                                 <View style={styles.blockView}>
                                
                                 <FlatList
-                                    data={this.state.hotelRoom}
+                                    data={this.state.hotelData.room}
                                     keyExtractor={(item, index) => item.id_hotel_room}
                                     renderItem={({ item }) => (
                                         <RoomType
@@ -153,13 +153,12 @@ export default class HotelRoom extends Component {
                                                 //     product:this.state.product,
                                                 //     productPart:item
                                                 // }
-                                                // console.log('HotelRoomParam',JSON.stringify(xx));
+                                                //console.log('HotelRoomParam',JSON.stringify(this.state.param));
                                                 
                                                 this.props.navigation.navigate(
                                                     "Summary",
                                                         {
                                                             param:this.state.param,
-                                                            paramOther:this.state.paramOther,
                                                             product:this.state.product,
                                                             productPart:item
                                                         }

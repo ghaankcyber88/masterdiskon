@@ -27,7 +27,7 @@ export default class FlightResultArrival extends Component {
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
         var param=this.props.navigation.state.params.param;
-        var paramOther=this.props.navigation.state.params.paramOther;
+        //var paramOther=this.props.navigation.state.params.paramOther;
         var listdata_return=this.props.navigation.state.params.listdata_return;
         var selectDataDeparture=this.props.navigation.state.params.selectDataDeparture;
 
@@ -52,7 +52,7 @@ export default class FlightResultArrival extends Component {
                 40
             ),
             param:param,
-            paramOther:paramOther,
+            //paramOther:paramOther,
             listdata_return:listdata_return,
             selectDataDeparture:selectDataDeparture,
             listdata_return_original:listdata_return_original
@@ -157,7 +157,7 @@ export default class FlightResultArrival extends Component {
         this.props.navigation.navigate("Summary",
                             {
                                 param:this.state.param,
-                                paramOther:this.state.paramOther,
+                                //paramOther:this.state.paramOther,
                                 selectDataDeparture:this.state.selectDataDeparture,
                                 selectDataReturn:select,
                                 departurePost:departurePost,

@@ -71,65 +71,26 @@ export default class Home extends Component {
                 {
                     icon: "calendar-alt",
                     name: "Hotel",
-                    route: "HotelSearch",
-                    iconAnimation:"hotel.json"
+                    route: "FlightSearch",
+                    iconAnimation:"hotel.json",
+                    type:'hotel'
                 },
                 {
                     icon: "map-marker-alt",
-                    name: "Tour",
+                    name: "Trip",
                     route: "Tour",
-                    iconAnimation:"tour.json"
-                    // <i class="fas fa-pencil-alt"></i>
+                    iconAnimation:"tour.json",
+                    type:'trip'
                 },
-                // {
-                //     icon: "car-alt",
-                //     name: "Car",
-                //     route: "OverViewCar"
-                // },
                 {
                     icon: "plane",
                     name: "Flight",
                     route: "FlightSearch",
-                    iconAnimation:"flight.json"
-                    // route: "BusSearch"
+                    iconAnimation:"flight.json",
+                    type:'flight'
                 },
-                // {
-                //     icon: "ship",
-                //     name: "Cruise",
-                //     route: "CruiseSearch"
-                // },
-                // {
-                //     icon: "bus",
-                //     name: "Bus",
-                //     route: "BusSearch"
-                // },
-                // {
-                //     icon: "star",
-                //     name: "Event",
-                //     route: "DashboardEvent"
-                // },
-                // {
-                //     icon: "ellipsis-h",
-                //     name: "More",
-                //     route: "More"
-                // }
             ],
-            relate: [
-                {
-                    id: "0",
-                    image: Images.event4,
-                    title: "BBC Music Introducing",
-                    time: "Thu, Oct 31, 9:00am",
-                    location: "Tobacco Dock, London"
-                },
-                {
-                    id: "1",
-                    image: Images.event5,
-                    title: "Bearded Theory Spring Gathering",
-                    time: "Thu, Oct 31, 9:00am",
-                    location: "Tobacco Dock, London"
-                }
-            ],
+            
             promotion: PromotionData,
             tours: TourData,
             featuredDestination:FeaturedDestination,
@@ -148,12 +109,15 @@ export default class Home extends Component {
 
 
             listdata_assets:{},
+            config:{},
 
 
            loaded: false,
           imageOpacity: new Animated.Value(0.0),
           placeholderOpacity: new Animated.Value(1.0),
           placeholderScale: new Animated.Value(1.0),
+          
+          urlBanner:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80"
 
         };
         this._deltaY = new Animated.Value(0);
@@ -268,30 +232,33 @@ export default class Home extends Component {
 
    
 
-    // getAssets(){
-    //     this.setState({ loading_assets: true }, () => {
+    getAssets(){
+        this.setState({ loading_assets: true }, () => {
           
-    //         PostData('get_assets')
-    //              .then((result) => {
-    //                 this.setState({loading_assets: false });
-    //                 this.setState({listdata_assets: result});
-    //              },
-    //              (error) => {
-    //                  this.setState({ error });
-    //              }
-    //          ); 
-    //     });
-    //  }
+            PostData('get_assets')
+                 .then((result) => {
+                    this.setState({loading_assets: false });
+                    this.setState({listdata_assets: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+             ); 
+        });
+     }
     
     
     getConfig(){
-        AsyncStorage.getItem('config', (error, result) => {
-            if (result) {    
-                let config = JSON.parse(result);
-                console.log('dataConfigHome',JSON.stringify(config));
-            }
+        this.setState({ loading_config: true }, () => {
+            AsyncStorage.getItem('config', (error, result) => {
+                if (result) {    
+                    this.setState({loading_config: false });
+                    let config = JSON.parse(result);
+                    console.log('dataConfigHome',JSON.stringify(config));
+                    this.setState({config:config});
+                }
+            });
         });
-    
     }
 
     addDate(dt, amount, dateType) {
@@ -440,7 +407,7 @@ export default class Home extends Component {
         
         //this.getPopularDestination();
         //this.getTripDomestic();
-        //this.getAssets();
+        this.getAssets();
         //this.getPromo();
      }
 
@@ -463,7 +430,7 @@ export default class Home extends Component {
                             style={styles.itemService}
                             activeOpacity={0.9}
                             onPress={() => {
-                                navigation.navigate(item.route);
+                                navigation.navigate(item.route,{type:item.type});
                             }}
                         >
                             <View style={styles.iconContent}>
@@ -631,7 +598,7 @@ export default class Home extends Component {
           placeholderScale
         } = this.state
 
-        if(this.state.loading_assets){
+        if(this.state.loading_config){
 
             var banner=<Animated.View
                           style={[
@@ -654,7 +621,7 @@ export default class Home extends Component {
                           ]} />
         }else{
              var banner=<Animated.Image
-                    source={{uri : this.state.listdata_assets.banner}}
+                    source={{uri : this.state.config.banner}}
                     style={[
                         styles.imageBackground,
                         // {
@@ -675,6 +642,13 @@ export default class Home extends Component {
                 />
 
         }
+        
+        // var banner=<Animated.Image
+        //             source={{uri : this.state.listdata_assets.banner}}
+        //             style={[
+        //                 styles.imageBackground,
+        //             ]}
+        //         />
 
         return (
             <View style={{ flex: 1 }}>

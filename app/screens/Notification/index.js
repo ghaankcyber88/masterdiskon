@@ -17,6 +17,7 @@ import {
   Fade
 } from "rn-placeholder";
 import NotYetLogin from "../../components/NotYetLogin";
+import PTRView from 'react-native-pull-to-refresh';
 export default class Notification extends Component {
     constructor(props) {
         super(props);
@@ -80,7 +81,12 @@ export default class Notification extends Component {
             this.getNotif();
         });
     }
-
+    _refresh() {
+        return new Promise((resolve) => {
+          setTimeout(()=>{resolve()}, 2000)
+        });
+    }
+        
     render() {
         const { navigation } = this.props;
         let { notification,login,loading_spinner } = this.state;
@@ -135,7 +141,9 @@ export default class Notification extends Component {
                             )}
                         /> 
                 :
+                <PTRView onRefresh={this._refresh} >
                 <NotYetLogin redirect={'Notification'} navigation={navigation} />
+                </PTRView>
                 }
                 
             </SafeAreaView>

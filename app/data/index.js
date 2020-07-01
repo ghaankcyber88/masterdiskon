@@ -21,6 +21,7 @@ import { BusData } from "./bus";
 import { EventListData } from "./event";
 import { DataMasterDiskon } from "./dataMasterDiskon";
 import { DataLoading } from "./dataLoading";
+import { DataFlight } from "./dataFlight";
 // Sample data for display on template
 export {
     BusData,
@@ -45,5 +46,6 @@ export {
     FlightBrandData,
     EventListData,
     DataMasterDiskon,
-    DataLoading
+    DataLoading,
+    DataFlight
 };

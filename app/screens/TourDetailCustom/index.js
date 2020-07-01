@@ -527,7 +527,7 @@ export default class TourDetailCustom extends Component {
                             onPress={() =>
                                 {
                                 // navigation.navigate("PreviewBooking")
-                                navigation.navigate("TourSet",{product:this.state.product})
+                                navigation.navigate("FlightSearch",{product:this.state.product,type:'trip'})
                                 //alert('Masih dalam pengembangan')
                                 }
                             }

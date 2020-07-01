@@ -29,12 +29,12 @@ import {PostDataProduct} from '../../services/PostDataProduct';
 export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
-        var paramUrl=this.props.navigation.state.params.paramUrl;
+        //var paramUrl=this.props.navigation.state.params.paramUrl;
         var param=this.props.navigation.state.params.param;
-        var paramOther=this.props.navigation.state.params.paramOther;
-        var slug=this.props.navigation.state.params.slug;
+        //var paramOther=this.props.navigation.state.params.paramOther;
+        //var slug=this.props.navigation.state.params.slug;
         var product=this.props.navigation.state.params.product;
-        console.log('product',JSON.stringify(product));
+        //console.log('product',JSON.stringify(product));
         // Temp data define
         this.state = {
             heightHeader: Utils.heightHeader(),
@@ -102,10 +102,10 @@ export default class HotelDetail extends Component {
             ],
             helpBlock: HelpBlockData,
             
-            paramUrl:paramUrl,
-            slug:slug,
+            //paramUrl:paramUrl,
+            //slug:slug,
             param:param,
-            paramOther:paramOther,
+            //paramOther:paramOther,
             product:product,
             
             hotelDetail:{},
@@ -153,10 +153,9 @@ export default class HotelDetail extends Component {
         this._deltaY = new Animated.Value(0);
     }
     getHotel(){
-        var paramUrl=this.state.paramUrl;
-        var slug=this.state.slug;
+        var param=this.state.param;
         this.setState({ loading_spinner: true }, () => {
-            PostDataProduct('hotel/detail_app/'+slug+'?'+paramUrl)
+            PostDataProduct('hotel/detail_app/'+param.slug_hotel+'?'+param.paramUrl)
             .then((result) => {
                     this.setState({ loading_spinner: false });
                     var hotelData=result;
@@ -740,10 +739,7 @@ export default class HotelDetail extends Component {
                                 navigation.navigate("HotelRoom",
                                     {
                                         hotelData:this.state.hotelData,
-                                        paramUrl:this.state.paramUrl,
-                                        slug:this.state.slug,
                                         param:this.state.param,
-                                        paramOther:this.state.paramOther,
                                         product:this.state.product,
                                     }
                                 )}
