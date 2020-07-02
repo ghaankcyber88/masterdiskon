@@ -6,7 +6,7 @@ export default StyleSheet.create({
     default: {
         height: 56,
         borderRadius: 8,
-        backgroundColor: BaseColor.primaryColor,
+        backgroundColor: BaseColor.secondColor,
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
@@ -21,10 +21,11 @@ export default StyleSheet.create({
                                 shadowOpacity: 0.25,
                                 shadowRadius: 3.84,
                                 elevation: 5,
+        marginTop:20
     },
     textDefault: {
         ...Typography.headline,
-        color: BaseColor.whiteColor,
+        color: BaseColor.primaryColor,
         fontWeight: FontWeight.semibold
     },
     outline: {

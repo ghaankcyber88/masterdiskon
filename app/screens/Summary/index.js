@@ -22,6 +22,7 @@ import {PostDataNew} from '../../services/PostDataNew';
 import DropdownAlert from 'react-native-dropdownalert';
 import { UserData } from "@data";
 import AnimatedLoader from "react-native-animated-loader";
+import PaymentGateway from 'react-native-midtrans-payment';
 
 const styles = StyleSheet.create({
     contain: {
@@ -168,7 +169,8 @@ export default class Summary extends Component {
         if(this.props.navigation.state.params.param){
             param=this.props.navigation.state.params.param;
         }
-
+        
+        console.log('params',JSON.stringify(param));
         // var param=[];
         // if(this.props.navigation.state.params.param){
         //     param=this.props.navigation.state.params.param;
@@ -345,6 +347,8 @@ export default class Summary extends Component {
         let {param,product,productPart}=this.state;
         var total_price=0;
         if(param.type=='trip'){
+            console.log('dataProductTrip',JSON.stringify(product));
+            console.log('paramProductTrip',JSON.stringify(param));
             var date1 = param.DepartureDate;
             var date2 = param.ReturnDate;
             var duration=this.convertDuration(date1,date2);
@@ -359,7 +363,7 @@ export default class Summary extends Component {
             var dataPrice={      
                 required_dob:true,
                 required_passport:false,
-                total_price:total_price,
+                total_price:product.harga,
                 nett_price:0,
                 insurance_total:1000,
                 transaction_fee:0
@@ -368,6 +372,7 @@ export default class Summary extends Component {
             this.setState({total_all:dataPrice.total_price});
             
         }else if(param.type=='hotel'){
+            console.log('dataProductHotel',JSON.stringify(product));
             var date1 = param.DepartureDate;
             var date2 = param.ReturnDate;
             var duration=this.convertDuration(date1,date2);
@@ -478,7 +483,79 @@ export default class Summary extends Component {
     setTitle(title){
         this.setState({title:title});
     }
-
+    
+    pay(cartToBeSaved,id_order){
+        var dataPay=cartToBeSaved;
+        const optionConnect = {
+            clientKey: "SB-Mid-client-zxkvGZYYuXIidGRG",
+            urlMerchant: "https://masterdiskon.com", // will hit https://domain.net/charge
+            sandbox : true, // works on iOS only, change it to false on production
+        }
+ 
+        const transRequest = {
+            transactionId: id_order,
+            totalAmount: dataPay.total_price
+        }
+ 
+        const itemDetails = [
+            {id: "001", price: 1000, qty: 4, name: "peanuts"}
+        ];
+ 
+        const creditCardOptions = {
+            saveCard: false,
+            saveToken: false,
+            paymentMode: "Normal",
+            secure: false
+        };
+ 
+        const userDetail = {
+            fullName: "jhon",
+            email: "jhon@payment.com",
+            phoneNumber: "0850000000",
+            userId: "U01",
+            address: "street coffee",
+            city: "yogyakarta",
+            country: "IDN", 
+            zipCode: "59382"
+        };
+ 
+        const optionColorTheme = {
+            primary: '#c51f1f',
+            primaryDark: '#1a4794',
+            secondary: '#1fce38'
+        }
+ 
+        const optionFont = {
+            // defaultText: "open_sans_regular.ttf",
+            // semiBoldText: "open_sans_semibold.ttf",
+            // boldText: "open_sans_bold.ttf"
+        }
+ 
+        const callback = (res) => {
+            console.log(res)
+        };
+        
+        var paramMidtrans={
+            optionConnect,
+            transRequest,
+            itemDetails,
+            creditCardOptions,
+            userDetail,
+            optionColorTheme,
+            optionFont
+        }
+        console.log('paramMidtrans',JSON.stringify(paramMidtrans));
+        // PaymentGateway.checkOut(
+        //     optionConnect,
+        //     transRequest,
+        //     itemDetails,
+        //     creditCardOptions,
+        //     userDetail,
+        //     optionColorTheme,
+        //     optionFont,
+        //     callback
+        // );
+    }
 
     onSubmit() {
 
@@ -799,6 +876,7 @@ export default class Summary extends Component {
                                                 cartToBeSaved.typeProduct=this.state.param.type;
                                                 console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
                                                 this.onSubmitOrder(cartToBeSaved);
+                                                //this.pay(cartToBeSaved);
                                                 // var outputCart={
                                                 //     dataCart:dataCart,
                                                 //     listdata_customer:this.state.listdata_customer,
@@ -923,12 +1001,11 @@ export default class Summary extends Component {
                                 pay=result.pay;
     
                                 var redirect='Pembayaran';
-                                //setTimeout(() => {
-                                    // var idCart=this.state.item.id;
-                                    // this.deleteCart(idCart);
-                                    var id_order=dataOrderSubmit.id_order;
-                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
-                                //}, 500);
+                                
+                                var id_order=dataOrderSubmit.id_order;
+                                //this.pay(cartToBeSaved,id_order);
+                                this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
+                               
                                
                     });
 
@@ -2085,7 +2162,7 @@ export default class Summary extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}

@@ -36,6 +36,10 @@ allprojects {
             // edited for example app
             url("$rootDir/../../node_modules/jsc-android/dist")
         }
+        
+        maven { url "http://dl.bintray.com/pt-midtrans/maven" }
+        maven { url "https://jitpack.io" }
+
         google()
         jcenter()
         maven { url 'https://jitpack.io' }

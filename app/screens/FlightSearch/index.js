@@ -40,7 +40,7 @@ export default class FlightSearch extends Component {
             round=true;
             title='Search Hotel';
         }else if(type=='trip'){
-            round=false;
+            round=true;
             title='Set Tour';
         }
 
@@ -87,9 +87,9 @@ export default class FlightSearch extends Component {
             qty:1,
             
             
-            dewasa:2,
-            anak:1,
-            bayi:0,
+            dewasa:"2",
+            anak:"1",
+            bayi:"0",
             tglAwal:tglAwal,
             tglAkhir:tglAkhir,
          
@@ -709,7 +709,7 @@ export default class FlightSearch extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -725,18 +725,20 @@ export default class FlightSearch extends Component {
                     <Button
                         full
                         loading={loading}
-                        style={{
-                                borderRadius: 18,
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5,
-                                marginTop:20
-                            }}
+                        // style={{
+                        //         borderRadius: 18,
+                        //         shadowColor: "#000",
+                        //         shadowOffset: {
+                        //             width: 0,
+                        //             height: 2,
+                        //         },
+                        //         shadowOpacity: 0.25,
+                        //         shadowRadius: 3.84,
+                        //         elevation: 5,
+                        //         marginTop:20,
+                        //         backgroundColor:BaseColor.secondColor,
+                        //         color:BaseColor.primaryColor
+                        //     }}
                         onPress={() => {  
                             this.onSubmit();
                            

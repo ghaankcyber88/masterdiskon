@@ -3,8 +3,9 @@ import { StyleSheet } from "react-native";
 import { BaseStyle,BaseColor } from "@config";
 
 export default StyleSheet.create({
-    contain: { height: 45, flexDirection: "row"},
+    contain: { height: 45, flexDirection: "row",backgroundColor:BaseColor.primaryColor},
     contain2: { height: 45, flexDirection: "row",backgroundColor:BaseColor.primaryColor},
+    textWhite: {color:BaseColor.primaryColor},
     contentLeft: {
         flex: 1,
         justifyContent: "center",
@@ -12,9 +13,15 @@ export default StyleSheet.create({
         width: 60
     },
     contentCenter: {
+        // flex: 2,
+        // alignItems: "center",
+        // justifyContent: "center",
+        
         flex: 2,
-        alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        paddingLeft: 0,
+        marginLeft:-60,
+        width: 60
     },
     contentRight: {
         justifyContent: "center",
