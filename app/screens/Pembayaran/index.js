@@ -192,3 +192,29 @@ export default class Pembayaran extends Component {
         );
     }
 }
+
+
+class OrderTab extends Component {
+    constructor(props) {
+        super(props);
+        var product=this.props.product;
+        //alert(product);
+        this.state = {
+           
+        };
+    }
+
+
+
+    render() {
+    const {navigation}=this.props;
+        return (
+            <View>
+
+                                
+            
+            </View>
+        );
+    }
+}
+
