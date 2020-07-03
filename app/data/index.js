@@ -20,6 +20,8 @@ import { CruiseData } from "./cruise";
 import { BusData } from "./bus";
 import { EventListData } from "./event";
 import { DataMasterDiskon } from "./dataMasterDiskon";
+import { DataPayment } from "./dataPayment";
+import { DataBooking } from "./dataBooking";
 import { DataLoading } from "./dataLoading";
 import { DataFlight } from "./dataFlight";
 // Sample data for display on template
@@ -46,6 +48,8 @@ export {
     FlightBrandData,
     EventListData,
     DataMasterDiskon,
+    DataPayment,
+    DataBooking,
     DataLoading,
     DataFlight
 };

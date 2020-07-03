@@ -725,20 +725,6 @@ export default class FlightSearch extends Component {
                     <Button
                         full
                         loading={loading}
-                        // style={{
-                        //         borderRadius: 18,
-                        //         shadowColor: "#000",
-                        //         shadowOffset: {
-                        //             width: 0,
-                        //             height: 2,
-                        //         },
-                        //         shadowOpacity: 0.25,
-                        //         shadowRadius: 3.84,
-                        //         elevation: 5,
-                        //         marginTop:20,
-                        //         backgroundColor:BaseColor.secondColor,
-                        //         color:BaseColor.primaryColor
-                        //     }}
                         onPress={() => {  
                             this.onSubmit();
                            

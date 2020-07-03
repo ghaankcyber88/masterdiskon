@@ -9,14 +9,16 @@ import {
     ProfileAuthor,
     ProfileGroup,
     Card,
-    PostListItem
+    PostListItem,
+    Button
 } from "@components";
 import * as Utils from "@utils";
 // import styles from "./styles";
-import { DataMasterDiskon,DataBooking } from "@data";
+import { DataMasterDiskon,DataPayment,DataBooking} from "@data";
 import HTML from 'react-native-render-html';
 import { WebView } from 'react-native-webview';
 import {PostData} from '../../services/PostData';
+
 
 const styles = StyleSheet.create({
     containField: {
@@ -59,76 +61,84 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         paddingBottom: 20,
         paddingTop: 20
-    }
+    },
+    contentButtonBottom: {
+        // borderTopColor: BaseColor.textSecondaryColor,
+        // borderTopWidth: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
 });
 
 
-export default class Pembayaran extends Component {
+export default class PembayaranDetail extends Component {
     constructor(props) {
-        var id_order=props.navigation.state.params.param;
-        //var url='https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app';
-        console.log('id_order',id_order);
         super(props);
+        //var dataPayment=props.navigation.state.params.dataPayment;
+        var id_order=props.navigation.state.params.param;
+
         this.state = {
-            //url:url,
-            id_order:id_order,
+            dataPayment:DataPayment,
             dataBooking:DataBooking,
-            payment: [
-                // {
-                //     title: "Payment Card",
-                //     payment_type:"peyment_card",
-                //     subPayment:[
-                //                     {
-                //                         title:"Credit Card",
-                //                         name:"credit_card",
-                //                         icon:""
-                //                     },
-                //                 ]
-                // },
-                {
-                    title: "Bank Transfer",
-                    payment_type:"bank_transfer",
-                    subPayment:[
-                                    {
-                                        title:"BCA",
-                                        name:"bca",
-                                        icon:"",
-                                        attribute:{
-                                                    bank_transfer:{
-                                                        bank: "bca"
-                                                    }
-                                        }
-                                    },
-                                    {
-                                        title:"Permata",
-                                        name:"permata",
-                                        icon:"",
-                                        attribute:{
-                                            bank_transfer:{
-                                                bank: "permata"
-                                            }
-                                        }
-                                    },
-                                    {
-                                        title:"BNI",
-                                        name:"bni",
-                                        icon:"",
-                                        attribute:{
-                                            bank_transfer:{
-                                                bank: "bni"
-                                            }
-                                        }
-                                    },
-                                    
-                                ]
-                },
-            ],
+            id_order:id_order,
+            loading:false,
+            // paramPayment:{
+            //     payment_type: dataPayment.payment_type,
+            //     transaction_details: {
+            //         gross_amount: "44000",
+            //         order_id: "order-101i-{{$timestamp}}"
+            //     },
+            //     customer_details: {
+            //         email: "noreply@example.com",
+            //         first_name: "budi",
+            //         last_name: "utomo",
+            //         phone: "+6281 1234 1234"
+            //     },
+            //     item_details: [
+            //     {
+            //        id: "item01",
+            //        price: 21000,
+            //        quantity: 1,
+            //        name: "Ayam Zozozo"
+            //     }
+            //    ],
+            //     cimb_clicks: {
+            //       description: "Purchase of a Food Delivery"
+            //     }
+            // }
         };
     }
     
-    componentDidMount(){
-        this.fetch();
+    onSubmit(){
+        // const{dataPayment}=this.state;
+        this.props.navigation.navigate("Loading",{redirect:'PembayaranDetail',param:this.state.id_order});
+        // var payment_type=dataPayment.payment.payment_type;
+        // var transaction_details={
+        //     gross_amount: dataPayment.dataBooking[0].total_price,
+        //     order_id: dataPayment.dataBooking[0].order_code
+        // }
+        // var customer_details={
+        //     email: dataPayment.dataBooking[0].contact.contact_email,
+        //     first_name: dataPayment.dataBooking[0].contact.contact_first,
+        //     last_name: dataPayment.dataBooking[0].contact.contact_last,
+        //     phone: dataPayment.dataBooking[0].contact.contact_phone,
+        // }
+        // var paramPayment={
+        //     payment_type: payment_type,
+        //     transaction_details: transaction_details,
+        //     customer_details: customer_details,
+        //     cimb_clicks: {
+        //       description: "Purchase of a Food Delivery"
+        //     }
+        // }
+        
+        // console.log('paramPayment',JSON.stringify(paramPayment));
+        
     }
+    
     
     fetch(){
 
@@ -169,10 +179,15 @@ export default class Pembayaran extends Component {
         });
 
     }
+    
+    
+    componentDidMount(){
+        this.fetch();
+    }
 
     render() {
         const { navigation} = this.props;
-        const {id_order} =this.state;
+        const {dataPayment,loading} =this.state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         return (
@@ -211,22 +226,21 @@ export default class Pembayaran extends Component {
                                 }}>
                         <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
                             <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                                <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
                                     <View>
                                         <Text>
-                                        No.Tagihan : {this.state.dataBooking[0].order_code}
+                                            Harga 
                                         </Text>
                                     
                                     </View>
                                 </View>
-                                <View style={{flex: 4,justifyContent: "center",alignItems: "flex-end"}}>
+                                <View style={{flex: 
+                                
+                                5,justifyContent: "center",alignItems: "flex-end"}}>
                                        
-                                            <Icon
-                                                name="angle-down"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                                style={{ textAlign: "center"}}
-                                            />
+                                        <Text headline semibold numberOfLines={1}>
+                                        {'IDR '+priceSplitter(this.state.dataBooking[0].total_price)}
+                                        </Text>
                                 </View>
                             </View>
                         </View>
@@ -248,73 +262,21 @@ export default class Pembayaran extends Component {
                             </View>
                         </View>
                     </View>
-                    {this.state.payment.map((item, index) => (
-                    <View>
-                        <Text title3 semibold>
-                            {item.title}
-                        </Text>
-                        <Bank id_order={this.state.id_order} payment={item} subPayment={item.subPayment} navigation={navigation} dataBooking={this.state.dataBooking} />
-                    </View>
-                    ))}
                 </View>
             </ScrollView>
-        </SafeAreaView>
-        );
-    }
-}
-
-
-
-class Bank extends Component {
-    constructor(props) {
-        super(props);
-        var product=this.props.product;
-        this.state = {
-           
-        };
-    }
-
-
-
-    render() {
-    const {navigation}=this.props;
-        return (
-            <View>      
-                    {this.props.subPayment.map((item, index) => (
-                        <TouchableOpacity
-                            style={styles.profileItem}
-                            onPress={() => {
-                            
-                            // var dataPayment={
-                            //                     id_order:this.props.id_order,
-                            //                     payment:this.props.payment,
-                            //                     subPayment:item,
-                            //                     dataBooking:this.props.dataBooking
-                            //                 }
-                            // console.log('dataPayment',JSON.stringify(dataPayment));
-                            navigation.navigate("PembayaranDetail",{param:this.props.id_order});
-                            }}
-                        >
-                            <Text body1>{item.title}</Text>
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center"
-                                }}
-                            >
-                                <Text body1 grayColor>
-                                    {item.icon}
-                                </Text>
-                                <Icon
-                                    name="angle-right"
-                                    size={18}
-                                    color={BaseColor.primaryColor}
-                                    style={{ marginLeft: 5 }}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    ))}
+            <View style={styles.contentButtonBottom}>
+                    <Button
+                        full
+                        loading={loading}
+                        onPress={() => { 
+                            this.onSubmit();
+                            //console.log('Param Payment',JSON.stringify(this.state.paramPayment));
+                        }}
+                    >
+                        Bayar
+                    </Button>
             </View>
+        </SafeAreaView>
         );
     }
 }

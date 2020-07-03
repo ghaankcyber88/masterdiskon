@@ -241,7 +241,18 @@ export default class Booking extends Component {
                 style={BaseStyle.safeAreaView}
                 forceInset={{ top: "always" }}
             >
-                <Header title="Booking History" />
+                <Header 
+                title="Booking History" 
+                renderLeft={() => {
+                    return (
+                        <Icon
+                            name="arrow-left"
+                            size={20}
+                            color={BaseColor.whiteColor}
+                        />
+                    );
+                }}
+                />
                 
                 {
                     login ? 

@@ -69,6 +69,7 @@ import BookingDetail from "@screens/BookingDetail";
 import PostDetail from "@screens/PostDetail";
 import Musium from "@screens/Musium";
 import Pembayaran from "@screens/Pembayaran";
+import PembayaranDetail from "@screens/PembayaranDetail";
 import WebViewPage from "@screens/WebViewPage";
 import TourDetail from "@screens/TourDetail";
 import TourDetailCustom from "@screens/TourDetailCustom";
@@ -336,6 +337,9 @@ const StackNavigator = createStackNavigator(
         },
         Pembayaran: {
             screen: Pembayaran
+        },
+        PembayaranDetail: {
+            screen: PembayaranDetail
         },
         WebViewPage: {
             screen: WebViewPage
