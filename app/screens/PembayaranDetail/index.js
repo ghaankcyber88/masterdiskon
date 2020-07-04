@@ -161,7 +161,7 @@ export default class PembayaranDetail extends Component {
 
                     PostData('get_booking_history',param)
                         .then((result) => {
-                            console.log("---------------get_booking_history ------------");
+                            console.log("---------------get_booking_historys ------------");
                             console.log(JSON.stringify(result));
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:result});
