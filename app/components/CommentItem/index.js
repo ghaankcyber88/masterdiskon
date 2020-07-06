@@ -329,7 +329,11 @@ export default class CommentItem extends Component {
                 style={[styles.item, style]}
                 //onPress={onPress}
                 onPress={() => {
-                    this.props.navigation.navigate(page,{param:item.id_order});
+                    var param={
+                        id_order:item.id_order,
+                        dataPayment:{}
+                    }
+                    this.props.navigation.navigate(page,{param:param});
                 }}
                 activeOpacity={0.9}
             >

@@ -1003,8 +1003,14 @@ export default class Summary extends Component {
                                 var redirect='Pembayaran';
                                 
                                 var id_order=dataOrderSubmit.id_order;
+                                
+                                var param={
+                                    id_order:id_order,
+                                    dataPayment:{}
+                                }
+                                
                                 //this.pay(cartToBeSaved,id_order);
-                                this.props.navigation.navigate("Loading",{redirect:redirect,param:id_order});
+                                this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
                                
                                
                     });
@@ -2144,7 +2150,7 @@ export default class Summary extends Component {
                                     <AnimatedLoader
                                         visible={true}
                                         overlayColor="rgba(255,255,255,0.75)"
-                                        source={require("app/assets/loader_jump.json")}
+                                        source={require("app/assets/loader_paperline.json")}
                                         animationStyle={{width: 300,height: 300}}
                                         speed={1}
                                       />

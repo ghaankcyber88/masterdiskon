@@ -66,11 +66,11 @@ const styles = StyleSheet.create({
 export default class Pembayaran extends Component {
     constructor(props) {
         var id_order=props.navigation.state.params.param;
-        //var url='https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app';
-        console.log('id_order',id_order);
+        
+        var param=props.navigation.state.params.param;
+        var id_order=param.id_order;
         super(props);
         this.state = {
-            //url:url,
             id_order:id_order,
             dataBooking:DataBooking,
             payment: [
@@ -133,7 +133,6 @@ export default class Pembayaran extends Component {
     fetch(){
 
         this.setState({ loading_spinner: true }, () => {
-
             AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
@@ -151,7 +150,7 @@ export default class Pembayaran extends Component {
 
                     PostData('get_booking_history',param)
                         .then((result) => {
-                            console.log("---------------get_booking_history ------------");
+                            console.log("---------------get_booking_historys ------------");
                             console.log(JSON.stringify(result));
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:result});
@@ -160,7 +159,6 @@ export default class Pembayaran extends Component {
                             this.setState({ error });
                         }
                     ); 
-
              }else{
                 this.setState({login:false});
              }
@@ -285,14 +283,20 @@ class Bank extends Component {
                             style={styles.profileItem}
                             onPress={() => {
                             
-                            // var dataPayment={
-                            //                     id_order:this.props.id_order,
-                            //                     payment:this.props.payment,
-                            //                     subPayment:item,
-                            //                     dataBooking:this.props.dataBooking
-                            //                 }
-                            // console.log('dataPayment',JSON.stringify(dataPayment));
-                            navigation.navigate("PembayaranDetail",{param:this.props.id_order});
+                            var dataPayment={
+                                                payment:this.props.payment,
+                                                subPayment:item,
+                                                dataBooking:this.props.dataBooking
+                                            }
+                                            
+                            var param={
+                                id_order:this.props.id_order,
+                                dataPayment:dataPayment
+                            }
+                            console.log('dataPayment',JSON.stringify(dataPayment));
+                            navigation.navigate("PembayaranDetail",{
+                                param:param,
+                            });
                             }}
                         >
                             <Text body1>{item.title}</Text>
