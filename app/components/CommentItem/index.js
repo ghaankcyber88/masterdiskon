@@ -301,7 +301,7 @@ export default class CommentItem extends Component {
                                Status
                             </Text>
                             <Text caption2 grayColor>
-                               {statusPay}
+                               {item.order_status.order_status_name}
                             </Text>
                             {countDown}
                         </View>
