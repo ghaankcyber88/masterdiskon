@@ -46,7 +46,28 @@ export default class FlightResult extends Component {
         // var listdata_departure_original=[];
         // var listdata_return_original=[];
 
-      
+        var Origin='Origin='+param.Origin;
+        var Destination='&Destination='+param.Destination;
+        var DepartureDate='&DepartureDate='+param.DepartureDate;
+        var Adults='&Adults='+param.Adults;
+        var Children='&Children='+param.Children;
+        var Infants='&Infants='+param.Infants;
+        var CorporateCode='&CorporateCode';
+        var Subclasses='&Subclasses=false';
+        var CabinClass='&CabinClass=E';
+        var Airlines='&Airlines=';
+        
+        
+        if(param.IsReturn==true){
+            var ReturnDate='&ReturnDate='+param.ReturnDate;
+        }else{
+            var ReturnDate='';
+        }
+        
+        
+        var paramUrl=Origin+Destination+DepartureDate+ReturnDate+Adults+Children+Infants+CorporateCode+Subclasses+CabinClass+Airlines;
+        console.log('paramUrl',JSON.stringify(paramUrl));
+        
         this.state = {
             refreshing: false,
             flights: FlightData,
@@ -66,6 +87,8 @@ export default class FlightResult extends Component {
             ),
 
             param:param,
+            paramUrl:paramUrl,
+            
             //paramOther:paramOther,
             listdata_departure:DataFlight,
             data_timeline: '',
@@ -131,6 +154,7 @@ export default class FlightResult extends Component {
             obj["to_city"]= item.to_city;
             obj["to_country"]= item.to_country;
             obj["to_country_code"]= item.to_country_code;
+            obj["price_custom"]=item.price.total_price;
             listdata_new.push(obj);
             a++;
         });
@@ -138,58 +162,182 @@ export default class FlightResult extends Component {
        return listdata_new;
     }
     
+    rebuildRow(item,num){
     
+        var row={
+            "num" : num.toString(),
+            "nums" : num,
+            "price":item.price,
+            "international": item.international,
+            "combinable": item.combinable,
+            "match_id": item.match_id,
+            "supplier_id": item.supplier_id,
+            "airline_id": item.airline_id,
+            "validating_carrier": item.validating_carrier,
+            "from": item.from,
+            "to": item.to,
+            "adult": item.adult,
+            "child": item.child,
+            "infant": item.infant,
+            "currency": item.currency,
+            "price_type": item.price_type,
+            "flight_schedule": item.flight_schedule,
+            "supplier_code": item.supplier_code,
+            "airline_code": item.airline_code,
+            "reference": item.reference,
+            "subclasses": item.subclasses,
+            "airline_name": item.airline_name,
+            "airline_logo": item.airline_logo,
+            "departure_date": item.departure_date,
+            "departure_time": item.departure_time,
+            "departure_timezone": item.departure_timezone,
+            "gmt_departure": item.gmt_departure,
+            "arrival_date": item.arrival_date,
+            "arrival_time": item.arrival_time,
+            "arrival_timezone": item.arrival_timezone,
+            "gmt_arrival": item.gmt_arrival,
+            "duration": item.duration,
+            "transit": item.transit,
+            "from_name": item.from_name,
+            "from_city": item.from_city,
+            "from_country": item.from_country,
+            "from_country_code": item.from_country_code,
+            "to_name": item.to_name,
+            "to_city": item.to_city,
+            "to_country": item.to_country,
+            "to_country_code": item.to_country_code,
+            "price_custom":item.price.total_price,
+        
+        }
+        return row;
+    
+    }
     getProduct() {
         var param=this.state.param;
-        //var paramOther=this.state.paramOther;
-        console.log("-------param------");
-        console.log(JSON.stringify(param));
+        var paramUrl=this.state.paramUrl;
+    
         this.setState({ loading_spinner: true }, () => {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
 
                             let config = JSON.parse(result);
-                            var access_token=config.token;
+                            var token=config.token;
                             var url=config.aeroUrl;
-
-                            var myHeaders = new Headers();
-                            myHeaders.append("Content-Type", "application/json");
-                            myHeaders.append("Authorization", "Bearer "+access_token);
-
-                            var raw = JSON.stringify(param);
-
-                            var requestOptions = {
-                            method: 'POST',
-                            headers: myHeaders,
-                            body: raw,
-                            redirect: 'follow'
-                            };
-
                             
-                            PostDataNew(url,'flight/search/v2',requestOptions)
-                                     .then((result) => {
-                                        
-                                        this.setState({ loading_spinner: false });
-                                        var listdata_departure=this.rebuild(result.data.departure);
-                                        var listdata_return=this.rebuild(result.data.return);  
-                                        console.log('listdata_departure_asli',JSON.stringify(listdata_departure)); 
-                                        
-                                        
-                                        
-                                        this.setState({ listdata_departure: listdata_departure });
-                                        this.setState({ listdata_return: listdata_return });
-        
-                                        this.setState({ listdata_departure_original: listdata_departure });
-                                        this.setState({ listdata_return_original: listdata_return });
-                                     },
-                                     (error) => {
-                                         this.setState({ error });
-                                     }
-                            ); 
+                           
+                            var myHeaders = new Headers();
+                            myHeaders.append("Authorization", "Bearer "+token);
+                            
+                            var raw = "";
+                            
+                            var requestOptions = {
+                              method: 'GET',
+                              headers: myHeaders,
+                              body: raw,
+                              redirect: 'follow'
+                            };
+                            
+                            fetch(url+"flight/search?"+paramUrl, requestOptions)
+                              .then(response => response.json())
+                              .then(result => {
+                                                            
+                                                            
+                                                            var listdata_departure=this.rebuild(result.data.departure);
+                                                            var listdata_return=this.rebuild(result.data.return);  
+                                                            
+                                                            this.setState({ listdata_departure: listdata_departure });
+                                                            this.setState({ listdata_return: listdata_return });
+                            
+                                                            this.setState({ listdata_departure_original: listdata_departure });
+                                                            this.setState({ listdata_return_original: listdata_return });
+                                                            
+                                                            var dataKey=result.data.key;
+                                                            var datacontinue=result.data.continue;
+                                                            
+                                                            if(datacontinue==true){
+                                                                this.getProductNext(dataKey);
+                                                            }
+                                                            
+                              })
+                              .catch(error => console.log('error', error));
                 }
             });
 
         });
+    }
+    
+    getProductNext(dataKey){
+    
+    
+    
+       
+            AsyncStorage.getItem('config', (error, result) => {
+                if (result) {    
+
+                            let config = JSON.parse(result);
+                            var token=config.token;
+                            var url=config.aeroUrl;
+                            
+                           
+                            var myHeaders = new Headers();
+                            myHeaders.append("Authorization", "Bearer "+token);
+                            
+                            var requestOptions = {
+                              method: 'POST',
+                              headers: myHeaders,
+                              redirect: 'follow'
+                            };
+                            
+                            fetch(url+"flight/search/"+dataKey, requestOptions)
+                              .then(response => response.json())
+                              .then(result => {
+                                    this.setState({ loading_spinner: false });
+                                    var dataDeparture=result.data.departure;
+                                    var dataReturn=result.data.return;
+                                    
+                                    
+                                    var listdata_departure_state=this.state.listdata_departure;
+                                    var listdata_return_state=this.state.listdata_return;
+                                   
+                                    
+                                    var a=listdata_departure_state.length;
+                                    dataDeparture.map((item, index) => {
+                                        a++;
+                                        var rebuidDeparture=this.rebuildRow(item,a);
+                                        listdata_departure_state.push(rebuidDeparture);
+                                                                
+                                    })
+                                    
+                                    var b=listdata_return_state.length;
+                                    dataReturn.map((item, index) => {
+                                        b++;
+                                        var rebuidReturn=this.rebuildRow(item,b);
+                                        listdata_return_state.push(rebuidReturn);
+                                                                
+                                    })
+                                    console.log('listdata_departure_state',JSON.stringify(listdata_departure_state));
+                                    this.setState({ listdata_departure: listdata_departure_state });
+                                    this.setState({ listdata_return: listdata_return_state });
+                            
+                                    this.setState({ listdata_departure_original: listdata_departure_state });
+                                    this.setState({ listdata_return_original: listdata_return_state });
+                                    
+                                    var dataKey=result.data.key;
+                                    var datacontinue=result.data.continue;
+                                    
+                                    if(datacontinue==true){
+                                        this.getProductNext(dataKey);
+                                    }
+                                
+                              
+                              })
+                              .catch(error => console.log('error', error));
+                }
+            });
+
+       
+          
+          
     }
 
     onChangeSort() {
@@ -294,24 +442,12 @@ export default class FlightResult extends Component {
     }
     
     
-    sortProcess(filter)
+    sortProcess(listdata)
     {   
-       
-        this.setState({listdata_departure:this.state.listdata_departure_original});
-        var filter=filter;
-        setTimeout(() => {
-
-            console.log("----------------sortProcess------------------------------------");
-            console.log(filter);
     
-            const products =this.state.listdata_departure_original;
-        
-        
-            ordered_array = this.mapOrder(products, filter, 'nums');
-            console.log('listdataSort',JSON.stringify(ordered_array));
-            this.setState({listdata_departure:products});
-        }, 50);
-        
+       console.log('hasil sort',JSON.stringify(listdata));
+       this.setState({listdata_departure:listdata});
+     
     }
     
      mapOrder(array, order, key) {

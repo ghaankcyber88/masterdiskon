@@ -27,17 +27,7 @@ export default class FilterSort extends Component {
             })
         });
     }
-    
- 
-    
-    // sort()
-    // {
-    //     homes.sort((a, b) => Number(a.price) - Number(b.price));
-    //     console.log("ascending", homes);
-        
-    //     homes.sort((a, b) => Number(b.price) - Number(a.price));
-    //     console.log("descending", homes);
-    // }
+
 
     onSelectFilter(selected) {
         const { sortOption } = this.state;
@@ -49,7 +39,6 @@ export default class FilterSort extends Component {
                 };
             })
         });
-        //this.onApply();
         this.sortData(selected);
         
         setTimeout(() => {
@@ -72,97 +61,26 @@ export default class FilterSort extends Component {
     }
     
     sortData(selected){
+        const { navigation } = this.props;
         var typeSort=selected.value;
         var listdata=this.props.listdata;
         console.log('listdatasort',JSON.stringify(listdata));
         
-        var listdata_new_sort = [];
-        var a=1;
-        listdata.map(item => {
-            var obj = {};
-            var fas=[];
-            obj['nums'] = a;
-            obj['transit'] = item.transit.toString();
-            obj['airline'] = item.airline_code;
-            obj['price'] = item.price.total_price;
-            obj['meal'] = item.flight_schedule[0].meal;
-            
-
-            if (item.flight_schedule[0].inflight_entertainment != false){
-                obj['entertainment']="1";
-                fas.push("entertainment"); 
-            }else{
-                obj['entertainment']="0";
-            }
-
-
-            if (item.flight_schedule[0].baggage != 0){
-                obj['baggage']="1";
-                fas.push("baggage");
-            }else{
-                obj['baggage']="0";
-            }
-
-            if (item.flight_schedule[0].meal != "0"){
-                fas.push("meal");
-            }
-
-            obj['fasilities']=fas;
-
-
-            listdata_new_sort.push(obj);
-            a++;
-        });
-
-
-        console.log("----------------departure new sort------------------------------------");
-        console.log(listdata_new_sort);
-        
-        // {
-        //     value: "low_price",
-        //     icon: "sort-amount-up",
-        //     text: "Lowest Price"
-        // },
-        // {
-        //     value: "hight_price",
-        //     icon: "sort-amount-down",
-        //     text: "Hightest Price"
-        // },
         
         if(typeSort=='low_price'){
-            listdata_new_sort.sort((a, b) => a.price - b.price);
-            console.log("ascendings", listdata_new_sort);
+            console.log('low_price',listdata.sort((a,b) =>  a.price_custom-b.price_custom ))
         }else if(typeSort=='hight_price'){
-            
-            listdata_new_sort.sort((a, b) => b.price - a.price);
-            console.log("descendings", listdata_new_sort);
+            console.log('hight_price',listdata.sort((a,b) =>  b.price_custom-a.price_custom ))
         }
         
         
-        this.sortFinal(listdata_new_sort);
+        this.props.sortProcess(listdata);
         
     
     }
     
-    sortFinal(filtered){
-        const { navigation } = this.props;
-        var filter = [];
-        filtered.map(item => {
-            filter.push(item.nums);
-        });
-
-        console.log("----------------sort final------------------------------------");
-        console.log(JSON.stringify(filter));
-        this.props.sortProcess(filter);
-
-        // this.props.navigation.state.params.filterProcess(filter);
-        // navigation.goBack();
-
-        
-    }
 
     onOpenSort() {
-        // this.listdata_new();
         const { sortOption, sortSelected } = this.state;
         this.setState({
             modalVisible: true,

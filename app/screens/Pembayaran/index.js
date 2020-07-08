@@ -74,51 +74,26 @@ export default class Pembayaran extends Component {
             id_order:id_order,
             dataBooking:DataBooking,
             payment: [
-                // {
-                //     title: "Payment Card",
-                //     payment_type:"peyment_card",
-                //     subPayment:[
-                //                     {
-                //                         title:"Credit Card",
-                //                         name:"credit_card",
-                //                         icon:""
-                //                     },
-                //                 ]
-                // },
                 {
-                    title: "Bank Transfer",
                     payment_type:"bank_transfer",
+                    payment_type_label: "Bank Transfer",
                     subPayment:[
                                     {
-                                        title:"BCA",
-                                        name:"bca",
+                                        payment_sub:"bca",
+                                        payment_sub_label:"BCA",
                                         icon:"",
-                                        attribute:{
-                                                    bank_transfer:{
-                                                        bank: "bca"
-                                                    }
-                                        }
                                     },
                                     {
-                                        title:"Permata",
-                                        name:"permata",
+                                        payment_sub:"bni",
+                                        payment_sub_label:"BNI",
                                         icon:"",
-                                        attribute:{
-                                            bank_transfer:{
-                                                bank: "permata"
-                                            }
-                                        }
                                     },
                                     {
-                                        title:"BNI",
-                                        name:"bni",
+                                        payment_sub:"permata",
+                                        payment_sub_label:"PERMATA",
                                         icon:"",
-                                        attribute:{
-                                            bank_transfer:{
-                                                bank: "bni"
-                                            }
-                                        }
                                     },
+                                   
                                     
                                 ]
                 },
@@ -131,7 +106,8 @@ export default class Pembayaran extends Component {
     }
     
     fetch(){
-
+        const { navigation} = this.props;
+        const {id_order} =this.state;
         this.setState({ loading_spinner: true }, () => {
             AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
@@ -150,10 +126,37 @@ export default class Pembayaran extends Component {
 
                     PostData('get_booking_history',param)
                         .then((result) => {
+                            var dataBooking=result;
                             console.log("---------------get_booking_historys ------------");
                             console.log(JSON.stringify(result));
+                            
+                            
+                            // var order_payment_recent=dataBooking[0].order_payment_recent;
+                            // if(order_payment_recent != null){
+                            
+                            //     var dataPayment={
+                            //         payment_type:order_payment_recent.payment_type,
+                            //         payment_type_label:order_payment_recent.payment_type_label,
+                            //         payment_sub:order_payment_recent.payment_sub,
+                            //         payment_sub_label:order_payment_recent.payment_sub_label,
+                            //     }
+                                
+                            //     var param={
+                            //         id_order:id_order,
+                            //         dataPayment:dataPayment
+                            //     }
+                            //     console.log('dataPayment',JSON.stringify(param));
+                            //     navigation.navigate("PembayaranDetail",{
+                            //         param:param,
+                            //     });
+                            
+                            // }
+                            
+                            
                             this.setState({ loading_spinner: false });
-                            this.setState({dataBooking:result});
+                            this.setState({dataBooking:dataBooking});
+                            
+                           
                         },
                         (error) => {
                             this.setState({ error });
@@ -249,9 +252,14 @@ export default class Pembayaran extends Component {
                     {this.state.payment.map((item, index) => (
                     <View>
                         <Text title3 semibold>
-                            {item.title}
+                            {item.payment_type_label}
                         </Text>
-                        <Bank id_order={this.state.id_order} payment={item} subPayment={item.subPayment} navigation={navigation} dataBooking={this.state.dataBooking} />
+                        <Bank 
+                            id_order={this.state.id_order} 
+                            payment={item} 
+                            subPayment={item.subPayment} 
+                            navigation={navigation} 
+                            />
                     </View>
                     ))}
                 </View>
@@ -283,23 +291,24 @@ class Bank extends Component {
                             style={styles.profileItem}
                             onPress={() => {
                             
-                            var dataPayment={
-                                                payment:this.props.payment,
-                                                subPayment:item,
-                                                dataBooking:this.props.dataBooking
-                                            }
-                                            
-                            var param={
-                                id_order:this.props.id_order,
-                                dataPayment:dataPayment
-                            }
-                            console.log('dataPayment',JSON.stringify(dataPayment));
-                            navigation.navigate("PembayaranDetail",{
-                                param:param,
-                            });
+                                var dataPayment={
+                                                    payment_type:this.props.payment.payment_type,
+                                                    payment_type_label:this.props.payment.payment_type_label,
+                                                    payment_sub:item.payment_sub,
+                                                    payment_sub_label:item.payment_sub_label,
+                                                }
+                                                
+                                var param={
+                                    id_order:this.props.id_order,
+                                    dataPayment:dataPayment
+                                }
+                                console.log('dataPayment',JSON.stringify(dataPayment));
+                                navigation.navigate("PembayaranDetail",{
+                                    param:param,
+                                });
                             }}
                         >
-                            <Text body1>{item.title}</Text>
+                            <Text body1>{item.payment_sub_label}</Text>
                             <View
                                 style={{
                                     flexDirection: "row",

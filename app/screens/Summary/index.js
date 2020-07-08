@@ -224,8 +224,11 @@ export default class Summary extends Component {
             total_price:0,
             userData: UserData[0],
 
-            colorButton:'grey',
-            handlerButton:true,
+            colorButton:BaseColor.greyColor,
+              colorButtonText:BaseColor.whiteColor,
+              disabledButton:true,
+            
+            
             reminders: false,
             remindersInsurance:false,
 
@@ -990,6 +993,7 @@ export default class Summary extends Component {
                     fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
                     .then(response => response.json())
                     .then((result) => {
+                        this.updateUserSession();
                         var dataOrderSubmit=result;
                         console.log("---------------status carts-------------");
                         console.log(JSON.stringify(dataOrderSubmit));
@@ -1269,13 +1273,15 @@ export default class Summary extends Component {
         console.log(jml_empty_customer);
 
         if(jml_empty_participant == 0 && jml_empty_customer == 0 ){
-            console.log('perfect');
-            this.setState({colorButton:BaseColor.primaryColor});
-            this.setState({handlerButton:false});
+                    console.log('perfect');
+                    this.setState({colorButton:BaseColor.secondColor});
+                    this.setState({colorButtonText:BaseColor.primaryColor});
+                    this.setState({disabledButton:false});
         }else{
             console.log('not yet');
-            this.setState({colorButton:'grey'});
-            this.setState({handlerButton:true});
+                this.setState({colorButton:BaseColor.greyColor});
+                this.setState({colorButtonText:BaseColor.whiteColor});
+                this.setState({disabledButton:true});
         }
 
     }
@@ -1996,7 +2002,6 @@ export default class Summary extends Component {
                             </View>
                         </View>
                         <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
-                               
                                 <Text headline semibold numberOfLines={1}>
                                 {'IDR '+priceSplitter(this.state.total_all)}
                                 </Text>
@@ -2096,12 +2101,12 @@ export default class Summary extends Component {
 
 
         var contentButton=<View style={{ padding: 20,borderRadius: 8,width: "100%",marginBottom:50}}>
-                <TouchableOpacity  disabled={this.state.handlerButton} onPress={() => 
+                <TouchableOpacity  disabled={this.state.disabledButton} onPress={() => 
                     {
                         this.onSubmit()
                     }} >
                 <View pointerEvents='none' style={styles.groupinput}>       
-                <Button
+                {/* <Button
                     loading={loading}
                     full
                     style={{
@@ -2118,6 +2123,14 @@ export default class Summary extends Component {
                             }}
                 >
                 Book Now
+                </Button> */}
+                
+                <Button
+                        loading={this.state.loading}
+                        style={{backgroundColor:this.state.colorButton}}
+                        full
+                    >
+                        <Text style={{color:this.state.colorButtonText}}>Sign In</Text>
                 </Button>
                 </View> 
                 </TouchableOpacity>

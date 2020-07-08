@@ -329,11 +329,39 @@ export default class CommentItem extends Component {
                 style={[styles.item, style]}
                 //onPress={onPress}
                 onPress={() => {
-                    var param={
-                        id_order:item.id_order,
-                        dataPayment:{}
-                    }
-                    this.props.navigation.navigate(page,{param:param});
+                
+                     
+                            var order_payment_recent=item.order_payment_recent;
+                            if(order_payment_recent != null){
+                            
+                                var dataPayment={
+                                    payment_type:order_payment_recent.payment_type,
+                                    payment_type_label:order_payment_recent.payment_type_label,
+                                    payment_sub:order_payment_recent.payment_sub,
+                                    payment_sub_label:order_payment_recent.payment_sub_label,
+                                }
+                                
+                                var param={
+                                    id_order:item.id_order,
+                                    dataPayment:dataPayment
+                                }
+                                // console.log('dataPayment',JSON.stringify(param));
+                                this.props.navigation.navigate("PembayaranDetail",{
+                                    param:param,
+                                });
+                            
+                            }else{
+                            
+                                var param={
+                                    id_order:item.id_order,
+                                    dataPayment:{}
+                                }
+                                //this.props.navigation.navigate(page,{param:param});
+                                this.props.navigation.navigate('Pembayaran',{param:param});
+                            }
+                            
+                            
+                               
                 }}
                 activeOpacity={0.9}
             >

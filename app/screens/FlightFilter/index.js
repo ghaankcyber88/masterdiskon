@@ -436,13 +436,13 @@ export default class FlightFilter extends Component {
                             <Icon
                                 name="times"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
                     renderRight={() => {
                         return (
-                            <Text headline primaryColor numberOfLines={1}>
+                            <Text headline whiteColor numberOfLines={1}>
                                 Apply
                             </Text>
                         );

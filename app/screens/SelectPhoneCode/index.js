@@ -248,7 +248,7 @@ export default class SelectPhoneCode extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}

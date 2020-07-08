@@ -61,7 +61,9 @@ export default class FlightResultArrival extends Component {
         this.onFilter = this.onFilter.bind(this);
         this.onChangeSort = this.onChangeSort.bind(this);
         this.filterProcess = this.filterProcess.bind(this);
+        this.sortProcess = this.sortProcess.bind(this);
         this.onClear = this.onClear.bind(this);
+        
     }
 
     onChangeSort() {}
@@ -123,7 +125,16 @@ export default class FlightResultArrival extends Component {
             this.setState({listdata_return:[]});
         }
     }
-
+    
+    sortProcess(listdata)
+    {   
+    
+       console.log('hasil sort',JSON.stringify(listdata));
+       this.setState({listdata_return:listdata});
+     
+    }
+    
+    
     onChangeView() {}
 
 
@@ -226,12 +237,22 @@ export default class FlightResultArrival extends Component {
                         { transform: [{ translateY: navbarTranslate }] }
                     ]}
                 >
-                    <FilterSort
+                    {/* <FilterSort
                         labelCustom={this.state.listdata_return.length+' result'}
                         onChangeSort={this.onChangeSort}
                         onFilter={this.onFilter}
                         onClear={this.onClear}
+                    /> */}
+                    
+                    <FilterSort
+                        labelCustom={this.state.listdata_return.length+' result'}
+                        listdata={this.state.listdata_return_original}
+                        onChangeSort={this.onChangeSort}
+                        onFilter={this.onFilter}
+                        onClear={this.onClear}
+                        sortProcess={this.sortProcess}
                     />
+                    
                 </Animated.View>
             </View>
         );

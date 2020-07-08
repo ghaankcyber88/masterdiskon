@@ -78,15 +78,11 @@ const styles = StyleSheet.create({
 export default class PembayaranDetail extends Component {
     constructor(props) {
         super(props);
-        //var dataPayment=props.navigation.state.params.dataPayment;
         var param=props.navigation.state.params.param;
         var id_order=param.id_order;
         var dataPayment=param.dataPayment;
-        //var dataPayment=props.navigation.state.params.dataPayment;
-        //var subPayment=props.navigation.state.params.subPayment;
         
          console.log('dataPayments',JSON.stringify(dataPayment));
-        // console.log('subPayment',JSON.stringify(subPayment));
         
 
         this.state = {
@@ -100,19 +96,19 @@ export default class PembayaranDetail extends Component {
     
     submitPayment(){
         const{dataPayment,dataBooking}=this.state;
-        var payment_type=dataPayment.payment.payment_type;
-        var payment_type_sub=dataPayment.subPayment.name;
+        var payment_type=dataPayment.payment_type;
+        var payment_sub=dataPayment.payment_sub;
         
         
         var transaction_details={
-            gross_amount: dataPayment.dataBooking[0].total_price,
-            order_id: dataPayment.dataBooking[0].order_code
+            gross_amount: dataBooking[0].total_price,
+            order_id: dataBooking[0].order_code
         }
         var customer_details={
-            email: dataPayment.dataBooking[0].contact.contact_email,
-            first_name: dataPayment.dataBooking[0].contact.contact_first,
-            last_name: dataPayment.dataBooking[0].contact.contact_last,
-            phone: dataPayment.dataBooking[0].contact.contact_phone,
+            email: dataBooking[0].contact.contact_email,
+            first_name: dataBooking[0].contact.contact_first,
+            last_name: dataBooking[0].contact.contact_last,
+            phone: dataBooking[0].contact.contact_phone,
         }
         
         
@@ -122,7 +118,7 @@ export default class PembayaranDetail extends Component {
                 transaction_details: transaction_details,
                 customer_details: customer_details,
                 bank_transfer: {
-                  bank: payment_type_sub
+                  bank: payment_sub
                 }
             }
         }
@@ -133,6 +129,7 @@ export default class PembayaranDetail extends Component {
             "pay":dataBooking[0].total_price,
             "id_order":dataBooking[0].id_order,
             "fee":dataBooking[0].order_payment_info.transaction_fee,
+            "dataPayment":this.state.dataPayment
             }
         console.log('paramPayMD',JSON.stringify(paramPayMD));
         console.log('paramPayMidtrans',JSON.stringify(paramPayMidtrans));
@@ -218,22 +215,28 @@ export default class PembayaranDetail extends Component {
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         var order_payment_num=dataBooking[0].order_payment_num;
+        var order_payment_recent=dataBooking[0].order_payment_recent;
         var content=<View></View>;
         var virtual_account='';
-        var payment_type=dataPayment.payment.payment_type;
-        var payment_type_sub=dataPayment.subPayment.name;
+        var payment_type=dataPayment.payment_type;
+        var payment_sub=dataPayment.payment_sub;
         
-        if(payment_type=='bank_transfer'){
-            if(payment_type_sub=='bca'){
-                virtual_account=this.state.statusMidtrans.va_numbers[0].va_number;
-            }else if(payment_type_sub=='bni'){
-                virtual_account=this.state.statusMidtrans.va_numbers[0].va_number;
-            }else if(payment_type_sub=='permata'){
-                virtual_account=this.state.statusMidtrans.permata_va_number;
+        
+        
+        
+        if(order_payment_recent != null){
+            if(payment_type=='bank_transfer'){
+                if(payment_sub=='bca'){
+                    virtual_account=this.state.statusMidtrans.va_numbers[0].va_number;
+                }else if(payment_sub=='bni'){
+                    virtual_account=this.state.statusMidtrans.va_numbers[0].va_number;
+                }else if(payment_sub=='permata'){
+                    virtual_account=this.state.statusMidtrans.permata_va_number;
+                }
             }
         }
         
-        if(order_payment_num==0){
+        if(order_payment_recent==null){
             content=<View>
                     <View style={{
                                 borderWidth: 1, 
@@ -275,7 +278,7 @@ export default class PembayaranDetail extends Component {
                                 
                                 5,justifyContent: "center",alignItems: "flex-end"}}>
                                         <Text headline semibold numberOfLines={1}>
-                                        {'IDR '+priceSplitter(this.state.dataBooking[0].fee)}
+                                        {'IDR '+priceSplitter(dataBooking[0].order_payment_info.transaction_fee)}
                                         </Text>
                                 </View>
                             </View>
@@ -318,7 +321,7 @@ export default class PembayaranDetail extends Component {
                                                 Transfer 
                                             </Text>
                                             <Text>
-                                                {dataPayment.subPayment.title} 
+                                                {dataPayment.payment_sub_label} 
                                             </Text>
                                         </View>
                                     </View>
@@ -417,10 +420,11 @@ export default class PembayaranDetail extends Component {
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         var order_payment_num=dataBooking[0].order_payment_num;
+        var order_payment_recent=dataBooking[0].order_payment_recent;
         var content=<View></View>;
         
         
-        if(order_payment_num==0){
+        if(order_payment_recent==null){
             content=<View style={styles.contentButtonBottom}>
                         <Button
                             full
@@ -588,7 +592,7 @@ export default class PembayaranDetail extends Component {
                             console.log("---------------get_booking_historys ------------");
                             console.log(JSON.stringify(result));
                             this.setState({ loading_spinner: false });
-                            this.setState({dataBooking:result});
+                            this.setState({dataBooking:dataBooking});
                             
                             
                             var order_code=dataBooking[0].order_code;
@@ -649,7 +653,7 @@ export default class PembayaranDetail extends Component {
             forceInset={{ top: "always" }}
         >
             <Header
-                title={dataPayment.payment.title+' - '+dataPayment.subPayment.title}
+                title={dataPayment.payment_type_label+' - '+dataPayment.payment_sub_label}
                 subTitle={'No.Tagihan :'+this.state.dataBooking[0].order_code}
                 renderLeft={() => {
                     return (

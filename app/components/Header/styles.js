@@ -9,14 +9,13 @@ export default StyleSheet.create({
     contentLeft: {
         flex: 1,
         justifyContent: "center",
-        paddingLeft: 20,
+        paddingLeft: 0,
         width: 60
     },
     contentCenter: {
         // flex: 2,
         // alignItems: "center",
         // justifyContent: "center",
-        
         flex: 2,
         justifyContent: "center",
         paddingLeft: 0,

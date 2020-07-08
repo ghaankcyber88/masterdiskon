@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, ScrollView, TextInput,TouchableOpacity} from "react-native";
 import { BaseStyle, BaseColor } from "@config";
-import { Header, SafeAreaView, Icon, Button } from "@components";
+import { Header, SafeAreaView, Icon, Button,Text } from "@components";
 import styles from "./styles";
 import DropdownAlert from 'react-native-dropdownalert';
 import ValidationComponent from 'react-native-form-validator';
@@ -35,6 +35,7 @@ export default class SignUp extends ValidationComponent {
             },
             
             colorButton:BaseColor.greyColor,
+            colorButtonText:BaseColor.whiteColor,
             disabledButton:true
         };
     }
@@ -126,15 +127,18 @@ export default class SignUp extends ValidationComponent {
                 if(errorMsg !=''){
                     console.log('not yet');
                     this.setState({colorButton:BaseColor.greyColor});
+                    this.setState({colorButtonText:BaseColor.whiteColor});
                     this.setState({disabledButton:true});
                 }else{
                     console.log('perfect');
-                    this.setState({colorButton:BaseColor.primaryColor});
+                    this.setState({colorButton:BaseColor.secondColor});
+                    this.setState({colorButtonText:BaseColor.primaryColor});
                     this.setState({disabledButton:false});
                 }
         }else{
                 console.log('not yet');
                 this.setState({colorButton:BaseColor.greyColor});
+                this.setState({colorButtonText:BaseColor.whiteColor});
                 this.setState({disabledButton:true});
           
         }
@@ -144,9 +148,9 @@ export default class SignUp extends ValidationComponent {
       
     handleChange = (key, val,validate) => {
         this.setState({ [key]: val});
-        if(val != '' ){
-            this.validate(validate);
-        }
+        // if(val != '' ){
+        //     this.validate(validate);
+        // }
         
         setTimeout(() => {
             this.validation();
@@ -397,7 +401,7 @@ export default class SignUp extends ValidationComponent {
                                     style={{backgroundColor:this.state.colorButton}}
                                     full
                                 >
-                                    Sign In
+                                    <Text style={{color:this.state.colorButtonText}}>Sign In</Text>
                                 </Button>
                                 </View>
                             </TouchableOpacity>

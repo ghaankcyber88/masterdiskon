@@ -41,6 +41,7 @@ class SignIn extends ValidationComponent {
             
             
             colorButton:BaseColor.greyColor,
+            colorButtonText:BaseColor.whiteColor,
             disabledButton:true
         };
         //this.handleChange = this.handleChange.bind(this);
@@ -175,7 +176,8 @@ class SignIn extends ValidationComponent {
 onSubmit() {
     const { email, password, success,redirect } = this.state;
     const { navigation } = this.props;
-    var errorMsg=this.validationSubmit();
+    //var errorMsg=this.validationSubmit();
+    errorMsg='';
     if(errorMsg==''){
 
         this.setState({ loading: true }, () => {
@@ -198,14 +200,14 @@ onSubmit() {
             fetch("https://masterdiskon.co.id/front/auth/login/login_proses_app", requestOptions)
             .then(response => response.json())
             .then(result => {
-                var userSession=result.userSession;
-                userSession.loginVia = "form";
                 this.setState({ loading: false });
                 console.log(JSON.stringify(result));
                 if(result.success==false){
                     this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
                     //this.setState({ loading: false });
                 }else if(result.success==true){
+                    var userSession=result.userSession;
+                    userSession.loginVia = "form";
                     this.dropdown.alertWithType('success', 'Success', JSON.stringify(result.message));
                     AsyncStorage.setItem('userSession', JSON.stringify(userSession));
                     AsyncStorage.setItem('id_user', JSON.stringify(userSession.id_user));
@@ -348,7 +350,6 @@ getNotification(id_user) {
     validationSubmit() {
         this.validate({
           email: {email: true,required: true},
-          password: {numbers: true,required: true},
         });
         
         var errorMsg=this.getErrorMessages();
@@ -365,15 +366,18 @@ getNotification(id_user) {
                 if(errorMsg !=''){
                     console.log('not yet');
                     this.setState({colorButton:BaseColor.greyColor});
+                    this.setState({colorButtonText:BaseColor.whiteColor});
                     this.setState({disabledButton:true});
                 }else{
                     console.log('perfect');
-                    this.setState({colorButton:BaseColor.primaryColor});
+                    this.setState({colorButton:BaseColor.secondColor});
+                    this.setState({colorButtonText:BaseColor.primaryColor});
                     this.setState({disabledButton:false});
                 }
         }else{
                 console.log('not yet');
                 this.setState({colorButton:BaseColor.greyColor});
+                this.setState({colorButtonText:BaseColor.whiteColor});
                 this.setState({disabledButton:true});
           
         }
@@ -383,9 +387,9 @@ getNotification(id_user) {
       
     handleChange = (key, val,validate) => {
         this.setState({ [key]: val});
-        if(val != '' ){
-            this.validate(validate);
-        }
+        // if(val != '' ){
+        //     this.validate(validate);
+        // }
         
         setTimeout(() => {
             this.validation();
@@ -446,7 +450,6 @@ getNotification(id_user) {
                                 this.handleChange('password',val,
                                     {
                                     email: {required: true,email: true},
-                                    password: {required: true,numbers: true},
                                     }
                                 );
                             }}
@@ -463,7 +466,7 @@ getNotification(id_user) {
                                     style={{backgroundColor:this.state.colorButton}}
                                     full
                                 >
-                                    Sign In
+                                    <Text style={{color:this.state.colorButtonText}}>Sign In</Text>
                                 </Button>
                                 </View>
                             </TouchableOpacity>

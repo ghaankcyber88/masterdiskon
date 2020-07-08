@@ -9,7 +9,8 @@ import { NotificationData,DataLoading,DataBooking } from "@data";
 import { View } from "react-native-animatable";
 import { Image } from "@components";
 import { Images } from "@config";
-
+import NotYetLogin from "../../components/NotYetLogin";
+import PTRView from 'react-native-pull-to-refresh';
 import {
   Placeholder,
   PlaceholderMedia,
@@ -81,45 +82,12 @@ export default class Booking extends Component {
 
     }
 
-    // getNotif(){
-    //     this.setState({ loading_spinner: true }, () => {
-    //         AsyncStorage.getItem('userSession', (error, result) => {
-    //         if (result) {
-    //             let userSession = JSON.parse(result);
-    //             console.log("---------------data session user  ------------");
-    //             console.log(JSON.stringify(userSession));
-    //             this.setState({userSession:userSession});
-    //             this.setState({login:true});
-                
-    //             var id_user=userSession.id_user;
-    //             const data={"id_user":id_user}
-    //             const param={"param":data}
-    //             console.log('-------------param notif-------------');
-    //             console.log(JSON.stringify(param));
-
-    //                 PostData('notif',param)
-    //                             .then((result) => {
-    //                                  console.log('-------------result notif-------------');
-    //                                 console.log(JSON.stringify(result));
-    //                                 this.setState({loading_spinner: false });
-    //                                 this.setState({notification:result});
-    //                             },
-    //                             (error) => {
-    //                                 this.setState({ error });
-    //                             }
-    //                 ); 
-
-    //          }else{
-    //             this.setState({login:false});
-
-    //          }
-            
-    //         });
-    //     });
-    // }
 
     componentDidMount() {
-        this.fetch();
+        const {navigation} = this.props;
+        navigation.addListener ('willFocus', () =>{
+            this.fetch();
+        });
     }
 
     render() {
@@ -161,81 +129,18 @@ export default class Booking extends Component {
                             data={dataBooking}
                             keyExtractor={(item, index) => item.id}
                             renderItem={({ item, index }) => (
-                                // <ListThumbCircle
-                                //     image={item.image}
-                                //     txtLeftTitle={item.title}
-                                //     txtContent={item.content}
-                                //     txtRight={item.date_added}
-                                //     loading={this.state.loading_spinner}
-                                //     //loading={true}
-                                //     onPress={() => {
-                                //         //this.props.navigation.navigate("PreviewBooking",{item:item});
-                                //         this.props.navigation.navigate("WebViewPage",{url:item.tautan+'?access=app',title:'Pembayaran'});
-                                //     }}
-                                // />
-                                
+                           
                                 <CommentItem
                                     style={{ marginTop: 10 }}
                                     item={item}
                                     loading={this.state.loading_spinner}
                                     navigation={navigation}
-                                    // onPress={() => {
-                                    //     //this.props.navigation.navigate("PreviewBooking",{item:item});
-                                    //     this.props.navigation.navigate("Pembayaran",{param:item.id_order});
-                                    // }}
+                                   
                                 />
                             )}
                         /> 
                 :
-                <View
-                    style={{flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100%',padding: 20}}
-                    >       
-                    <Image
-                        source={Images.login}
-                        style={{ width: "60%", height: "60%" }}
-                        resizeMode="cover"
-                    />
-                    <View><Text>Anda Belum Login</Text></View>
-                    <Button
-                                full
-                                style={{ 
-                                     marginTop: 20,
-                                    borderRadius: 18,
-                                // backgroundColor: BaseColor.fieldColor,
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5 }}
-                                loading={this.state.loading}
-                                onPress={() => navigation.navigate("SignIn",{redirect:'Booking'})}
-                            >
-                                Sign In
-                            </Button>
-                            <View style={styles.contentActionBottom}>
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate("SignUp")}
-                                >
-                                    <Text body1 grayColor>
-                                        Haven’t registered yet?
-                                    </Text>
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate("SignUp")}
-                                >
-                                    <Text body1 primaryColor>
-                                        Join Now
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                </View>
+                    <NotYetLogin redirect={'Booking'} navigation={navigation} />
                 }
                 
             </SafeAreaView>

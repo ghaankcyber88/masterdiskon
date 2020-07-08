@@ -284,8 +284,9 @@ export default class DetailContact extends Component {
           typeFlight:typeFlight,
           typeProduct:typeProduct,
 
-          colorButton:'grey',
-          handlerButton:true,
+          colorButton:BaseColor.greyColor,
+          colorButtonText:BaseColor.whiteColor,
+          disabledButton:true
 
 
           };
@@ -545,13 +546,15 @@ export default class DetailContact extends Component {
                 nationality !='' &&
                 nationality_phone_code !=''
             ){
-                console.log('perfect');
-                this.setState({colorButton:BaseColor.primaryColor});
-                this.setState({handlerButton:false});
+                    console.log('perfect');
+                    this.setState({colorButton:BaseColor.secondColor});
+                    this.setState({colorButtonText:BaseColor.primaryColor});
+                    this.setState({disabledButton:false});
             }else{
                 console.log('not yet');
-                this.setState({colorButton:'grey'});
-                this.setState({handlerButton:true});
+                this.setState({colorButton:BaseColor.greyColor});
+                this.setState({colorButtonText:BaseColor.whiteColor});
+                this.setState({disabledButton:true});
             }
         }else if(type=='guest'){
             if(typeFlight=='domestic' || typeProduct=='trip'){
@@ -564,12 +567,14 @@ export default class DetailContact extends Component {
 
                 ){
                     console.log('perfect');
-                    this.setState({colorButton:'red'});
-                    this.setState({handlerButton:false});
+                    this.setState({colorButton:BaseColor.secondColor});
+                    this.setState({colorButtonText:BaseColor.primaryColor});
+                    this.setState({disabledButton:false});
                 }else{
                     console.log('not yet');
-                    this.setState({colorButton:'grey'});
-                    this.setState({handlerButton:true});
+                this.setState({colorButton:BaseColor.greyColor});
+                this.setState({colorButtonText:BaseColor.whiteColor});
+                this.setState({disabledButton:true});
                 }
             }else{
                 if( 
@@ -585,11 +590,14 @@ export default class DetailContact extends Component {
                     passport_country !=''
                 ){
                     console.log('perfect');
-                    this.setState({colorButton:'red'});
-                    this.setState({handlerButton:false});
+                    this.setState({colorButton:BaseColor.secondColor});
+                    this.setState({colorButtonText:BaseColor.primaryColor});
+                    this.setState({disabledButton:false});
                 }else{
                     console.log('not yet');
-                    this.setState({colorButton:'grey'});
+                this.setState({colorButton:BaseColor.greyColor});
+                this.setState({colorButtonText:BaseColor.whiteColor});
+                this.setState({disabledButton:true});
                   
                 }
             }
@@ -607,11 +615,14 @@ export default class DetailContact extends Component {
                 passport_country !=''
             ){
                 console.log('perfect');
-                this.setState({colorButton:'red'});
-                this.setState({handlerButton:false});
+                    this.setState({colorButton:BaseColor.secondColor});
+                    this.setState({colorButtonText:BaseColor.primaryColor});
+                    this.setState({disabledButton:false});
             }else{
                 console.log('not yet');
-                this.setState({colorButton:'grey'});
+                this.setState({colorButton:BaseColor.greyColor});
+                this.setState({colorButtonText:BaseColor.whiteColor});
+                this.setState({disabledButton:true});
               
             }
         }
@@ -640,7 +651,7 @@ export default class DetailContact extends Component {
                             <View style={{flexDirection: "row"}}>
                                 <View style={{flex: 6,marginRight: 15}}>
                                     <TouchableOpacity 
-                                    style={{width:'100%'}}
+                                    style={{width:'100%',flexDirection: "row"}}
                                     >
                                         <View style={styles.contentProfile}>
                                             <View style={{ flex: 6 }}>
@@ -649,7 +660,7 @@ export default class DetailContact extends Component {
                                                             label="lastname"
                                                             validators={['required']}
                                                             errorMessages={['This field is required']}
-                                                            placeholder="Your firstname"
+                                                            placeholder="e.g., firstname"
                                                             type="text"
                                                             // keyboardType="email-address"
                                                             value={this.state.firstname}
@@ -664,12 +675,15 @@ export default class DetailContact extends Component {
                                             </View>
                                         </View>
                                     </TouchableOpacity>
+                                    <Text body2 style={{marginTop:-20,color:BaseColor.primaryColor}}>
+                                        Firstname
+                                    </Text>
                                 </View>                    
                                         
                                 <View style={{flex: 6}}>
 
                                                     <TouchableOpacity 
-                                                    style={{width:'100%'}}
+                                                    style={{width:'100%',flexDirection: "row"}}
                                                 >
                                                         <View style={styles.contentProfile}>
                                                             <View style={{ flex: 6 }}>
@@ -678,7 +692,7 @@ export default class DetailContact extends Component {
                                                                     label="lastname"
                                                                     validators={['required']}
                                                                     errorMessages={['This field is required']}
-                                                                    placeholder="Your lastname"
+                                                                    placeholder="e.g., lastname"
                                                                     type="text"
                                                                     value={this.state.lastname}
                                                                     onChangeText={(lastname)=> {
@@ -692,11 +706,12 @@ export default class DetailContact extends Component {
                                                             </View>
                                                         </View>
                                                     </TouchableOpacity>
+                                                    <Text body2 style={{marginTop:-20,color:BaseColor.primaryColor}}>
+                                                        Lastname
+                                                    </Text>
                                 </View>
                             </View>
-                            <Text body2 grayColor style={{marginTop:-15}}>
-                            Isikan sesuai dengan KTP Anda
-                            </Text>
+                            
                        </View>
 
 
@@ -771,7 +786,7 @@ export default class DetailContact extends Component {
                             </TouchableOpacity>
             </View>
         </View>
-        <Text body2 grayColor style={{marginTop:-15}}>
+        <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
         Sekumpulan tempat menginap pilihan yang telah
         </Text>
         </View>
@@ -780,11 +795,6 @@ export default class DetailContact extends Component {
 
 
         var formTitle=<View style={{marginBottom: 10}}>
-                            {/* <View style={styles.contentTitle}>
-                                                <Text headline semibold>
-                                                    Title
-                                                </Text>
-                                            </View> */}
                                             <TouchableOpacity 
                                             style={{width:'100%'}}
                                             onPress={() => this.props.navigation.navigate('SelectTitle',
@@ -797,47 +807,25 @@ export default class DetailContact extends Component {
 
                                                 <View style={styles.contentProfile} pointerEvents='none'>
                                                     <View style={{ flex: 6 }}>
-                                                    {/* <TextInput
-                                                        style={BaseStyle.textInput}
-                                                        // onChangeText={text => {
-                                                        //     this.setState({ id: text })
-                                                        //     }
-                                                        // }
-                                                        autoCorrect={false}
-                                                        placeholder={this.state.title}
-                                                        placeholderTextColor={BaseColor.grayColor}
-                                                        value={this.state.title}
-                                                        selectionColor={BaseColor.primaryColor}
-                                                    /> */}
-
-                                                    <TextValidator
-                                                        name="email"
-                                                        label="email"
-                                                        validators={['required']}
-                                                        errorMessages={['This field is required']}
-                                                        placeholder="Your title"
-                                                        type="text"
-                                                        keyboardType="email-address"
-                                                        value={this.state.title}
-                                                    />
+                                                        <TextValidator
+                                                            name="email"
+                                                            label="email"
+                                                            validators={['required']}
+                                                            errorMessages={['This field is required']}
+                                                            placeholder="e.g., MR"
+                                                            type="text"
+                                                            keyboardType="email-address"
+                                                            value={this.state.title}
+                                                        />
                                                     </View>
-                                                    {/* <View style={styles.searchIcon} onPress={()=>
-                                                        {navigation.navigate("ProfileSmart");} } >
-                                                        <Icon name="chevron-down" size={18} color={BaseColor.primaryColor} />
-                                                    </View> */}
                                                 </View>
                                             </TouchableOpacity>
-                                            <Text body2 grayColor style={{marginTop:-15}}>
-                                            Pilih sesuai dengan jenis kelamin Anda
+                                            <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                                Title
                                             </Text>
                         </View>                    
 
             var formBirthday=<View style={{marginBottom: 10}}>
-                            {/* <View style={styles.contentTitle}>
-                            <Text headline semibold>
-                                Day Of Birth
-                            </Text>
-                        </View> */}
                         <TouchableOpacity 
                         style={{width:'100%'}}
                         onPress={() => {this.datePickerRef.onPressDate()}}
@@ -845,31 +833,17 @@ export default class DetailContact extends Component {
 
                             <View style={styles.contentProfile} pointerEvents='none'>
                                 <View style={{ flex: 6}}>
-                                {/* <TextInput
-                                    style={BaseStyle.textInput}
-                                    value={this.state.birthday}
-                                    autoCorrect={false}
-                                    placeholderTextColor={BaseColor.grayColor}
-                                    selectionColor={BaseColor.primaryColor}
-                                /> */}
-
                                             <TextValidator
                                                 name="email"
                                                 label="email"
                                                 validators={['required']}
                                                 errorMessages={['This field is required']}
-                                                placeholder="Your day of birth"
+                                                placeholder="e.g., 1987-09-18"
                                                 type="text"
                                                 keyboardType="email-address"
                                                 value={this.state.birthday}
                                             />
                                 </View>
-
-                                
-                                {/* <View style={styles.searchIcon} onPress={()=>
-                                    {navigation.navigate("ProfileSmart");} } >
-                                    <Icon name="calendar-alt" size={18} color={BaseColor.primaryColor} />
-                                </View> */}
                             </View>
                             <DatePicker
                             style={{display:'none'}}
@@ -907,21 +881,15 @@ export default class DetailContact extends Component {
                             }}
                             />
                         </TouchableOpacity>
-                        <Text body2 grayColor style={{marginTop:-15}}>
-                                             Isi sesuai dengan KTP Anda
-                                            </Text>
+                            <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                Date of birth
+                            </Text>
                         </View>  
 
             var formEmail=<View style={{marginBottom: 10}}>
-                            {/* <View style={styles.contentTitle}>
-                                            <Text headline semibold>
-                                                Email
-                                            </Text>
-                                        </View> */}
                                         <TouchableOpacity 
                                         style={{width:'100%'}}
                                     >
-
                                             <View style={styles.contentProfile}>
                                                 <View style={{ flex: 6}}>
                                                 <TextValidator
@@ -929,7 +897,7 @@ export default class DetailContact extends Component {
                                                 label="email"
                                                 validators={['required', 'isEmail']}
                                                 errorMessages={['This field is required', 'Email invalid']}
-                                                placeholder="Your email"
+                                                placeholder="e.g., example@email.com"
                                                 type="text"
                                                 keyboardType="email-address"
                                                 value={this.state.email}
@@ -939,31 +907,16 @@ export default class DetailContact extends Component {
                                                         this.validation();
                                                     }, 500);
                                                 }}
+                                                
                                                
                                             />
-                                                {/* <TextInput
-                                                    style={BaseStyle.textInput}
-                                                    onChangeText={(email)=> {
-                                                        this.setState({email : email})
-                                                        setTimeout(() => {
-                                                            this.validation();
-                                                        }, 500);
-                                                    }}
-                                                    value={this.state.email}
-                                                    autoCorrect={false}
-                                                    placeholderTextColor={BaseColor.grayColor}
-                                                    selectionColor={BaseColor.primaryColor}
-                                                /> */}
                                                 </View>
-                                                {/* <View style={styles.searchIcon} onPress={()=>
-                                                    {navigation.navigate("ProfileSmart");} } >
-                                                    <Icon name="keyboard" size={18} color={BaseColor.primaryColor} />
-                                                </View> */}
+                                               
                                             </View>
                                         </TouchableOpacity>
                                         
-                                        <Text body2 grayColor style={{marginTop:-15}}>
-                                             Isi dengan email Anda yang aktif
+                                        <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                             Email
                                             </Text>
                                         
             </View>
@@ -972,7 +925,7 @@ export default class DetailContact extends Component {
                             <View style={{flexDirection: "row"}}>
                                 <View style={{flex: 4,marginRight: 15}}>
                                     <TouchableOpacity 
-                                    style={{width:'100%'}}
+                                    style={{width:'100%',flexDirection: "row"}}
                                     onPress={() => this.props.navigation.navigate('SelectPhoneCode',
                                     {
                                         setPhoneCode: this.setPhoneCode,
@@ -987,7 +940,7 @@ export default class DetailContact extends Component {
                                                                     label="nationality_phone_code"
                                                                     validators={['required']}
                                                                     errorMessages={['This field is required']}
-                                                                    placeholder="Phone Code"
+                                                                    placeholder="e.g., 021"
                                                                     type="text"
                                                                     keyboardType="email-address"
                                                                     value={this.state.nationality_phone_code}
@@ -1001,12 +954,15 @@ export default class DetailContact extends Component {
                                             </View>
                                         </View>
                                     </TouchableOpacity>
+                                    <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                        Phone Code
+                                    </Text>
                                 </View>                    
                                         
                                 <View style={{flex: 8}}>
 
                                                     <TouchableOpacity 
-                                                    style={{width:'100%'}}
+                                                    style={{width:'100%',flexDirection: "row"}}
                                                 >
                                                         <View style={styles.contentProfile}>
                                                                 <View style={{ flex: 6 }}>
@@ -1015,7 +971,7 @@ export default class DetailContact extends Component {
                                                                             label="phone"
                                                                             validators={['required', 'isNumber']}
                                                                             errorMessages={['This field is required', 'Number invalid']}
-                                                                            placeholder="Your phone"
+                                                                            placeholder="e.g., 80808080"
                                                                             type="text"
                                                                             keyboardType="email-address"
                                                                             value={this.state.phone}
@@ -1030,11 +986,12 @@ export default class DetailContact extends Component {
                                                             </View>
                                                         </View>
                                                     </TouchableOpacity>
+                                                    <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                                        Phone Number
+                                                    </Text>
                                 </View>
                             </View>
-                            <Text body2 grayColor style={{marginTop:-15}}>
-                            Mobile Phone
-                            </Text>
+                            
                        </View>
 
 
@@ -1057,7 +1014,7 @@ export default class DetailContact extends Component {
                                                         label="nationality"
                                                         validators={['required']}
                                                         errorMessages={['This field is required']}
-                                                        placeholder="Your nationality"
+                                                        placeholder="e.g., Indonesia"
                                                         type="text"
                                                         keyboardType="email-address"
                                                         value={this.state.nationality}
@@ -1065,43 +1022,26 @@ export default class DetailContact extends Component {
                                 </View>
                             </View>
                         </TouchableOpacity>
-                        <Text body2 grayColor style={{marginTop:-15}}>
-                                            Pilih negara asal Anda
+                        <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                            Nationality
                                             </Text>
             </View>
 
             var formPassportNumber=<View style={{marginBottom: 10}}>
-            {/* <View style={styles.contentTitle}>
-                            <Text headline semibold>
-                                Passport Number
-                            </Text>
-                        </View> */}
+         
                         <TouchableOpacity 
                         style={{width:'100%'}}
                        >
 
                             <View style={styles.contentProfile}>
                                 <View style={{ flex: 6}}>
-                                {/* <TextInput
-                                    style={BaseStyle.textInput}
-                                    onChangeText={(passport_number)=> {
-                                        this.setState({passport_number :  passport_number.replace(/[^0-9]/g, '')})
-                                        setTimeout(() => {
-                                            this.validation();
-                                        }, 500);
-                                
-                                    }} 
-                                    value={this.state.passport_number}
-                                    autoCorrect={false}
-                                    placeholderTextColor={BaseColor.grayColor}
-                                    selectionColor={BaseColor.primaryColor}
-                                /> */}
+                               
                                   <TextValidator
                                                 name="passport_number"
                                                 label="passport_number"
                                                 validators={['required', 'isNumber']}
                                                 errorMessages={['This field is required', 'Number invalid']}
-                                                placeholder="Passport Number"
+                                                placeholder="e.g.,80808080"
                                                 type="text"
                                                 keyboardType="email-address"
                                                 value={this.state.passport_number}
@@ -1115,24 +1055,15 @@ export default class DetailContact extends Component {
                                             />
                                 </View>
 
-                              
-                                {/* <View style={styles.searchIcon} onPress={()=>
-                                    {navigation.navigate("ProfileSmart");} } >
-                                    <Icon name="passport" size={18} color={BaseColor.primaryColor} />
-                                </View> */}
+                           
                             </View>
                         </TouchableOpacity>
-                        <Text body2 grayColor style={{marginTop:-15}}>
-                                             Isi sesuai dengan data Passport Anda
+                        <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                             Passport Number
                                             </Text>
             </View>
 
             var formPassportExpired=<View  style={{marginBottom: 10}}>
-            {/* <View style={styles.contentTitle}>
-                            <Text headline semibold>
-                                Passport Expired
-                            </Text>
-                        </View> */}
                         <TouchableOpacity 
                         style={{width:'100%'}}
                         onPress={() => {this.datePickerRef2.onPressDate()}}
@@ -1140,29 +1071,17 @@ export default class DetailContact extends Component {
 
                             <View style={styles.contentProfile} pointerEvents='none'>
                                 <View style={{ flex: 6 }}>
-                                {/* <TextInput
-                                    style={BaseStyle.textInput}
-                                    value={this.state.passport_expire}
-                                    autoCorrect={false}
-                                    placeholderTextColor={BaseColor.grayColor}
-                                    selectionColor={BaseColor.primaryColor}
-                                /> */}
-
                                 <TextValidator
                                                 name="Passport Expired"
                                                 label="passport_expire"
                                                 validators={['required']}
                                                 errorMessages={['This field is required']}
-                                                placeholder="Passport Expired"
+                                                placeholder="e.g.,1987-09-18"
                                                 type="text"
                                                 keyboardType="email-address"
                                                 value={this.state.passport_expire}
                                             />
                                 </View>
-                                {/* <View style={styles.searchIcon} onPress={()=>
-                                    {navigation.navigate("ProfileSmart");} } >
-                                    <Icon name="calendar-alt" size={18} color={BaseColor.primaryColor} />
-                                </View> */}
                             </View>
                             <DatePicker
                             style={{display:'none'}}
@@ -1200,17 +1119,13 @@ export default class DetailContact extends Component {
                             }}
                             />
                         </TouchableOpacity>
-                        <Text body2 grayColor style={{marginTop:-15}}>
-                                            Isi sesuai dengan data Passport Anda
+                        <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                            Passport Expired
                                             </Text>
             </View>
 
             var formPassportCountry=<View style={{marginBottom: 10}}>
-                        {/* <View style={styles.contentTitle}>
-                            <Text headline semibold>
-                                Passport Country
-                            </Text>
-                        </View> */}
+                       
                         <TouchableOpacity 
                         style={{width:'100%'}}
                         onPress={() => this.props.navigation.navigate('SelectCountry',
@@ -1225,35 +1140,24 @@ export default class DetailContact extends Component {
 
                             <View style={styles.contentProfile} pointerEvents='none'>
                                 <View style={{ flex: 6 }}>
-                                {/* <TextInput
-                                    style={BaseStyle.textInput}
-                                    onChangeText={text => this.setState({ id: text })}
-                                    autoCorrect={false}
-                                    placeholder={this.state.passport_country}
-                                    placeholderTextColor={BaseColor.grayColor}
-                                    value={this.state.passport_country}
-                                    selectionColor={BaseColor.primaryColor}
-                                /> */}
+                           
 
                                     <TextValidator
                                                         name="passport_country"
                                                         label="passport_country"
                                                         validators={['required']}
                                                         errorMessages={['This field is required']}
-                                                        placeholder="Pasport Country"
+                                                        placeholder="e.g., Indonesia"
                                                         type="text"
                                                         keyboardType="email-address"
                                                         value={this.state.passport_country}
                                                     />
                                 </View>
-                                {/* <View style={styles.searchIcon} onPress={()=>
-                                    {navigation.navigate("ProfileSmart");} } >
-                                    <Icon name="chevron-down" size={18} color={BaseColor.primaryColor} />
-                                </View> */}
+                               
                             </View>
                         </TouchableOpacity>
-                            <Text body2 grayColor style={{marginTop:-15}}>
-                            Isi dengan 
+                            <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                Passport Country
                             </Text>
                         </View>
             
@@ -1288,15 +1192,15 @@ export default class DetailContact extends Component {
         </View>
 
         var contentFormGuestInternational=<View style={{width:'100%'}}>
-                {formFullName}
                 {formTitle}
+                {formFullName}
                 {formBirthday}
                 {formEmail}
                 {formPhone}
                 {formNationality}
                 {formPassportNumber}
                 {formPassportExpired}
-        {formPassportCountry}
+                {formPassportCountry}
         </View>
 
         var contentForm=<View></View>
@@ -1327,7 +1231,7 @@ export default class DetailContact extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -1349,14 +1253,14 @@ export default class DetailContact extends Component {
                     
                 </ScrollView>
                 <View style={{ padding: 20 }}>
-                    <TouchableOpacity  disabled={this.state.handlerButton} onPress={() => this.updateParticipant()} >
+                    <TouchableOpacity  disabled={this.state.disabledButton} onPress={() => this.updateParticipant()} >
                     <View pointerEvents='none' style={styles.groupinput}>
                     <Button
                         loading={this.state.loading}
                         style={{backgroundColor:this.state.colorButton}}
                         full
                     >
-                        Confirm
+                        <Text style={{color:this.state.colorButtonText}}>Sign In</Text>
                     </Button>
                     </View>
                     </TouchableOpacity>

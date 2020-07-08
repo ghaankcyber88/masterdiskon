@@ -71,7 +71,7 @@ class Profile extends Component {
 
     onLogOut() {
         var loginVia=this.state.userSession.loginVia;
-
+        //alert(loginVia);
         if(loginVia=='form'){
 
             AsyncStorage.removeItem('userSession');
@@ -98,7 +98,7 @@ class Profile extends Component {
 
     _signOut = async () => {
         try {
-          await GoogleSignin.revokeAccess();
+          //await GoogleSignin.revokeAccess();
           await GoogleSignin.signOut();
           this.setState({ user: null }); // Remember to remove the user from your app's state as well
         } catch (error) {

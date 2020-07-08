@@ -141,9 +141,7 @@ export default class Notification extends Component {
                             )}
                         /> 
                 :
-                <PTRView onRefresh={this._refresh} >
-                <NotYetLogin redirect={'Notification'} navigation={navigation} />
-                </PTRView>
+                    <NotYetLogin redirect={'Notification'} navigation={navigation} />
                 }
                 
             </SafeAreaView>
