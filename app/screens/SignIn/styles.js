@@ -17,6 +17,14 @@ export default StyleSheet.create({
         width: "100%"
     },
     
+    contentProfile: {
+      // marginTop: 15,
+      flexDirection: "row",
+      // backgroundColor: BaseColor.fieldColor,
+      marginBottom: 15,
+      width: '100%',
+  },
+    
     
     passwordContainer: {
         flexDirection: 'row',

@@ -112,6 +112,15 @@ export default class Summary extends Component {
             
         });
         
+        AsyncStorage.getItem('tokenFirebase', (error, result) => {
+            if (result) {
+                console.log('Token Firebase',result);
+                this.setState({
+                    tokenFirebase: result
+                });
+            }
+        });
+        
         
         const scrollAnim = new Animated.Value(0);
         const offsetAnim = new Animated.Value(0);
@@ -963,14 +972,11 @@ export default class Summary extends Component {
                     var url=config.aeroUrl;
                     
                     var dataCartArrayRealSend={
-                    //"cart_select":[item],
                     "token":access_token,
                     "id_user":this.state.id_user,
                     "dataCart":item,
-                    // "dataSavePerson":{
-                    //     "participant":item.participant
-                    // },
-                    "type":item.typeProduct
+                    "type":item.typeProduct,
+                    "tokenFirebase":this.state.tokenFirebase
                     }
                     
                     console.log("---------------data cart array cart kirim  ------------");
@@ -997,7 +1003,6 @@ export default class Summary extends Component {
                         var dataOrderSubmit=result;
                         console.log("---------------status carts-------------");
                         console.log(JSON.stringify(dataOrderSubmit));
-                            //this.setState({ loading_spinner: false });
                             
                                 
                                 
@@ -1013,7 +1018,6 @@ export default class Summary extends Component {
                                     dataPayment:{}
                                 }
                                 
-                                //this.pay(cartToBeSaved,id_order);
                                 this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
                                
                                

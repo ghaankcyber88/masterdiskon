@@ -101,7 +101,7 @@ export default class PembayaranDetail extends Component {
         
         
         var transaction_details={
-            gross_amount: dataBooking[0].total_price,
+            gross_amount: parseInt(dataBooking[0].total_price)+parseInt(dataBooking[0].order_payment_info.transaction_fee),
             order_id: dataBooking[0].order_code
         }
         var customer_details={
@@ -129,6 +129,7 @@ export default class PembayaranDetail extends Component {
             "pay":dataBooking[0].total_price,
             "id_order":dataBooking[0].id_order,
             "fee":dataBooking[0].order_payment_info.transaction_fee,
+            "order_code":dataBooking[0].order_code,
             "dataPayment":this.state.dataPayment
             }
         console.log('paramPayMD',JSON.stringify(paramPayMD));
@@ -184,6 +185,8 @@ export default class PembayaranDetail extends Component {
         var raw = JSON.stringify(paramPay);
         var requestOptions = {
           method: 'POST',
+          
+          
           headers: myHeaders,
           body: raw,
           redirect: 'follow'

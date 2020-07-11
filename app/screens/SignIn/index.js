@@ -10,6 +10,7 @@ import DropdownAlert from 'react-native-dropdownalert';
 import {PostData} from '../../services/PostData';
 import ValidationComponent from 'react-native-form-validator';
 import InputText from "../../components/InputText";
+import { Form, TextValidator } from 'react-native-validator-form';
 
 import {
     GoogleSignin,
@@ -347,14 +348,14 @@ getNotification(id_user) {
 
 
     
-    validationSubmit() {
-        this.validate({
-          email: {email: true,required: true},
-        });
+    // validationSubmit() {
+    //     this.validate({
+    //       email: {email: true,required: true},
+    //     });
         
-        var errorMsg=this.getErrorMessages();
-        return errorMsg;
-    }
+    //     var errorMsg=this.getErrorMessages();
+    //     return errorMsg;
+    // }
       
 
     validation(){
@@ -385,20 +386,93 @@ getNotification(id_user) {
     
   
       
-    handleChange = (key, val,validate) => {
-        this.setState({ [key]: val});
-        // if(val != '' ){
-        //     this.validate(validate);
-        // }
+    // handleChange = (key, val,validate) => {
+    //     this.setState({ [key]: val});
         
-        setTimeout(() => {
-            this.validation();
-        }, 500);
-    }
+    //     setTimeout(() => {
+    //         this.validation();
+    //     }, 500);
+    // }
       
     render() {
         const { navigation } = this.props;
         let { loading} = this.state;
+        
+        
+        
+                
+                var formEmail=<View style={{marginBottom: 10}}>
+                                        <TouchableOpacity 
+                                        style={{width:'100%'}}
+                                    >
+                                            <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                                 Email
+                                            </Text>
+                                            <View style={styles.contentProfile}>
+                                                <View style={{ flex: 6}}>
+                                                <TextValidator
+                                                name="email"
+                                                label="email"
+                                                validators={['required', 'isEmail']}
+                                                errorMessages={['This field is required', 'Email invalid']}
+                                                placeholder="e.g., example@email.com"
+                                                type="text"
+                                                keyboardType="email-address"
+                                                value={this.state.email}
+                                                onChangeText={(email)=> {
+                                                    this.setState({email : email})
+                                                    setTimeout(() => {
+                                                        this.validation();
+                                                    }, 500);
+                                                }}
+                                                errorStyle={{underlineValidColor: BaseColor.textPrimaryColor,text: { color: BaseColor.thirdColor }, underlineInvalidColor: BaseColor.thirdColor }}
+                                                
+                                               
+                                            />
+                                                </View>
+                                               
+                                            </View>
+                                        </TouchableOpacity>
+                                        
+                                        
+                                        
+            </View>
+            
+            
+            var formPassword=<View style={{marginBottom: 10}}>
+                                        <TouchableOpacity 
+                                        style={{width:'100%'}}
+                                    >
+                                            <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                                 Password
+                                            </Text>
+                                            <View style={styles.contentProfile}>
+                                                <View style={{ flex: 6}}>
+                                                <TextValidator
+                                                name="password"
+                                                label="text"
+                                                placeholder="e.g., ******"
+                                                secureTextEntry
+                                                type="text"
+                                                value={this.state.password}
+                                                onChangeText={(password)=> {
+                                                    this.setState({password : password})
+                                                    setTimeout(() => {
+                                                        this.validation();
+                                                    }, 500);
+                                                }}
+                                                errorStyle={{underlineValidColor: BaseColor.textPrimaryColor,text: { color: BaseColor.thirdColor }, underlineInvalidColor: BaseColor.thirdColor }}
+                                                
+                                               
+                                            />
+                                                </View>
+                                               
+                                            </View>
+                                        </TouchableOpacity>
+                                        
+                                        
+                                        
+            </View>
 
         return (
             <SafeAreaView
@@ -422,7 +496,25 @@ getNotification(id_user) {
                 />
                 <ScrollView>
                     <View style={styles.contain}>
-                        <InputText
+                        <Form
+                            ref="form"
+                            //onSubmit={this.onSubmit}
+                        >
+                        {formEmail}
+                        {formPassword}
+                            <TouchableOpacity  disabled={this.state.disabledButton} onPress={() => this.onSubmit()} >
+                                <View pointerEvents='none' style={styles.groupinput}>
+                                <Button
+                                    loading={this.state.loading}
+                                    style={{backgroundColor:this.state.colorButton}}
+                                    full
+                                >
+                                    <Text style={{color:this.state.colorButtonText}}>Sign In</Text>
+                                </Button>
+                                </View>
+                            </TouchableOpacity>
+                        </Form>
+                        {/* <InputText
                             name="email"
                             label="Email"
                             placeholder="e.g.,email@address.com"
@@ -439,26 +531,9 @@ getNotification(id_user) {
                             getErrorsInField={this.getErrorsInField('email')}
                         
                         />
+                         */}
                         
-                        <InputText
-                            name="password"
-                            label="Password"
-                            placeholder="e.g., ******"
-                            value={this.state.password}
-                            icon="key"
-                            onChangeText={(val)=> {
-                                this.handleChange('password',val,
-                                    {
-                                    email: {required: true,email: true},
-                                    }
-                                );
-                            }}
-                            isFieldInError={this.isFieldInError('password')}
-                            getErrorsInField={this.getErrorsInField('password')}
-                        
-                        />
-                        
-                        <View>
+                        {/* <View>
                             <TouchableOpacity  disabled={this.state.disabledButton} onPress={() => this.onSubmit()} >
                                 <View pointerEvents='none' style={styles.groupinput}>
                                 <Button
@@ -466,11 +541,12 @@ getNotification(id_user) {
                                     style={{backgroundColor:this.state.colorButton}}
                                     full
                                 >
+                                
                                     <Text style={{color:this.state.colorButtonText}}>Sign In</Text>
                                 </Button>
                                 </View>
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
                       
                       
                         <View style={{ width: "100%" }}>
