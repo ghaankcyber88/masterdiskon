@@ -9,7 +9,7 @@ export default StyleSheet.create({
     contentLeft: {
         flex: 1,
         justifyContent: "center",
-        paddingLeft: 0,
+        paddingLeft: 20,
         width: 60
     },
     contentCenter: {

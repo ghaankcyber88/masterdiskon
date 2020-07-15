@@ -130,12 +130,14 @@ export default class CommentItem extends Component {
     //     }
     // }
 
+            
 
-
-            statusPay=item.order_status_name;
+            //statusPay=item.order_status_name;
         
             if(expiredTime > 0){
-                countDown=<View style={styles.validContent}>
+            
+                if(item.order_status.order_status_slug=='new' || item.order_status.order_status_slug=='process'){
+                    countDown=<View style={styles.validContent}>
                         {/* <Text caption3 semibold>
                             Tagihan Pembayaran
                         </Text> */}
@@ -153,7 +155,23 @@ export default class CommentItem extends Component {
                             showSeparator
                         />
                 </View>
+                }
+                
             }
+            
+            var status_name='';
+            if(expiredTime <= 0){
+                if(item.order_status.order_status_slug=='new'){
+                    status_name='Expired';
+                }else{
+                    status_name=item.order_status.order_status_name;
+                }
+            }else{
+                status_name=item.order_status.order_status_name;
+            }
+            
+            
+            
 
     var icon='';
     if(item.product=='Flight'){
@@ -301,7 +319,7 @@ export default class CommentItem extends Component {
                                Status
                             </Text>
                             <Text caption2 grayColor>
-                               {item.order_status.order_status_name}
+                               {status_name}
                             </Text>
                             {countDown}
                         </View>
@@ -333,30 +351,36 @@ export default class CommentItem extends Component {
                      
                             var order_payment_recent=item.order_payment_recent;
                             if(order_payment_recent != null){
-                            
-                                var dataPayment={
-                                    payment_type:order_payment_recent.payment_type,
-                                    payment_type_label:order_payment_recent.payment_type_label,
-                                    payment_sub:order_payment_recent.payment_sub,
-                                    payment_sub_label:order_payment_recent.payment_sub_label,
-                                }
+                                if(expiredTime > 0){
+                                    var dataPayment={
+                                        payment_type:order_payment_recent.payment_type,
+                                        payment_type_label:order_payment_recent.payment_type_label,
+                                        payment_sub:order_payment_recent.payment_sub,
+                                        payment_sub_label:order_payment_recent.payment_sub_label,
+                                    }
+                                    
+                                    var param={
+                                        id_order:item.id_order,
+                                        dataPayment:dataPayment
+                                    }
+                                    this.props.navigation.navigate("PembayaranDetail",{
+                                        param:param,
+                                    });
                                 
-                                var param={
-                                    id_order:item.id_order,
-                                    dataPayment:dataPayment
+                                }else{
+                                    var param={
+                                        id_order:item.id_order,
+                                        dataPayment:{}
+                                    }
+                                    this.props.navigation.navigate('Pembayaran',{param:param});
                                 }
-                                // console.log('dataPayment',JSON.stringify(param));
-                                this.props.navigation.navigate("PembayaranDetail",{
-                                    param:param,
-                                });
-                            
+                               
                             }else{
                             
                                 var param={
                                     id_order:item.id_order,
                                     dataPayment:{}
                                 }
-                                //this.props.navigation.navigate(page,{param:param});
                                 this.props.navigation.navigate('Pembayaran',{param:param});
                             }
                             

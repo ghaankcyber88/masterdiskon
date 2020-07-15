@@ -17,7 +17,9 @@ import { DataMasterDiskon,DataBooking } from "@data";
 import HTML from 'react-native-render-html';
 import { WebView } from 'react-native-webview';
 import {PostData} from '../../services/PostData';
-
+import CountDown from 'react-native-countdown-component';
+import AnimatedLoader from "react-native-animated-loader";
+import moment from 'moment';
 const styles = StyleSheet.create({
     containField: {
         margin: 20,
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
 
 export default class Pembayaran extends Component {
     constructor(props) {
-        var id_order=props.navigation.state.params.param;
+        //var id_order=props.navigation.state.params.param;
         
         var param=props.navigation.state.params.param;
         var id_order=param.id_order;
@@ -99,6 +101,208 @@ export default class Pembayaran extends Component {
                 },
             ],
         };
+    }
+    duration(expirydate)
+    {
+        
+        var date = moment()
+        var diffr = moment.duration(moment(expirydate).diff(moment(date)));
+        var hours = parseInt(diffr.asHours());
+        var minutes = parseInt(diffr.minutes());
+        var seconds = parseInt(diffr.seconds());
+        var d = hours * 60 * 60 + minutes * 60 + seconds;
+        return d;
+    
+    }
+    
+    content_countdown(){
+        var item=this.state.dataBooking[0];
+        var order_expired=item.order_expired;
+        var expiredTime=this.duration(order_expired);
+        var countDown=<View></View>;
+        
+        if(expiredTime > 0){
+            if(item.order_status.order_status_slug=='new' || item.order_status.order_status_slug=='process'){
+                countDown=<View style={{
+                            borderWidth: 1, 
+                            borderColor: BaseColor.textSecondaryColor,
+                            borderRadius: 10,
+                            marginBottom:10,
+                            padding:10
+                            }}>
+        
+                                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                                        <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                            <View>
+                                                <Text>
+                                                Batas Waktu Pembayaran
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        <View style={{flex: 4,justifyContent: "center",alignItems: "flex-end"}}>
+                                            <CountDown
+                                                size={12}
+                                                until={expiredTime}
+                                                // onFinish={() => alert('Finished')}
+                                                style={{float:'left'}}
+                                                digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
+                                                digitTxtStyle={{color: BaseColor.primaryColor}}
+                                                timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
+                                                separatorStyle={{color: BaseColor.primaryColor}}
+                                                timeToShow={['H', 'M', 'S']}
+                                                timeLabels={{m: null, s: null}}
+                                                showSeparator
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+            </View>
+                    
+            }
+            
+        }
+        return(
+            <View>
+                    {countDown}
+            </View>
+        )
+    }
+    
+    
+    
+    content_payment(){
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
+        return(
+            <View style={{
+                borderWidth: 1, 
+                borderColor: BaseColor.textSecondaryColor,
+                borderRadius: 10,
+                marginBottom:10,
+                padding:10
+                }}>
+        
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text>
+                                No.Tagihan : {this.state.dataBooking[0].order_code}
+                                </Text>
+                            
+                            </View>
+                        </View>
+                        <View style={{flex: 4,justifyContent: "center",alignItems: "flex-end"}}>
+                               
+                                    <Icon
+                                        name="angle-down"
+                                        size={18}
+                                        color={BaseColor.primaryColor}
+                                        style={{ textAlign: "center"}}
+                                    />
+                        </View>
+                    </View>
+                </View>
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text>
+                                   Total Pembayaran
+                                </Text>
+                            
+                            </View>
+                        </View>
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                                <Text headline semibold numberOfLines={1}>
+                                {this.state.dataBooking[0].ccy+" "+priceSplitter(this.state.dataBooking[0].total_price)}
+                                </Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+        )
+    }
+    
+    
+    content_bank(){
+        var item=this.state.dataBooking[0];
+        var order_expired=item.order_expired;
+        var expiredTime=this.duration(order_expired);
+        
+        const { navigation} = this.props;
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+        var content_bank = [];
+        this.state.payment.map((item, index) => (
+            content_bank.push(<View>
+                <Text title3 semibold>
+                    {item.payment_type_label}
+                </Text>
+                <Bank 
+                    id_order={this.state.id_order} 
+                    payment={item} 
+                    subPayment={item.subPayment} 
+                    navigation={navigation} 
+                    />
+            </View>
+            )
+        ))
+        var content=<View></View>
+        if(item.order_status.order_status_slug=='new' || item.order_status.order_status_slug=='process'){
+            if(expiredTime <= 0){
+                content=<View
+                    style={{
+                        borderWidth: 1, 
+                        borderColor: BaseColor.textSecondaryColor,
+                        borderRadius: 10,
+                        marginBottom:10,
+                        padding:10,
+                        justifyContent: 'center', alignItems: 'center'
+                        }}
+                    >
+                        <Icon
+                            name="times-circle"
+                            size={50}
+                            color={BaseColor.thirdColor}
+                            solid
+                        />
+                        <Text style={{fontSize:50}}>
+                            Expired
+                        </Text>
+                    </View>
+            }else{
+                content=content_bank;
+            }
+            
+            
+        }else if(item.order_status.order_status_slug=='complete'){
+            content=<View
+                    style={{
+                        borderWidth: 1, 
+                        borderColor: BaseColor.textSecondaryColor,
+                        borderRadius: 10,
+                        marginBottom:10,
+                        padding:10,
+                        justifyContent: 'center', alignItems: 'center'
+                        }}
+                    >
+                        <Icon
+                            name="check-circle"
+                            size={50}
+                            color={'green'}
+                            solid
+                        />
+                        <Text style={{fontSize:50}}>
+                            Complete
+                        </Text>
+                    </View>
+        }
+        return(
+            <View>
+                    {content}
+            </View>
+        )
     }
     
     componentDidMount(){
@@ -173,7 +377,7 @@ export default class Pembayaran extends Component {
 
     render() {
         const { navigation} = this.props;
-        const {id_order} =this.state;
+        const {id_order,loading_spinner} =this.state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         return (
@@ -199,71 +403,44 @@ export default class Pembayaran extends Component {
                     navigation.goBack();
                 }}
             />
-          
+            {
+                            loading_spinner ? 
+                            
+                            <View style={{flex: 1,backgroundColor:  "#FFFFFF",justifyContent: "center",alignItems: "center"}}>
+                                <View
+                                    style={{
+                                        position: "absolute",
+                                        top: 220,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        justifyContent: "center",
+                                        alignItems: "center"
+                                    }}
+                                >
+                                    
+                                    <AnimatedLoader
+                                        visible={true}
+                                        overlayColor="rgba(255,255,255,0.75)"
+                                        source={require("app/assets/loader_paperline.json")}
+                                        animationStyle={{width: 300,height: 300}}
+                                        speed={1}
+                                      />
+                                    <Text grayColor>
+                                        Connecting.. to Masterdiskon
+                                    </Text>
+                                </View>
+                            </View>
+                            :
             
             <ScrollView>
                 <View  style={{ padding: 20 }}>
-                    <View style={{
-                                borderWidth: 1, 
-                                borderColor: BaseColor.textSecondaryColor,
-                                borderRadius: 10,
-                                marginBottom:10,
-                                padding:10
-                                }}>
-                        <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                            <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                                <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                    <View>
-                                        <Text>
-                                        No.Tagihan : {this.state.dataBooking[0].order_code}
-                                        </Text>
-                                    
-                                    </View>
-                                </View>
-                                <View style={{flex: 4,justifyContent: "center",alignItems: "flex-end"}}>
-                                       
-                                            <Icon
-                                                name="angle-down"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                                style={{ textAlign: "center"}}
-                                            />
-                                </View>
-                            </View>
-                        </View>
-                        <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                            <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                                <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                    <View>
-                                        <Text>
-                                           Total Pembayaran
-                                        </Text>
-                                    
-                                    </View>
-                                </View>
-                                <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
-                                        <Text headline semibold numberOfLines={1}>
-                                        {'IDR '+priceSplitter(this.state.dataBooking[0].total_price)}
-                                        </Text>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                    {this.state.payment.map((item, index) => (
-                    <View>
-                        <Text title3 semibold>
-                            {item.payment_type_label}
-                        </Text>
-                        <Bank 
-                            id_order={this.state.id_order} 
-                            payment={item} 
-                            subPayment={item.subPayment} 
-                            navigation={navigation} 
-                            />
-                    </View>
-                    ))}
+                {this.content_countdown()}
+                {this.content_payment()}
+                {this.content_bank()}    
                 </View>
             </ScrollView>
+            }
         </SafeAreaView>
         );
     }

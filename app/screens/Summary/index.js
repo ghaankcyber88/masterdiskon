@@ -276,7 +276,9 @@ export default class Summary extends Component {
                     phone_number: "6666666",
                     email: "matadesaindotcom@gmail.com"
                 }
-            }
+            },
+            
+            config:{"aeroStatus":false,"aeroUrl":"https://staging-api.megaelectra.co.id/","baseUrl":"https://masterdiskon.co.id/","banner":"https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80","transaction_fee":"5000","norek":"1290080508050 (Mandiri) an. PT Master Diskon Internasional","voucher_markup":"20000","token":"EfVwMeH5HgFokJknYDYHto_DcxundKflSmevqUHTNNU"}
         };
 
         this.updateParticipant = this.updateParticipant.bind(this);
@@ -452,7 +454,8 @@ export default class Summary extends Component {
                                         this.setState({ loading_spinner: false });
                                         console.log('data pricess',JSON.stringify(result));
                                         this.setState({dataPrice:result.data});
-                                        this.setState({total_all:result.data.total_price});
+                                        this.setState({total_all:parseInt(result.data.total_price)+parseInt(config.transaction_fee)});
+                                        this.setState({fee:config.transaction_fee});
                                      },
                                      (error) => {
                                          this.setState({ error });
@@ -976,7 +979,8 @@ export default class Summary extends Component {
                     "id_user":this.state.id_user,
                     "dataCart":item,
                     "type":item.typeProduct,
-                    "tokenFirebase":this.state.tokenFirebase
+                    "tokenFirebase":this.state.tokenFirebase,
+                    "fee":config.transaction_fee
                     }
                     
                     console.log("---------------data cart array cart kirim  ------------");
@@ -1428,12 +1432,28 @@ export default class Summary extends Component {
         // create the format you want
         return (yyyy + "-" + MM + "-" + dd);
      }
+    
+    //  getConfig(){
+    //     this.setState({ loading_config: true }, () => {
+    //         AsyncStorage.getItem('config', (error, result) => {
+    //             if (result) {    
+    //                 this.setState({loading_config: false });
+    //                 let config = JSON.parse(result);
+    //                 console.log('dataConfig',JSON.stringify(config));
+    //                 this.setState({config:config});
+    //             }
+    //         });
+    //     });
+    // }
+
+
 
     componentDidMount() {
 
         var param=this.state.param;
         var typeProduct=param.type;
         var typeFlight=this.state.typeFlight;
+        //this.getConfig();
         this.totalPrice();
 
         if(param.type=='flight'){
@@ -2081,6 +2101,26 @@ export default class Summary extends Component {
                 </View>
 
 
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text footnote grayColor numberOfLines={1}>
+                                    Fee
+                                </Text>
+                            
+                            </View>
+                        </View>
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                               
+                                <Text headline semibold numberOfLines={1}>
+                                {'IDR '+priceSplitter(this.state.fee)}
+                                </Text>
+                        </View>
+                    </View>
+                </View>
+                
+                
                 <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
                     <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
                         <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>

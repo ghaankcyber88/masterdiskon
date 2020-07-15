@@ -48,8 +48,9 @@
 
 import React, {useEffect} from 'react'
 import {View, StyleSheet, Text, Button} from 'react-native'
-import {fcmService} from './src/FCMService'
-import {localNotificationService} from './src/LocalNotificationService'
+import {fcmService} from './src/FCMService';
+import {localNotificationService} from './src/LocalNotificationService';
+import {navigationService} from './src/NavigationService';
 import App from "./navigation";
 import { store, persistor } from "app/store";
 import { StatusBar,AsyncStorage } from "react-native";
@@ -68,7 +69,10 @@ export default function index() {
     };
     StatusBar.setBackgroundColor(BaseColor.primaryColor, true);
     StatusBar.setBackgroundColor("rgba(0,0,0,0)");
-
+    
+    //var current=navigationService.currentRoute();
+    
+    
 
 
     fcmService.registerAppWithFCM()
@@ -83,8 +87,16 @@ export default function index() {
     }
 
     function onNotification(notify) {
-      //console.log("[App] onNotification: ", notify)
-      alert("[App] onNotification: " + notify.body);
+      console.log("[App] onNotification: ", notify)
+      var body_msg=notify.body;
+      var body_array = body_msg.split("|||");
+      var message=body_array[0];
+      var id_order=body_array[1];
+      var id_invoice=body_array[2];
+      
+      
+      alert("Notification " + id_invoice);
+      
       const options = {
         soundName: 'default',
         playSound: true //,

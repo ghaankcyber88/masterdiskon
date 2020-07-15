@@ -19,7 +19,8 @@ import HTML from 'react-native-render-html';
 import { WebView } from 'react-native-webview';
 import {PostData} from '../../services/PostData';
 import AnimatedLoader from "react-native-animated-loader";
-
+import CountDown from 'react-native-countdown-component';
+import moment from 'moment';
 
 const styles = StyleSheet.create({
     containField: {
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
         // borderTopColor: BaseColor.textSecondaryColor,
         // borderTopWidth: 1,
         //paddingVertical: 10,
-        paddingHorizontal: 20,
+        // paddingHorizontal: 20,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center"
@@ -82,7 +83,17 @@ export default class PembayaranDetail extends Component {
         var id_order=param.id_order;
         var dataPayment=param.dataPayment;
         
-         console.log('dataPayments',JSON.stringify(dataPayment));
+        console.log('dataPayments',JSON.stringify(dataPayment));
+        
+        AsyncStorage.getItem('tokenFirebase', (error, result) => {
+            if (result) {
+                console.log('Token Firebase',result);
+                this.setState({
+                    tokenFirebase: result
+                });
+            }
+        });
+        
         
 
         this.state = {
@@ -95,55 +106,30 @@ export default class PembayaranDetail extends Component {
     }
     
     submitPayment(){
+     
         const{dataPayment,dataBooking}=this.state;
-        var payment_type=dataPayment.payment_type;
-        var payment_sub=dataPayment.payment_sub;
-        
-        
-        var transaction_details={
-            gross_amount: parseInt(dataBooking[0].total_price)+parseInt(dataBooking[0].order_payment_info.transaction_fee),
-            order_id: dataBooking[0].order_code
-        }
-        var customer_details={
-            email: dataBooking[0].contact.contact_email,
-            first_name: dataBooking[0].contact.contact_first,
-            last_name: dataBooking[0].contact.contact_last,
-            phone: dataBooking[0].contact.contact_phone,
-        }
-        
-        
-        if(payment_type=='bank_transfer'){
-            var paramPayMidtrans={
-                payment_type: payment_type,
-                transaction_details: transaction_details,
-                customer_details: customer_details,
-                bank_transfer: {
-                  bank: payment_sub
-                }
-            }
-        }
-        
-        
         
         var paramPayMD={
-            "pay":dataBooking[0].total_price,
+            "subtotal":dataBooking[0].subtotal,
+            "insurance":dataBooking[0].insurance,
+            "fee":dataBooking[0].fee,
+            "total_price":dataBooking[0].total_price,
             "id_order":dataBooking[0].id_order,
-            "fee":dataBooking[0].order_payment_info.transaction_fee,
             "order_code":dataBooking[0].order_code,
-            "dataPayment":this.state.dataPayment
+            "dataPayment":this.state.dataPayment,
+            "tokenFirebase":this.state.tokenFirebase,
             }
         console.log('paramPayMD',JSON.stringify(paramPayMD));
-        console.log('paramPayMidtrans',JSON.stringify(paramPayMidtrans));
-        this.payMasterDiskon(paramPayMD,paramPayMidtrans);
+        //console.log('paramPayMidtrans',JSON.stringify(paramPayMidtrans));
+        this.payMasterDiskon(paramPayMD);
         
     }
     
-    payMasterDiskon(paramPayMD,paramPayMidtrans){
+    payMasterDiskon(paramPayMD){
         this.setState({ loading_spinner: true }, () => {
             console.log("---------------paramPayMD ------------");
             console.log(JSON.stringify(paramPayMD));
 
-     
             
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
@@ -162,7 +148,8 @@ export default class PembayaranDetail extends Component {
             .then((result) => {
                 console.log("---------------result payment md ------------");
                 console.log(JSON.stringify(result));
-                this.payMidtrans(paramPayMidtrans);
+                var id_invoice=result.id_invoice;
+                this.payMidtrans(id_invoice);
                 
             });
         });  
@@ -170,9 +157,37 @@ export default class PembayaranDetail extends Component {
     }
     
     
-    payMidtrans(paramPay){
-    
-        var paramPay=paramPay;
+    payMidtrans(id_invoice){
+        const{dataPayment,dataBooking}=this.state;
+        var payment_type=dataPayment.payment_type;
+        var payment_sub=dataPayment.payment_sub;
+        
+        
+        var transaction_details={
+            gross_amount: dataBooking[0].total_price,
+            order_id: id_invoice
+        }
+        var customer_details={
+            email: dataBooking[0].contact.contact_email,
+            first_name: dataBooking[0].contact.contact_first,
+            last_name: dataBooking[0].contact.contact_last,
+            phone: dataBooking[0].contact.contact_phone,
+        }
+        
+        
+        if(payment_type=='bank_transfer'){
+            var paramPay={
+                payment_type: payment_type,
+                transaction_details: transaction_details,
+                customer_details: customer_details,
+                bank_transfer: {
+                  bank: payment_sub
+                }
+            }
+        }
+        
+        
+        
         
         console.log('paramPay',JSON.stringify(paramPay))
         
@@ -211,6 +226,72 @@ export default class PembayaranDetail extends Component {
     
     }
     
+    duration(expirydate)
+    {
+        
+        var date = moment()
+        var diffr = moment.duration(moment(expirydate).diff(moment(date)));
+        var hours = parseInt(diffr.asHours());
+        var minutes = parseInt(diffr.minutes());
+        var seconds = parseInt(diffr.seconds());
+        var d = hours * 60 * 60 + minutes * 60 + seconds;
+        return d;
+    
+    }
+    
+    content_countdown(){
+        var item=this.state.dataBooking[0];
+        var order_expired=item.order_expired;
+        var expiredTime=this.duration(order_expired);
+        var countDown=<View></View>;
+        
+        if(expiredTime > 0){
+            if(item.order_status.order_status_slug=='new' || item.order_status.order_status_slug=='process'){
+                countDown=<View style={{
+                            borderWidth: 1, 
+                            borderColor: BaseColor.textSecondaryColor,
+                            borderRadius: 10,
+                            marginBottom:10,
+                            padding:10
+                            }}>
+        
+                                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                                        <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                            <View>
+                                                <Text>
+                                                Batas Waktu Pembayaran
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        <View style={{flex: 4,justifyContent: "center",alignItems: "flex-end"}}>
+                                            <CountDown
+                                                size={12}
+                                                until={expiredTime}
+                                                // onFinish={() => alert('Finished')}
+                                                style={{float:'left'}}
+                                                digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
+                                                digitTxtStyle={{color: BaseColor.primaryColor}}
+                                                timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
+                                                separatorStyle={{color: BaseColor.primaryColor}}
+                                                timeToShow={['H', 'M', 'S']}
+                                                timeLabels={{m: null, s: null}}
+                                                showSeparator
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                </View>
+                    
+            }
+            
+        }
+        return(
+            <View>
+                    {countDown}
+            </View>
+        )
+    }
     
     content_payment(){
         const { navigation} = this.props;
@@ -248,46 +329,7 @@ export default class PembayaranDetail extends Component {
                                 marginBottom:10,
                                 padding:10
                                 }}>
-                        <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                            <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                                <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                    <View>
-                                        <Text>
-                                            Harga 
-                                        </Text>
-                                    
-                                    </View>
-                                </View>
-                                <View style={{flex:5,justifyContent: "center",alignItems: "flex-end"}}>
-                                       
-                                        <Text headline semibold numberOfLines={1}>
-                                        {'IDR '+priceSplitter(this.state.dataBooking[0].total_price)}
-                                        </Text>
-                                </View>
-                            </View>
-                        </View>
-                        
-                        <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5,}} >
-                            <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
-                                <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                    <View>
-                                        <Text>
-                                            Fee 
-                                        </Text>
-                                    
-                                    </View>
-                                </View>
-                                <View style={{flex: 
-                                
-                                5,justifyContent: "center",alignItems: "flex-end"}}>
-                                        <Text headline semibold numberOfLines={1}>
-                                        {'IDR '+priceSplitter(dataBooking[0].order_payment_info.transaction_fee)}
-                                        </Text>
-                                </View>
-                            </View>
-                        </View>
-                        
-                        
+                       
                         <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
                             <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
                                 <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
@@ -300,7 +342,7 @@ export default class PembayaranDetail extends Component {
                                 </View>
                                 <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
                                         <Text headline semibold numberOfLines={1}>
-                                        {'IDR '+priceSplitter(parseInt(this.state.dataBooking[0].total_price)+parseInt(this.state.dataBooking[0].order_payment_info.transaction_fee))}
+                                        {'IDR '+priceSplitter(this.state.dataBooking[0].total_price)}
                                         </Text>
                                 </View>
                             </View>
@@ -411,7 +453,7 @@ export default class PembayaranDetail extends Component {
         }
         
         return(
-            <View  style={{ padding: 20 }}>
+            <View>
                     {content}
             </View>
         )
@@ -598,8 +640,18 @@ export default class PembayaranDetail extends Component {
                             this.setState({dataBooking:dataBooking});
                             
                             
-                            var order_code=dataBooking[0].order_code;
-                            this.fetchMidtrans(order_code);
+                            //var order_code=dataBooking[0].order_code;
+                            
+                            var order_payment_recent=dataBooking[0].order_payment_recent;
+                          
+                            
+                            
+                            if(order_payment_recent != null){
+                            var id_invoice=order_payment_recent.id_invoice;
+                            this.fetchMidtrans(id_invoice);
+                              
+                            }
+                            
                         },
                         (error) => {
                             this.setState({ error });
@@ -614,8 +666,8 @@ export default class PembayaranDetail extends Component {
 
     }
     
-    fetchMidtrans(order_code){
-        console.log('order_code',order_code);
+    fetchMidtrans(id_invoice){
+        console.log('id_invoice',id_invoice);
         var myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
         myHeaders.append("Content-Type", "application/json");
@@ -627,7 +679,7 @@ export default class PembayaranDetail extends Component {
           redirect: 'follow'
         };
         
-        fetch("https://api.sandbox.midtrans.com/v2/"+order_code+"/status", requestOptions)
+        fetch("https://api.sandbox.midtrans.com/v2/"+id_invoice+"/status", requestOptions)
           .then(response => response.json())
           .then(result => {
             var statusMidtrans=result;
@@ -702,8 +754,11 @@ export default class PembayaranDetail extends Component {
                             </View>
                             :
             <ScrollView>
-                {this.content_payment()}
-                {this.content_button()}
+                <View  style={{ padding: 20 }}>
+                    {this.content_countdown()}
+                    {this.content_payment()}
+                    {this.content_button()}
+                </View>
             </ScrollView>
             }
             
