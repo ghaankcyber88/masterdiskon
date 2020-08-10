@@ -7,12 +7,7 @@ const DataLoading = [
     {
         site: "https://masterdiskon.co.id/",
     },
-    {
-        site: "https://masterdiskon.co.id/",
-    },
-    {
-        site: "https://masterdiskon.co.id/",
-    },
+    
    
 ];
 

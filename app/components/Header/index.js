@@ -25,11 +25,16 @@ export default class Header extends Component {
       subTitle,
       onPressLeft,
       onPressRight,
-      onPressRightSecond
+      onPressRightSecond,
+      transparent
     } = this.props;
-
+    
+    var bgColor=BaseColor.primaryColor;
+    if(transparent==true){
+      bgColor='transparent';
+    }
     return (
-      <View style={[styles.contain, style]}>
+      <View style={[{ height: 45, flexDirection: "row",backgroundColor:bgColor}, style]}>
         <View style={{ flex: 1 }}>
           <TouchableOpacity
             style={[styles.contentLeft, styleLeft]}
@@ -39,7 +44,7 @@ export default class Header extends Component {
           </TouchableOpacity>
         </View>
         <View style={[styles.contentCenter, styleCenter]}>
-          <Text headline style={{color:BaseColor.whiteColor}}>{title}</Text>
+        <Text headline style={{color:BaseColor.whiteColor}}>{title}</Text>
           {subTitle != "" && (
             <Text caption2 light style={{color:BaseColor.whiteColor}}>
               {subTitle}
@@ -79,7 +84,8 @@ Header.propTypes = {
   onPressRight: PropTypes.func,
   title: PropTypes.string,
   subTitle: PropTypes.string,
-  barStyle: PropTypes.string
+  barStyle: PropTypes.string,
+  transparent:PropTypes.bool
 };
 
 Header.defaultProps = {
@@ -96,5 +102,6 @@ Header.defaultProps = {
   onPressRightSecond: () => {},
   title: "Title",
   subTitle: "",
-  barStyle: "dark-content"
+  barStyle: "dark-content",
+  transparent:false
 };

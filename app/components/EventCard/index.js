@@ -13,7 +13,7 @@ import {
 
 
 export default class EventCard extends Component {
-     constructor(props: Props) {
+     constructor(props) {
         super(props)
         this.state = {
           loaded: false,

@@ -85,8 +85,9 @@ export const Images = {
     login: require("@assets/images/login.jpg"),
     intergrity: require("@assets/images/intergrity.jpg"),
     dot: require("@assets/images/dot.png"),
-    airplane: require("@assets/images/airplane.gif"),
-    trip: require("@assets/images/trip.gif"),
-    hotel: require("@assets/images/hotel.gif"),
+    flight: require("@assets/images/icon/flight.png"),
+    trip: require("@assets/images/icon/trip.png"),
+    hotel: require("@assets/images/icon/hotel.png"),
+    voucher: require("@assets/images/icon/voucher.png"),
 
 };

@@ -29,7 +29,15 @@ class SignIn extends ValidationComponent {
             redirect=this.props.navigation.state.params.redirect;
         }
 
-
+        
+        if(this.props.navigation.state.params && this.props.navigation.state.params.param){
+            var param=this.props.navigation.state.params.param;
+        }else{
+            var param='';
+        }
+        
+        
+        
         this.state = {
             email: "",
             password: "",
@@ -43,7 +51,8 @@ class SignIn extends ValidationComponent {
             
             colorButton:BaseColor.greyColor,
             colorButtonText:BaseColor.whiteColor,
-            disabledButton:true
+            disabledButton:true,
+            param:param
         };
         //this.handleChange = this.handleChange.bind(this);
     }
@@ -143,7 +152,7 @@ class SignIn extends ValidationComponent {
             redirect: 'follow'
             };
 
-            fetch("https://masterdiskon.co.id/front/auth/login/login_proses_app_google", requestOptions)
+            fetch("https://masterdiskon.com/front/auth/login/login_proses_app_google", requestOptions)
             .then(response => response.json())
             .then(result => {
                 var userSession=result.userSession;
@@ -177,7 +186,6 @@ class SignIn extends ValidationComponent {
 onSubmit() {
     const { email, password, success,redirect } = this.state;
     const { navigation } = this.props;
-    //var errorMsg=this.validationSubmit();
     errorMsg='';
     if(errorMsg==''){
 
@@ -198,7 +206,7 @@ onSubmit() {
             redirect: 'follow'
             };
 
-            fetch("https://masterdiskon.co.id/front/auth/login/login_proses_app", requestOptions)
+            fetch("https://masterdiskon.com/front/auth/login/login_proses_app", requestOptions)
             .then(response => response.json())
             .then(result => {
                 this.setState({ loading: false });
@@ -255,7 +263,7 @@ getSmartProfile(id_user){
         redirect: 'follow'
         };
 
-        fetch("https://masterdiskon.co.id/front/api/api/get_participant?id_user="+id_user, requestOptions)
+        fetch("https://masterdiskon.com/front/api/api/get_participant?id_user="+id_user, requestOptions)
         .then(response => response.text())
         .then(result => {
             
@@ -280,7 +288,7 @@ getBookingHistory(id_user) {
                 redirect: 'follow'
                 };
         
-                fetch("https://masterdiskon.co.id/front/api/api/get_booking_history?id="+id_user, requestOptions)
+                fetch("https://masterdiskon.com/front/api/api/get_booking_history?id="+id_user, requestOptions)
                 .then(response => response.text())
                 .then(result => {
                     
@@ -298,7 +306,7 @@ getNotification(id_user) {
         redirect: 'follow'
       };
       
-      fetch("https://masterdiskon.co.id/front/api/api/notif?id="+id_user, requestOptions)
+      fetch("https://masterdiskon.com/front/api/api/notif?id="+id_user, requestOptions)
         .then(response => response.json())
         .then(result => {
             console.log("-------------notif--------------")
@@ -334,7 +342,7 @@ getNotification(id_user) {
                 this.props.actions.authentication(true, response => {
                     if (response.success) {
                         //alert(redirect);
-                        this.props.navigation.navigate("Loading",{redirect:redirect});
+                        this.props.navigation.navigate("Loading",{redirect:redirect,param:this.state.param});
                     } else {
                         this.setState({
                             loading: false
@@ -361,20 +369,20 @@ getNotification(id_user) {
     validation(){
     var email=this.state.email;
     var password=this.state.password;
-    var errorMsg=this.getErrorMessages();
+    //var errorMsg=this.getErrorMessages();
 
         if(email != '' && password !='' ){
-                if(errorMsg !=''){
-                    console.log('not yet');
-                    this.setState({colorButton:BaseColor.greyColor});
-                    this.setState({colorButtonText:BaseColor.whiteColor});
-                    this.setState({disabledButton:true});
-                }else{
+                // if(errorMsg !=''){
+                //     console.log('not yet');
+                //     this.setState({colorButton:BaseColor.greyColor});
+                //     this.setState({colorButtonText:BaseColor.whiteColor});
+                //     this.setState({disabledButton:true});
+                // }else{
                     console.log('perfect');
                     this.setState({colorButton:BaseColor.secondColor});
                     this.setState({colorButtonText:BaseColor.primaryColor});
                     this.setState({disabledButton:false});
-                }
+                //}
         }else{
                 console.log('not yet');
                 this.setState({colorButton:BaseColor.greyColor});
@@ -430,13 +438,9 @@ getNotification(id_user) {
                                                
                                             />
                                                 </View>
-                                               
                                             </View>
                                         </TouchableOpacity>
-                                        
-                                        
-                                        
-            </View>
+                                </View>
             
             
             var formPassword=<View style={{marginBottom: 10}}>
@@ -486,7 +490,7 @@ getNotification(id_user) {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -514,39 +518,7 @@ getNotification(id_user) {
                                 </View>
                             </TouchableOpacity>
                         </Form>
-                        {/* <InputText
-                            name="email"
-                            label="Email"
-                            placeholder="e.g.,email@address.com"
-                            value={this.state.email}
-                            icon="envelope"
-                            onChangeText={(val)=> {
-                                this.handleChange('email',val,
-                                    {
-                                    email: {required: true,email: true},
-                                    }
-                                );
-                            }}
-                            isFieldInError={this.isFieldInError('email')}
-                            getErrorsInField={this.getErrorsInField('email')}
-                        
-                        />
-                         */}
-                        
-                        {/* <View>
-                            <TouchableOpacity  disabled={this.state.disabledButton} onPress={() => this.onSubmit()} >
-                                <View pointerEvents='none' style={styles.groupinput}>
-                                <Button
-                                    loading={this.state.loading}
-                                    style={{backgroundColor:this.state.colorButton}}
-                                    full
-                                >
-                                
-                                    <Text style={{color:this.state.colorButtonText}}>Sign In</Text>
-                                </Button>
-                                </View>
-                            </TouchableOpacity>
-                        </View> */}
+
                       
                       
                         <View style={{ width: "100%" }}>

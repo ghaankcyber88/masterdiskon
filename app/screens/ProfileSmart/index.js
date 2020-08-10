@@ -58,35 +58,7 @@ class ProfileSmart extends Component {
         this.updateParticipant = this.updateParticipant.bind(this);
     }
 
-    /**
-     * @description Simple logout with Redux
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     */
-    onLogOut() {
-        this.setState(
-            {
-                loading: true
-            },
-            () => {
-                this.props.actions.authentication(false, response => {
-                    if (response.success) {
-                        this.props.navigation.navigate("Loading");
-                    } else {
-                        this.setState({ loading: false });
-                    }
-                });
-            }
-        );
-    }
-
-    /**
-     * @description Call when reminder option switch on/off
-     */
-    toggleSwitch = value => {
-        this.setState({ reminders: value });
-    };
-
+    
 
     redirect(redirect='') {
       
@@ -582,7 +554,6 @@ class ProfileSmart extends Component {
     render() {
         const { navigation } = this.props;
         const { userData, loading,heightHeader,participant,loading_spinner,sourcePage } = this.state;
-        // let { participant, loading, airplane,loading_spinner } = this.state;
         const heightImageBanner = Utils.scaleWithPixel(140);
         const marginTopBanner = heightImageBanner - heightHeader-70;
 
@@ -616,7 +587,7 @@ class ProfileSmart extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -648,17 +619,17 @@ class ProfileSmart extends Component {
                         navigation.navigate("Messenger");
                     }}
                 /> 
-                {/* <View style={{marginHorizontal: 20}}>
-                    <TextInput
-                        style={BaseStyle.textInput}
-                        onChangeText={text => this.search(text)}
-                        autoCorrect={false}
-                        placeholder="Search Airplane"
-                        placeholderTextColor={BaseColor.grayColor}
-                        // value={airplane}
-                        selectionColor={BaseColor.primaryColor}
-                    />
-                </View> */}
+                    <View style={{marginHorizontal: 20}}>
+                        <TextInput
+                            style={[BaseStyle.textInput,{marginTop:10}]}
+                            onChangeText={text => this.search(text)}
+                            autoCorrect={false}
+                            placeholder="Search"
+                            placeholderTextColor={BaseColor.grayColor}
+                            // value={airplane}
+                            selectionColor={BaseColor.primaryColor}
+                        />
+                    </View>
                     <ScrollView 
                         onScroll={Animated.event([
                             {
@@ -703,36 +674,17 @@ class ProfileSmart extends Component {
                                 data={participant}
                                 keyExtractor={(item, index) => index.toString()}
                                 renderItem={({ item, index }) => (
-                                    // <TouchableOpacity
-                                    //     style={styles.item}
-                                    //     onPress={() => this.onChange(item)}
-                                    // >
-                                    //     <View style={{ flexDirection: "row" }}>
-                                    //         <Icon
-                                    //             name={item.icon}
-                                    //             color={BaseColor.primaryColor}
-                                    //             size={18}
-                                    //             solid
-                                    //             style={{ marginRight: 10 }}
-                                    //         />
-                                    //         <Text body1>{item.fullname}</Text>
-                                    //     </View>
-                                    //     <Icon
-                                    //         name="angle-right"
-                                    //         size={18}
-                                    //         color={BaseColor.primaryColor}
-                                    //     />
-                                    // </TouchableOpacity>
                                     <View style={styles.item}>
-                                    <ProfileDetail
-                                    textFirst={this.convertOld(item.birthday)+" ("+this.getAge(item.birthday)+")"}
-                                    textSecond={item.fullname}
-                                    textThird={item.fullname}
-                                    onPress={() =>{
-                                        this.onChange(item)
-                                    }}
-                                    viewImage={false}
-                                    />
+                                        <ProfileDetail
+                                        textFirst={this.convertOld(item.birthday)}
+                                        //textFirst={this.convertOld(item.birthday)+" ("+this.getAge(item.birthday)+")"}
+                                        textSecond={item.fullname}
+                                        textThird={item.fullname}
+                                        onPress={() =>{
+                                            this.onChange(item)
+                                        }}
+                                        viewImage={false}
+                                        />
                                     </View>
                                 )}
                             />

@@ -5,48 +5,31 @@ import {
     Animated,
     TouchableOpacity,
     FlatList,
-    ActivityIndicator,
-    Dimensions
 } from "react-native";
 import {
-    Image,
     Text,
     Icon,
-    HotelItem,
-    Card,
-    Button,
     SafeAreaView,
-    PostListItem,
-
-    EventCard,
-    ProfileDescription
+    Header,
+    Image
 } from "@components";
 import { BaseStyle, BaseColor, Images } from "@config";
 import * as Utils from "@utils";
 import styles from "./styles";
 
-import {PostData} from '../../services/PostData';
 import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
-import AnimatedLoader from "react-native-animated-loader";
+import CardCustom from "../../components/CardCustom";
+import {DataLoading,DataConfig } from "@data";
+// import Swiper from 'react-native-swiper'
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { sliderWidth, itemWidth } from '../../components/CarouselItem/styles/SliderEntry.style';
+import { ENTRIES1, ENTRIES2 } from '../../components/CarouselItem/static/entries';
+//import {SliderEntry} from '../../components/Carousel/components/SliderEntry';
+import CarouselItem from "../../components/CarouselItem";
+import styles_carousel, { colors_carousel } from '../../components/CarouselItem/styles/index.style';
 
-
-
-// Load sample data
-import { PromotionData, TourData, HotelData,FeaturedDestination,DataMasterDiskon, DataLoading } from "@data";
-import Swiper from 'react-native-swiper'
-import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-
-const { width } = Dimensions.get('window');
-
-import {
-  Placeholder,
-  PlaceholderMedia,
-  PlaceholderLine,
-  Fade
-} from "rn-placeholder";
-import { cos } from "react-native-reanimated";
-
+const SLIDER_1_FIRST_ITEM = 1;
 
 const renderPagination = (index, total, context) => {
   return (
@@ -65,350 +48,378 @@ export default class Home extends Component {
     
     constructor(props) {
         super(props);
-        // Temp data define
         this.state = {
+            slider1ActiveSlide: SLIDER_1_FIRST_ITEM,
             icons: [
+            
+                // {
+                //     icon: "calendar-alt",
+                //     name: "Hotel",
+                //     route: "Hotel"
+                // },
+                // {
+                //     icon: "map-marker-alt",
+                //     name: "Tour",
+                //     route: "Tour"
+                // },
+                // {
+                //     icon: "car-alt",
+                //     name: "Car",
+                //     route: "OverViewCar"
+                // },
+                // {
+                //     icon: "plane",
+                //     name: "Flight",
+                //     route: "FlightSearch"
+                // },
+                // {
+                //     icon: "ship",
+                //     name: "Cruise",
+                //     route: "CruiseSearch"
+                // },
+                // {
+                //     icon: "bus",
+                //     name: "Bus",
+                //     route: "BusSearch"
+                // },
+                // {
+                //     icon: "star",
+                //     name: "Event",
+                //     route: "DashboardEvent"
+                // },
+                // {
+                //     icon: "ellipsis-h",
+                //     name: "More",
+                //     route: "More"
+                // },
                 {
                     icon: "calendar-alt",
                     name: "Hotel",
-                    route: "FlightSearch",
+                    route: "Hotel",
                     iconAnimation:"hotel.json",
-                    type:'hotel'
+                    type:'hotel',
+                    image: Images.hotel
                 },
                 {
                     icon: "map-marker-alt",
                     name: "Trip",
                     route: "Tour",
                     iconAnimation:"tour.json",
-                    type:'trip'
+                    type:'trip',
+                    image: Images.trip
                 },
                 {
                     icon: "plane",
                     name: "Flight",
                     route: "FlightSearch",
                     iconAnimation:"flight.json",
-                    type:'flight'
+                    type:'flight',
+                    image: Images.flight
+                },
+                {
+                    icon: "tag",
+                    name: "Voucher",
+                    route: "Voucher",
+                    iconAnimation:"flight.json",
+                    type:'voucher',
+                    image: Images.voucher
                 },
             ],
             
-            promotion: PromotionData,
-            tours: TourData,
-            featuredDestination:FeaturedDestination,
-            hotels: HotelData.splice(0, 4),
             heightHeader: Utils.heightHeader(),
-            DataMasterDiskon:DataMasterDiskon[0],
 
-
-            listdata_featured_destination:DataLoading,
-            listdata_popular_destination:DataLoading,
-            listdata_trip_domestic:DataLoading,
-            listdata_blog_new:DataLoading,
             listdata_promo:DataLoading,
             listdata_musium:DataLoading,
             listdata_culture:DataLoading,
+            listdata_product_trip_country:DataLoading,
+            listdata_product_trip:DataLoading,
+            listdata_product_hotel_package:DataLoading,
+            listdata_product_voucher:DataLoading,
+            config:DataConfig,
 
-
-            listdata_assets:{},
-            config:{},
-
-
-           loaded: false,
-          imageOpacity: new Animated.Value(0.0),
-          placeholderOpacity: new Animated.Value(1.0),
-          placeholderScale: new Animated.Value(1.0),
-          
-          urlBanner:"https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80"
 
         };
         this._deltaY = new Animated.Value(0);
+        this.getConfig();
     }
-
-
-
-    getPayment(){
-            PostData('selectpayment_list')
-                    .then((result) => {
-                        console.log('-----------data bank payment----------------');
-                        console.log(JSON.stringify(result));
-                        AsyncStorage.setItem('bankPayment', JSON.stringify(result));
-                    }
-                );
-        
+    
+    
+    _renderItem = ({item, index}) => {
+        return (
+            <View>
+                <Text>{ item.title }</Text>
+            </View>
+        );
     }
-
-
-    // getFeaturedDestination(){
-    //     this.setState({ loading_featured: true }, () => {
-    //         PostData('get_featured_destination')
-    //                 .then((result) => {
-    //                     console.log('listdata_featured_destination',JSON.stringify(result));
-    //                     this.setState({loading_featured: false });
-    //                     this.setState({listdata_featured_destination: result});
-    //                 }
-    //             );
-    //         });
-        
-    // }
-
-    // getPopularDestination(){
-    //     this.setState({ loading_popular: true }, () => {
-    //         const data={
-    //             "id_trip":"",
-    //             "id_country":"0",
-    //             "harga_min":"","harga_max":""
-    //         }
-    //         const param={"param":data}
-    //         console.log('-------------param trip-------------');
-    //         console.log(JSON.stringify(param));
-    //         PostData('trip',param)
-    //              .then((result) => {
-    //                 this.setState({loading_popular: false });
-    //                  this.setState({listdata_popular_destination: result});
-    //              },
-    //              (error) => {
-    //                  this.setState({ error });
-    //              }
-    //          ); 
-    //     });
-    // }
     
-
-    // getTripDomestic(){
-    //     this.setState({ loading_domestic: true }, () => {
-    //         const data={
-    //             "id_trip":"",
-    //             "id_country":"193",
-    //             "harga_min":"","harga_max":""
-    //         }
-    //         const param={"param":data}
-    //         console.log('-------------param trip-------------');
-    //         console.log(JSON.stringify(param));
-    //         PostData('trip',param)
-    //              .then((result) => {
-    //                 this.setState({loading_domestic: false });
-    //                  this.setState({listdata_trip_domestic: result});
-    //              },
-    //              (error) => {
-    //                  this.setState({ error });
-    //              }
-    //          ); 
-    //     });
-    //  }
-
-    //  getTripDunia(){
-    //     this.setState({ loading_dunia: true }, () => {
-    //         const data={"id_trip":"","id_country":"","harga_min":"","harga_max":""}
-    //         const param={"param":data}
-    //         console.log('getTripDunia',JSON.stringify(param));
-    //         PostData('trip',param)
-    //              .then((result) => {
-    //                 this.setState({loading_dunia: false });
-    //                  this.setState({listdata_trip_dunia: result});
-    //              },
-    //              (error) => {
-    //                  this.setState({ error });
-    //              }
-    //          ); 
-    //     });
-
-    //  }
-
+    _renderItemWithParallax ({item, index}, parallaxProps) {
+        return (
+            <CarouselItem
+              data={item}
+              even={(index + 1) % 2 === 0}
+              parallax={true}
+              parallaxProps={parallaxProps}
+            />
+        );
+    }
     
-
-    // getPromo(){
-    //     this.setState({ loading_promo: true }, () => {
-    //         PostData('get_promo')
-    //             .then((result) => {
-    //                 this.setState({loading_promo: false });
-    //                 this.setState({listdata_promo: result});
-    //             },
-    //             (error) => {
-    //                 this.setState({ error });
-    //             }
-    //         );   
-    //     });
-    // }
-
-
-   
-
-    getAssets(){
-        this.setState({ loading_assets: true }, () => {
-          
-            PostData('get_assets')
+    mainExample (number, title) {
+        const { slider1ActiveSlide } = this.state;
+    
+        return (
+            <View style={styles_carousel.exampleContainer}>
+                {/* <Text style={styles_carousel.title}>{'Example ${number}'}</Text>
+                <Text style={styles_carousel.subtitle}>{title}</Text> */}
+                <Carousel
+                  ref={c => this._slider1Ref = c}
+                  data={this.state.listdata_product_voucher}
+                  renderItem={this._renderItemWithParallax}
+                  sliderWidth={sliderWidth}
+                  itemWidth={itemWidth}
+                  hasParallaxImages={true}
+                  firstItem={1}
+                  inactiveSlideScale={0.94}
+                  inactiveSlideOpacity={0.7}
+                  // inactiveSlideShift={20}
+                  containerCustomStyle={styles_carousel.slider}
+                  contentContainerCustomStyle={styles_carousel.sliderContentContainer}
+                  loop={true}
+                  loopClonesPerSide={2}
+                  autoplay={true}
+                  autoplayDelay={500}
+                  autoplayInterval={3000}
+                  onSnapToItem={(index) => this.setState({ slider1ActiveSlide: index }) }
+                />
+                <Pagination
+                  dotsLength={ENTRIES1.length}
+                  activeDotIndex={slider1ActiveSlide}
+                  containerStyle={styles_carousel.paginationContainer}
+                  dotColor={BaseColor.primaryColor}
+                  dotStyle={styles_carousel.paginationDot}
+                  inactiveDotColor={'#1a1917'}
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.6}
+                  carouselRef={this._slider1Ref}
+                  tappableDots={!!this._slider1Ref}
+                />
+            </View>
+        );
+    }
+    
+    getConfig(){
+            AsyncStorage.getItem('config', (error, result) => {
+                if (result) {    
+                    let config = JSON.parse(result);
+                    console.log('getConfig',config);
+                    this.setState({config:config});
+                }
+            });
+    }
+    
+    
+    getProductTripCountry(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.url_md.product.trip_country;
+        this.setState({ loading_product_trip_country: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+             PostDataNew(url,path,param)
                  .then((result) => {
-                    this.setState({loading_assets: false });
-                    this.setState({listdata_assets: result});
+                    console.log("getProductTripCountry",JSON.stringify(result));
+                    this.setState({loading_product_trip_country: false });
+                    this.setState({listdata_product_trip_country: result});
                  },
                  (error) => {
                      this.setState({ error });
                  }
-             ); 
-        });
-     }
-    
-    
-    getConfig(){
-        this.setState({ loading_config: true }, () => {
-            AsyncStorage.getItem('config', (error, result) => {
-                if (result) {    
-                    this.setState({loading_config: false });
-                    let config = JSON.parse(result);
-                    console.log('dataConfigHome',JSON.stringify(config));
-                    this.setState({config:config});
-                }
-            });
+            ); 
         });
     }
-
-    addDate(dt, amount, dateType) {
-        switch (dateType) {
-          case 'days':
-            return dt.setDate(dt.getDate() + amount) && dt;
-          case 'weeks':
-            return dt.setDate(dt.getDate() + (7 * amount)) && dt;
-          case 'months':
-            return dt.setMonth(dt.getMonth() + amount) && dt;
-          case 'years':
-            return dt.setFullYear( dt.getFullYear() + amount) && dt;
-        }
-      }
-
-    minmaxDate(value,dateType){
-        let dt = new Date();
-        dt = this.addDate(dt, -value, dateType);
-        var date = dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate();
-        return date;
-    }
-
-
-    getAge(dateString) {
-        var today = new Date();
-        var DOB = new Date(dateString);
-        var totalMonths = (today.getFullYear() - DOB.getFullYear()) * 12 + today.getMonth() - DOB.getMonth();
-        totalMonths += today.getDay() < DOB.getDay() ? -1 : 0;
-        var years = today.getFullYear() - DOB.getFullYear();
-        if (DOB.getMonth() > today.getMonth())
-            years = years - 1;
-        else if (DOB.getMonth() === today.getMonth())
-            if (DOB.getDate() > today.getDate())
-                years = years - 1;
     
-        var days;
-        var months;
     
-        if (DOB.getDate() > today.getDate()) {
-            months = (totalMonths % 12);
-            if (months == 0)
-                months = 11;
-            var x = today.getMonth();
-            switch (x) {
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                case 8:
-                case 10:
-                case 12: {
-                    var a = DOB.getDate() - today.getDate();
-                    days = 31 - a;
-                    break;
-                }
-                default: {
-                    var a = DOB.getDate() - today.getDate();
-                    days = 30 - a;
-                    break;
-                }
-            }
-    
-        }
-        else {
-            days = today.getDate() - DOB.getDate();
-            if (DOB.getMonth() === today.getMonth())
-                months = (totalMonths % 12);
-            else
-                months = (totalMonths % 12) + 1;
-        }
-        var age = years + ' years ' + months + ' months ' + days + ' days';
-        return age;
+    getProductTrip(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.url_md.product.product_trip;
+        this.setState({ loading_product_trip: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    console.log("getProductTrip",JSON.stringify(result));
+                    this.setState({loading_product_trip: false });
+                    this.setState({listdata_product_trip: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
     }
     
+    
+    getProductVoucher(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.url_md.product.product_voucher;
+        this.setState({ loading_product_voucher: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    console.log("getProductvoucher",JSON.stringify(result));
+                    this.setState({loading_product_voucher: false });
+                    this.setState({listdata_product_voucher: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
+    
+    
+    getProductHotelPackage(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.url_md.product.product_hotel_package;
+        this.setState({ loading_product_hotel_package: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    console.log("getProductHotelPackage",JSON.stringify(result));
+                    this.setState({loading_product_hotel_package: false });
+                    this.setState({listdata_product_hotel_package: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
     
     getMusium(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.url_md.common.musium;
         this.setState({ loading_musium: true }, () => {
-            PostData('get_musium')
-                .then((result) => {
-                    console.log(JSON.stringify(result));
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+           
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    console.log("getMusium",JSON.stringify(result));
                     this.setState({loading_musium: false });
                     this.setState({listdata_musium: result});
-                },
-                (error) => {
-                    this.setState({ error });
-                }
-            );   
-        });
-    }
-
-    getculture(){
-        this.setState({ loading_culture: true }, () => {
-            PostData('get_culture')
-                .then((result) => {
-                    console.log(JSON.stringify(result));
-                    this.setState({loading_culture: false });
-                    this.setState({listdata_culture: result});
-                },
-                (error) => {
-                    this.setState({ error });
-                }
-            );   
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
         });
     }
     
     getBlog(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.url_md.common.blog;
         this.setState({ loading_blog: true }, () => {
-            PostData('get_blog_new')
-                .then((result) => {
-                    this.setState({loading_blog: false });
-                    this.setState({listdata_blog_new: result});
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
                 },
-                (error) => {
-                    this.setState({ error });
-                }
-            );   
+                body: JSON.stringify(),
+              }
+           
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    console.log("getblog",JSON.stringify(result));
+                    this.setState({loading_blog: false });
+                    this.setState({listdata_blog: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
         });
     }
 
+    getculture(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.url_md.common.culture;
+        console.log('url',url);
+        console.log('path',path);
+        this.setState({ loading_culture: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+           
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    console.log("getculture",JSON.stringify(result));
+                    this.setState({loading_culture: false });
+                    this.setState({listdata_culture: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
+    
+
 
     componentDidMount() {
-        console.log("------------maximal----------");
-        console.log(this.minmaxDate(12,'years'));
+        setTimeout(() => {
+            this.getMusium();
+            this.getculture();
+            this.getProductTripCountry();
+            this.getProductTrip();
+            // this.getProductHotelPackage();
+            this.getProductVoucher();
+            this.getBlog();
+        }, 500);
 
-
-        console.log("------------minimal-----------");
-        console.log(this.minmaxDate(60,'years'));
-
-        console.log("------------getage-----------");
-        console.log(this.getAge("1987-09-18"));
-
-        
-        //this.getToken();
-        
-        //gak kepake
-        // this.getPayment();
-        //this.getFeaturedDestination();
-        //this.getTripDunia();
-
-        this.getConfig();
-        this.getMusium();
-        this.getculture();
-        this.getBlog();
-
-
-        
-        //this.getPopularDestination();
-        //this.getTripDomestic();
-        this.getAssets();
-        //this.getPromo();
      }
 
      
@@ -430,25 +441,22 @@ export default class Home extends Component {
                             style={styles.itemService}
                             activeOpacity={0.9}
                             onPress={() => {
-                                navigation.navigate(item.route,{type:item.type});
+                                navigation.navigate(item.route,{param:item.type});
                             }}
                         >
                             <View style={styles.iconContent}>
-                                <Icon
+                                {/* <Icon
                                     name={item.icon}
                                     size={25}
                                     color={BaseColor.primaryColor}
                                     solid
+                                /> */}
+                                <Image
+                                    source={item.image}
+                                    style={styles.imgProfile}
                                 />
-                                {/* <AnimatedLoader
-                                    visible={true}
-                                    overlayColor="rgba(255,255,255,0)"
-                                    source={require("app/assets/flight.json")}
-                                    animationStyle={{width: 50,height: 50}}
-                                    speed={1}
-                                  /> */}
                             </View>
-                            <Text footnote>
+                            <Text footnote whiteColor>
                                 {item.name}
                             </Text>
                         </TouchableOpacity>
@@ -459,204 +467,57 @@ export default class Home extends Component {
     }
 
 
-
-     _onLoad = () => {
-    const {
-      placeholderScale,
-      placeholderOpacity,
-      imageOpacity
-    } = this.state
-
-    Animated.sequence([
-      // Delay is just so here so it can be seen
-      Animated.timing(placeholderOpacity, {
-        delay: 1000,
-        toValue: 1.0
-      }),
-      // Begin explode animation
-      Animated.parallel([
-        Animated.timing(placeholderScale, {
-          toValue: 0.7,
-          duration: 100,
-          useNativeDriver: true
-        }),
-        Animated.timing(placeholderOpacity, {
-          toValue: 0.66,
-          duration: 100,
-          useNativeDriver: true
-        }),
-      ]),
-      Animated.parallel([
-        Animated.parallel([
-          Animated.timing(placeholderOpacity, {
-            toValue: 0,
-            duration: 200,
-            useNativeDriver: true
-          }),
-          Animated.timing(placeholderScale, {
-            toValue: 1.2,
-            duration: 200,
-            useNativeDriver: true
-          }),
-        ]),
-        Animated.timing(imageOpacity, {
-          toValue: 1.0,
-          delay: 200,
-          duration: 300,
-          useNativeDriver: true
-        })
-      ])
-    ]).start(() => {
-      this.setState(() => ({ loaded: true }))
-    })
-  }
-
-
-
-
-
     render() {
-        
-        const todo = [
-            {
-            id: '1',
-            title: 'South Travon',
-            image: Images.trip1,
-            },
-            {
-            id: '2',
-            title: 'South Travon',
-            image: Images.trip2,
-            },
-            {
-            id: '3',
-            title: 'South Travon',
-            image: Images.trip3,
-            },
-            {
-            id: '4',
-            title: 'South Travon',
-            image: Images.trip4,
-            },
-            {
-            id: '5',
-            title: 'South Travon',
-            image: Images.trip5,
-            },
-        ];
-        const valueProduct = [
-            {
-            image: Images.profile2,
-            subName: 'CEO Founder',
-            name: 'Kondo Ieyasu',
-            screen: 'Profile1',
-            description:
-                'Andaz Tokyo Toranomon Hills is one of the newest luxury hotels in Tokyo. Located in one of the uprising areas of Tokyo',
-            },
-            {
-            image: Images.profile3,
-            subName: 'Sale Manager',
-            name: 'Yeray Rosales',
-            screen: 'Profile2',
-            description:
-                'Andaz Tokyo Toranomon Hills is one of the newest luxury hotels in Tokyo. Located in one of the uprising areas of Tokyo',
-            },
-            {
-            image: Images.profile5,
-            subName: 'Product Manager',
-            name: 'Alf Huncoot',
-            screen: 'Profile3',
-            description:
-                'Andaz Tokyo Toranomon Hills is one of the newest luxury hotels in Tokyo. Located in one of the uprising areas of Tokyo',
-            },
-            {
-            image: Images.profile4,
-            subName: 'Designer UI/UX',
-            name: 'Chioke Okonkwo',
-            screen: 'Profile4',
-            description:
-                'Andaz Tokyo Toranomon Hills is one of the newest luxury hotels in Tokyo. Located in one of the uprising areas of Tokyo',
-            },
-        ];
-
 
         const { navigation } = this.props;
-        const { promotion, tours, hotels, relate, heightHeader} = this.state;
+        const { heightHeader} = this.state;
         const heightImageBanner = Utils.scaleWithPixel(140);
         const marginTopBanner = heightImageBanner - heightHeader-50;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-
-
-        const {
-          placeholderColor,
-          source
-        } = this.props
-
-        const {
-          imageOpacity,
-          placeholderOpacity,
-          placeholderScale
-        } = this.state
-
-        if(this.state.loading_config){
-
-            var banner=<Animated.View
-                          style={[
-                            styles.imageBackground,
-                            // {
-                            //     backgroundColor: placeholderColor || BaseColor.fieldColor,    
-                            //     height: this._deltaY.interpolate({
-                            //         inputRange: [
-                            //             0,
-                            //             Utils.scaleWithPixel(100),
-                            //             Utils.scaleWithPixel(100)
-                            //         ],
-                            //         outputRange: [
-                            //             heightImageBanner,
-                            //             heightHeader,
-                            //             0
-                            //         ]
-                            //     })
-                            // }
-                          ]} />
-        }else{
-             var banner=<Animated.Image
-                    source={{uri : this.state.config.banner}}
-                    style={[
-                        styles.imageBackground,
-                        // {
-                        //     height: this._deltaY.interpolate({
-                        //         inputRange: [
-                        //             0,
-                        //             Utils.scaleWithPixel(100),
-                        //             Utils.scaleWithPixel(100)
-                        //         ],
-                        //         outputRange: [
-                        //             heightImageBanner,
-                        //             heightHeader,
-                        //             0
-                        //         ]
-                        //     })
-                        // }
-                    ]}
-                />
-
-        }
+        const {config} =this.state;
         
-        // var banner=<Animated.Image
-        //             source={{uri : this.state.listdata_assets.banner}}
-        //             style={[
-        //                 styles.imageBackground,
-        //             ]}
-        //         />
-
+        
+   
+        const example1 = this.mainExample(1, 'Default layout | Loop | Autoplay | Parallax | Scale | Opacity | Pagination with tappable dots');
         return (
             <View style={{ flex: 1 }}>
-                {banner}
+                
+                
                 <SafeAreaView
                     style={BaseStyle.safeAreaView}
                     forceInset={{ top: "always" }}
                 >
+                
+                
+                    <Header
+                        title="Masterdiskon"
+                        // subTitle={"Perjalanan di tanganmu"}
+                        renderLeft={() => {
+                            return (
+                                <Icon
+                                    name="home"
+                                    size={20}
+                                    color={BaseColor.whiteColor}
+                                />
+                            );
+                        }}
+                        
+                        renderRight={() => {
+                            return (
+                                <Icon
+                                    name="search"
+                                    size={20}
+                                    color={BaseColor.whiteColor}
+                                />
+                            );
+                        }}
+                        
+                        onPressLeft={() => {
+                            navigation.goBack();
+                        }}
+                    />
+                    
+                    
                     <ScrollView
                         onScroll={Animated.event([
                             {
@@ -672,41 +533,71 @@ export default class Home extends Component {
                         }
                         scrollEventThrottle={8}
                     >
-                        
-                        <View style={{}}>
-                            
-                            <View>
-                                <View style={styles.contentHiking2}>
-                                    <Text  whiteColor style={ {
-                                            fontSize: 30,
-                                            fontWeight: "700",
-                                            fontFamily: "Lato"
-                                    }}>
-                                    Panduanmu 
-                                    </Text>
+                     
+                    <View style={styles.containerSwipper}>
+                        <View style={styles.top_background}>
+                          <View style={styles.top_content}>
+                            <View style={{ marginTop: 20,borderRadius:30,width:'90%',alignSelf: 'center'}}>
+                                <View>
                                     <Text whiteColor style={ {
-                                            fontSize: 50,
+                                            fontSize: 20,
                                             fontWeight: "700",
                                             fontFamily: "Lato",
-                                            elevation: 5,
-                                            marginTop:-5
+                                            alignSelf: 'center'
                                     }}>
-                                    Jelajahi Dunia
+                                    Wherever you are,
                                     </Text>
-                                    <Text whiteColor style={ {
-                                            fontSize: 15,
-                                            fontWeight: "300",
-                                            fontFamily: "Lato"
+                                    
+                                    <Text whiteColor  style={ {
+                                            fontSize: 20,
+                                            fontWeight: "700",
+                                            fontFamily: "Lato",
+                                            alignSelf: 'center'
                                     }}>
-                                    Gali lebih dalam begitu banyak ide, panduan, dan cerita unik yang dapat menginspirasi perjalanan anda selanjutnya
+                                    you are always traveling
                                     </Text>
+                                    
+                                    {/* <Text whiteColor>
+                                    Master Diskon provide everything you need for fun wherever and whenever you are
+                                    </Text> */}
+                                    
                                 </View>
-                               
+                                <View>
+                                    {this.renderIconService()}
+                                </View>
                             </View>
-                       </View>
-                        <View style={{backgroundColor:'#fff',marginTop: marginTopBanner}}>
-                            
-                            <View style={{ marginTop: -50,backgroundColor:'#fff',borderRadius:30,width:'90%',alignSelf: 'center'}}>
+                                {/* <Swiper
+                                    renderPagination={renderPagination}
+                                    loop={false}
+                                    style={styles.wrapper}
+                                    style={{marginTop: 5}}
+                                    >
+
+                                    {
+                                        this.state.listdata_promo.map((item, key) => {
+                                            return (
+
+                                                <View
+                                                    style={styles.slide}
+                                                    title={
+                                                        <Text numberOfLines={1}>{item.title_promo}</Text>
+                                                    }
+                                                    >
+                                                    <Text>asd</Text>
+                                                    </View>
+
+                                            )
+                                        })
+                                    }
+
+                                </Swiper> */}
+                          </View>
+                        </View>
+                      </View>
+                      
+                      
+                        <View style={{backgroundColor:'#fff',marginTop:0}}>
+                            {/* <View style={{ marginTop: -50,backgroundColor:'#fff',borderRadius:30,width:'90%',alignSelf: 'center'}}>
                                 <View style={styles.contentHiking2}>
                                     <Text title3 semibold style={{alignSelf: 'center'}}>
                                     Hey Kamu Mau Kemana ?
@@ -716,180 +607,202 @@ export default class Home extends Component {
                                     {this.renderIconService()}
                                 </View>
                             </View>
-
-
+                             */}
+                            
+                            
                             {/* <View>
-                                <View style={styles.contentHiking}>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
-                                        Featuread Destination
+                                        Featured Destination
                                     </Text>
                                     <Text body2>
                                     Sekumpulan tempat menginap pilihan yang telah terverifikasi kualitas dan desainnya
                                     </Text>
                                 </View>
-                            
-                                <FlatList
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={this.state.listdata_featured_destination}
-                                    keyExtractor={(item, index) => item.id}
-                                    renderItem={({ item, index }) => (
-                                        <Card
-                                            style={[
-                                                styles.tourItem,
-                                                index == 0
-                                                    ? { marginHorizontal: 20 }
-                                                    : { marginRight: 20 }
-                                            ]}
-                                            image={item.country_image}
-                                            url={this.state.DataMasterDiskon.site+'assets/upload/country/img/'}
-                                            onPress={() =>
-                                                navigation.navigate("Tour",{country:item})
-                                            }
-                                            loading={this.state.loading_featured}
-                                        >
-                                        {!this.state.loading_featured && (
-                                            <View>
-                                                <Text headline whiteColor semibold>
-                                                    {item.country_name}
-                                                </Text>
-                                                <Text subhead whiteColor>
-                                                    {item.listing} pencarian
-                                                </Text>
-                                            </View>
+                                <View>
+                                    <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk horizontal false
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //untuk horizontal false
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_product_trip_country}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                item={item}
+                                                img={config.baseUrl+'assets/upload/destination/country/img/'+item.img_featured}
+                                                imgHeight={150}
+                                                titleIcon={{text:"",icon:""}}
+                                                title={item.product_name}
+                                                subtitle={''}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("WebViewPage",{url:'https://masterdiskon.com/blog/detail/'+item.slug_blog_category+'/'+item.title_slug+'?access=app',title:item.title})
+                                                }
+                                                loading={this.state.loading_product_trip_country}
+                                                property={{inFrame:false,innerText:false}}
+                                                type={''}
+                                            />
+                                        
                                         )}
-                                        </Card>
-                                    )}
-                                />
+                                    />
                                     
+                                </View>
                             </View> */}
-
+                            
+                            
                             {/* <View>
-                                <View style={styles.contentHiking}>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
-                                        Rekomendasi
+                                        Voucher
                                     </Text>
                                     <Text body2>
-                                    Jelajahi Sekarang
+                                    Dapatkan penawaran terbaik dari voucher yang tersedia
                                     </Text>
                                 </View>
-                                
-                                <FlatList
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={this.state.listdata_popular_destination}
-                                    keyExtractor={(item, index) => item.id}
-                                    renderItem={({ item, index }) => (
-                                        <Card
-                                            style={[
-                                                styles.promotionItem,
-                                                index == 0
-                                                    ? { marginHorizontal: 20 }
-                                                    : { marginRight: 20 }
-                                            ]}
-                                            image={item.img_featured}
-                                            url='https://masterdiskon.co.id/assets/upload/product/img/featured/'
-                                            onPress={() =>
-                                                navigation.navigate("TourDetailCustom",{product:item})
-                                            }
-                                            loading={this.state.loading_popular}
-                                        >
-                                        {!this.state.loading_popular && (
-                                            <View>
-                                            <Text subhead whiteColor>
-                                                {item.judul_trip}
-                                            </Text>
-                                            <Text title2 whiteColor semibold>
-                                                {item.duration} hari
-                                            </Text>
-                                            <View
-                                                style={styles.contentCartPromotion}
-                                            >
-                                                <Button
-                                                    style={styles.btnPromotion}
-                                                    onPress={() => {
-                                                        navigation.navigate(
-                                                            "PreviewBooking"
-                                                        );
-                                                    }}
-                                                >
-                                                    <Text body2 semibold whiteColor>
-                                                    IDR {priceSplitter(item.harga)}
-                                                    </Text>
-                                                </Button>
-                                            </View>
-                                        </View>
-                                            )}
-                                        </Card>
-                                    )}
-                                />
+                                <View>
+                                    {example1}
+                                </View>
                             </View> */}
-                                
-                            {/* <View>
-                                <View style={styles.contentHiking}>
+                            
+                            <View>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
-                                    Domestic
+                                        Trip
                                     </Text>
                                     <Text body2>
-                                    Sekumpulan destinasi pilihan di Indonesia
+                                    Jelajahi sekarang
                                     </Text>
                                 </View>
-                                
+                                <View>
                                 <FlatList
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={this.state.listdata_trip_domestic}
-                                    keyExtractor={(item, index) => item.id}
-                                    renderItem={({ item, index }) => (
-                                        <Card
-                                            style={[
-                                                styles.promotionItem,
-                                                index == 0
-                                                    ? { marginHorizontal: 20 }
-                                                    : { marginRight: 20 }
-                                            ]}
-                                            image={item.img_featured}
-                                            url='https://masterdiskon.co.id/assets/upload/product/img/featured/'
-                                            onPress={() =>
-                                                navigation.navigate("TourDetailCustom",{product:item})
-                                            }
-                                            loading={this.state.loading_domestic}
-                                        >
-                                        {!this.state.loading_domestic && (
-                                            <View>
-                                                <Text subhead whiteColor>
-                                                    {item.judul_trip}
-                                                </Text>
-                                                <Text title2 whiteColor semibold>
-                                                    {item.duration} hari
-                                                </Text>
-                                                <View
-                                                    style={styles.contentCartPromotion}
-                                                >
-                                                    <Button
-                                                        style={styles.btnPromotion}
-                                                        onPress={() => {
-                                                            navigation.navigate(
-                                                                "PreviewBooking"
-                                                            );
-                                                        }}
-                                                    >
-                                                        <Text body2 semibold whiteColor>
-                                                        IDR {priceSplitter(item.harga)}
-                                                        </Text>
-                                                    </Button>
-                                                </View>
-                                            </View>
-                                            )}
-                                        </Card>
-                                    )}
-                                />
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk horizontal false
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //untuk horizontal false
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_product_trip}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                item={item}
+                                                img={config.baseUrl+'assets/upload/product/trip/2020/featured/'+item.img_featured}
+                                                imgHeight={150}
+                                                titleIcon={{text:"home",icon:"home"}}
+                                                title={item.product_name}
+                                                subtitle={''}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("TourDetailCustom",{product:item})
+                                                }
+                                                loading={this.state.loading_product_trip}
+                                                property={{inFrame:false,innerText:false}}
+                                                type={''}
+                                            />
+                                        
+                                        )}
+                                    />
+                                    
+                                    
+                                </View>
+                            </View>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            {/* <View>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
+                                    <Text title3 semibold>
+                                    Voucher Hotel Domestik
+                                    </Text>
+                                    <Text body2>
+                                    Pay Now Stay Later
+                                    </Text>
+                                </View>
+                                <View>
+                                    <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk coloumn
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //data memanjang horizontal
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_product_voucher}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                            <CardCustom
+                                                item={item}
+                                                img={config.baseUrl+'assets/upload/product/voucher/2020/'+item.img_featured}
+                                                imgHeight={150}
+                                                titleIcon={{text:"home",icon:"home"}}
+                                                title={item.product_name}
+                                                subtitle={''}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(250),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("WebViewPage",{url:'https://masterdiskon.com/blog/detail/'+item.slug_blog_category+'/'+item.title_slug+'?access=app',title:item.title})
+                                                }
+                                                loading={this.state.loading_product_voucher}
+                                                property={{inFrame:false,innerText:false}}
+                                                type={''}
+                                            />
+                                            
+                                        )}
+                                    />
+                                </View>
                             </View> */}
-                        
+                            
+                            
                             
 
                             <View>
-                                <View style={styles.contentHiking}>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
                                     National Musium Collection
                                     </Text>
@@ -897,47 +810,54 @@ export default class Home extends Component {
                                     Sekumpulan tempat menginap pilihan yang telah terverifikasi kualitas dan desainnya
                                     </Text>
                                 </View>
-                            
-                            
-                                <FlatList
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={this.state.listdata_musium}
-                                    keyExtractor={(item, index) => item.id}
-                                    renderItem={({ item, index }) => (
-                                        <Card
-                                            style={[
-                                                styles.tourItem,
-                                                index == 0
-                                                    ? { marginHorizontal: 20 }
-                                                    : { marginRight: 20 }
-                                            ]}
-                                            image={'https:'+item[2]}
-                                            url={''}
-                                            onPress={() =>
-                                                navigation.navigate("Musium",{url:item[3]})
-                                            }
-                                            loading={this.state.loading_featured}
-                                        >
-                                        {!this.state.loading_featured && (
-                                            <View>
-                                                <Text headline whiteColor semibold>
-                                                {item[0]}
-                                                </Text>
-                                                <Text subhead whiteColor>
-                                                {item[1]}
-                                                </Text>
-                                            </View>
+                                <View>
+                                    <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk coloumn
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //data memanjang horizontal
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_musium}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                            <CardCustom
+                                                item={item}
+                                                img={'https:'+item[2]}
+                                                imgHeight={200}
+                                                titleIcon={{text:"home",icon:"home"}}
+                                                title={item[0]}
+                                                subtitle={''}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("Musium",{url:item[3]})
+                                                }
+                                                loading={this.state.loading_musium}
+                                                property={{inFrame:false,innerText:true}}
+                                                type={''}
+                                            />
                                         )}
-                                        </Card>
-                                    )}
-                                />
-                                    
+                                    />
+                                </View>
                             </View>
                             
-
+                            
+                            
                             <View>
-                                <View style={styles.contentHiking}>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
                                         Art & Culture Stories
                                     </Text>
@@ -945,239 +865,115 @@ export default class Home extends Component {
                                     Jelajahi Sekarang
                                     </Text>
                                 </View>
-                                
-                                <FlatList
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={this.state.listdata_culture}
-                                    keyExtractor={(item, index) => item.id}
-                                    renderItem={({ item, index }) => (
-                                        <Card
-                                            style={[
-                                                styles.promotionItem,
-                                                index == 0
-                                                    ? { marginHorizontal: 20 }
-                                                    : { marginRight: 20 }
-                                            ]}
-                                            image={'https:'+item[2]}
-                                            url=''
-                                            onPress={() =>
-                                                navigation.navigate("Musium",{url:item[3]})
-                                            }
-                                            loading={this.state.loading_popular}
-                                        >
-                                        {!this.state.loading_popular && (
-                                            <View>
-                                            <Text subhead whiteColor>
-                                                {item[1]}
-                                            </Text>
-                                            {/* <Text title2 whiteColor semibold>
-                                                {item.duration} hari
-                                            </Text> */}
-                                            <View
-                                                style={styles.contentCartPromotion}
-                                            >
-                                                
-                                                    <Text body2 semibold whiteColor>
-                                                    {item[0]}
-                                                    </Text>
-                                              
-                                            </View>
-                                        </View>
-                                            )}
-                                        </Card>
-                                    )}
-                                />
+                                <View>
+                                    <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk coloumn
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //data memanjang horizontal
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_culture}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                            <CardCustom
+                                                item={item}
+                                                img={'https:'+item[2]}
+                                                imgHeight={150}
+                                                titleIcon={{text:"home",icon:"home"}}
+                                                title={item[0]}
+                                                subtitle={item[1]}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(250),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("Musium",{url:item[3]})
+                                                }
+                                                loading={this.state.loading_culture}
+                                                property={{inFrame:true,innerText:false}}
+                                                type={''}
+                                            />
+                                        )}
+                                    />
+                                </View>
                             </View>
-                                
                             
-                            {/* <View
-                                style={{
-                                    padding: 20,
-                                    height: wp("75%"),
-                                }}
-                            >
-                                <Text title3 semibold>
-                                    Wonders of Indonesia
-                                </Text>
-                                <Text body2>
-                                A gallery for Indonesia's best cultures. From ancient monuments to contemporary art, find inspiration from the country's rich cultures.
-                                </Text>
-
-                                {this.state.loading_promo ?
-                                
-                                <Placeholder
-                                        Animation={Fade}
-                                        style={{marginTop: 5}}
-                                        >
-                                            <PlaceholderLine width={100} height={200} style={{marginTop: 2,marginBottom:0,borderRadius: 5}} />
-                                            <PlaceholderLine width={100} style={{marginTop: 2,marginBottom:0}} />
-                                        </Placeholder>
-
-                                :      
-                                <Swiper
-                                    renderPagination={renderPagination}
-                                    loop={false}
-                                    style={styles.wrapper}
-                                    style={{marginTop: 5}}
-                                    >
-
-                                    {
-                                        this.state.listdata_promo.map((item, key) => {
-                                            return (
-
-                                                <View
-                                                    style={styles.slide}
-                                                    title={
-                                                        <Text numberOfLines={1}>{item.title_promo}</Text>
-                                                    }
-                                                    >
-                                                    <Image style={styles.image}  source={{uri : this.state.DataMasterDiskon.site+'assets/upload/promo/'+item.img_featured}} />
-                                                    </View>
-
-                                            )
-                                        })
-                                    }
-
-                                </Swiper>
-                                }
-
-                            </View> */}
-
-
-
-                        
-                           
-
-                            {/* <View style={styles.contentHiking}>
-                                    <Text title3 semibold>
-                                        BLOG
-                                    </Text>
-                                    <Text body2 grayColor>
-                                    Dapatkan Informasi Seputar Dunia Wisata
-                                    </Text>
-                            </View>
+                            
+                            
+                            
+                            
+                            
                             <View>
-                                <FlatList
-                                    contentContainerStyle={{
-                                        paddingRight: 20
-                                    }}
-                                    horizontal={true}
-                                    data={this.state.listdata_blog_new}
-                                    showsHorizontalScrollIndicator={false}
-                                    keyExtractor={(item, index) => item.id}
-                                    renderItem={({ item, index }) => (
-                                        <EventCard
-                                            image={item.featured_image}
-                                            url={this.state.DataMasterDiskon.site+'assets/upload/blog/post/'}
-                                            title={item.title}
-                                            time={item.name_blog_category}
-                                            location={item.location}
-                                            onPress={() =>
-                                                navigation.navigate("PostDetail",{item:item})
-                                            }
-                                            style={{ marginLeft: 20 }}
-                                            loading={this.state.loading_blog}
-                                        />
-                                    )}
-                                />
-                            </View> */}
-
-
-                            
-                            {/* <View
-                                style={{
-                                    padding: 20,
-                                    height: wp("75%"),
-                                }}
-                            >
-                                <Text title3 semibold>
-                                    Wonders of Indonesia
-                                </Text>
-                                <Text body2>
-                                A gallery for Indonesia's best cultures. From ancient monuments to contemporary art, find inspiration from the country's rich cultures.
-                                </Text>
-
-                                {this.state.loading_promo ?
-                                
-                                <Placeholder
-                                        Animation={Fade}
-                                        style={{marginTop: 5}}
-                                        >
-                                            <PlaceholderLine width={100} height={200} style={{marginTop: 2,marginBottom:0,borderRadius: 5}} />
-                                            <PlaceholderLine width={100} style={{marginTop: 2,marginBottom:0}} />
-                                        </Placeholder>
-
-                                :      
-                                <Swiper
-                                    renderPagination={renderPagination}
-                                    loop={false}
-                                    style={styles.wrapper}
-                                    style={{marginTop: 5}}
-                                    >
-
-                                    {
-                                        this.state.listdata_promo.map((item, key) => {
-                                            return (
-
-                                                <View
-                                                    style={styles.slide}
-                                                    title={
-                                                        <Text numberOfLines={1}>{item.title_promo}</Text>
-                                                    }
-                                                    >
-                                                    <Image style={styles.image}  source={{uri : this.state.DataMasterDiskon.site+'assets/upload/promo/'+item.img_featured}} />
-                                                    </View>
-
-                                            )
-                                        })
-                                    }
-
-                                </Swiper>
-                                }
-                            </View> */}
-                                
-
-                         
-                            <View style={{padding: 20}}>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
                                         BLOG
                                     </Text>
-                                    <Text body2 grayColor>
+                                    <Text body2>
                                     Dapatkan Informasi Seputar Dunia Wisata
                                     </Text>
+                                </View>
+                                <View>
+                                    <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk horizontal false
+                                        columnWrapperStyle={{ marginBottom: 10 }}
+                                        numColumns={2}
+                                        
+                                        //untuk horizontal false
+                                        //horizontal={true}
+                                        
+                                        data={this.state.listdata_blog}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                item={item}
+                                                img={config.baseUrl+'assets/upload/blog/post/'+item.featured_image}
+                                                imgHeight={150}
+                                                titleIcon={{text:"",icon:""}}
+                                                title={item.title}
+                                                subtitle={item.name_blog_category}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    // { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    //navigation.navigate("TourDetailCustom",{product:item})
+                                                    navigation.navigate("WebViewPage",{url:config.baseUrl+'blog/detail/'+item.slug_blog_category+'/'+item.title_slug+'?access=app',title:item.title})
+                                                }
+                                                loading={this.state.loading_blog}
+                                                property={{inFrame:false,innerText:false}}
+                                                type={''}
+                                            />
+                                        
+                                        )}
+                                    />
+                                </View>
                             </View>
-                            <View style={{paddingLeft: 20,paddingRight: 20}}>
-                                <FlatList
-                                    columnWrapperStyle={{ marginBottom: 10 }}
-                                    numColumns={2}
-                                    data={this.state.listdata_blog_new}
-                                    keyExtractor={(item, index) => item.id}
-                                    renderItem={({ item, index }) => (
-                                        <HotelItem
-                                            grid
-                                            image={item.featured_image}
-                                            name={item.title}
-                                            location={item.name_blog_category}
-                                            price={item.price}
-                                            available={item.available}
-                                            rate={item.rate}
-                                            rateStatus={item.rateStatus}
-                                            numReviews={item.numReviews}
-                                            services={item.services}
-                                            style={
-                                                index % 2 ? { marginLeft: 15 } : {}
-                                            }
-                                            onPress={() =>
-                                                navigation.navigate("WebViewPage",{url:'https://masterdiskon.com/blog/detail/'+item.slug_blog_category+'/'+item.title_slug+'?access=app',title:item.title})
-                                            }
-                                            url={this.state.DataMasterDiskon.site+'assets/upload/blog/post/'}
-                                            loading={this.state.loading_blog}
-                                            type={'blog'}
-                                        />
-                                    )}
-                                />
-                            </View>
+                            
+                            
+                            
+                            
+                            
                         </View>
                     </ScrollView>
                 </SafeAreaView>

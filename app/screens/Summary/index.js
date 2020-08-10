@@ -454,7 +454,8 @@ export default class Summary extends Component {
                                         this.setState({ loading_spinner: false });
                                         console.log('data pricess',JSON.stringify(result));
                                         this.setState({dataPrice:result.data});
-                                        this.setState({total_all:parseInt(result.data.total_price)+parseInt(config.transaction_fee)});
+                                        this.setState({total_all:result.data.total_price});
+                                        //this.setState({total_all:parseInt(result.data.total_price)+parseInt(config.transaction_fee)});
                                         this.setState({fee:config.transaction_fee});
                                      },
                                      (error) => {
@@ -980,7 +981,8 @@ export default class Summary extends Component {
                     "dataCart":item,
                     "type":item.typeProduct,
                     "tokenFirebase":this.state.tokenFirebase,
-                    "fee":config.transaction_fee
+                    "fee":0,
+                    //"fee":config.transaction_fee
                     }
                     
                     console.log("---------------data cart array cart kirim  ------------");
@@ -1016,10 +1018,13 @@ export default class Summary extends Component {
                                 var redirect='Pembayaran';
                                 
                                 var id_order=dataOrderSubmit.id_order;
+                                //var id_invoice=dataOrderSubmit.id_invoice;
+                                
                                 
                                 var param={
                                     id_order:id_order,
-                                    dataPayment:{}
+                                    dataPayment:{},
+                                    // id_invoice:id_invoice
                                 }
                                 
                                 this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
@@ -2101,7 +2106,7 @@ export default class Summary extends Component {
                 </View>
 
 
-                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                {/* <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
                     <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
                         <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
                             <View>
@@ -2118,7 +2123,7 @@ export default class Summary extends Component {
                                 </Text>
                         </View>
                     </View>
-                </View>
+                </View> */}
                 
                 
                 <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
@@ -2188,7 +2193,23 @@ export default class Summary extends Component {
                 style={BaseStyle.safeAreaView}
                 forceInset={{ top: "always" }}
             >   
-                {
+               
+                <Header
+                    title="Booking"
+                    renderLeft={() => {
+                        return (
+                            <Icon
+                                name="arrow-left"
+                                size={20}
+                                color={BaseColor.whiteColor}
+                            />
+                        );
+                    }}
+                    onPressLeft={() => {
+                        navigation.goBack();
+                    }}
+                />
+                 {
                             loading_spinner ? 
                             
                             <View style={{flex: 1,backgroundColor:  "#FFFFFF",justifyContent: "center",alignItems: "center"}}>
@@ -2206,33 +2227,17 @@ export default class Summary extends Component {
                                     
                                     <AnimatedLoader
                                         visible={true}
-                                        overlayColor="rgba(255,255,255,0.75)"
+                                        overlayColor="rgba(255,255,255,0.1)"
                                         source={require("app/assets/loader_paperline.json")}
                                         animationStyle={{width: 300,height: 300}}
                                         speed={1}
                                       />
-                                    <Text grayColor>
+                                    <Text>
                                         Connecting.. to Masterdiskon
                                     </Text>
                                 </View>
                             </View>
                             :
-                <View>
-                <Header
-                    title="Booking"
-                    renderLeft={() => {
-                        return (
-                            <Icon
-                                name="arrow-left"
-                                size={20}
-                                color={BaseColor.whiteColor}
-                            />
-                        );
-                    }}
-                    onPressLeft={() => {
-                        navigation.goBack();
-                    }}
-                />
                 <ScrollView>
                     <View style={styles.contain}>
                         {contentProduct}
@@ -2290,7 +2295,6 @@ export default class Summary extends Component {
 
 
                 </ScrollView>
-                </View>
             }
             <DropdownAlert ref={ref => this.dropdown = ref} messageNumOfLines={10} closeInterval={10000} />
             </SafeAreaView>

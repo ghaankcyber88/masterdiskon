@@ -13,7 +13,8 @@ export default StyleSheet.create({
     },
     contain: {
         //alignItems: "center",
-        padding: 20,
+        paddingVertical: 50,
+        paddingHorizontal: 20,
         width: "100%"
     },
     

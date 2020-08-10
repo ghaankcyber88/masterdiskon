@@ -44,5 +44,6 @@ export default StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center"
-    }
+    },
+    imageBanner: { width: "100%", height: "30", borderRadius: 8,resizeMode:"contain" }
 });

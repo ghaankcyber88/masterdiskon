@@ -59,200 +59,208 @@ export default class CommentItem extends Component {
                         </View>
                     </View>
                 </View>
-                
             );
-
         });
     
-    var statusPay='';
     var countDown=<View></View>;
-    var current_payment=item.current_payment;
-    var order_expired=item.order_expired;
-    var order_status=item.order_status;
-    //var expiredTime=this.duration(current_payment.expired);
-    var expiredTime=this.duration(order_expired);
-    var stat='';
- 
-    // if(item.status_payment=="lunas"){
-    //         // statusPay= <View style={styles.validContentRed}>
-    //         //     <Text caption3 semibold>
-    //         //         Status
-    //         //     </Text>
-    //         //     <Text grayColor>
-    //         //         Lunas
-    //         //     </Text>
-    //         // </View>
+    var order_payment_recent=item.order_payment_recent;
+    var status_name='';
+    var no_tagihan=<View></View>
+    var jumlah_tagihan=<View></View>
 
-    //         statusPay='Lunas';
-    // }else{
-    //     if(expiredTime > 0){
-    //         // statusPay= <View style={styles.validContentGreen}>
-    //         // <Text caption3 semibold>
-    //         //     Status
-    //         // </Text>
-    //         // <Text caption3 semibold>
-    //         //     Belum Lunas
-    //         // </Text>
-    //         // </View>
-    //         statusPay='Belum Lunas';
-    //     }else{
-    //         // statusPay= <View style={styles.validContentGreen}>
-    //         // <Text caption3 semibold>
-    //         //     Status 
-    //         // </Text>
-    //         // <Text caption3 semibold>
-    //         //     Cancel
-    //         // </Text>
-    //         // </View>
-    //         statusPay='Cancel';
-    //     }
-
-
-    //     if(expiredTime > 0){
-    //     countDown=<View style={styles.validContent}>
-    //             {/* <Text caption3 semibold>
-    //                 Tagihan Pembayaran
-    //             </Text> */}
-    //             <CountDown
-    //                 size={12}
-    //                 until={expiredTime}
-    //                 // onFinish={() => alert('Finished')}
-    //                 style={{float:'left'}}
-    //                 digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
-    //                 digitTxtStyle={{color: BaseColor.primaryColor}}
-    //                 timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
-    //                 separatorStyle={{color: BaseColor.primaryColor}}
-    //                 timeToShow={['H', 'M', 'S']}
-    //                 timeLabels={{m: null, s: null}}
-    //                 showSeparator
-    //             />
-    //     </View>
-    //     }
-    // }
-
-            
-
-            //statusPay=item.order_status_name;
-        
-            if(expiredTime > 0){
-            
-                if(item.order_status.order_status_slug=='new' || item.order_status.order_status_slug=='process'){
-                    countDown=<View style={styles.validContent}>
-                        {/* <Text caption3 semibold>
-                            Tagihan Pembayaran
-                        </Text> */}
-                        <CountDown
-                            size={12}
-                            until={expiredTime}
-                            // onFinish={() => alert('Finished')}
-                            style={{float:'left'}}
-                            digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
-                            digitTxtStyle={{color: BaseColor.primaryColor}}
-                            timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
-                            separatorStyle={{color: BaseColor.primaryColor}}
-                            timeToShow={['H', 'M', 'S']}
-                            timeLabels={{m: null, s: null}}
-                            showSeparator
-                        />
-                </View>
-                }
+            if(order_payment_recent != null){
+                var expiredTime=this.duration(order_payment_recent.expired);
                 
-            }
-            
-            var status_name='';
-            if(expiredTime <= 0){
-                if(item.order_status.order_status_slug=='new'){
-                    status_name='Expired';
-                }else{
+                no_tagihan=<Text
+                                note
+                                numberOfLines={2}
+                                style={{
+                                    paddingTop: 5
+                                }}
+                            >
+                                No.Tagihan  {order_payment_recent.id_invoice}
+                            </Text>
+                            
+                jumlah_tagihan=<Text
+                            note
+                            numberOfLines={2}
+                            style={{
+                                paddingTop: 5
+                            }}
+                        >
+                            Rp {priceSplitter(order_payment_recent.iv_total_amount)}
+                        </Text>
+
+                if(expiredTime > 0){
+                    if(item.order_status.order_status_slug != 'cancel' || item.order_status.order_status_slug != 'expired'  || item.order_status.order_status_slug != 'deny'){
+                        countDown=<CountDown
+                                size={12}
+                                until={expiredTime}
+                                // onFinish={() => alert('Finished')}
+                                style={{float:'left',paddingVertical:5}}
+                                digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
+                                digitTxtStyle={{color: BaseColor.primaryColor}}
+                                timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
+                                separatorStyle={{color: BaseColor.primaryColor}}
+                                timeToShow={['H', 'M', 'S']}
+                                timeLabels={{m: null, s: null}}
+                                showSeparator
+                            />
+                    
+                    }
+                    
+                    if(order_payment_recent.payment_type==""){
+                        var dataPayment={};
+                        var urlRedirect='Pembayaran';
+
+                    }else{
+                        var dataPayment={
+                            payment_type:order_payment_recent.payment_type,
+                            payment_type_label:order_payment_recent.payment_type_label,
+                            payment_sub:order_payment_recent.payment_sub,
+                            payment_sub_label:order_payment_recent.payment_sub_label,
+                        };
+                        var urlRedirect='PembayaranDetail';
+
+                    }
                     status_name=item.order_status.order_status_name;
+                    var param={
+                        id_order:item.id_order,
+                        dataPayment:dataPayment,
+                    }
+                }else{
+                    countDown=<Text
+                            note
+                            numberOfLines={2}
+                            style={{
+                                paddingTop: 5
+                            }}
+                        >
+                            Waktu Habis
+                        </Text>
+                            
+                    if(item.order_status.order_status_slug=='new'){
+                        status_name='Expired';
+                        var param={
+                            id_order:item.id_order,
+                            dataPayment:{},
+                        }
+                        
+                        var urlRedirect='Pembayaran';
+                    }else{
+                        status_name=item.order_status.order_status_name;
+                        var param={
+                            id_order:item.id_order,
+                            dataPayment:{},
+                        }
+                        
+                        var urlRedirect='Pembayaran';
+                    }
+                
                 }
             }else{
                 status_name=item.order_status.order_status_name;
+                var param={
+                    id_order:item.id_order,
+                    dataPayment:{},
+                }
+                
+                var urlRedirect='Pembayaran';
             }
             
+
             
-            
-
-    var icon='';
-    if(item.product=='Flight'){
-        icon=<Icon
-                                    name={'plane'}
-                                    color={BaseColor.primaryColor}
-                                    size={18}
-                                    solid
-                                    style={{ marginLeft: -10,marginTop:20,position:'absolute',width:40,height:40,
-                                    backgroundColor: "#fff",
-                                    borderRadius: 18,
-                                    shadowColor: "#000",
-                                    shadowOffset: {
-                                        width: 0,
-                                        height: 2,
-                                    },
-                                    shadowOpacity: 0.25,
-                                    shadowRadius: 3.84,
-                                    elevation: 5,
-                                    padding:10,
-                                         }}
-                                />
-    }else if(item.product=='Trip'){
-        icon=<Icon
-                                    name={'suitcase'}
-                                    color={BaseColor.primaryColor}
-                                    size={18}
-                                    solid
-                                    style={{ marginLeft: -10,marginTop:25,position:'absolute',width:40,height:40,
-                                    backgroundColor: "#fff",
-                                    borderRadius: 18,
-                                    shadowColor: "#000",
-                                    shadowOffset: {
-                                        width: 0,
-                                        height: 2,
-                                    },
-                                    shadowOpacity: 0.25,
-                                    shadowRadius: 3.84,
-                                    elevation: 5,
-                                    padding:10,
-                                         }}
-                                />
-    }else if(item.product=='Hotel'){
-        icon=<Icon
-                                    name={'hotel'}
-                                    color={BaseColor.primaryColor}
-                                    size={18}
-                                    solid
-                                    style={{ marginLeft: -10,marginTop:20,position:'absolute',width:40,height:40,
-                                    backgroundColor: "#fff",
-                                    borderRadius: 18,
-                                    shadowColor: "#000",
-                                    shadowOffset: {
-                                        width: 0,
-                                        height: 2,
-                                    },
-                                    shadowOpacity: 0.25,
-                                    shadowRadius: 3.84,
-                                    elevation: 5,
-                                    padding:10,
-                                         }}
-                                />
-
-    }
+        var icon_name_type='';
+            if(item.product=='Flight'){
+                icon_name_type='plane';
+            }else if(item.product=='Trip'){
+                icon_name_type='suitcase';
+            }else if(item.product=='Hotel'){
+                icon_name_type='hotel';
+            }else if(item.product=='Hotelpackage'){
+                icon_name_type='bed';
+            }else if(item.product=='Voucher'){
+                icon_name_type='gift';
+            }
+                        
+        var icon_type=<View></View>;
+        icon_type=<Icon
+            name={icon_name_type}
+            color={BaseColor.primaryColor}
+            size={18}
+            solid
+            style={{ marginLeft: -10,marginTop:60,position:'absolute',width:40,height:40,
+            backgroundColor: "#fff",
+            borderRadius: 18,
+            shadowColor: "#000",
+            shadowOffset: {
+                width: 0,
+                height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+            padding:10,
+                 }}
+        />
 
 
-    var title_product='';
-    if(item.product=='Flight'){
-        title_product=<Text headline semibold style={{fontSize:12}}>
-               {item.detail[0].order_flight_detail[0].airline_name} - {item.product_name} 
-            </Text>
-    }else if(item.product=='Trip'){
-        title_product=<Text headline semibold style={{fontSize:12}}>
-                {item.product_name} 
-            </Text>
-    }else if(item.product=='Hotel'){
-        title_product=<Text headline semibold style={{fontSize:12}}>
-                {item.product_name} 
-            </Text>
+    var title_product=<View></View>;
+    // if(item.product=='Flight'){
+    //     title_product=<Text headline semibold style={{fontSize:20}}>
+    //            {item.product_name} - {item.detail[0].order_detail[0].airline_name} 
+    //         </Text>
+    // }else if(item.product=='Trip'){
+    //     title_product=<Text headline semibold style={{fontSize:20}}>
+    //             {item.product_name} 
+    //         </Text>
+    // }else if(item.product=='Hotelpackage'){
+    //     title_product=<Text headline semibold style={{fontSize:20}}>
+    //             {item.product_name} 
+    //         </Text>
+    // }else if(item.product=='Hotel'){
+    //     title_product=<Text headline semibold style={{fontSize:20}}>
+    //             {item.product_name} 
+    //         </Text>
+    // }else if(item.product=='Voucher'){
+    //     title_product=<Text headline semibold style={{fontSize:20}}>
+    //             {item.product_name} 
+    //         </Text>
+    // }
     
-    }
+    title_product=<View style={{flex: 1,flexDirection:'row',paddingTop:5,paddingBottom:5,borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}} >
+                        <View style={{flexDirection:'row',flex: 11,justifyContent: "flex-start",alignItems: "center"}}>
+                            <Icon
+                                name={icon_name_type}
+                                size={18}
+                                color={BaseColor.primaryColor}
+                                style={{ textAlign: "left",marginRight:10}}
+                            />
+                            <Text>
+                                {item.product}
+                            </Text>
+                        </View>
+                        <View
+                            style={{flex: 1}}
+                        >
+                                         <Icon
+                                            name="ellipsis-v"
+                                            size={18}
+                                            color={BaseColor.textSecondaryColor}
+                                            style={{ textAlign: "right"}}
+                                        />
+                        </View>
+                    </View>
+    
+    var no_order=<Text
+                    note
+                    numberOfLines={2}
+                    style={{
+                        paddingTop: 5
+                    }}
+                >
+                    No.Order {item.order_code}
+                </Text>
 
     var content='';
     if(loading==true){
@@ -288,44 +296,62 @@ export default class CommentItem extends Component {
                     </View>
                 </View>
     }else{
-        content=<View style={styles.contain}>
-                                {icon}
-                    <View style={styles.content}>
-                        <View style={styles.left}>
+        // content=<View style={styles.contain}>
+        //             <View style={styles.content}>
+        //                 {/* <View style={{flex: 1}}>
+        //                 {title_product}
+        //                 </View> */}
+                        
+        //                 <View style={{flex: 1}}>
+        //                     {title_product}
+        //                     <View style={styles.left}>
+        //                         {no_order}
+        //                         {no_tagihan}
+        //                         {jumlah_tagihan}
+        //                         {countDown}
+        //                     </View>
+        //                     <View style={styles.right}>
+        //                         <Text>asd</Text>
+        //                     </View>
+        //                 </View>
+        //             </View>
+        //         </View>
+                
+            content=<View style={{borderBottomColor: BaseColor.textSecondaryColor,
+                                    borderBottomWidth: 1,
+                                    backgroundColor: "#fff",
+                                    borderRadius: 18,
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                            width: 0,
+                                            height: 2,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3.84,
+                                    elevation: 5,
+                                    padding:10}}>
+                        <View style={{ flex: 1,flexDirection: "row"}}>
                             {title_product}
-                            <Text
-                                note
-                                numberOfLines={2}
-                                grayColor
-                                style={{
-                                    paddingTop: 5
-                                }}
-                            >
-                                No.Tagihan {item.order_code}
-                            </Text>
-                            <Text
-                                note
-                                numberOfLines={2}
-                                grayColor
-                                style={{
-                                    paddingTop: 5
-                                }}
-                            >
-                                IDR {priceSplitter(item.total_price)}
-                            </Text>
                         </View>
-                        <View style={styles.right}>
-                            <Text caption2 grayColor style={{fontSize:14,fontWeight: "bold"}}>
-                               Status
-                            </Text>
-                            <Text caption2 grayColor>
-                               {status_name}
-                            </Text>
-                            {countDown}
+                        <View style={{ flex: 1,flexDirection: "row"}}>
+                            <View style={styles.left}>
+                                {no_order}
+                                {no_tagihan}
+                                {jumlah_tagihan}
+                                {countDown}
+                            </View>
+                            <View style={styles.right}>
+                                <Icon
+                                            name="chevron-right"
+                                            size={18}
+                                            color={BaseColor.textSecondaryColor}
+                                            style={{ textAlign: "right"}}
+                                        />
+                            </View>
                         </View>
                     </View>
-                </View>
-
+                
+                
     }   
     
         var page='';
@@ -347,42 +373,41 @@ export default class CommentItem extends Component {
                 style={[styles.item, style]}
                 //onPress={onPress}
                 onPress={() => {
-                
-                     
-                            var order_payment_recent=item.order_payment_recent;
-                            if(order_payment_recent != null){
-                                if(expiredTime > 0){
-                                    var dataPayment={
-                                        payment_type:order_payment_recent.payment_type,
-                                        payment_type_label:order_payment_recent.payment_type_label,
-                                        payment_sub:order_payment_recent.payment_sub,
-                                        payment_sub_label:order_payment_recent.payment_sub_label,
-                                    }
+                            this.props.navigation.navigate(urlRedirect,{param:param});
+
+                            // if(order_payment_recent != null){
+                            //     if(expiredTime > 0){
+                            //         var dataPayment={
+                            //             payment_type:order_payment_recent.payment_type,
+                            //             payment_type_label:order_payment_recent.payment_type_label,
+                            //             payment_sub:order_payment_recent.payment_sub,
+                            //             payment_sub_label:order_payment_recent.payment_sub_label,
+                            //         }
                                     
-                                    var param={
-                                        id_order:item.id_order,
-                                        dataPayment:dataPayment
-                                    }
-                                    this.props.navigation.navigate("PembayaranDetail",{
-                                        param:param,
-                                    });
+                            //         var param={
+                            //             id_order:item.id_order,
+                            //             dataPayment:dataPayment
+                            //         }
+                            //         this.props.navigation.navigate("PembayaranDetail",{
+                            //             param:param,
+                            //         });
                                 
-                                }else{
-                                    var param={
-                                        id_order:item.id_order,
-                                        dataPayment:{}
-                                    }
-                                    this.props.navigation.navigate('Pembayaran',{param:param});
-                                }
+                            //     }else{
+                            //         var param={
+                            //             id_order:item.id_order,
+                            //             dataPayment:{}
+                            //         }
+                            //         this.props.navigation.navigate('Pembayaran',{param:param});
+                            //     }
                                
-                            }else{
+                            // }else{
                             
-                                var param={
-                                    id_order:item.id_order,
-                                    dataPayment:{}
-                                }
-                                this.props.navigation.navigate('Pembayaran',{param:param});
-                            }
+                            //     var param={
+                            //         id_order:item.id_order,
+                            //         dataPayment:{}
+                            //     }
+                            //     this.props.navigation.navigate('Pembayaran',{param:param});
+                            // }
                             
                             
                                

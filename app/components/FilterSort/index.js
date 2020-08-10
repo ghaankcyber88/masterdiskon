@@ -205,8 +205,8 @@ export default class FilterSort extends Component {
                     </Text>
                 </TouchableOpacity>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    {customAction}
-                    <View style={styles.line} />
+                    {/* {customAction} */}
+                    {/* <View style={styles.line} /> */}
                     <TouchableOpacity
                         onPress={onFilter}
                         style={styles.contentFilter}
@@ -233,7 +233,7 @@ export default class FilterSort extends Component {
                             solid
                         />
                         <Text headline grayColor style={{ marginLeft: 5 }}>
-                            Clear
+                            Clear Filter
                         </Text>
                         
                     </TouchableOpacity>
@@ -248,7 +248,7 @@ FilterSort.propTypes = {
     sortOption: PropTypes.array,
     sortSelected: PropTypes.object,
     modeView: PropTypes.string,
-    labelCustom: PropTypes.string,
+    labelCustom: PropTypes.number,
     onChangeSort: PropTypes.func,
     onChangeView: PropTypes.func,
     onFilter: PropTypes.func,
@@ -287,7 +287,7 @@ FilterSort.defaultProps = {
         text: "Hightest Rating"
     },
     modeView: "",
-    labelCustom: "",
+    labelCustom: 1,
     onChangeSort: () => {},
     onChangeView: () => {},
     onFilter: () => {},

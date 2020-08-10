@@ -15,15 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "254255805430-00dfuk2jo5q6ll01mak7jph3f8n9k79u.apps.googleusercontent.com",
+          "client_id": "254255805430-kr2l4j9aontj124ibga196rpi29qj39u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.masterdiskon",
-            "certificate_hash": "1a98b7b7fa257557e6bd091952eb6a198d427245"
+            "certificate_hash": "cea55faf9218df054827d55bfa27db546c9b2837"
           }
         },
         {
-          "client_id": "254255805430-n420so6nklgjgv09uh4j5obrudiobq37.apps.googleusercontent.com",
+          "client_id": "254255805430-p93vrmi97uomebr8ilh4j10dkutu9esr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.masterdiskon",

@@ -1,39 +1,96 @@
-import React from "react";
 import { StyleSheet } from "react-native";
-import { BaseColor, BaseStyle } from "@config";
+import { BaseColor } from "@config";
 
 export default StyleSheet.create({
-    contentButtonBottom: {
+    // inputItem: {
+    //     flex: 6.5,
+    //     marginLeft: 10,
+    //     flexDirection: "row",
+    //     alignItems: "center",
+    //     justifyContent: "space-between",
+    //     height: 46,
+    //     backgroundColor: BaseColor.fieldColor,
+    //     borderRadius: 5,
+    //     padding: 10
+    // },
+    
+    
+    contain: {
+        paddingTop: 0,
+        paddingLeft: 20,
+        paddingRight: 20,
+        width: "100%"
+    },
+    line: {
+        width: "100%",
+        height: 1,
+        borderWidth: 0.5,
+        borderColor: BaseColor.dividerColor,
+        borderStyle: "dashed",
+        marginTop: 15
+    },
+    contentButtonBottomBank: {
         borderTopColor: BaseColor.textSecondaryColor,
         borderTopWidth: 1,
+        // paddingVertical: 10,
+        // paddingHorizontal: 20,
+        // flexDirection: "row",
+        // justifyContent: "space-between",
+        // alignItems: "center"
+    },
+    contentButtonBottom: {
+        // borderTopColor: BaseColor.textSecondaryColor,
+        // borderTopWidth: 1,
         paddingVertical: 10,
         paddingHorizontal: 20,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center"
     },
-    blockView: {
-        paddingVertical: 10,
-        borderBottomColor: BaseColor.textSecondaryColor,
-        borderBottomWidth: 1
+    contentTitle: {
+        alignItems: "flex-start",
+        width: "100%",
+        height: 32,
+        justifyContent: "center"
     },
-
-
-
-    //FlightItemCustom
-    content: {
-        padding: 10,
-        borderRadius: 8,
+  
+    textInput: {
+        height: 56,
         backgroundColor: BaseColor.fieldColor,
+        borderRadius: 5,
+        padding: 10,
+        width: "100%"
     },
+    profileItem: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderBottomColor: BaseColor.textSecondaryColor,
+        borderBottomWidth: 1,
+        paddingBottom: 20,
+        paddingTop: 20
+    },
+    
+    
     contentTop: {
         flexDirection: "row",
         paddingBottom: 10,
-        borderBottomWidth: 1,
-        borderColor: BaseColor.textSecondaryColor
+        borderBottomWidth: 0,
+        borderColor: BaseColor.textSecondaryColor,
+        paddingVertical: '4%',
+        
+        
     },
     line: {
         width: "100%",
+        height: 1,
+        borderWidth: 0.5,
+        borderColor: BaseColor.dividerColor,
+        marginBottom:10,
+        borderStyle: "dashed"
+    },
+    lineFlight: {
+        width: "30%",
         height: 1,
         borderWidth: 0.5,
         borderColor: BaseColor.dividerColor,
@@ -58,29 +115,5 @@ export default StyleSheet.create({
         justifyContent: "space-between"
     },
     bottomLeft: { flexDirection: "row", alignItems: "center" },
-    image: { width: 32, height: 32, marginRight: 10, borderRadius: 16 },
-
-
-    //flightplan
-    contentRow: { flexDirection: "row" },
-    centerView: {
-        alignItems: "center",
-        justifyContent: "center",
-        marginHorizontal: 10
-    },
-    colCenter: { flex: 1, alignItems: "center" },
-
-
-
-    line: {
-        width: "100%",
-        height: 2,
-        borderWidth: 1,
-        borderColor: BaseColor.dividerColor,
-        borderStyle: "dotted",
-    },
-
-
-    
-
+    image: { width: 32, height: 32, marginRight: 10, borderRadius: 16 }
 });

@@ -43,11 +43,9 @@ export default class ProfileDetail extends Component {
                     )}
                     <View>
                         <Text footnote grayColor numberOfLines={1}>
-                            
                             {textFirst}
                         </Text>
                         <Text headline semibold numberOfLines={1}>
-                            {/* {textThird} */}
                             {textSecond}
                         </Text>
                         {/* <Text

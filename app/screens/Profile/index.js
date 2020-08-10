@@ -26,6 +26,7 @@ import {
     statusCodes,
   } from '@react-native-community/google-signin';
   import NotYetLogin from "../../components/NotYetLogin";
+  import CardCustomProfile from "../../components/CardCustomProfile";
 
 class Profile extends Component {
     constructor(props) {
@@ -46,32 +47,9 @@ class Profile extends Component {
         this._deltaY = new Animated.Value(0);
     }
 
-    /**
-     * @description Simple logout with Redux
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     */
-    // onLogOut() {
-    //     this.setState(
-    //         {
-    //             loading: true
-    //         },
-    //         () => {
-    //             this.props.actions.authentication(false, response => {
-    //                 if (response.success) {
-    //                     this.props.navigation.navigate("Loading");
-    //                 } else {
-    //                     this.setState({ loading: false });
-    //                 }
-    //             });
-    //         }
-    //     );
-    // }
-
 
     onLogOut() {
         var loginVia=this.state.userSession.loginVia;
-        //alert(loginVia);
         if(loginVia=='form'){
 
             AsyncStorage.removeItem('userSession');
@@ -196,7 +174,7 @@ class Profile extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -274,17 +252,13 @@ class Profile extends Component {
                                         styles.searchForm
                                     ]}
                                 >
-                                    <View
-                                    style={[
-                                        // styles.contentBoxTop,
-                                    ]}
-                                >   
-                                    {/* <Icon
+                                    <View>   
+                                    <Icon
                                                 name="pencil-alt"
                                                 size={18}
                                                 color={BaseColor.primaryColor}
                                                 style={{position: 'absolute', right: 0}}
-                                    /> */}
+                                    />
                                     <Text
                                         title2
                                         semibold
@@ -309,198 +283,58 @@ class Profile extends Component {
                        
 
                     <View style={styles.contain}>
-                       
-
-
-
                         <View style={{ width: "100%" }}>
-
                             <View style={{paddingBottom:50}}>
+                                <CardCustomProfile 
+                                    title={'QuickPick'}
+                                    subtitle={'Pesenan lebih cepat, isi data penumpang, dengan satu klik'}
+                                    icon={'home'}
+                                    onPress={() => {
+                                        this.props.navigation.navigate("ProfileSmart",{sourcePage:'profile'});
+                                    }}
+                                
+                                />
                                 {/* <TouchableOpacity
                                     onPress={() => {
                                         navigation.navigate("ProfileSmart",{sourcePage:'profile'});
                                     }}
                                 >   
-
-                                <View style={styles.contain}>
-                                    <Icon
-                                                name="user-check"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                            />
-                                    
-                                    <View style={styles.content}>
-                                        <View style={styles.left}>
-                                            <Text headline semibold>
-                                               Detail Utama
-                                            </Text>
-                                            <Text
-                                                note
-                                                numberOfLines={2}
-                                                footnote
-                                                grayColor
-                                                style={{
-                                                    paddingTop: 5
-                                                }}
-                                            >
-                                               Lengkapi data utama Anda untuk sebagai data pemesan
-                                            </Text>
-                                        </View>
-                                        <View style={styles.right}>
-                                            <Icon
-                                            name="angle-right"
-                                            size={18}
-                                            color={BaseColor.primaryColor}
-                                        />
-                                        </View>
-                                    </View>
-                                </View>
-                            </TouchableOpacity> */}
-
-
-                            <TouchableOpacity
-                                onPress={() => {
-                                    navigation.navigate("ProfileSmart",{sourcePage:'profile'});
-                                }}
-                            >   
-
-                                <View style={styles.contain}>
-                                    <Icon
-                                                name="user-check"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                            />
-                                    
-                                    <View style={styles.content}>
-                                        <View style={styles.left}>
-                                            <Text headline semibold>
-                                               QuickPick
-                                            </Text>
-                                            <Text
-                                                note
-                                                numberOfLines={2}
-                                                footnote
-                                                grayColor
-                                                style={{
-                                                    paddingTop: 5
-                                                }}
-                                            >
-                                               Pesenan lebih cepat, isi data penumpang, dengan satu klik
-                                            </Text>
-                                        </View>
-                                        <View style={styles.right}>
-                                            <Icon
-                                            name="angle-right"
-                                            size={18}
-                                            color={BaseColor.primaryColor}
-                                        />
-                                        </View>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-
-
-                        </View>
-                            
-                        {/* <View style={{paddingBottom:50}}>
-                            <View><Text style={{ marginLeft: 10 }}>Pengaturan</Text></View>
-                            <TouchableOpacity
-                                style={styles.profileItem}
-                                onPress={() => {
-                                    navigation.navigate("ChangePassword");
-                                }}
-                            >
-                                <Text body1 style={{ marginLeft: 10 }}>Change Password</Text>
-                                <Icon
-                                    name="angle-right"
-                                    size={18}
-                                    color={BaseColor.primaryColor}
-                                    style={{ marginRight: 10 }}
-                                />
-                            </TouchableOpacity>
-                                        <TouchableOpacity
-                                            style={styles.profileItem}
-                                            onPress={() => {
-                                                navigation.navigate("ChangePassword");
-                                            }}
-                                        >
-                                            <Text body1 style={{ marginLeft: 10 }}>Email dan Nomor Ponsel</Text>
-                                            <Icon
-                                                name="angle-right"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                                 style={{ marginRight: 10 }}
-                                            />
-                                        </TouchableOpacity>
-
-
-                                        
-                        </View> */}
-
-                             {/* <View style={{paddingBottom:50}}>
-                                <View><Text style={{ marginLeft: 10 }}>Lainnya</Text></View>
-                                        <TouchableOpacity
-                                            style={styles.profileItem}
-                                            onPress={() => {
-                                                navigation.navigate("ChangePassword");
-                                            }}
-                                        >
-                                            <Text body1 style={{ marginLeft: 10 }}>Tentang Masterdiskon</Text>
-                                            <Icon
-                                                name="angle-right"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                                 style={{ marginRight: 10 }}
-                                            />
-                                        </TouchableOpacity>
-
-                                        <TouchableOpacity
-                                            style={styles.profileItem}
-                                            onPress={() => {
-                                                navigation.navigate("ChangePassword");
-                                            }}
-                                        >
-                                            <Text body1 style={{ marginLeft: 10 }}>Kebijakan Privasi</Text>
-                                            <Icon
-                                                name="angle-right"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                                 style={{ marginRight: 10 }}
-                                            />
-                                        </TouchableOpacity>
-
-                                        <TouchableOpacity
-                                            style={styles.profileItem}
-                                            onPress={() => {
-                                                navigation.navigate("ChangePassword");
-                                            }}
-                                        >
-                                            <Text body1 style={{ marginLeft: 10 }}>Syarat dan Ketentuan</Text>
-                                            <Icon
-                                                name="angle-right"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                                style={{ marginRight: 10 }}
-                                            />
-                                        </TouchableOpacity>
-
-                                       
-                                            <View style={styles.profileItem}>
-                                                <Text body1 style={{ marginLeft: 10 }}>Reminders</Text>
-                                                <Switch
-                                                    name="angle-right"
+    
+                                    <View style={styles.contain}>
+                                        <Icon
+                                                    name="user-check"
                                                     size={18}
-                                                    onValueChange={this.toggleSwitch}
-                                                    value={this.state.reminders}
+                                                    color={BaseColor.primaryColor}
                                                 />
-                                            </View>
-                                            <View style={styles.profileItem}>
-                                                <Text body1 style={{ marginLeft: 10 }}>App Version</Text>
-                                                <Text body1 grayColor  style={{ marginRight: 10 }}>
-                                                    {BaseSetting.appVersion}
+                                        
+                                        <View style={styles.content}>
+                                            <View style={styles.left}>
+                                                <Text headline semibold>
+                                                   QuickPick
+                                                </Text>
+                                                <Text
+                                                    note
+                                                    numberOfLines={2}
+                                                    footnote
+                                                    grayColor
+                                                    style={{
+                                                        paddingTop: 5
+                                                    }}
+                                                >
+                                                   Pesenan lebih cepat, isi data penumpang, dengan satu klik
                                                 </Text>
                                             </View>
-                            </View> */}
+                                            <View style={styles.right}>
+                                                <Icon
+                                                name="angle-right"
+                                                size={18}
+                                                color={BaseColor.primaryColor}
+                                            />
+                                            </View>
+                                        </View>
+                                    </View>
+                                </TouchableOpacity> */}
+                            </View>
                         </View>
                     </View>
                     <View style={{ paddingLeft: 20,paddingRight:20 }}>

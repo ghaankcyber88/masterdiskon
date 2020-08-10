@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { View, ScrollView, Animated,Dimensions,ActivityIndicator,TouchableOpacity,StyleSheet,AsyncStorage, Alert } from "react-native";
+import React, { Component,useEffect,useState } from "react";
+import { View, ScrollView, Animated,Dimensions,ActivityIndicator,TouchableOpacity,StyleSheet,AsyncStorage, Alert,Clipboard } from "react-native";
 import { BaseStyle, BaseColor, Images } from "@config";
 import {
     Header,
@@ -21,6 +21,12 @@ import {PostData} from '../../services/PostData';
 import AnimatedLoader from "react-native-animated-loader";
 import CountDown from 'react-native-countdown-component';
 import moment from 'moment';
+import {PostDataNew} from '../../services/PostDataNew';
+
+import {fcmService} from '../../src/FCMService';
+import {localNotificationService} from '../../src/LocalNotificationService';
+// import Clipboard from "@react-native-community/clipboard";
+
 
 const styles = StyleSheet.create({
     containField: {
@@ -76,95 +82,110 @@ const styles = StyleSheet.create({
 });
 
 
-export default class PembayaranDetail extends Component {
-    constructor(props) {
-        super(props);
-        var param=props.navigation.state.params.param;
-        var id_order=param.id_order;
-        var dataPayment=param.dataPayment;
-        
-        console.log('dataPayments',JSON.stringify(dataPayment));
-        
-        AsyncStorage.getItem('tokenFirebase', (error, result) => {
-            if (result) {
-                console.log('Token Firebase',result);
-                this.setState({
-                    tokenFirebase: result
-                });
-            }
-        });
-        
-        
+export default function PembayaranDetail(props) {
 
-        this.state = {
-            dataPayment:dataPayment,
-            dataBooking:DataBooking,
-            statusMidtrans:{"va_numbers":[{"bank":"bca","va_number":"81174157162"}],"payment_amounts":[],"transaction_time":"2020-07-06 16:33:07","gross_amount":"740800.00","currency":"IDR","order_id":"MD2007060026","payment_type":"bank_transfer","signature_key":"7eb271c8362f64dd96c7519a7067ccb5d8f563ee45e7c64e4606773332aad32841e522fcdfb30dae96c183d57a044db425f07a3772a3e4d848ccbb1d65765884","status_code":"201","transaction_id":"1df337f3-5dc2-4cc7-a445-ae8c46eabefa","transaction_status":"pending","fraud_status":"accept","status_message":"Success, transaction is found","merchant_id":"G042781174"},
-            id_order:id_order,
-            loading:false,
-        };
-    }
+    var param=props.navigation.state.params.param;
+    // var id_order=param.id_order;
+    // var dataPayment=param.dataPayment;
+ 
+      const { navigation} = props;
+      const [dataPayment, setDataPayment]=useState(param.dataPayment);
+      const [idOrder, setIdOrder]=useState(param.id_order);
+      const [count, setCount] = useState(0);
+      const [tokenFirebase, setTokenFirebase]= useState(0);
+      const [loading, setLoading]=useState(true);
+      const [dataBooking, setDataBooking]=useState(DataBooking);
+      const [statusMidtrans, setStatusMidtrans]=useState({"va_numbers":[{"bank":"bca","va_number":"81174157162"}],"payment_amounts":[],"transaction_time":"2020-07-06 16:33:07","gross_amount":"740800.00","currency":"IDR","order_id":"MD2007060026","payment_type":"bank_transfer","signature_key":"7eb271c8362f64dd96c7519a7067ccb5d8f563ee45e7c64e4606773332aad32841e522fcdfb30dae96c183d57a044db425f07a3772a3e4d848ccbb1d65765884","status_code":"201","transaction_id":"1df337f3-5dc2-4cc7-a445-ae8c46eabefa","transaction_status":"pending","fraud_status":"accept","status_message":"Success, transaction is found","merchant_id":"G042781174"});
+      const [fee, setFee]= useState(0);
+      const [totalPembayaran, setTotalPembayaran]= useState(0);
+      
+      const [config, setConfig]=useState({
+        "aeroStatus": false,
+        "aeroUrl": "https://staging-api.megaelectra.co.id/",
+        "midtransStatus": false,
+        "midtransUrl": "https://api.sandbox.midtrans.com/",
+        "baseUrl": "https://masterdiskon.com/",
+        "banner": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80",
+        "transaction_fee": "5000",
+        "transaction_fee_cc" :"",
+        "norek": "1290080508050 (Mandiri) an. PT Master Diskon Internasional",
+        "voucher_markup": "20000"
     
-    submitPayment(){
-     
-        const{dataPayment,dataBooking}=this.state;
+    });
         
+    AsyncStorage.getItem('tokenFirebase', (error, result) => {
+        if (result) {
+            console.log('Token Firebase',result);
+            setTokenFirebase(result);
+        }
+    });
+    
+    
+
+    
+    function getConfig(){
+            AsyncStorage.getItem('config', (error, result) => {
+                if (result) {    
+                    let config = JSON.parse(result);
+                    setConfig(config);
+                }
+            });
+       
+    }
+
+    
+    function submitPayment(){
         var paramPayMD={
-            "subtotal":dataBooking[0].subtotal,
-            "insurance":dataBooking[0].insurance,
-            "fee":dataBooking[0].fee,
-            "total_price":dataBooking[0].total_price,
-            "id_order":dataBooking[0].id_order,
-            "order_code":dataBooking[0].order_code,
-            "dataPayment":this.state.dataPayment,
-            "tokenFirebase":this.state.tokenFirebase,
+            "total_pembayaran":totalPembayaran,
+            "fee":fee,
+            "id_invoice":dataBooking[0].order_payment_recent.id_invoice,
+            "dataPayment":dataPayment,
             }
         console.log('paramPayMD',JSON.stringify(paramPayMD));
-        //console.log('paramPayMidtrans',JSON.stringify(paramPayMidtrans));
-        this.payMasterDiskon(paramPayMD);
+        payMasterDiskon(paramPayMD);
         
     }
     
-    payMasterDiskon(paramPayMD){
-        this.setState({ loading_spinner: true }, () => {
+    function payMasterDiskon(paramPayMD){
+            setLoading(true);
             console.log("---------------paramPayMD ------------");
             console.log(JSON.stringify(paramPayMD));
 
             
-            var myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-
-
-            var raw = JSON.stringify(paramPayMD);
-            var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: raw,
-            redirect: 'follow'
-            };
-
-            fetch("https://masterdiskon.com/front/api/apiOrder/payment", requestOptions)
-            .then(response => response.json())
-            .then((result) => {
-                console.log("---------------result payment md ------------");
-                console.log(JSON.stringify(result));
-                var id_invoice=result.id_invoice;
-                this.payMidtrans(id_invoice);
-                
-            });
-        });  
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paramPayMD),
+              }
+           
+             var url=config.baseUrl;
+             console.log('baseUrl',url);
+             
+             return PostDataNew(url,'front/api/apiOrder/payment_update',param)
+                 .then((result) => {
+                           console.log("---------------result payment md ------------");
+                            console.log(JSON.stringify(result));
+                        var id_invoice=result.id_invoice;
+                        payMidtrans(id_invoice);
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
     
     }
     
     
-    payMidtrans(id_invoice){
-        const{dataPayment,dataBooking}=this.state;
+    function payMidtrans(id_invoice){
         var payment_type=dataPayment.payment_type;
         var payment_sub=dataPayment.payment_sub;
         
         
         var transaction_details={
-            gross_amount: dataBooking[0].total_price,
+            gross_amount: totalPembayaran,
             order_id: id_invoice
         }
         var customer_details={
@@ -173,6 +194,9 @@ export default class PembayaranDetail extends Component {
             last_name: dataBooking[0].contact.contact_last,
             phone: dataBooking[0].contact.contact_phone,
         }
+        
+        
+        
         
         
         if(payment_type=='bank_transfer'){
@@ -191,42 +215,289 @@ export default class PembayaranDetail extends Component {
         
         console.log('paramPay',JSON.stringify(paramPay))
         
-        
-        var myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6");
-        
-        var raw = JSON.stringify(paramPay);
-        var requestOptions = {
-          method: 'POST',
           
-          
-          headers: myHeaders,
-          body: raw,
-          redirect: 'follow'
-        };
-        
-        fetch("https://api.sandbox.midtrans.com/v2/charge", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            console.log("---------------result payment midtarns ------------");
-            console.log(JSON.stringify(result));
-            
-            this.setState({ loading_spinner: false });
-            
-            var redirect='PembayaranDetail';
-                var param={
-                    id_order:this.state.id_order,
-                    dataPayment:this.state.dataPayment
-                }
-            this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
-          })
-          .catch(error => console.log('error', error));
+          var param={
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6',
+            },
+            body: JSON.stringify(paramPay),
+          }
+       
+         var url='https://api.sandbox.midtrans.com/';
+         console.log('baseUrl',url);
+         
+         return PostDataNew(url,'v2/charge',param)
+             .then((result) => {
+                console.log("---------------result payment midtarns ------------");
+                console.log(JSON.stringify(result));
+                
+                //this.setState({ loading_spinner: false });
+                setLoading(false);
+                
+                var redirect='PembayaranDetail';
+                    var param={
+                        id_order:idOrder,
+                        dataPayment:dataPayment
+                    }
+                navigation.navigate("Loading",{redirect:redirect,param:param});
+                },
+             (error) => {
+                 this.setState({ error });
+             }
+        ); 
+
     
     }
     
-    duration(expirydate)
+    
+    function changePayment(){
+        var item=dataBooking[0];
+        var order_payment_recent=item.order_payment_recent;
+        var total_pembayaran=parseInt(order_payment_recent.iv_total_amount)-parseInt(fee);
+        var paramPayMD={
+            "total_pembayaran": total_pembayaran,
+            "fee": "0",
+            "id_invoice": order_payment_recent.id_invoice,
+            "dataPayment": {
+                "payment_type": "",
+                "payment_type_label": "",
+                "payment_sub": "",
+                "payment_sub_label": ""
+            }
+        }
+        console.log('paramPayMD',JSON.stringify(paramPayMD));
+       
+        setLoading(true);
+            console.log("---------------paramPayMD ------------");
+            console.log(JSON.stringify(paramPayMD));
+
+            
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paramPayMD),
+              }
+           
+             var url=config.baseUrl;
+             console.log('baseUrl',url);
+             
+             return PostDataNew(url,'front/api/apiOrder/payment_update',param)
+                 .then((result) => {
+                        //     setLoading(false);
+                        //    console.log("---------------result payment md ------------");
+                        //     console.log(JSON.stringify(result));
+                        //     var redirect='Pembayaran';
+                        //     var param={
+                        //         id_order:idOrder,
+                        //         dataPayment:{}
+                        //     }
+                        //     navigation.navigate("Loading",{redirect:redirect,param:param});
+                        var id_invoice=result.id_invoice;
+                        // payMidtrans(id_invoice);
+                        cancelMidtrans(id_invoice);
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+         
+            
+    }
+    
+    function cancelMidtrans(id_invoice){
+        //var dataBooking=dataBooking;
+        
+        // var myHeaders = new Headers();
+        // myHeaders.append("Accept", "application/json");
+        // myHeaders.append("Content-Type", "application/json");
+        // myHeaders.append("Authorization", "Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6");
+        
+        // var raw = "";
+        
+        // var requestOptions = {
+        //   method: 'POST',
+        //   headers: myHeaders,
+        //   body: raw,
+        //   redirect: 'follow'
+        // };
+        
+        // return fetch("https://api.sandbox.midtrans.com/v2/"+order_code+"/cancel", requestOptions)
+        //   .then(response => response.json())
+        //   .then(result => {
+        //                     setLoading(false);
+        //                     //this.setState({ loading_spinner: false });
+        //                     console.log("---------------cancel midtrans ------------");
+        //                     console.log(JSON.stringify(result));
+        //                     var redirect='Pembayaran';
+        //                     var param={
+        //                         id_order:this.state.id_order,
+        //                         dataPayment:{}
+        //                     }
+        //                     navigation.navigate("Loading",{redirect:redirect,param:param});
+        //   })
+        //   .catch(error => console.log('error', error)); 
+          
+          
+          
+        var order_code=id_invoice;
+           
+          var param={
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6',
+            },
+            //body: JSON.stringify(paramPay),
+            redirect: 'follow'
+          }
+       
+         var url='https://api.sandbox.midtrans.com/';
+         console.log('baseUrl',url);
+         
+         return PostDataNew(url,"v2/"+order_code+"/deny",param)
+             .then((result) => {
+             
+                            setLoading(false);
+                            //this.setState({ loading_spinner: false });
+                            console.log("---------------cancel midtrans ------------");
+                            console.log(JSON.stringify(result));
+                            var redirect='Pembayaran';
+                            var param={
+                                id_order:idOrder,
+                                dataPayment:{}
+                            }
+                            navigation.navigate("Loading",{redirect:redirect,param:param});
+
+                         
+                },
+             (error) => {
+                 this.setState({ error });
+             }
+        ); 
+
+    }
+    
+    
+    
+    function fetch(){
+
+        
+            AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {
+                let userSession = JSON.parse(result);
+              
+                
+                    var id_user=userSession.id_user;
+                    const data={"id":id_user,"id_order":idOrder,"order_status":"","product":""}
+                    const param={"param":data}
+                    // console.log('-------------param booking-------------');
+                    // console.log(JSON.stringify(param));
+    
+    
+                    return PostData('get_booking_history',param)
+                        .then((result) => {
+                            var dataBooking=result;
+                            console.log("---------------get_booking_historyssss ------------");
+                            console.log(JSON.stringify(result));
+                            setLoading(false);
+                            setDataBooking(dataBooking);
+                            
+                            //jika refresh setelah pembayaran lunas
+                            var statusOrder=dataBooking[0].order_status.order_status_slug;
+                            if(statusOrder=='complete'){
+                                var redirect='Pembayaran';
+                                var param={
+                                    id_order:idOrder,
+                                    dataPayment:{}
+                                }
+                                navigation.navigate("Loading",{redirect:redirect,param:param});
+                            }else{
+                                //-------------------------------
+                                var order_payment_recent=dataBooking[0].order_payment_recent;
+                                var order_payment_num=dataBooking[0].order_payment_num;
+                                if(order_payment_recent != null){
+                                    var id_invoice=order_payment_recent.id_invoice;
+                                    if(order_payment_recent.payment_type==""){
+                                        var payment_type=dataPayment.payment_type;
+                                        var payment_sub=dataPayment.payment_sub;
+                                    }else{
+                                        var payment_type=order_payment_recent.payment_type;
+                                        var payment_sub=order_payment_recent.payment_sub;
+                                        fetchMidtrans(id_invoice);
+                                    }
+                                    
+                                    var fee='';
+                                    
+                                    if(order_payment_num == 1){
+                                        if(payment_type=='bank_transfer'){
+                                            fee=config.transaction_fee;
+                                        }
+                                    }else{
+                                        fee=0;
+                                    }
+                                    
+                                    var totalPembayaran=parseInt(order_payment_recent.iv_amount)+parseInt(fee);
+                                    setFee(fee);
+                                    setTotalPembayaran(totalPembayaran);
+                                    
+                                   
+                                  
+                                }
+                            }
+                            
+                            
+                        },
+                        (error) => {
+                            setState({ error });
+                        }
+                    ); 
+             }
+            
+            });
+       
+    
+    }
+
+
+    function fetchMidtrans(id_invoice){
+          
+          
+          var param={
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6',
+            },
+            redirect: 'follow'
+          }
+       
+         var url=config.midtransUrl;
+         console.log('baseUrl',url);
+         
+         return PostDataNew(url,"v2/"+id_invoice+"/status",param)
+             .then((result) => {
+                            var statusMidtrans=result;
+                console.log('status_midtransasd',JSON.stringify(result));
+                setStatusMidtrans(statusMidtrans);
+
+                },
+             (error) => {
+                 this.setState({ error });
+             }
+        ); 
+
+    
+    }
+    
+    function duration(expirydate)
     {
         
         var date = moment()
@@ -239,53 +510,55 @@ export default class PembayaranDetail extends Component {
     
     }
     
-    content_countdown(){
-        var item=this.state.dataBooking[0];
-        var order_expired=item.order_expired;
-        var expiredTime=this.duration(order_expired);
+    
+    function content_countdown(){
+        var item=dataBooking[0];
+        var order_payment_recent=item.order_payment_recent;
         var countDown=<View></View>;
         
-        if(expiredTime > 0){
-            if(item.order_status.order_status_slug=='new' || item.order_status.order_status_slug=='process'){
+        if(order_payment_recent != null){
+            var expiredTime=duration(order_payment_recent.expired);
+            if(expiredTime > 0){
                 countDown=<View style={{
-                            borderWidth: 1, 
-                            borderColor: BaseColor.textSecondaryColor,
-                            borderRadius: 10,
-                            marginBottom:10,
-                            padding:10
-                            }}>
-        
-                                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                                        <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                            <View>
-                                                <Text>
-                                                Batas Waktu Pembayaran
-                                                </Text>
+                                    borderWidth: 1, 
+                                    borderColor: BaseColor.textSecondaryColor,
+                                    borderRadius: 10,
+                                    marginBottom:10,
+                                    padding:10
+                                    }}>
+                
+                                        <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                            <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                    <View>
+                                                        <Text>
+                                                        Batas Waktu Pembayaran
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{flex: 4,justifyContent: "center",alignItems: "flex-end"}}>
+                                                    <CountDown
+                                                        size={12}
+                                                        until={expiredTime}
+                                                        // onFinish={() => alert('Finished')}
+                                                        style={{float:'left'}}
+                                                        digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
+                                                        digitTxtStyle={{color: BaseColor.primaryColor}}
+                                                        timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
+                                                        separatorStyle={{color: BaseColor.primaryColor}}
+                                                        timeToShow={['H', 'M', 'S']}
+                                                        timeLabels={{m: null, s: null}}
+                                                        showSeparator
+                                                    />
+                                                </View>
                                             </View>
                                         </View>
-                                        <View style={{flex: 4,justifyContent: "center",alignItems: "flex-end"}}>
-                                            <CountDown
-                                                size={12}
-                                                until={expiredTime}
-                                                // onFinish={() => alert('Finished')}
-                                                style={{float:'left'}}
-                                                digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
-                                                digitTxtStyle={{color: BaseColor.primaryColor}}
-                                                timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
-                                                separatorStyle={{color: BaseColor.primaryColor}}
-                                                timeToShow={['H', 'M', 'S']}
-                                                timeLabels={{m: null, s: null}}
-                                                showSeparator
-                                            />
-                                        </View>
-                                    </View>
-                                </View>
-                </View>
-                    
+                    </View>
             }
-            
         }
+     
+        
+        
         return(
             <View>
                     {countDown}
@@ -293,164 +566,265 @@ export default class PembayaranDetail extends Component {
         )
     }
     
-    content_payment(){
-        const { navigation} = this.props;
-        const {dataPayment,loading,dataBooking,statusMidtrans} =this.state;
+    
+    function content_payment(){
+        //const { navigation} = props;
+        //const {dataPayment,loading,dataBooking,statusMidtrans} =state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         var order_payment_num=dataBooking[0].order_payment_num;
         var order_payment_recent=dataBooking[0].order_payment_recent;
         var content=<View></View>;
         var virtual_account='';
-        var payment_type=dataPayment.payment_type;
-        var payment_sub=dataPayment.payment_sub;
+        
+        
+       
         
         
         
+      
         
-        if(order_payment_recent != null){
-            if(payment_type=='bank_transfer'){
-                if(payment_sub=='bca'){
-                    virtual_account=this.state.statusMidtrans.va_numbers[0].va_number;
-                }else if(payment_sub=='bni'){
-                    virtual_account=this.state.statusMidtrans.va_numbers[0].va_number;
-                }else if(payment_sub=='permata'){
-                    virtual_account=this.state.statusMidtrans.permata_va_number;
+            if(order_payment_recent != null){
+               
+                
+                if(order_payment_recent.payment_type==""){
+                    var payment_type=dataPayment.payment_type;
+                    var payment_sub=dataPayment.payment_sub;
+                    virtual_account='';
+                }else{
+                    var payment_type=order_payment_recent.payment_type;
+                    var payment_sub=order_payment_recent.payment_sub;
+                    
+                    if(payment_type=='bank_transfer'){
+                        if(payment_sub=='bca'){
+                            virtual_account=statusMidtrans.va_numbers[0].va_number;
+                        }else if(payment_sub=='bni'){
+                            virtual_account=statusMidtrans.va_numbers[0].va_number;
+                        }else if(payment_sub=='permata'){
+                            virtual_account=statusMidtrans.permata_va_number;
+                        }
+                    }
+                    
+                }
+                
+                
+                
+                
+                
+                
+                if(order_payment_recent.payment_type == ""){
+            
+        
+                            content=<View>
+                                        <View style={{
+                                                    borderWidth: 1, 
+                                                    borderColor: BaseColor.textSecondaryColor,
+                                                    borderRadius: 10,
+                                                    marginBottom:10,
+                                                    padding:10
+                                                    }}>
+                                           
+                                           <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                                                            <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                                <View>
+                                                                    <Text>
+                                                                       No. Tagihan
+                                                                    </Text>
+                                                                </View>
+                                                            </View>
+                                                            <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                                                                    <Text headline semibold numberOfLines={1}>
+                                                                    {order_payment_recent.id_invoice}
+                                                                    </Text>
+                                                            </View>
+                                                        </View>
+                                            </View>
+                                            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                                                    <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                        <View>
+                                                            <Text>
+                                                               Sub Total 
+                                                            </Text>
+                                                        
+                                                        </View>
+                                                    </View>
+                                                    <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                                                            <Text headline semibold numberOfLines={1}>
+                                                            {'IDR '+priceSplitter(dataBooking[0].total_price)}
+                                                            </Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
+                                                    <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                        <View>
+                                                            <Text>
+                                                               Fee
+                                                            </Text>
+                                                        
+                                                        </View>
+                                                    </View>
+                                                    <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                                                            <Text headline semibold numberOfLines={1}>
+                                                            {'IDR '+priceSplitter(fee)}
+                                                            </Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            
+                                            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                                                    <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                        <View>
+                                                            <Text>
+                                                               Total Pembayaran
+                                                            </Text>
+                                                        
+                                                        </View>
+                                                    </View>
+                                                    <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                                                            <Text headline semibold numberOfLines={1}>
+                                                            {'IDR '+priceSplitter(totalPembayaran)}
+                                                            </Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                
+                            }else{
+                            
+                                content=<View>
+                                <View style={{
+                                            borderWidth: 1, 
+                                            borderColor: BaseColor.textSecondaryColor,
+                                            borderRadius: 10,
+                                            marginBottom:10,
+                                            padding:10
+                                            }}>
+                                            
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        No. Tagihan
+                                                    </Text>
+                                                    <Text>
+                                                        {order_payment_recent.id_invoice}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        Transfer
+                                                    </Text>
+                                                    <Text>
+                                                        {dataPayment.payment_sub_label} 
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
+                                                    <Text></Text>
+                                                    <Text headline semibold numberOfLines={1}>
+                                                    
+                                                    </Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        No Rekening 
+                                                    </Text>
+                                                    <Text headline semibold numberOfLines={6}>
+                                                        {dataBooking[0].order_payment_info.norek}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
+                                                    <Text></Text>
+                                                    <TouchableOpacity onPress={() => Clipboard.setString(dataBooking[0].order_payment_info.norek)}>
+                                                        <View>
+                                                            <Text>
+                                                                SALIN
+                                                            </Text>
+                                                          </View>
+                                                    </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        Total Pembayaran 
+                                                    </Text>
+                                                    <Text headline semibold numberOfLines={1}>
+                                                    {'IDR '+priceSplitter(order_payment_recent.iv_total_amount)}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        Virtual Account 
+                                                    </Text>
+                                                    <Text headline semibold numberOfLines={10}>
+                                                        {virtual_account}
+                                                        
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
+                                                    <Text></Text>
+                                                    <TouchableOpacity onPress={() => Clipboard.setString(virtual_account)}>
+                                                        <View>
+                                                            <Text>
+                                                                SALIN
+                                                            </Text>
+                                                          </View>
+                                                    </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    
+                                    
+                                </View>
+                            </View>
+                
+                    
+                    
                 }
             }
-        }
         
-        if(order_payment_recent==null){
-            content=<View>
-                    <View style={{
-                                borderWidth: 1, 
-                                borderColor: BaseColor.textSecondaryColor,
-                                borderRadius: 10,
-                                marginBottom:10,
-                                padding:10
-                                }}>
-                       
-                        <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                            <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                                <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                    <View>
-                                        <Text>
-                                           Total Pembayaran
-                                        </Text>
-                                    
-                                    </View>
-                                </View>
-                                <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
-                                        <Text headline semibold numberOfLines={1}>
-                                        {'IDR '+priceSplitter(this.state.dataBooking[0].total_price)}
-                                        </Text>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-        }else{
-            content=<View>
-                        <View style={{
-                                    borderWidth: 1, 
-                                    borderColor: BaseColor.textSecondaryColor,
-                                    borderRadius: 10,
-                                    marginBottom:10,
-                                    padding:10
-                                    }}>
-                            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
-                                    <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                        <View>
-                                            <Text style={{color:BaseColor.grayColor,fontSize:12}}>
-                                                Transfer 
-                                            </Text>
-                                            <Text>
-                                                {dataPayment.payment_sub_label} 
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
-                                            <Text></Text>
-                                            <Text headline semibold numberOfLines={1}>
-                                            
-                                            </Text>
-                                    </View>
-                                </View>
-                            </View>
-                            
-                            
-                            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
-                                    <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                        <View>
-                                            <Text style={{color:BaseColor.grayColor,fontSize:12}}>
-                                                No Rekening 
-                                            </Text>
-                                            <Text headline semibold numberOfLines={6}>
-                                                {this.state.dataBooking[0].order_payment_info.norek}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
-                                            <Text></Text>
-                                            <Text headline semibold numberOfLines={1}>
-                                                SALIN
-                                            </Text>
-                                    </View>
-                                </View>
-                            </View>
-                            
-                            
-                            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
-                                    <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                        <View>
-                                            <Text style={{color:BaseColor.grayColor,fontSize:12}}>
-                                                Total Pembayaran 
-                                            </Text>
-                                            <Text headline semibold numberOfLines={1}>
-                                            {'IDR '+priceSplitter(this.state.dataBooking[0].order_payment[0].iv_total_amount)}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
-                                            <Text></Text>
-                                            <Text headline semibold numberOfLines={1}>
-                                                SALIN
-                                            </Text>
-                                    </View>
-                                </View>
-                            </View>
-                            
-                            <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
-                                <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
-                                    <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                        <View>
-                                            <Text style={{color:BaseColor.grayColor,fontSize:12}}>
-                                                Virtual Account 
-                                            </Text>
-                                            <Text headline semibold numberOfLines={10}>
-                                                {virtual_account}
-                                                
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
-                                            <Text></Text>
-                                            <Text headline semibold numberOfLines={1}>
-                                                SALIN
-                                            </Text>
-                                    </View>
-                                </View>
-                            </View>
-                            
-                            
-                            
-                        </View>
-                    </View>
-        
-        }
+            
         
         return(
             <View>
@@ -458,74 +832,75 @@ export default class PembayaranDetail extends Component {
             </View>
         )
     }
-    content_button(){
     
-        const { navigation} = this.props;
-        const {dataPayment,loading,dataBooking} =this.state;
+    function content_button(){
+        //var dataBooking=dataBooking;
+        //const { navigation} = props;
+        //const {dataPayment,loading,dataBooking} =state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         var order_payment_num=dataBooking[0].order_payment_num;
         var order_payment_recent=dataBooking[0].order_payment_recent;
         var content=<View></View>;
         
-        
-        if(order_payment_recent==null){
-            content=<View style={styles.contentButtonBottom}>
-                        <Button
-                            full
-                            loading={loading}
-                            onPress={() => { 
-                                Alert.alert(
-                                  'Confirm',
-                                  'Yakin ingin membayar tagihan ini ?',
-                                  [
-                                    {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
-                                    {text: 'YES', onPress: () => this.submitPayment()},
-                                  ]
-                                );
-                        }}    
-                        >
-                            Bayar
-                        </Button>
-                </View>
-        }else{
-            
-                
-            content=<View>
-                <View style={styles.contentButtonBottom}>
-                        <Button
-                            full
-                            loading={loading}
-                            onPress={() => { 
-                                this.onSubmit();
-                            }}
-                        >
-                            Sudah Membayar
-                        </Button>
-                </View>
-                    <View style={styles.contentButtonBottom}>
+        if(order_payment_recent != null){
+            if(order_payment_recent.payment_type == ""){
+                content=<View style={styles.contentButtonBottom}>
                             <Button
                                 full
                                 loading={loading}
                                 onPress={() => { 
-                                        Alert.alert(
-                                          'Confirm',
-                                          'Ingin mengganti metode pembayaran ?',
-                                          [
-                                            {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
-                                            {text: 'YES', onPress: () => this.changePayment()},
-                                          ]
-                                        );
-                                }}
-                                style={{backgroundColor:BaseColor.grayColor}}
+                                    Alert.alert(
+                                      'Confirm',
+                                      'Yakin ingin membayar tagihan ini ?',
+                                      [
+                                        {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                        {text: 'YES', onPress: () => submitPayment()},
+                                      ]
+                                    );
+                            }}    
                             >
-                                <Text style={{color:BaseColor.whiteColor}}>Ganti Metode Pembayaran</Text>
+                                Bayar
                             </Button>
                     </View>
-                </View>
-        
+            }else{
+                
+                    
+                content=<View>
+                    {/* <View style={styles.contentButtonBottom}>
+                            <Button
+                                full
+                                loading={loading}
+                                onPress={() => { 
+                                    onSubmit();
+                                }}
+                            >
+                                Sudah Membayar
+                            </Button>
+                    </View>
+                        <View style={styles.contentButtonBottom}>
+                                <Button
+                                    full
+                                    loading={loading}
+                                    onPress={() => { 
+                                            Alert.alert(
+                                              'Confirm',
+                                              'Ingin mengganti metode pembayaran ?',
+                                              [
+                                                {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                                {text: 'YES', onPress: () => changePayment()},
+                                              ]
+                                            );
+                                    }}
+                                    style={{backgroundColor:BaseColor.grayColor}}
+                                >
+                                    <Text style={{color:BaseColor.whiteColor}}>Ganti Metode Pembayaran</Text>
+                                </Button>
+                        </View> */}
+                    </View>
+            
+            }
         }
-        
         
         return(
         
@@ -537,233 +912,131 @@ export default class PembayaranDetail extends Component {
     }
     
     
-    // submitPayment(){
-       
-           
-    //     const data={"id_order":this.state.id_order}
-    //     const param={"param":data}
-    //     console.log('-------------param change payment-------------');
-    //     console.log(JSON.stringify(param));
-
-    //     PostData('order_payment_delete',param)
-    //         .then((result) => {
-    //             console.log("---------------get_booking_historys ------------");
-    //             console.log(JSON.stringify(result));
-    //             //this.setState({dataBooking:result});
-    //         },
-    //         (error) => {
-    //             this.setState({ error });
-    //         }
-    //     ); 
-
-    // }
-
-
-    changePayment(){
-       
-        this.setState({ loading_spinner: true }, () => {
-                    const data={"id_order":this.state.id_order}
-                    const param={"param":data}
-                    console.log('-------------param change payment-------------');
-                    console.log(JSON.stringify(param));
-
-                    PostData('order_payment_delete',param)
-                        .then((result) => {
-                            this.cancelMidtrans();
-                            
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    ); 
-        });           
-            
-    }
+  useEffect(() => {
+    getConfig();
+    fetch();  
     
-    cancelMidtrans(){
-        var dataBooking=this.state.dataBooking;
-        var order_code=dataBooking[0].order_code;
-        var myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6");
-        
-        var raw = "";
-        
-        var requestOptions = {
-          method: 'POST',
-          headers: myHeaders,
-          body: raw,
-          redirect: 'follow'
-        };
-        
-        fetch("https://api.sandbox.midtrans.com/v2/"+order_code+"/cancel", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-                            this.setState({ loading_spinner: false });
-                            console.log("---------------cancel midtrans ------------");
-                            console.log(JSON.stringify(result));
-                            var redirect='Pembayaran';
-                            var param={
-                                id_order:this.state.id_order,
-                                dataPayment:{}
-                            }
-                            this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
-          })
-          .catch(error => console.log('error', error)); 
-    }
+    fcmService.registerAppWithFCM()
+    fcmService.register(onRegister, onNotification, onOpenNotification)
+    localNotificationService.configure(onOpenNotification)
     
-    fetch(){
 
-        this.setState({ loading_spinner: true }, () => {
-            AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
-                this.setState({userSession:userSession});
-                this.setState({login:true});
-                
-                var id_user=userSession.id_user;
-                    const data={"id":id_user,"id_order":this.state.id_order,"order_status":"","product":""}
-                    const param={"param":data}
-                    console.log('-------------param booking-------------');
-                    console.log(JSON.stringify(param));
-
-
-                    PostData('get_booking_history',param)
-                        .then((result) => {
-                            var dataBooking=result;
-                            console.log("---------------get_booking_historys ------------");
-                            console.log(JSON.stringify(result));
-                            this.setState({ loading_spinner: false });
-                            this.setState({dataBooking:dataBooking});
-                            
-                            
-                            //var order_code=dataBooking[0].order_code;
-                            
-                            var order_payment_recent=dataBooking[0].order_payment_recent;
-                          
-                            
-                            
-                            if(order_payment_recent != null){
-                            var id_invoice=order_payment_recent.id_invoice;
-                            this.fetchMidtrans(id_invoice);
-                              
-                            }
-                            
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    ); 
-             }else{
-                this.setState({login:false});
-             }
-            
-            });
-        });
-
-    }
-    
-    fetchMidtrans(id_invoice){
-        console.log('id_invoice',id_invoice);
-        var myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6");
-        
-        var requestOptions = {
-          method: 'GET',
-          headers: myHeaders,
-          redirect: 'follow'
-        };
-        
-        fetch("https://api.sandbox.midtrans.com/v2/"+id_invoice+"/status", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            var statusMidtrans=result;
-            console.log('status_midtrans',JSON.stringify(result));
-            this.setState({statusMidtrans:statusMidtrans});
-          })
-          .catch(error => console.log('error', error));
-
-    }
-    
-    
-    componentDidMount(){
-        this.fetch();
-    }
-
-    render() {
-        const { navigation} = this.props;
-        const {dataPayment,loading,dataBooking,loading_spinner} =this.state;
+    function onRegister(token) {
+        console.log("[App] onRegister: ", token);
+        AsyncStorage.setItem('tokenFirebase', token);
+      }
+  
+      function onNotification(notify) {
+        console.log("[App] onNotification: ", notify)
+        var body_msg=notify.body;
+        var body_array = body_msg.split("|||");
+        var message=body_array[0];
+        var id_order=body_array[1];
+        var id_invoice=body_array[2];
         
         
-        return (
+        //alert("Notification " + id_invoice);
+        
+        var redirect='PembayaranDetail';
+        var param={
+            id_order:idOrder,
+            dataPayment:dataPayment
+        }
+        navigation.navigate("Loading",{redirect:redirect,param:param});
+        
+        const options = {
+          soundName: 'default',
+          playSound: true //,
+          // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
+          // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
+        }
+        localNotificationService.showNotification(
+          0,
+          notify.title,
+          notify.body,
+          notify,
+          options
+        )
+      }
+  
+      function onOpenNotification(notify) {
+        console.log("[App] onOpenNotification: ", notify)
+        //alert("Open Notification: " + notify.body)
+      }
+      
+      return () => {
+        console.log("[App] unRegister")
+        fcmService.unRegister()
+        localNotificationService.unregister()
+      }
+  
+  },[]);
+
+  return (
       
         
-            <SafeAreaView
-            style={BaseStyle.safeAreaView}
-            forceInset={{ top: "always" }}
-        >
-            <Header
-                title={dataPayment.payment_type_label+' - '+dataPayment.payment_sub_label}
-                subTitle={'No.Tagihan :'+this.state.dataBooking[0].order_code}
-                renderLeft={() => {
-                    return (
-                        <Icon
-                            name="arrow-left"
-                            size={20}
-                            color={BaseColor.whiteColor}
-                        />
-                    );
-                }}
-                onPressLeft={() => {
-                    navigation.goBack();
-                }}
-            />
-          
-            {
-                            loading_spinner ? 
-                            
-                            <View style={{flex: 1,backgroundColor:  "#FFFFFF",justifyContent: "center",alignItems: "center"}}>
-                                <View
-                                    style={{
-                                        position: "absolute",
-                                        top: 220,
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        justifyContent: "center",
-                                        alignItems: "center"
-                                    }}
-                                >
-                                    
-                                    <AnimatedLoader
-                                        visible={true}
-                                        overlayColor="rgba(255,255,255,0.75)"
-                                        source={require("app/assets/loader_paperline.json")}
-                                        animationStyle={{width: 300,height: 300}}
-                                        speed={1}
-                                      />
-                                    <Text grayColor>
-                                        Connecting.. to Masterdiskon
-                                    </Text>
-                                </View>
+    <SafeAreaView
+        style={BaseStyle.safeAreaView}
+        forceInset={{ top: "always" }}
+    >
+        <Header
+            title={dataPayment.payment_type_label+' - '+dataPayment.payment_sub_label}
+            subTitle={'No.Order :'+dataBooking[0].order_code}
+            renderLeft={() => {
+                return (
+                    <Icon
+                        name="arrow-left"
+                        size={20}
+                        color={BaseColor.whiteColor}
+                    />
+                );
+            }}
+            onPressLeft={() => {
+                navigation.goBack();
+            }}
+        />
+      
+        {
+                        loading ? 
+                        
+                        <View style={{flex: 1,backgroundColor:  "#FFFFFF",justifyContent: "center",alignItems: "center"}}>
+                            <View
+                                style={{
+                                    position: "absolute",
+                                    top: 220,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}
+                            >
+                                
+                                <AnimatedLoader
+                                    visible={true}
+                                    overlayColor="rgba(255,255,255,0.1)"
+                                    source={require("app/assets/loader_paperline.json")}
+                                    animationStyle={{width: 300,height: 300}}
+                                    speed={1}
+                                  />
+                                <Text>
+                                    Connecting.. to Masterdiskon
+                                </Text>
                             </View>
-                            :
-            <ScrollView>
-                <View  style={{ padding: 20 }}>
-                    {this.content_countdown()}
-                    {this.content_payment()}
-                    {this.content_button()}
-                </View>
-            </ScrollView>
-            }
-            
-        </SafeAreaView>
-        );
-    }
+                        </View>
+                        :
+        <ScrollView>
+            <View  style={{ padding: 20 }}>
+                {/* {content_countdown()}
+                {content_payment()}
+                {content_button()} */}
+                {content_countdown()}
+                {content_payment()}
+                {content_button()}
+            </View>
+        </ScrollView>
+        }
+        
+    </SafeAreaView>
+    );
 }
-

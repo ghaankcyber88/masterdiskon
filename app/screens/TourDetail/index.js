@@ -127,7 +127,7 @@ export default class TourDetail extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -135,14 +135,47 @@ export default class TourDetail extends Component {
                         navigation.goBack();
                     }}
                 />
-                <ProfileDescription
+                {/* <ProfileDescription
                     image={userData.image}
-                    name={this.state.product.judul_trip}
-                    subName={this.state.product.country_name}
+                    name={'asdasdas'}
+                    subName={'asdasdas'}
                     description={userData.address}
                     style={{ marginTop: 25, paddingHorizontal: 20 }}
-                />
-                {/* <View
+                /> */}
+                
+                {/* <View style={{ flexDirection: "row",flex: 1 }}>
+                            <Card
+                                style={{ borderRadius: 8 }}
+                                image={'large-holbung-hill-view-at-toba-lake-sumatera-indonesia-0c6f46cefbcf08ccb86f5df01e34be43.jpg'}
+                                url={'https://masterdiskon.com/assets/upload/product/trip/2020/featured/'}
+                            >
+                                <Text headline semibold>
+                                    {Card}
+                                </Text>
+                            </Card>
+                </View>
+                 */}
+                <TouchableOpacity
+                    // style={style}
+                    //onPress={onPress}
+                    style={{
+                        marginHorizontal: 20,
+                        // marginHorizontal:10,
+                        flexDirection:'row',
+                        height:50,
+                        flex:1
+                    }}
+                    activeOpacity={0.9}
+                >
+                        <Image 
+                        source={{uri : 'https://masterdiskon.com/assets/upload/product/trip/2020/featured/'+'large-holbung-hill-view-at-toba-lake-sumatera-indonesia-0c6f46cefbcf08ccb86f5df01e34be43.jpg'}}  
+                        style={{ width: '100%',height:'100%',borderRadius:8}}
+                        resizeMode="contain" 
+                        onLoad={this._onLoad} />
+                        {/* <View><Text>asd</Text></View> */}
+    
+                </TouchableOpacity>
+                <View
                     style={{
                         flexDirection: "row",
                         alignItems: "center",
@@ -168,7 +201,7 @@ export default class TourDetail extends Component {
                             }}
                         />
                     </View>
-                </View> */}
+                </View>
                 <View style={{ flex: 1 }}>
                     <TabView
                         lazy
@@ -203,7 +236,7 @@ export default class TourDetail extends Component {
                                 Price per pax
                             </Text>
                             <Text title3 primaryColor semibold>
-                                {'IDR '+priceSplitter(this.state.product.harga)}
+                                {'IDR '+priceSplitter(2000)}
                             </Text>
                             {/* <Text caption1 semibold style={{ marginTop: 5 }}>
                                 3 Participants

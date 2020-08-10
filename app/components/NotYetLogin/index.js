@@ -29,6 +29,7 @@ export default class NotYetLogin extends Component {
             redirect,
             navigation,
             type,
+            param
         } = this.props;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
         return (
@@ -59,7 +60,7 @@ export default class NotYetLogin extends Component {
                              shadowRadius: 3.84,
                              elevation: 5 }}
                              loading={this.state.loading}
-                             onPress={() => navigation.navigate("SignIn",{redirect:redirect})}
+                             onPress={() => navigation.navigate("SignIn",{redirect:redirect,param:param})}
                          >
                              Sign In
                          </Button>
@@ -90,12 +91,14 @@ export default class NotYetLogin extends Component {
 NotYetLogin.propTypes = {
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     redirect: PropTypes.string,
-    navigation: PropTypes.object
+    navigation: PropTypes.object,
+    param: PropTypes.string,
 };
 
 NotYetLogin.defaultProps = {
     style: {},
     redirect:'',
     onPress: () => { },
-    navigation: {}
+    navigation: {},
+    param:''
 };

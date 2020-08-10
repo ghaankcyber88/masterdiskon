@@ -2,7 +2,13 @@ import { StyleSheet,Dimensions } from "react-native";
 import { BaseColor } from "@config";
 import * as Utils from "@utils";
 
-const { width } = Dimensions.get('window')
+const sWidth  = Dimensions.get('window').width;
+const sHeight = Dimensions.get('window').height;
+const ratio   = sWidth / sHeight; //sWidth = ratio * sHeight
+
+const { width } = Dimensions.get('window');
+import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
+
 
 export default StyleSheet.create({
     imageBackground: {
@@ -80,7 +86,7 @@ export default StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
+        //elevation: 5,
         marginBottom:5
     },
     itemService: {
@@ -97,9 +103,8 @@ export default StyleSheet.create({
     tourItem: {
         borderRadius: 8,
         width: Utils.scaleWithPixel(135),
-        height: Utils.scaleWithPixel(160)
+        height: Utils.scaleWithPixel(135)
     },
-
 
 
 
@@ -107,7 +112,12 @@ export default StyleSheet.create({
      slide: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    
+    //backgroundColor: BaseColor.primaryColor,
+    zIndex:1, 
+    flex:1,
+  
   },
   text: {
     color: '#fff',
@@ -145,4 +155,56 @@ export default StyleSheet.create({
 //     justifyContent: "center",
 //     alignItems: "center"
 //   }
+
+
+
+
+containerSwipper: {
+    width: sWidth,
+    //height: sHeight,
+    height: wp("50%"),
+    backgroundColor: '#fff'
+  },
+  top_background: {
+    width: sHeight * 2,
+    height: sHeight * 2,
+    borderRadius: sHeight * 1,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    backgroundColor: BaseColor.primaryColor,
+    alignItems: 'center',
+    marginLeft: ((ratio * sHeight) * 0.5) - (sHeight),
+    marginTop: -sHeight * 1.7,
+    paddingTop: sHeight * 1.7,
+  },
+  top_content: {
+    paddingTop: sHeight * 0.002,
+    width: sWidth,
+    height: sHeight * 0.3,
+    alignItems: 'center',
+  },
+  text1: {
+    fontSize: 14,
+    color: '#fff'
+  },  
+  text2: {
+    marginTop: sHeight * 0.1,
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: '#fff'
+  },
+  
+  imgProfile: {
+    width: 35,
+    height: 35,
+    //borderRadius: 60,
+    //marginBottom: 10
+  },
+  
+  carouselContainer: {
+    height:200  
+},
+  carousel: {
+        flex:1
+} 
 });

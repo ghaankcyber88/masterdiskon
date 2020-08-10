@@ -36,6 +36,7 @@ import Profile8 from "@screens/Profile8";
 import ProfileSmart from "@screens/ProfileSmart";
 import More from "@screens/More";
 import Tour from "@screens/Tour";
+import Voucher from "@screens/Voucher";
 import Car from "@screens/Car";
 import OverViewCar from "@screens/OverViewCar";
 import Hotel from "@screens/Hotel";
@@ -463,6 +464,9 @@ const StackNavigator = createStackNavigator(
         },
         Tour: {
             screen: Tour
+        },
+        Voucher: {
+            screen: Voucher
         },
         Car: {
             screen: Car

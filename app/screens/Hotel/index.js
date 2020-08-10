@@ -1,458 +1,152 @@
 import React, { Component } from "react";
-import { FlatList, RefreshControl, View, Animated,Text} from "react-native";
+import { FlatList, RefreshControl, View, Animated,ScrollView } from "react-native";
 import { BaseStyle, BaseColor } from "@config";
-import { Header, SafeAreaView, Icon, HotelItem, FilterSort,Image } from "@components";
+import { Header, SafeAreaView, Icon, HotelItem, FilterSort,Text } from "@components";
 import styles from "./styles";
 import * as Utils from "@utils";
-import { Images } from "@config";
+import {PostData} from '../../services/PostData';
+import {PostDataNew} from '../../services/PostDataNew';
+import {AsyncStorage} from 'react-native';
+import CardCustom from "../../components/CardCustom";
+import CardCustomProduct from "../../components/CardCustomProduct";
 
 // Load sample data
-import { HotelData,DataMasterDiskon } from "@data";
-import {PostDataProduct} from '../../services/PostDataProduct';
+import {DataLoading,DataConfig} from "@data";
+import {
+    Placeholder,
+    PlaceholderMedia,
+    PlaceholderLine,
+    Fade
+  } from "rn-placeholder";
 
 export default class Hotel extends Component {
     constructor(props) {
         super(props);
-        const scrollAnim = new Animated.Value(0);
-        const offsetAnim = new Animated.Value(0);
-        //var paramUrl=this.props.navigation.state.params.paramUrl;
-        //var paramOther=this.props.navigation.state.params.paramOther;
-        var param=this.props.navigation.state.params.param;
-        console.log('PARAM hotel',JSON.stringify(param));
-        //var city=this.props.navigation.state.params.city;
-        // Temp data define
-        this.state = {
-            refreshing: false,
-            loading: false,
-            scrollAnim,
-            offsetAnim,
-            clampedScroll: Animated.diffClamp(
-                Animated.add(
-                    scrollAnim.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, 1],
-                        extrapolateLeft: "clamp"
-                    }),
-                    offsetAnim
-                ),
-                0,
-                40
-            ),
-            modeView: "list",
-            hotels: HotelData,
-            // paramUrl:paramUrl,
-            // city:city,
-            param:param,
-            //paramOther:paramOther,
-            DataMasterDiskon:DataMasterDiskon[0],
-        };
-
-        this.onChangeView = this.onChangeView.bind(this);
-        this.onFilter = this.onFilter.bind(this);
-        this.onChangeSort = this.onChangeSort.bind(this);
-    }
-    
-    
-    getHotel(){
-        var param=this.state.param;
-        //var paramUrl=this.state.paramUrl;
-        //var city=this.state.city;
-        var paramUrl='checkin='+param.DepartureDate+'&checkout='+param.ReturnDate+'&adults='+param.Adults+'&children='+param.Children+'&room='+param.Qty;
-        param.paramUrl=paramUrl;
-        this.setState({param:param});
-        this.setState({ loading_spinner: true }, () => {
-            PostDataProduct('hotel/search_app?city='+param.cityId+'&'+paramUrl)
-            .then((result) => {
-                    this.setState({ loading_spinner: false });
-                  
-                    var hotels=result.result;
-                   
-                    console.log('hotellsx',JSON.stringify(hotels));
-                    this.setState({hotels:hotels});
-                   
         
-                },
-                (error) => {
-                    this.setState({ error });
-                }
-            );
-            
-
-
-        });
-    }
-    componentDidMount(){
-        this.getHotel();
-    }
-    onSelect(item){
-        const{param}=this.state;
-        
-        param.slug=item.slug_hotel;
-        
-        this.props.navigation.navigate(
-            "HotelDetail",{
-            param:param,
-            product:item
-            }
-        );
-    }
-    
-    
-    onChangeSort() {}
-
-    /**
-     * @description Open modal when filterring mode is applied
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     */
-    onFilter() {
-        const { navigation } = this.props;
-        navigation.navigate("Filter");
-    }
-
-    /**
-     * @description Open modal when view mode is pressed
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     */
-    onChangeView() {
-        let { modeView } = this.state;
-        Utils.enableExperimental();
-        switch (modeView) {
-            case "block":
-                this.setState({
-                    modeView: "grid"
-                });
-                break;
-            case "grid":
-                this.setState({
-                    modeView: "list"
-                });
-                break;
-            case "list":
-                this.setState({
-                    modeView: "block"
-                });
-                break;
-            default:
-                this.setState({
-                    modeView: "block"
-                });
-                break;
+        if(this.props.navigation.state.params && this.props.navigation.state.params.country){
+            country=this.props.navigation.state.params.country;
+            id_country=country.id_country;
+        }else{
+            id_country='';
         }
+
+        this.state = {
+            
+            id_country:id_country,
+            listdata_product_hotel_package:DataLoading,
+            config:DataConfig,
+
+
+        };
+        this.getConfig();
+
+    }
+    
+    getConfig(){
+        AsyncStorage.getItem('config', (error, result) => {
+            if (result) {    
+                let config = JSON.parse(result);
+                //console.log('getConfig',config);
+                this.setState({config:config});
+            }
+        });
+    }
+    
+    
+    getProductHotelPackage(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.url_md.product.product_hotel_package;
+        this.setState({ loading_product_hotel_package: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    console.log("getProductHotelPackage",JSON.stringify(result));
+                    this.setState({loading_product_hotel_package: false });
+                    this.setState({listdata_product_hotel_package: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
     }
 
-    /**
-     * @description Render container view
-     * @author Passion UI <passionui.com>
-     * @date 2019-08-03
-     * @returns
-     */
+
+    componentDidMount() {
+        setTimeout(() => {
+            this.getProductHotelPackage();
+        }, 500);
+    }
+
+
     renderContent() {
-        const { modeView, hotels, refreshing, clampedScroll } = this.state;
+        const { config} = this.state;
         const { navigation } = this.props;
-        const navbarTranslate = clampedScroll.interpolate({
-            inputRange: [0, 40],
-            outputRange: [0, -40],
-            extrapolate: "clamp"
-        });
+    
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
-        switch (modeView) {
-            case "block":
+      
                 return (
-                    <View style={{ flex: 1 }}>
-                        <Animated.FlatList
-                            contentContainerStyle={{
-                                paddingTop: 50,
-                                paddingBottom: 20
-                            }}
-                            refreshControl={
-                                <RefreshControl
-                                    colors={[BaseColor.primaryColor]}
-                                    tintColor={BaseColor.primaryColor}
-                                    refreshing={refreshing}
-                                    onRefresh={() => {}}
-                                />
-                            }
-                            scrollEventThrottle={1}
-                            onScroll={Animated.event(
-                                [
-                                    {
-                                        nativeEvent: {
-                                            contentOffset: {
-                                                y: this.state.scrollAnim
-                                            }
-                                        }
-                                    }
-                                ],
-                                { useNativeDriver: true }
-                            )}
-                            data={hotels}
-                            key={"block"}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={({ item, index }) => (
-                                
-                                <HotelItem
-                                    block
-                                    image={item.image}
-                                    name={item.name_hotel}
-                                    location={item.location}
-                                    price={item.price}
-                                    available={item.available}
-                                    rate={item.rate}
-                                    rateStatus={item.rateStatus}
-                                    numReviews={item.numReviews}
-                                    services={item.services}
-                                    style={{
-                                        marginBottom: 10
-                                    }}
-                                    onPress={() =>
-                                        navigation.navigate("HotelDetail")
-                                    }
-                                    onPressTag={() =>
-                                        navigation.navigate("Review")
-                                    }
-                                />
-                            )}
-                        />
-                        <Animated.View
-                            style={[
-                                styles.navbar,
-                                { transform: [{ translateY: navbarTranslate }] }
-                            ]}
-                        >
-                            <FilterSort
-                                modeView={modeView}
-                                onChangeSort={this.onChangeSort}
-                                onChangeView={this.onChangeView}
-                                onFilter={this.onFilter}
-                            />
-                        </Animated.View>
-                    </View>
-                );
-            case "grid":
-                return (
-                    <View style={{ flex: 1 }}>
-                        <Animated.FlatList
-                            contentContainerStyle={{
-                                paddingTop: 50,
-                                paddingBottom: 20
-                            }}
-                            columnWrapperStyle={{
-                                marginHorizontal: 20
-                            }}
-                            refreshControl={
-                                <RefreshControl
-                                    colors={[BaseColor.primaryColor]}
-                                    tintColor={BaseColor.primaryColor}
-                                    refreshing={refreshing}
-                                    onRefresh={() => {}}
-                                />
-                            }
-                            scrollEventThrottle={1}
-                            onScroll={Animated.event(
-                                [
-                                    {
-                                        nativeEvent: {
-                                            contentOffset: {
-                                                y: this.state.scrollAnim
-                                            }
-                                        }
-                                    }
-                                ],
-                                { useNativeDriver: true }
-                            )}
-                            numColumns={2}
-                            data={hotels}
-                            key={"grid"}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={({ item, index }) => (
-                                <HotelItem
-                                    grid
-                                    image={item.image}
-                                    name={item.name}
-                                    location={item.location}
-                                    price={item.price}
-                                    available={item.available}
-                                    rate={item.rate}
-                                    rateStatus={item.rateStatus}
-                                    numReviews={item.numReviews}
-                                    services={item.services}
-                                    onPress={() =>
-                                        navigation.navigate("HotelDetail")
-                                    }
-                                    style={{
-                                        marginBottom: 10,
-                                        marginLeft: index % 2 ? 15 : 0
-                                    }}
-                                />
-                            )}
-                        />
-                        <Animated.View
-                            style={[
-                                styles.navbar,
-                                {
-                                    transform: [{ translateY: navbarTranslate }]
-                                }
-                            ]}
-                        >
-                            <FilterSort
-                                modeView={modeView}
-                                onChangeSort={this.onChangeSort}
-                                onChangeView={this.onChangeView}
-                                onFilter={this.onFilter}
-                            />
-                        </Animated.View>
-                    </View>
-                );
-            case "list":
-                return (
-                    <View style={{ flex: 1 }}>
-                        <Animated.FlatList
-                            contentContainerStyle={{
-                                paddingTop: 50,
-                                paddingBottom: 20
-                            }}
-                            refreshControl={
-                                <RefreshControl
-                                    colors={[BaseColor.primaryColor]}
-                                    tintColor={BaseColor.primaryColor}
-                                    refreshing={refreshing}
-                                    onRefresh={() => {}}
-                                />
-                            }
-                            scrollEventThrottle={1}
-                            onScroll={Animated.event(
-                                [
-                                    {
-                                        nativeEvent: {
-                                            contentOffset: {
-                                                y: this.state.scrollAnim
-                                            }
-                                        }
-                                    }
-                                ],
-                                { useNativeDriver: true }
-                            )}
-                            data={hotels}
-                            key={"list"}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={({ item, index }) => (
-                                <HotelItem
-                                    list
-                                    image={item.img_featured}
-                                    url={this.state.DataMasterDiskon.site+'assets/upload/product/hotel/img/featured/'}
-                                    name={item.name_hotel}
-                                    location={item.city_name}
-                                    price={'Rp '+priceSplitter(item.price_from)}
-                                    available={'Inclusive of Taxes'}
-                                    rate={item.stars}
-                                    rateStatus={item.rateStatus}
-                                    numReviews={item.numReviews}
-                                    services={item.services}
-                                    rateCount={item.rating+'of 100'}
-                                    style={{
-                                        marginHorizontal: 20,
-                                        marginBottom: 20
-                                    }}
-                                    onPress={() => {
-                                        this.onSelect(item);
+                            <View>
+                                <View style={{marginTop: 20}}>
+                                    <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk horizontal false
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
                                         
-                                    }}
-                                />
-                            )}
-                        />
-                        <Animated.View
-                            style={[
-                                styles.navbar,
-                                {
-                                    transform: [{ translateY: navbarTranslate }]
-                                }
-                            ]}
-                        >
-                            <FilterSort
-                                modeView={modeView}
-                                onChangeSort={this.onChangeSort}
-                                onChangeView={this.onChangeView}
-                                onFilter={this.onFilter}
-                            />
-                        </Animated.View>
-                    </View>
+                                        //untuk horizontal false
+                                        //horizontal={true}
+                                        
+                                        data={this.state.listdata_product_hotel_package}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                item={item}
+                                                img={config.baseUrl+'assets/upload/product/trip/2020/featured/'+item.img_featured}
+                                                titleIcon={{text:item.product_place,icon:"home"}}
+                                                title={item.product_name}
+                                                subtitle={item.product_duration}
+                                                subtitle2={'Rp '+priceSplitter(item.product_price)}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    // { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    //index % 2 ? { marginLeft: 20 } : {marginLeft:20}
+                                                    {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() => {
+                                                    alert('Dalam pengembangan');
+                                                    // navigation.navigate(item.route,{type:item.type});
+                                                }}
+                                                url={config.baseUrl+'assets/upload/product/voucher/2020/'}
+                                                loading={this.state.loading_product_trip}
+                                                property={{inFrame:true,innerText:false}}
+                                                type={''}
+                                            />
+                                        
+                                        )}
+                                    />
+                                </View>
+                            </View>
                 );
-            default:
-                return (
-                    <View style={{ flex: 1 }}>
-                        <Animated.FlatList
-                            contentContainerStyle={{
-                                paddingTop: 50,
-                                paddingBottom: 20
-                            }}
-                            refreshControl={
-                                <RefreshControl
-                                    colors={[BaseColor.primaryColor]}
-                                    tintColor={BaseColor.primaryColor}
-                                    refreshing={refreshing}
-                                    onRefresh={() => {}}
-                                />
-                            }
-                            scrollEventThrottle={1}
-                            onScroll={Animated.event(
-                                [
-                                    {
-                                        nativeEvent: {
-                                            contentOffset: {
-                                                y: this.state.scrollAnim
-                                            }
-                                        }
-                                    }
-                                ],
-                                { useNativeDriver: true }
-                            )}
-                            data={hotels}
-                            key={"block"}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={({ item, index }) => (
-                                <HotelItem
-                                    block
-                                    image={item.image}
-                                    name={item.name}
-                                    location={item.location}
-                                    price={item.price}
-                                    available={item.available}
-                                    rate={item.rate}
-                                    rateStatus={item.rateStatus}
-                                    numReviews={item.numReviews}
-                                    services={item.services}
-                                    style={{
-                                        marginBottom: 10
-                                    }}
-                                    onPress={() =>
-                                        navigation.navigate("HotelDetail")
-                                    }
-                                    onPressTag={() =>
-                                        navigation.navigate("Preview")
-                                    }
-                                />
-                            )}
-                        />
-                        <Animated.View
-                            style={[
-                                styles.navbar,
-                                { transform: [{ translateY: navbarTranslate }] }
-                            ]}
-                        >
-                            <FilterSort
-                                modeView={modeView}
-                                onChangeSort={this.onChangeSort}
-                                onChangeView={this.onChangeView}
-                                onFilter={this.onFilter}
-                            />
-                        </Animated.View>
-                    </View>
-                );
-        }
+            
     }
+
 
     render() {
         const { navigation } = this.props;
@@ -463,13 +157,13 @@ export default class Hotel extends Component {
             >
                 <Header
                     title="Hotels"
-                    //subTitle="24 Dec 2018, 2 Nights, 1 Room"
+                    subTitle="24 Dec 2018, 2 Nights, 1 Room"
                     renderLeft={() => {
                         return (
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -489,22 +183,23 @@ export default class Hotel extends Component {
                         navigation.navigate("SearchHistory");
                     }}
                 />
-{/*               
-                <View
-                    style={{flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100%',padding: 20}}
-                    >       
-                    <Image
-                        source={Images.login}
-                        style={{ width: "60%", height: "60%" }}
-                        resizeMode="cover"
-                    />
-                    <View><Text>Masih dalam pengembangan</Text></View>
-
-                </View>     */}
-                 {this.renderContent()}
+                <ScrollView
+                        onScroll={Animated.event([
+                            {
+                                nativeEvent: {
+                                    contentOffset: { y: this._deltaY }
+                                }
+                            }
+                        ])}
+                        onContentSizeChange={() =>
+                            this.setState({
+                                heightHeader: Utils.heightHeader()
+                            })
+                        }
+                        scrollEventThrottle={8}
+                    >
+                {this.renderContent()}
+                </ScrollView>
             </SafeAreaView>
         );
     }

@@ -67,15 +67,11 @@ export default StyleSheet.create({
     },
     contain: {
         flexDirection: "row",
+        flex: 1,
         borderBottomColor: BaseColor.textSecondaryColor,
         borderBottomWidth: 1,
-        // paddingTop: 5,
-        // paddingBottom: 5,
-
-         backgroundColor: "#fff",
-
-         borderRadius: 18,
-                                // backgroundColor: BaseColor.fieldColor,
+        backgroundColor: "#fff",
+        borderRadius: 18,
                                 shadowColor: "#000",
                                 shadowOffset: {
                                     width: 0,
@@ -89,13 +85,14 @@ export default StyleSheet.create({
     thumb: { width: 48, height: 48, marginRight: 10, borderRadius: 24 },
     content: {
         flex: 1,
-        flexDirection: "row"
+        flexDirection: "row",
     },
     left: {
         flex: 7.5,
         alignItems: "flex-start",
         justifyContent: "center",
-        marginLeft:30
+        //marginLeft:30
+        
     },
     right: {
         flex: 2.5,

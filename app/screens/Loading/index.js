@@ -5,11 +5,9 @@ import { ActivityIndicator, View } from "react-native";
 import { bindActionCreators } from "redux";
 import { Images, BaseColor } from "@config";
 import SplashScreen from "react-native-splash-screen";
-import { Image, Text } from "@components";
-import styles from "./styles";
-import {PostData} from '../../services/PostData';
+import {Text } from "@components";
 import {PostDataNew} from '../../services/PostDataNew';
-import { PromotionData, TourData, HotelData,FeaturedDestination,DataMasterDiskon, DataLoading } from "@data";
+import {DataMasterDiskon} from "@data";
 import {AsyncStorage} from 'react-native';
 import AnimatedLoader from "react-native-animated-loader";
 
@@ -18,15 +16,11 @@ class Loading extends Component {
         super(props);
         this.state={
             DataMasterDiskon:DataMasterDiskon[0],
-            // isProduction:{
-            //     status:false,
-            //     url:''
-            // }
         }
     }
 
     isProduction(){
-    
+        const {DataMasterDiskon} =this.state;
         this.setState({ loading_production: true }, () => {
             var param={
                 method: 'POST',
@@ -37,13 +31,10 @@ class Loading extends Component {
                 body: JSON.stringify(),
               }
            
-             var url=this.state.DataMasterDiskon.site;
-             console.log('baseUrl',url);
+             var url=this.state.DataMasterDiskon.baseUrl;
              
-             PostDataNew(url,'front/api/api/config',param)
+             PostDataNew(url,DataMasterDiskon.urlApiMd.common.config.path,param)
                  .then((result) => {
-                    console.log('config',JSON.stringify(result));
-
                     var aeroStatus=result.aeroStatus;
                     var aeroUrl=result.aeroUrl;
                     if(aeroStatus==false){
@@ -51,26 +42,19 @@ class Loading extends Component {
                     }else{
                         var details=this.state.DataMasterDiskon.aeroProd;
                     }
-                    console.log('detailsparam',JSON.stringify(details));
                     var config=result;
-
                     this.getToken(details,aeroUrl,config);
-                    // AsyncStorage.setItem('config',JSON.stringify(result));
-                    // this.setState({config:result});
-                    
-                    
                  },
                  (error) => {
                      this.setState({ error });
                  }
             ); 
-        
-        
         });
     
     }
     
     getToken(details,url,config){
+        const {DataMasterDiskon} =this.state;
         let { navigation, auth } = this.props;
         let status = auth.login.success;
         var formBody = [];
@@ -92,13 +76,10 @@ class Loading extends Component {
           }
 
 
-        PostDataNew(url,'connect/token',param)
+        PostDataNew(url,DataMasterDiskon.urlApiAero.token.path,param)
                  .then((result) => {
                     var access_token=result.access_token;
-                    
                     config.token=access_token;
-                    console.log('dataConfif',JSON.stringify(config));
-                    // console.log('token agi loading',access_token);
                     AsyncStorage.setItem('config', JSON.stringify(config)); 
                     navigation.navigate("Home");
                     
@@ -137,20 +118,6 @@ class Loading extends Component {
             }, 500);
         }else{
             this.isProduction();
-            // switch (status) {
-            //     case true:
-            //         setTimeout(() => {
-            //             navigation.navigate("Home");
-            //         }, 500);
-            //         break;
-            //     case false:
-            //         setTimeout(() => {
-            //             navigation.navigate("Home");
-            //         }, 500);
-            //         break;
-            //     default:
-            //         break;
-            // }
         }
     }
     
@@ -181,7 +148,7 @@ class Loading extends Component {
                     
                     <AnimatedLoader
                         visible={true}
-                        overlayColor="rgba(255,255,255,0.75)"
+                        overlayColor="rgba(255,255,255,0.1)"
                         source={require("app/assets/loader_paperline.json")}
                         animationStyle={{width: 300,height: 300}}
                         speed={1}

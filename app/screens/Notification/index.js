@@ -9,6 +9,7 @@ import { NotificationData,DataLoading } from "@data";
 import { View } from "react-native-animatable";
 import { Image } from "@components";
 import { Images } from "@config";
+import CardCustomNotif from "../../components/CardCustomNotif";
 
 import {
   Placeholder,
@@ -18,67 +19,87 @@ import {
 } from "rn-placeholder";
 import NotYetLogin from "../../components/NotYetLogin";
 import PTRView from 'react-native-pull-to-refresh';
+import {PostDataNew} from '../../services/PostDataNew';
 export default class Notification extends Component {
     constructor(props) {
         super(props);
-        AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                let userSession = JSON.parse(result);
-                this.setState({userSession:userSession});
-                this.setState({login:true});
-             }
-            
-        });
-        
         this.state = {
             refreshing: false,
             login:true,
             notification:DataLoading,
 
         };
+        this.getConfig();
+        this.getSession();
     }
-
-    getNotif(){
-        this.setState({ loading_spinner: true }, () => {
-            AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                let userSession = JSON.parse(result);
-                //console.log("---------------data session user  ------------");
-                //console.log(JSON.stringify(userSession));
-                this.setState({userSession:userSession});
-                this.setState({login:true});
-                
-                var id_user=userSession.id_user;
-                const data={"id_user":id_user}
-                const param={"param":data}
-                //console.log('-------------param notif-------------');
-                //console.log(JSON.stringify(param));
-
-                    PostData('notif',param)
-                                .then((result) => {
-                                    //console.log('-------------result notif-------------');
-                                    //console.log(JSON.stringify(result));
-                                    this.setState({loading_spinner: false });
-                                    this.setState({notification:result});
-                                },
-                                (error) => {
-                                    this.setState({ error });
-                                }
-                    ); 
-
-             }else{
-                this.setState({login:false});
-
-             }
-            
-            });
+    
+    getConfig(){    
+        AsyncStorage.getItem('config', (error, result) => {
+            if (result) {    
+                let config = JSON.parse(result);
+                console.log('getConfig',config);
+                this.setState({config:config});
+            }
         });
     }
+    
+    
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                var id_user=userSession.id_user;
+                console.log('getSession',userSession);
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+            }
+        });
+    }
+    
+
+    getNotif(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.url_md.common.notif;
+        
+        var id_user=this.state.id_user;
+        var data={"id_user":id_user}
+        var param={"param":data}
+
+        var body=param;
+        this.setState({ loading_spinner: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: body,
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    //console.log("getOrder",JSON.stringify(result));
+                    this.setState({loading_spinner: false });
+                    this.setState({notification:result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
+    
+    
+    
 
     componentDidMount() {
         const {navigation} = this.props;
         navigation.addListener ('willFocus', () =>{
-            this.getNotif();
+            this.setState({ loading_spinner: true });
+            setTimeout(() => {
+                this.getNotif();
+            }, 200);
         });
     }
     _refresh() {
@@ -103,7 +124,7 @@ export default class Notification extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -126,15 +147,13 @@ export default class Notification extends Component {
                             data={notification}
                             keyExtractor={(item, index) => item.id}
                             renderItem={({ item, index }) => (
-                                <ListThumbCircle
+                                <CardCustomNotif
                                     image={item.image}
                                     txtLeftTitle={item.title}
                                     txtContent={item.content}
                                     txtRight={item.date_added}
                                     loading={this.state.loading_spinner}
-                                    //loading={true}
                                     onPress={() => {
-                                        //this.props.navigation.navigate("PreviewBooking",{item:item});
                                         this.props.navigation.navigate("WebViewPage",{url:item.tautan+'?access=app',title:'Pembayaran'});
                                     }}
                                 />

@@ -6,6 +6,7 @@ import styles from "./styles";
 import DropdownAlert from 'react-native-dropdownalert';
 import ValidationComponent from 'react-native-form-validator';
 import InputText from "../../components/InputText";
+import { Form, TextValidator } from 'react-native-validator-form';
 
 export default class SignUp extends ValidationComponent {
     constructor(props) {
@@ -40,7 +41,7 @@ export default class SignUp extends ValidationComponent {
         };
     }
 
-    onSignUp() {
+    onSubmit() {
         const { navigation } = this.props;
         let { name,firstname,lastname,username,password,passwordConfirm, email, address, success } = this.state;
 
@@ -113,36 +114,73 @@ export default class SignUp extends ValidationComponent {
     }
       
 
-    validation(){
-        var passwordConfirm=this.state.passwordConfirm;
-        var password = this.state.password;
-        var email=this.state.email;
-        var username=this.state.username;
-        var firstname=this.state.firstname;
-        var lastname=this.state.lastname;
+    // validation(){
+    //     var passwordConfirm=this.state.passwordConfirm;
+    //     var password = this.state.password;
+    //     var email=this.state.email;
+    //     var username=this.state.username;
+    //     var firstname=this.state.firstname;
+    //     var lastname=this.state.lastname;
     
-        var errorMsg=this.getErrorMessages();
+    //     var errorMsg=this.getErrorMessages();
 
-        if(passwordConfirm != '' && password !='' && email !='' && username !='' && firstname !='' && lastname !='' ){
-                if(errorMsg !=''){
+    //     if(passwordConfirm != '' && password !='' && email !='' && username !='' && firstname !='' && lastname !='' ){
+    //             if(errorMsg !=''){
+    //                 console.log('not yet');
+    //                 this.setState({colorButton:BaseColor.greyColor});
+    //                 this.setState({colorButtonText:BaseColor.whiteColor});
+    //                 this.setState({disabledButton:true});
+    //             }else{
+    //                 console.log('perfect');
+    //                 this.setState({colorButton:BaseColor.secondColor});
+    //                 this.setState({colorButtonText:BaseColor.primaryColor});
+    //                 this.setState({disabledButton:false});
+    //             }
+    //     }else{
+    //             console.log('not yet');
+    //             this.setState({colorButton:BaseColor.greyColor});
+    //             this.setState({colorButtonText:BaseColor.whiteColor});
+    //             this.setState({disabledButton:true});
+          
+    //     }
+    // }
+    
+    validation(){
+        let { name,firstname,lastname,username,password,passwordConfirm, email, address, success } = this.state;
+
+        //var errorMsg=this.getErrorMessages();
+        var dataForm={
+            firstname:firstname,
+            lastname:lastname,
+            username:username,
+            password:password,
+            passwordConfirm:passwordConfirm,
+            email:email,
+        }
+
+        console.log(JSON.stringify(dataForm));
+    
+        if (firstname != "" && lastname != "" && username != "" && password != "" && passwordConfirm != "" && email != "") {
+            // if(errorMsg !=''){
+            //             console.log('not yet');
+            //             this.setState({colorButton:BaseColor.greyColor});
+            //             this.setState({colorButtonText:BaseColor.whiteColor});
+            //             this.setState({disabledButton:true});
+            //         }else{
+                        console.log('perfect');
+                        this.setState({colorButton:BaseColor.secondColor});
+                        this.setState({colorButtonText:BaseColor.primaryColor});
+                        this.setState({disabledButton:false});
+                   //}
+            }else{
                     console.log('not yet');
                     this.setState({colorButton:BaseColor.greyColor});
                     this.setState({colorButtonText:BaseColor.whiteColor});
                     this.setState({disabledButton:true});
-                }else{
-                    console.log('perfect');
-                    this.setState({colorButton:BaseColor.secondColor});
-                    this.setState({colorButtonText:BaseColor.primaryColor});
-                    this.setState({disabledButton:false});
-                }
-        }else{
-                console.log('not yet');
-                this.setState({colorButton:BaseColor.greyColor});
-                this.setState({colorButtonText:BaseColor.whiteColor});
-                this.setState({disabledButton:true});
-          
+              
+            }
         }
-    }
+    
     
   
       
@@ -161,6 +199,193 @@ export default class SignUp extends ValidationComponent {
     render() {
         const { navigation } = this.props;
         let { loading,firstname,lastname,username,password,passwordConfirm,email, success } = this.state;
+        
+        // var data={"firstname":firstname,"lastname":lastname,"username":username,"password":password,"passwordConfirm":passwordConfirm,"email":email}
+
+        var formFirstname=<View style={{marginBottom: 10}}>
+                                        <TouchableOpacity 
+                                        style={{width:'100%'}}
+                                    >
+                                            <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                                 Firstname
+                                            </Text>
+                                            <View style={styles.contentProfile}>
+                                                <View style={{ flex: 6}}>
+                                                <TextValidator
+                                                name="firstname"
+                                                label="text"
+                                                validators={['required']}
+                                                errorMessages={['This field is required']}
+                                                placeholder="e.g., John"
+                                                type="text"
+                                                value={this.state.firstname}
+                                                onChangeText={(firstname)=> {
+                                                    this.setState({firstname : firstname})
+                                                    setTimeout(() => {
+                                                        this.validation();
+                                                    }, 500);
+                                                }}
+                                                errorStyle={{underlineValidColor: BaseColor.textPrimaryColor,text: { color: BaseColor.thirdColor }, underlineInvalidColor: BaseColor.thirdColor }}
+                                            />
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                </View>
+                                
+                                
+            var formLastname=<View style={{marginBottom: 10}}>
+                                <TouchableOpacity 
+                                style={{width:'100%'}}
+                            >
+                                    <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                         Lastname
+                                    </Text>
+                                    <View style={styles.contentProfile}>
+                                        <View style={{ flex: 6}}>
+                                        <TextValidator
+                                        name="lastname"
+                                        label="text"
+                                        validators={['required']}
+                                        errorMessages={['This field is required']}
+                                        placeholder="e.g., Doe"
+                                        type="text"
+                                        value={this.state.lastname}
+                                        onChangeText={(lastname)=> {
+                                            this.setState({lastname : lastname})
+                                            setTimeout(() => {
+                                                this.validation();
+                                            }, 500);
+                                        }}
+                                        errorStyle={{underlineValidColor: BaseColor.textPrimaryColor,text: { color: BaseColor.thirdColor }, underlineInvalidColor: BaseColor.thirdColor }}
+                                    />
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                        </View>
+                        
+                        
+            var formUsername=<View style={{marginBottom: 10}}>
+                        <TouchableOpacity 
+                        style={{width:'100%'}}
+                    >
+                            <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                 Username
+                            </Text>
+                            <View style={styles.contentProfile}>
+                                <View style={{ flex: 6}}>
+                                <TextValidator
+                                name="username"
+                                label="text"
+                                validators={['required']}
+                                errorMessages={['This field is required']}
+                                placeholder="e.g., johndoe"
+                                type="text"
+                                value={this.state.username}
+                                onChangeText={(username)=> {
+                                    this.setState({username : username})
+                                    setTimeout(() => {
+                                        this.validation();
+                                    }, 500);
+                                }}
+                                errorStyle={{underlineValidColor: BaseColor.textPrimaryColor,text: { color: BaseColor.thirdColor }, underlineInvalidColor: BaseColor.thirdColor }}
+                            />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                </View>    
+        
+        var formEmail=<View style={{marginBottom: 10}}>
+                                    <TouchableOpacity 
+                                    style={{width:'100%'}}
+                                >
+                                        <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                             Email
+                                        </Text>
+                                        <View style={styles.contentProfile}>
+                                            <View style={{ flex: 6}}>
+                                            <TextValidator
+                                            name="email"
+                                            label="email"
+                                            validators={['required', 'isEmail']}
+                                            errorMessages={['This field is required', 'Email invalid']}
+                                            placeholder="e.g., johndoe@email.com"
+                                            type="text"
+                                            value={this.state.email}
+                                            onChangeText={(email)=> {
+                                                this.setState({email : email})
+                                                setTimeout(() => {
+                                                    this.validation();
+                                                }, 500);
+                                            }}
+                                            errorStyle={{underlineValidColor: BaseColor.textPrimaryColor,text: { color: BaseColor.thirdColor }, underlineInvalidColor: BaseColor.thirdColor }}
+                                        />
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                            </View>
+        
+        var formPassword=<View style={{marginBottom: 10}}>
+                                    <TouchableOpacity 
+                                    style={{width:'100%'}}
+                                >
+                                        <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                             Password
+                                        </Text>
+                                        <View style={styles.contentProfile}>
+                                            <View style={{ flex: 6}}>
+                                            <TextValidator
+                                            name="password"
+                                            label="text"
+                                            secureTextEntry
+                                            validators={['required']}
+                                            errorMessages={['This field is required']}
+                                            placeholder="********"
+                                            type="text"
+                                            value={this.state.password}
+                                            onChangeText={(password)=> {
+                                                this.setState({password : password})
+                                                setTimeout(() => {
+                                                    this.validation();
+                                                }, 500);
+                                            }}
+                                            errorStyle={{underlineValidColor: BaseColor.textPrimaryColor,text: { color: BaseColor.thirdColor }, underlineInvalidColor: BaseColor.thirdColor }}
+                                        />
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                            </View>
+                            
+            var formPasswordConfirm=<View style={{marginBottom: 10}}>
+                            <TouchableOpacity 
+                            style={{width:'100%'}}
+                        >
+                                <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                     Password Confirmation
+                                </Text>
+                                <View style={styles.contentProfile}>
+                                    <View style={{ flex: 6}}>
+                                    <TextValidator
+                                    name="passwordConfirm"
+                                    label="text"
+                                    secureTextEntry
+                                    validators={['required']}
+                                    errorMessages={['This field is required']}
+                                    placeholder="********"
+                                    type="text"
+                                    value={this.state.passwordConfirm}
+                                    onChangeText={(passwordConfirm)=> {
+                                        this.setState({passwordConfirm : passwordConfirm})
+                                        setTimeout(() => {
+                                            this.validation();
+                                        }, 500);
+                                    }}
+                                    errorStyle={{underlineValidColor: BaseColor.textPrimaryColor,text: { color: BaseColor.thirdColor }, underlineInvalidColor: BaseColor.thirdColor }}
+                                />
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
+                    </View>
+
         return (
             <SafeAreaView
                 style={BaseStyle.safeAreaView}
@@ -173,7 +398,7 @@ export default class SignUp extends ValidationComponent {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -184,216 +409,16 @@ export default class SignUp extends ValidationComponent {
                 <ScrollView>
                     <View style={styles.contain}>
                     
-                        <InputText
-                            name="firstname"
-                            label="Firstname *"
-                            placeholder="e.g.,John"
-                            value={this.state.firstname}
-                            icon="user"
-                            onChangeText={(val)=> {
-                                this.handleChange('firstname',val,
-                                    {
-                                        firstname: {required: true},
-                                    }
-                                );
-                            }}
-                            isFieldInError={this.isFieldInError('firstname')}
-                            getErrorsInField={this.getErrorsInField('firstname')}
-                        
-                        />
-                        
-                        <InputText
-                            name="lastname"
-                            label="Lastname *"
-                            placeholder="e.g.,Doe"
-                            value={this.state.lastname}
-                            icon="user"
-                            onChangeText={(val)=> {
-                                this.handleChange('lastname',val,
-                                    {   
-                                        firstname: {required: true},
-                                        lastname: {required: true},
-                                    }
-                                );
-                            }}
-                            isFieldInError={this.isFieldInError('lastname')}
-                            getErrorsInField={this.getErrorsInField('lastname')}
-                        />
-                        
-                        
-                        <InputText
-                            name="username"
-                            label="Username *"
-                            placeholder="e.g.,Doe"
-                            value={this.state.username}
-                            icon="user"
-                            onChangeText={(val)=> {
-                                this.handleChange('username',val,
-                                    {
-                                        username: {required: true},
-                                        firstname: {required: true},
-                                        lastname: {required: true},
-                                    }
-                                );
-                            }}
-                            isFieldInError={this.isFieldInError('username')}
-                            getErrorsInField={this.getErrorsInField('username')}
-                        
-                        />
-                        
-                        <InputText
-                            name="email"
-                            label="Email *"
-                            placeholder="e.g.,Doe"
-                            value={this.state.email}
-                            icon="user"
-                            onChangeText={(val)=> {
-                                this.handleChange('email',val,
-                                    {
-                                        email: {required: true,email:true},
-                                        username: {required: true},
-                                        firstname: {required: true},
-                                        lastname: {required: true},
-                                    }
-                                );
-                            }}
-                            isFieldInError={this.isFieldInError('email')}
-                            getErrorsInField={this.getErrorsInField('email')}
-                        
-                        />
-                        
-                        
-                        <InputText
-                            name="password"
-                            label="Password *"
-                            placeholder="e.g.,Doe"
-                            value={this.state.password}
-                            icon="user"
-                            onChangeText={(val)=> {
-                                this.handleChange('password',val,
-                                    {
-                                        password: {required: true},
-                                        email: {required: true,email:true},
-                                        username: {required: true},
-                                        firstname: {required: true},
-                                        lastname: {required: true},
-                                    }
-                                );
-                            }}
-                            isFieldInError={this.isFieldInError('password')}
-                            getErrorsInField={this.getErrorsInField('password')}
-                        
-                        />
-                        
-                        <InputText
-                            name="passwordConfirm"
-                            label="Password Konfirm *"
-                            placeholder="e.g.,Doe"
-                            value={this.state.passwordConfirm}
-                            icon="user"
-                            onChangeText={(val)=> {
-                                this.handleChange('passwordConfirm',val,
-                                    {
-                                        passwordConfirm: {required: true},
-                                        password: {required: true},
-                                        email: {required: true,email:true},
-                                        username: {required: true},
-                                        firstname: {required: true},
-                                        lastname: {required: true},
-                                        
-                                    }
-                                );
-                            }}
-                            isFieldInError={this.isFieldInError('passwordConfirm')}
-                            getErrorsInField={this.getErrorsInField('passwordConfirm')}
-                        
-                        />
-                        
-                        {/* <TextInput
-                            style={[BaseStyle.textInput, { marginTop: 65 }]}
-                            onChangeText={text => this.setState({ firstname: text })}
-                            autoCorrect={false}
-                            placeholder="Firstname"
-                            placeholderTextColor={
-                                success.firstname
-                                    ? BaseColor.grayColor
-                                    : BaseColor.primaryColor
-                            }
-                            value={firstname}
-                        />
-
-                        <TextInput
-                            style={[BaseStyle.textInput, { marginTop: 10 }]}
-                            onChangeText={text => this.setState({ lastname: text })}
-                            autoCorrect={false}
-                            placeholder="Lastname"
-                            placeholderTextColor={
-                                success.lastname
-                                    ? BaseColor.grayColor
-                                    : BaseColor.primaryColor
-                            }
-                            value={lastname}
-                        />
-
-                        <TextInput
-                            style={[BaseStyle.textInput, { marginTop: 10 }]}
-                            onChangeText={text => this.setState({ username: text })}
-                            autoCorrect={false}
-                            placeholder="Username"
-                            placeholderTextColor={
-                                success.username
-                                    ? BaseColor.grayColor
-                                    : BaseColor.primaryColor
-                            }
-                            value={username}
-                        />
-
-
-                        <TextInput
-                            style={[BaseStyle.textInput, { marginTop: 10 }]}
-                            onChangeText={text =>
-                                this.setState({ email: text })
-                            }
-                            autoCorrect={false}
-                            placeholder="Email"
-                            keyboardType="email-address"
-                            placeholderTextColor={
-                                success.email
-                                    ? BaseColor.grayColor
-                                    : BaseColor.primaryColor
-                            }
-                            value={email}
-                        />
-
-                        <TextInput
-                            secureTextEntry={true}
-                            style={[BaseStyle.textInput, { marginTop: 10 }]}
-                            onChangeText={text => this.setState({ password: text })}
-                            autoCorrect={false}
-                            placeholder="Password"
-                            placeholderTextColor={
-                                success.password
-                                    ? BaseColor.grayColor
-                                    : BaseColor.primaryColor
-                            }
-                            value={password}
-                        />
-
-                        <TextInput
-                            secureTextEntry={true}
-                            style={[BaseStyle.textInput, { marginTop: 10 }]}
-                            onChangeText={text => this.setState({ passwordConfirm: text })}
-                            autoCorrect={false}
-                            placeholder="Password Confirmation"
-                            placeholderTextColor={
-                                success.passwordConfirm
-                                    ? BaseColor.grayColor
-                                    : BaseColor.primaryColor
-                            }
-                            value={passwordConfirm}
-                        /> */}
-
-                        <View>
+                        <Form
+                            ref="form"
+                            //onSubmit={this.onSubmit}
+                        >
+                        {formFirstname}
+                        {formLastname}
+                        {formUsername}
+                        {formEmail}
+                        {formPassword}
+                        {formPasswordConfirm}
                             <TouchableOpacity  disabled={this.state.disabledButton} onPress={() => this.onSubmit()} >
                                 <View pointerEvents='none' style={styles.groupinput}>
                                 <Button
@@ -405,7 +430,11 @@ export default class SignUp extends ValidationComponent {
                                 </Button>
                                 </View>
                             </TouchableOpacity>
-                        </View>
+                        </Form>
+                        
+                       
+                        
+                        
                         
                         
                     </View>

@@ -23,6 +23,7 @@ import {PostData} from '../../services/PostData';
 import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
 import Modal from "react-native-modal";
+import AnimatedLoader from "react-native-animated-loader";
 
 
 import {
@@ -115,6 +116,7 @@ export default class FlightResult extends Component {
             var obj = {};
             obj['num'] = a.toString();
             obj['nums'] = a;
+            obj['data_type'] = "real";
             obj["price"]=item.price;
             obj["international"]= item.international;
             obj["combinable"]= item.combinable;
@@ -167,6 +169,7 @@ export default class FlightResult extends Component {
         var row={
             "num" : num.toString(),
             "nums" : num,
+            "data_type" : "real",
             "price":item.price,
             "international": item.international,
             "combinable": item.combinable,
@@ -215,7 +218,8 @@ export default class FlightResult extends Component {
     getProduct() {
         var param=this.state.param;
         var paramUrl=this.state.paramUrl;
-    
+  
+        
         this.setState({ loading_spinner: true }, () => {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
@@ -240,16 +244,27 @@ export default class FlightResult extends Component {
                             fetch(url+"flight/search?"+paramUrl, requestOptions)
                               .then(response => response.json())
                               .then(result => {
+                                                            var length=result.data.departure.length;
+                                                            //console.log('result',JSON.stringify(result));
+                                                            console.log('flight_result',length);   
+
+                                                            if(length != 0){
+                                                                this.setState({ loading_spinner: false });
+                                                                //console.log('flight_result',JSON.stringify(result.data.departure));                            
+                                                                var listdata_departure=this.rebuild(result.data.departure);
+                                                                var listdata_return=this.rebuild(result.data.return);  
+                                                                
+                                                                this.setState({ listdata_departure: listdata_departure });
+                                                                this.setState({ listdata_return: listdata_return });
+                                
+                                                                this.setState({ listdata_departure_original: listdata_departure });
+                                                                this.setState({ listdata_return_original: listdata_return });
+    
                                                             
                                                             
-                                                            var listdata_departure=this.rebuild(result.data.departure);
-                                                            var listdata_return=this.rebuild(result.data.return);  
+                                                            }
                                                             
-                                                            this.setState({ listdata_departure: listdata_departure });
-                                                            this.setState({ listdata_return: listdata_return });
-                            
-                                                            this.setState({ listdata_departure_original: listdata_departure });
-                                                            this.setState({ listdata_return_original: listdata_return });
+
                                                             
                                                             var dataKey=result.data.key;
                                                             var datacontinue=result.data.continue;
@@ -264,13 +279,12 @@ export default class FlightResult extends Component {
             });
 
         });
+        
+        
+      
     }
     
     getProductNext(dataKey){
-    
-    
-    
-       
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
 
@@ -291,36 +305,54 @@ export default class FlightResult extends Component {
                             fetch(url+"flight/search/"+dataKey, requestOptions)
                               .then(response => response.json())
                               .then(result => {
-                                    this.setState({ loading_spinner: false });
-                                    var dataDeparture=result.data.departure;
-                                    var dataReturn=result.data.return;
+                                //console.log('flight_result_next',result.data.departure.length);                            
                                     
+                                    var length=result.data.departure.length;
+                                    console.log('flight_result_next',length);   
+
                                     
-                                    var listdata_departure_state=this.state.listdata_departure;
-                                    var listdata_return_state=this.state.listdata_return;
-                                   
+                                    if(length != 0){
+                                        this.setState({ loading_spinner: false });
+                                        //console.log('flight_result',JSON.stringify(result.data.departure));                            
+                                        var dataDeparture=result.data.departure;
+                                        var dataReturn=result.data.return;
+                                        
+                                        
+                                        var listdata_departure_state=this.state.listdata_departure;
+                                        var listdata_return_state=this.state.listdata_return;
+                                       
+                                        
+                                        var a=listdata_departure_state.length;
+                                        dataDeparture.map((item, index) => {
+                                            a++;
+                                            var rebuidDeparture=this.rebuildRow(item,a);
+                                            listdata_departure_state.push(rebuidDeparture);
+                                                                    
+                                        })
+                                        
+                                        var b=listdata_return_state.length;
+                                        dataReturn.map((item, index) => {
+                                            b++;
+                                            var rebuidReturn=this.rebuildRow(item,b);
+                                            listdata_return_state.push(rebuidReturn);
+                                                                    
+                                        })
+                                        //console.log('listdata_departure_state',JSON.stringify(listdata_departure_state));
+                                        
+                                        const index = listdata_departure_state.findIndex(x => x.data_type === "sample");
+                                        if (index !== undefined) listdata_departure_state.splice(index, 1);
+                                        
+                                        
+                                        
+                                        this.setState({ listdata_departure: listdata_departure_state });
+                                        this.setState({ listdata_return: listdata_return_state });
+                                
+                                        this.setState({ listdata_departure_original: listdata_departure_state });
+                                        this.setState({ listdata_return_original: listdata_return_state });
+                                        
                                     
-                                    var a=listdata_departure_state.length;
-                                    dataDeparture.map((item, index) => {
-                                        a++;
-                                        var rebuidDeparture=this.rebuildRow(item,a);
-                                        listdata_departure_state.push(rebuidDeparture);
-                                                                
-                                    })
-                                    
-                                    var b=listdata_return_state.length;
-                                    dataReturn.map((item, index) => {
-                                        b++;
-                                        var rebuidReturn=this.rebuildRow(item,b);
-                                        listdata_return_state.push(rebuidReturn);
-                                                                
-                                    })
-                                    console.log('listdata_departure_state',JSON.stringify(listdata_departure_state));
-                                    this.setState({ listdata_departure: listdata_departure_state });
-                                    this.setState({ listdata_return: listdata_return_state });
-                            
-                                    this.setState({ listdata_departure_original: listdata_departure_state });
-                                    this.setState({ listdata_return_original: listdata_return_state });
+                                    }
+
                                     
                                     var dataKey=result.data.key;
                                     var datacontinue=result.data.continue;
@@ -335,8 +367,6 @@ export default class FlightResult extends Component {
                 }
             });
 
-       
-          
           
     }
 
@@ -534,19 +564,7 @@ export default class FlightResult extends Component {
             extrapolate: "clamp"
         });
         var content=<View></View>
-        if(this.state.listdata_departure.length==0){
-            content=<View
-            style={{position: 'absolute',
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            alignItems: 'center',
-            justifyContent: 'center'
-            }}
-    ><Text>Maaf data tidak tersedia</Text></View> 
-        }else{
-
+       
             content= <Animated.FlatList
             contentContainerStyle={{
                 paddingTop: 50,
@@ -588,7 +606,7 @@ export default class FlightResult extends Component {
                 />
             )}
         />
-        }
+      
         return (
             <View style={{ flex: 1 }}>
                 {content}
@@ -616,7 +634,15 @@ export default class FlightResult extends Component {
     
   
     componentDidMount() {
-        this.getProduct();
+       // this.getProduct();
+       
+       const {navigation} = this.props;
+        navigation.addListener ('willFocus', () =>{
+            // this.setState({ loading_spinner: true });
+            setTimeout(() => {
+                this.getProduct();
+            }, 200);
+        });
  
     }
     
@@ -671,9 +697,12 @@ export default class FlightResult extends Component {
                         navigation.goBack();
                     }}
                 />
-                         
+                        
+                            
                 {this.renderContent()}
-                <Modal
+                
+              
+                {/* <Modal
                     isVisible={modalVisible}
                     onBackdropPress={() => {
                         this.setState({
@@ -727,7 +756,7 @@ export default class FlightResult extends Component {
                             <Text>{JSON.stringify(this.state.data_timeline)}</Text>
                         </View>
                     </View>
-                </Modal>
+                </Modal> */}
             </SafeAreaView>
         );
     }

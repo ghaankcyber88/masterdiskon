@@ -20,6 +20,7 @@ import { CruiseData } from "./cruise";
 import { BusData } from "./bus";
 import { EventListData } from "./event";
 import { DataMasterDiskon } from "./dataMasterDiskon";
+import { DataConfig } from "./dataConfig";
 import { DataPayment } from "./dataPayment";
 import { DataBooking } from "./dataBooking";
 import { DataLoading } from "./dataLoading";
@@ -51,5 +52,6 @@ export {
     DataPayment,
     DataBooking,
     DataLoading,
-    DataFlight
+    DataFlight,
+    DataConfig
 };

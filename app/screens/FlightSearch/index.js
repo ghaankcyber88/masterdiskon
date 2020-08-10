@@ -22,11 +22,21 @@ export default class FlightSearch extends Component {
         
         
         var product=[];
-        if(this.props.navigation.state.params.product){
-            product=this.props.navigation.state.params.product;
+        if(this.props.navigation.state.params && this.props.navigation.state.params.product){
+            var product=this.props.navigation.state.params.product;
+        }else{
+            var product=[];
         }
-       
-        var type=this.props.navigation.state.params.type;
+        
+        var type='';
+        if(this.props.navigation.state.params && this.props.navigation.state.params.param){
+            var type=this.props.navigation.state.params.param;
+        }else{
+            var type='';
+        }
+        
+        
+        //var type=this.props.navigation.state.params.type;
         var tglAwal=this.getDate(2);
         var tglAkhir=this.getDate(3);
         
@@ -735,7 +745,7 @@ export default class FlightSearch extends Component {
                 </ScrollView>
 
                 :
-                <NotYetLogin redirect={'FlightSearch'} navigation={navigation} />
+                <NotYetLogin redirect={'FlightSearch'} param={this.state.type} navigation={navigation} />
                 
     }
 
