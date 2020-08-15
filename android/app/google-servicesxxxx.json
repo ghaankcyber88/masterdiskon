@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "280725445152",
-    "firebase_url": "https://masterdiskonapp-b45f1.firebaseio.com",
-    "project_id": "masterdiskonapp-b45f1",
-    "storage_bucket": "masterdiskonapp-b45f1.appspot.com"
+    "project_number": "254255805430",
+    "firebase_url": "https://masterdiskonnew-3b763.firebaseio.com",
+    "project_id": "masterdiskonnew-3b763",
+    "storage_bucket": "masterdiskonnew-3b763.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:280725445152:android:0f0f84c1b48137ee05ba45",
+        "mobilesdk_app_id": "1:254255805430:android:354477aacb484aed44cdd7",
         "android_client_info": {
           "package_name": "com.masterdiskon"
         }
       },
       "oauth_client": [
         {
-          "client_id": "280725445152-77l3ll7a2eo54bpbvocr780t9l0bpnjk.apps.googleusercontent.com",
+          "client_id": "254255805430-kr2l4j9aontj124ibga196rpi29qj39u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.masterdiskon",
@@ -23,7 +23,7 @@
           }
         },
         {
-          "client_id": "280725445152-rr8pagtmepe2c54s80g3kmafai6t1mra.apps.googleusercontent.com",
+          "client_id": "254255805430-p93vrmi97uomebr8ilh4j10dkutu9esr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.masterdiskon",
@@ -31,20 +31,20 @@
           }
         },
         {
-          "client_id": "280725445152-ulhq6j2enufgiedabbph68i2tg6clilm.apps.googleusercontent.com",
+          "client_id": "254255805430-c16v2nifqsa42a8iduiv552uihrjbl7u.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC8HQCW_TM2-MDQZxLatufD7wRPWVbOwS4"
+          "current_key": "AIzaSyAJKwJqKTC2NYRx_yd9kkwAcBkFQ0e93SU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "280725445152-ulhq6j2enufgiedabbph68i2tg6clilm.apps.googleusercontent.com",
+              "client_id": "254255805430-c16v2nifqsa42a8iduiv552uihrjbl7u.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
