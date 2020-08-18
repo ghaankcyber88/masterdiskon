@@ -24,7 +24,8 @@ import {
     PostListItem,
     HelpBlock,
     StarRating,
-    Tag
+    Tag,
+    QuantityPicker
 } from "@components";
 import { TabView, TabBar } from "react-native-tab-view";
 import * as Utils from "@utils";
@@ -36,6 +37,8 @@ import SetPenumpang from "../../components/SetPenumpang";
 // Load sample data
 import { HelpBlockData, ReviewData } from "@data";
 import HTML from "react-native-render-html";
+import Modal from "react-native-modal";
+import CalendarPicker from 'react-native-calendar-picker';
 
 const styles = StyleSheet.create({
     imgBanner: {
@@ -114,6 +117,46 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center"
     },
+
+
+
+    contentForm: {
+        padding: 10,
+        borderRadius: 8,
+        width: "100%",
+        //backgroundColor: BaseColor.fieldColor
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: BaseColor.fieldColor,
+    },
+    bottomModal: {
+        justifyContent: "flex-end",
+        margin: 0
+    },
+    contentFilterBottom: {
+        width: "100%",
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        paddingHorizontal: 20,
+        backgroundColor: BaseColor.whiteColor
+    },
+    contentSwipeDown: {
+        paddingTop: 10,
+        alignItems: "center"
+    },
+    lineSwipeDown: {
+        width: 30,
+        height: 2.5,
+        backgroundColor: BaseColor.dividerColor
+    },
+    contentActionModalBottom: {
+        flexDirection: "row",
+        paddingVertical: 10,
+        marginBottom: 10,
+        justifyContent: "space-between",
+        borderBottomColor: BaseColor.textSecondaryColor,
+        borderBottomWidth: 1
+    }
 });
 
 
@@ -122,6 +165,12 @@ export default class TourDetailCustom extends Component {
         super(props);
         var product = this.props.navigation.state.params.product;
         console.log('TourDetailCustom',JSON.stringify(product));
+
+        var minDate = new Date(); // Today
+        minDate.setDate(minDate.getDate() + 7);
+        var tglAwal=this.convertDate(minDate);
+
+
         // Temp data define
         this.state = {
             heightHeader: Utils.heightHeader(),
@@ -157,11 +206,31 @@ export default class TourDetailCustom extends Component {
             product: product,
             minPerson:0,
             minPrice:0,
-            totalPrice:0
+            totalPrice:0,
+            modalVisiblePerson: false,
+            modalVisibleDate: false,
+            dewasa:"0",
+            anak:"0",
+            bayi:"0",
+            selectedStartDate: null,
+            tglAwal:tglAwal,
+            tglAkhir:'',
+
+            tglAwalNumber:0,
+            tglAkhirNumber:0
+
         };
         this._deltaY = new Animated.Value(0);
         this.setPrice = this.setPrice.bind(this);
+        this.setJumlahDewasa = this.setJumlahDewasa.bind(this);
+        this.setJumlahAnak = this.setJumlahAnak.bind(this);
+        this.setJumlahBayi = this.setJumlahBayi.bind(this);
+        this.setMinPerson = this.setMinPerson.bind(this);
+        this.setTglAwal = this.setTglAwal.bind(this);
+        this.setTglAkhir = this.setTglAkhir.bind(this);
     }
+
+   
 
     // When tab is activated, set what's index value
     _handleIndexChange = index =>
@@ -189,15 +258,84 @@ export default class TourDetailCustom extends Component {
         />
     );
     
+    setTglAwal(dateConversion,dateNumber){
+        this.setState({tglAwal:dateConversion});
+        this.setState({tglAwalNumber:dateNumber});
+        //console.log('setTglAwal',dateNumber);
+        //alert(dateNumber);
+    }
+
+    setTglAkhir(dateConversion,dateNumber){
+        this.setState({tglAkhir:dateConversion});
+        this.setState({tglAkhirNumber:dateNumber});
+    }
+
+
     setPrice(select){
         var minPerson=select.trip_minimum[0].count_minimum;
         var minPrice=select.trip_minimum[0].price_minimum;
-        
         var totalPrice=parseInt(minPerson)*parseInt(minPrice);
         this.setState({minPerson:minPerson});
         this.setState({minPrice:minPrice});
         this.setState({totalPrice:totalPrice});
+        this.setState({select:select});
         
+    }
+
+    setJumlahDewasa(jml){
+        this.setState({dewasa:jml});
+
+    }
+
+    setJumlahAnak(jml){
+        this.setState({anak:jml});
+    }
+
+    setJumlahBayi(jml){
+        this.setState({bayi:jml});
+    }
+
+    setMinPerson(jml){
+        
+        var select=this.state.select;
+        var trip_minimum=select.trip_minimum;
+        const arrayHasIndex = (array, index) => Array.isArray(array) && array.hasOwnProperty(index);
+        var min_0=arrayHasIndex(trip_minimum,0);
+        var min_1=arrayHasIndex(trip_minimum,1);
+        var min_2=arrayHasIndex(trip_minimum,2);
+        var min_3=arrayHasIndex(trip_minimum,3);
+        var min_4=arrayHasIndex(trip_minimum,4);
+
+        var minPrice=0;
+        var totalPrice=0;
+
+        if(min_0==true){
+            if(min_1==true){
+                if(jml >= trip_minimum[0].count_minimum && jml < trip_minimum[1].count_minimum ){
+                    minPrice=select.trip_minimum[0].price_minimum; 
+                    totalPrice=parseInt(jml)*parseInt(minPrice);
+                }else if(jml >= trip_minimum[1].count_minimum){
+                    minPrice=select.trip_minimum[1].price_minimum; 
+                    totalPrice=parseInt(jml)*parseInt(minPrice);
+                }
+    
+            }
+            
+        }
+
+       
+
+        this.setState({totalPrice:totalPrice});
+        this.setState({minPerson:jml});
+        this.setState({minPrice:minPrice});
+        //this.setPrice();
+    }
+
+
+    componentDidMount(){
+        setTimeout(() => {
+            this.setState({dewasa:this.state.minPerson});
+        }, 500);
     }
     // Render correct screen container when tab is activated
     _renderScene = ({ route, jumpTo }) => {
@@ -259,6 +397,15 @@ export default class TourDetailCustom extends Component {
         }
     };
 
+    convertDate(date){
+
+        var dd = String(date.getDate()).padStart(2, '0');
+        var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = date.getFullYear();
+
+        date = yyyy + '/' + mm + '/' + dd;
+        return date;
+    }
     render() {
         const { navigation } = this.props;
         const { title, heightHeader, service, product,minPerson,minPrice,totalPrice} = this.state;
@@ -266,6 +413,9 @@ export default class TourDetailCustom extends Component {
         const marginTopBanner = heightImageBanner - heightHeader;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
+        const { modalVisiblePerson,modalVisibleDate} = this.state;
+      
+        
 
         return (
             <View style={{ flex: 1 }}>
@@ -384,35 +534,11 @@ export default class TourDetailCustom extends Component {
                             ]}
                         >
                             <Text
-                                //headline
                                 style={{ marginBottom: 10 }}
-                            //semibold
                             >
                                 {product.product_name}
                             </Text>
-                            {/* <FlatList
-                                numColumns={5}
-                                data={service}
-                                keyExtractor={(item, index) => item.id}
-                                renderItem={({ item }) => (
-                                    <View
-                                        style={{
-                                            alignItems: "center",
-                                            paddingHorizontal: 10,
-                                            marginBottom: 10
-                                        }}
-                                    >
-                                        <Icon
-                                            name={item.name}
-                                            size={24}
-                                            color={BaseColor.accentColor}
-                                        />
-                                        <Text overline grayColor>
-                                            Free Wifi
-                                        </Text>
-                                    </View>
-                                )}
-                            /> */}
+                            
                         </View>
 
 
@@ -446,27 +572,40 @@ export default class TourDetailCustom extends Component {
                             <Text caption1 semibold>
                                 {minPerson} x Rp {priceSplitter(minPrice)}
                             </Text>
-                            <Text title3 primaryColor semibold>
+                            <Text title3 primaryColor s
+                            emibold>
                                 {priceSplitter(totalPrice)}
                             </Text>
                         </View>
                         <View>
                             <SetDate
-                                label="Date"
-                                detail=">= 12 years"
-                                value={this.state.dewasa}
-                                setJumlahDewasa={this.setJumlahDewasa}
-                                typeOld="1"
+                                labelTglAwal={this.state.tglAwal}
+                                labelTglAkhir={this.state.tglAwal}
+
+                                tglAwalNumber={this.state.tglAwalNumber}
+                                tglAwal={this.state.tglAwal}
+                                setTglAwal={this.setTglAwal}
+
+                                tglAkhirNumber={this.state.tglAkhirNumber}
+                                tglAkhir={this.state.tglAkhir}
+                                setTglAkhir={this.setTglAkhir}
+
                             />
                         </View>
                         
                         <View>
                             <SetPenumpang
-                                label="Penumpang"
-                                detail=">= 12 years"
-                                value={this.state.dewasa}
+                                label={this.state.minPerson}
+                                dewasa={this.state.dewasa}
+                                anak={this.state.anak}
+                                bayi={this.state.bayi}
                                 setJumlahDewasa={this.setJumlahDewasa}
-                                typeOld="1"
+                                setJumlahAnak={this.setJumlahAnak}
+                                setJumlahBayi={this.setJumlahBayi}
+                                minPerson={this.state.minPerson}
+                                minPrice={this.state.minPrice}
+                                totalPrice={this.state.totalPrice}
+                                setMinPerson={this.setMinPerson}
                             />
                         </View>
                         
@@ -736,7 +875,7 @@ class Hotel extends Component {
                                                     </View>
                                                 </View>
                         
-                                                {/* <View style={styles.linePrice}>
+                                                <View style={styles.linePrice}>
                                                     <Text primaryColor semibold style={{ paddingHorizontal: 10 }}>
                                                         Minimum: 4
                                                                 </Text>
@@ -747,7 +886,7 @@ class Hotel extends Component {
                                                             Rp {priceSplitter(item.trip_minimum[1].price_minimum)}
                                                         </Text>
                                                     </View>
-                                                </View> */}
+                                                </View>
                                             </View>
                                         </View>
                                 </TouchableOpacity>

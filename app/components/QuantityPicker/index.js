@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity } from "react-native";
-import PropTypes from "prop-types";
+import PropTypes, { func } from "prop-types";
 import { Text, Icon } from "@components";
 import styles from "./styles";
 import { BaseColor } from "@config";
@@ -9,24 +9,43 @@ export default class QuantityPicker extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: props.value
+            value: props.value,
+            minPerson:props.minPerson
+
         };
     }
     
 
     onChange(type) {
+        const{setMinPerson}=this.props;
         var value=0;
+        var minPerson=0;
         if (type == "up") {
             this.setState({
                 value: parseInt(this.state.value) + 1
             });
             value=parseInt(this.state.value) + 1;
+
+
+            this.setState({
+                minPerson: parseInt(this.state.minPerson) + 1
+            });
+            minPerson=parseInt(this.state.minPerson) + 1;
         } else {
             this.setState({
                 value: this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
             });
             value=this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
+
+
+
+            this.setState({
+                minPerson: this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
+            });
+            minPerson=this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
         }
+
+        setMinPerson(minPerson);
         
         if(this.props.typeOld=='1'){
             this.props.setJumlahDewasa(value);
@@ -76,7 +95,9 @@ QuantityPicker.propTypes = {
     label: PropTypes.string,
     detail: PropTypes.string,
     value: PropTypes.number,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    setMinPerson:PropTypes.func,
+    minPerson:PropTypes.number
 };
 
 QuantityPicker.defaultProps = {
@@ -84,5 +105,7 @@ QuantityPicker.defaultProps = {
     label: "Adults",
     detail: ">= 12 years",
     value: 1,
-    onChange: () => {}
+    onChange: () => {},
+    setMinPerson: () => {},
+    minPerson:2
 };

@@ -232,7 +232,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getProductTripCountry",JSON.stringify(result));
+                    //console.log("getProductTripCountry",JSON.stringify(result));
                     this.setState({loading_product_trip_country: false });
                     this.setState({listdata_product_trip_country: result});
                  },
@@ -242,12 +242,14 @@ export default class Home extends Component {
             ); 
         });
     }
+
+    
     
     
     getProductTrip(){
         const {config} =this.state;
         var url=config.baseUrl;
-        var path=config.url_md.product.product_trip;
+        var path=config.product_trip.dir;
         this.setState({ loading_product_trip: true }, () => {
             var param={
                 method: 'POST',
@@ -259,7 +261,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getProductTrip",JSON.stringify(result));
+                    //console.log("getProductTrip",JSON.stringify(result));
                     this.setState({loading_product_trip: false });
                     this.setState({listdata_product_trip: result});
                  },
@@ -286,7 +288,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getProductvoucher",JSON.stringify(result));
+                    //console.log("getProductvoucher",JSON.stringify(result));
                     this.setState({loading_product_voucher: false });
                     this.setState({listdata_product_voucher: result});
                  },
@@ -313,7 +315,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getProductHotelPackage",JSON.stringify(result));
+                    //console.log("getProductHotelPackage",JSON.stringify(result));
                     this.setState({loading_product_hotel_package: false });
                     this.setState({listdata_product_hotel_package: result});
                  },
@@ -327,7 +329,7 @@ export default class Home extends Component {
     getMusium(){
         const {config} =this.state;
         var url=config.baseUrl;
-        var path=config.url_md.common.musium;
+        var path=config.common_musium.dir;
         this.setState({ loading_musium: true }, () => {
             var param={
                 method: 'POST',
@@ -340,7 +342,7 @@ export default class Home extends Component {
            
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getMusium",JSON.stringify(result));
+                    //console.log("getMusium",JSON.stringify(result));
                     this.setState({loading_musium: false });
                     this.setState({listdata_musium: result});
                  },
@@ -367,7 +369,7 @@ export default class Home extends Component {
            
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getblog",JSON.stringify(result));
+                    //console.log("getblog",JSON.stringify(result));
                     this.setState({loading_blog: false });
                     this.setState({listdata_blog: result});
                  },
@@ -381,9 +383,7 @@ export default class Home extends Component {
     getculture(){
         const {config} =this.state;
         var url=config.baseUrl;
-        var path=config.url_md.common.culture;
-        console.log('url',url);
-        console.log('path',path);
+        var path=config.common_culture.dir;
         this.setState({ loading_culture: true }, () => {
             var param={
                 method: 'POST',
@@ -396,7 +396,7 @@ export default class Home extends Component {
            
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getculture",JSON.stringify(result));
+                    //console.log("getculture",JSON.stringify(result));
                     this.setState({loading_culture: false });
                     this.setState({listdata_culture: result});
                  },
@@ -413,11 +413,11 @@ export default class Home extends Component {
         setTimeout(() => {
             this.getMusium();
             this.getculture();
-            this.getProductTripCountry();
+            // this.getProductTripCountry();
             this.getProductTrip();
             // this.getProductHotelPackage();
-            this.getProductVoucher();
-            this.getBlog();
+            // this.getProductVoucher();
+            // this.getBlog();
         }, 500);
 
      }
@@ -709,7 +709,7 @@ export default class Home extends Component {
                                         
                                             <CardCustom
                                                 item={item}
-                                                img={config.baseUrl+'assets/upload/product/trip/2020/featured/'+item.img_featured}
+                                                img={item.img_featured_url}
                                                 imgHeight={150}
                                                 titleIcon={{text:"home",icon:"home"}}
                                                 title={item.product_name}

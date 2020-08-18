@@ -313,8 +313,8 @@ export default class CardCustom extends Component {
                       <Text
                           body2
                           semibold
-                          numberOfLines={2}
-                          style={[color,{height:40}]}
+                          numberOfLines={4}
+                          style={[color,{height:80}]}
                       >
                           {title}
                       </Text>

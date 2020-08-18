@@ -153,7 +153,36 @@ export default class Pembayaran extends Component {
                 },
             ],
         };
+
+        this.getConfig();
+        this.getSession();
     }
+
+    getConfig(){    
+        AsyncStorage.getItem('config', (error, result) => {
+            if (result) {    
+                let config = JSON.parse(result);
+                console.log('getConfig',config);
+                this.setState({config:config});
+            }
+        });
+    }
+    
+    
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                var id_user=userSession.id_user;
+                console.log('getSession',userSession);
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+            }
+        });
+    }
+
+
     duration(expirydate)
     {
         
@@ -724,31 +753,40 @@ export default class Pembayaran extends Component {
 
     
     componentDidMount(){
-        this.fetch();
+        // this.fetch();
+
+        const {navigation} = this.props;
+        navigation.addListener ('willFocus', () =>{
+            this.setState({ loading_spinner: true });
+            setTimeout(() => {
+                this.fetch();
+            }, 200);
+        });
     }
-    
+
     fetch(){
-        const { navigation} = this.props;
-        const {id_order} =this.state;
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.user_order.dir;
+        
+        var id_user=this.state.id_user;
+        var data={"id":id_user,"id_order":"","order_status":this.state.status,"product":""}
+        var parameter={"param":data}
+
+        var body=parameter;
+        console.log('bodyparamter',JSON.stringify(body));
         this.setState({ loading_spinner: true }, () => {
-            AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
-                this.setState({userSession:userSession});
-                this.setState({login:true});
-                
-                var id_user=userSession.id_user;
-                    const data={"id":id_user,"id_order":this.state.id_order,"order_status":"","product":""}
-                    const param={"param":data}
-                    console.log('-------------param booking-------------');
-                    console.log(JSON.stringify(param));
-
-
-                    PostData('get_booking_history',param)
-                        .then((result) => {
-                            var dataBooking=result;
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    var dataBooking=result;
                             console.log("---------------get_booking_historys ------------");
                             console.log(JSON.stringify(result));
                             
@@ -757,28 +795,67 @@ export default class Pembayaran extends Component {
                             
                             var order_status=dataBooking[0].order_status.order_status_slug;
                             var product=dataBooking[0].product;
-
-                            
-                            //console.log('order_status',order_status);
                             
                             if(product=='Flight' && order_status=='complete'){
                                 var order_code=dataBooking[0].aero_orderid;
-                                //console.log('order_code',order_code);
                                 this.checkBooking(order_code);
                             }
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    ); 
-             }else{
-                this.setState({login:false});
-             }
-            
-            });
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
         });
-
     }
+    
+    // fetch(){
+    //     const { navigation} = this.props;
+    //     const {id_order} =this.state;
+    //     this.setState({ loading_spinner: true }, () => {
+    //         AsyncStorage.getItem('userSession', (error, result) => {
+    //         if (result) {
+    //             let userSession = JSON.parse(result);
+    //             console.log("---------------data session user  ------------");
+    //             console.log(JSON.stringify(userSession));
+    //             this.setState({userSession:userSession});
+    //             this.setState({login:true});
+                
+    //             var id_user=userSession.id_user;
+    //                 const data={"id":id_user,"id_order":this.state.id_order,"order_status":"","product":""}
+    //                 const param={"param":data}
+    //                 console.log('-------------param booking-------------');
+    //                 console.log(JSON.stringify(param));
+
+
+    //                 PostData('get_booking_history',param)
+    //                     .then((result) => {
+    //                         var dataBooking=result;
+    //                         console.log("---------------get_booking_historys ------------");
+    //                         console.log(JSON.stringify(result));
+                            
+    //                         this.setState({ loading_spinner: false });
+    //                         this.setState({dataBooking:dataBooking});
+                            
+    //                         var order_status=dataBooking[0].order_status.order_status_slug;
+    //                         var product=dataBooking[0].product;
+                            
+    //                         if(product=='Flight' && order_status=='complete'){
+    //                             var order_code=dataBooking[0].aero_orderid;
+    //                             this.checkBooking(order_code);
+    //                         }
+    //                     },
+    //                     (error) => {
+    //                         this.setState({ error });
+    //                     }
+    //                 ); 
+    //          }else{
+    //             this.setState({login:false});
+    //          }
+            
+    //         });
+    //     });
+
+    // }
     
     checkBooking(order_code){
     
