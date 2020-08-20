@@ -156,7 +156,7 @@ export default class SelectTitle extends Component {
 
     search(value){
         this.setState({ loading_spinner: true }, () => {
-            PostData('airport',{"param":value})
+            PostData('common/airport',{"param":value})
             .then((result) => {
                     this.setState({ loading_spinner: false });
                     this.setState({flight:result});

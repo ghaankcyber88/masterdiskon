@@ -770,7 +770,7 @@ export default class Pembayaran extends Component {
         var path=config.user_order.dir;
         
         var id_user=this.state.id_user;
-        var data={"id":id_user,"id_order":"","order_status":this.state.status,"product":""}
+        var data={"id":id_user,"id_order":"","order_status":"","product":""}
         var parameter={"param":data}
 
         var body=parameter;

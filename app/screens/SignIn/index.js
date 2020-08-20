@@ -236,7 +236,7 @@ getProfile(id_user) {
  
     var id_user=id_user;           
     // alert(id_user);
-    PostData('user',{"id_user":id_user})
+    PostData('api/user',{"id_user":id_user})
         .then((result) => {
             console.log("-------------GET profile--------------")
             AsyncStorage.setItem('profile', JSON.stringify(result));

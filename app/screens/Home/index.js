@@ -215,7 +215,8 @@ export default class Home extends Component {
                 }
             });
     }
-    
+
+
     
     getProductTripCountry(){
         const {config} =this.state;

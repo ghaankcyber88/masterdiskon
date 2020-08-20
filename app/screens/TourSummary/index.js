@@ -389,7 +389,7 @@ export default class TourSummary extends Component {
                         console.log("------------------data param submit order trip--------------");
                         console.log(JSON.stringify(param));
 
-                        PostData('submitbook_order_new',param)
+                        PostData('api/submitbook_order_new',param)
                             .then((result) => {
                                 id_order=result.id_order;
                                 pay=result.pay;

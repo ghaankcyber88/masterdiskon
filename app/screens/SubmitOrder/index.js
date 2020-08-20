@@ -311,7 +311,7 @@ export default class SubmitOrder extends Component {
         var pay=this.props.navigation.state.params.pay;
         var payment_method=this.props.navigation.state.params.payment_method;
 
-        PostData('fu_get_virtualaccount_app?id_order='+id_order+'&pay='+pay+'&payment_method='+payment_method)
+        PostData('api/fu_get_virtualaccount_app?id_order='+id_order+'&pay='+pay+'&payment_method='+payment_method)
         .then((result) => {
             //this.setState({listdata});
         var id_order_payment=result.key;
@@ -333,7 +333,7 @@ export default class SubmitOrder extends Component {
 
     confirm_wa(id_order_payment){
         //alert(id_order_payment);
-        PostData('confirmation_va_app/'+id_order_payment)
+        PostData('api/confirmation_va_app/'+id_order_payment)
             .then((result) => {
                 console.log("---------------Virtual Account------------");
             console.log(JSON.stringify(result));
