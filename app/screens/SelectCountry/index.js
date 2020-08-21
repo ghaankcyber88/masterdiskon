@@ -63,7 +63,7 @@ export default class SelectCountry extends Component {
     componentDidMount() {   
         var selected=this.props.navigation.state.params.selected;
         this.setState({ loading_spinner: true }, () => {
-            PostData('country_all',{'id_country':'','country_name':''})
+            PostData('common/country_all',{'id_country':'','country_name':''})
             .then((result) => {
                     this.setState({ loading_spinner: false });
                     this.setState({country:result});
@@ -143,7 +143,7 @@ export default class SelectCountry extends Component {
 
     search(value){
         this.setState({ loading_spinner: true }, () => {
-            PostData('country_all',{'id_country':'','country_name':value})
+            PostData('common/country_all',{'id_country':'','country_name':value})
             .then((result) => {
                     this.setState({ loading_spinner: false });
                     this.setState({country:result});

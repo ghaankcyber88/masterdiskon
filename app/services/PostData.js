@@ -1,7 +1,7 @@
 
 
 export function PostData(type,userData){
-	let BaseUrl='https://masterdiskon.com/front/api/api/';
+	let BaseUrl='https://masterdiskon.com/front/api/';
 	return new Promise((resolve,reject)=>{ 
 
 

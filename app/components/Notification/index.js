@@ -56,7 +56,7 @@ export default class Notification extends Component {
                 console.log('-------------param notif-------------');
                 console.log(JSON.stringify(param));
 
-                    PostData('notif',param)
+                    PostData('user/notif',param)
                                 .then((result) => {
                                      console.log('-------------result notif-------------');
                                     console.log(JSON.stringify(result));

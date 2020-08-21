@@ -114,13 +114,7 @@ export default class FormOption extends Component {
                                 )}
                             </TouchableOpacity>
                         ))}
-                        {/* <Button
-                            full
-                            style={{ marginTop: 10, marginBottom: 20 }}
-                            onPress={() => this.onApply()}
-                        >
-                            Apply
-                        </Button> */}
+                      
                     </View>
                 </Modal>
                 <TouchableOpacity

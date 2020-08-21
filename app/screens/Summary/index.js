@@ -482,7 +482,17 @@ export default class Summary extends Component {
         console.log("------------------data param typeFlight--------------");
         console.log(JSON.stringify(param));
 
-        PostData('get_type_flight',param)
+        AsyncStorage.getItem('config', (error, result) => {
+            if (result) {   
+                let config = JSON.parse(result);
+                var access_token=config.token;
+                var path=config.common_type_flight.dir;
+                var url=config.baseUrl;
+
+                PostDataNew(url,path,param)
+
+
+                //PostData('get_type_flight',param)
                                 .then((result) => {
                                     console.log(JSON.stringify(result));
                                     this.setState({typeFlight:result.typeFlight})
@@ -492,6 +502,8 @@ export default class Summary extends Component {
                                     this.setState({ error });
                                 }
                                 );
+                }
+            }); 
         
     }    
 
@@ -572,11 +584,8 @@ export default class Summary extends Component {
         //     callback
         // );
     }
-
-    onSubmit() {
-
+    submitOrder(){
         var param=this.state.param;
-        this.saveParticipant();
         if(param.type=='trip'){
             var customer=this.state.listdata_customer;
             var product= this.state.product;
@@ -959,6 +968,14 @@ export default class Summary extends Component {
 
 
         }
+
+    }
+
+    onSubmit() {
+        
+        this.saveParticipant();
+        this.submitOrder();
+       
       
         
     }
@@ -973,7 +990,8 @@ export default class Summary extends Component {
                 if (result) {    
                     let config = JSON.parse(result);
                     var access_token=config.token;
-                    var url=config.aeroUrl;
+                    var path=config.user_order_submit.dir;
+                    var url=config.baseUrl;
                     
                     var dataCartArrayRealSend={
                     "token":access_token,
@@ -1001,9 +1019,9 @@ export default class Summary extends Component {
                     body: raw,
                     redirect: 'follow'
                     };
-
-                    fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
-                    .then(response => response.json())
+                    PostDataNew(url,path,requestOptions)
+                    // fetch("https://masterdiskon.com/front/api/apiOrder/submit", requestOptions)
+                    //.then(response => response.json())
                     .then((result) => {
                         this.updateUserSession();
                         var dataOrderSubmit=result;
@@ -1172,7 +1190,7 @@ export default class Summary extends Component {
                     
                 var customer=this.state.listdata_customer;
                            
-                var customer = [];
+                var customers = [];
                 var a=1;
                 customer.map(item => {
                     var obj = {};
@@ -1192,7 +1210,7 @@ export default class Summary extends Component {
                     obj['nationality_phone_code'] = item.nationality_phone_code;
                     obj['passport_country_id'] = item.passport_country_id;
 
-                    customer.push(obj);
+                    customers.push(obj);
                     a++;
                 });    
 
@@ -1200,29 +1218,28 @@ export default class Summary extends Component {
                 const data={  
                     "id_user": id_user,
                     "participant":participant,
-                    "customer":customer
+                    "customer":customers
                 }
                  const param={"param":data}
 
-                 console.log("------------------data param submit profie--------------");
-                 console.log(JSON.stringify(param));
-
-                 PostData('save_participant',param)
-                     .then((result) => {
-                        console.log("------------------result save profle-------------");
-
-                       console.log(JSON.stringify(result));
-
-                     },
-                     (error) => {
-                         this.setState({ error });
-                     }
-                     );
 
 
-                    }      
+             
+                        PostData('user/participant_save',param)
+                            .then((result) => {
+                                console.log("------------------result save profle-------------");
+
+                            console.log(JSON.stringify(result));
+
+                            },
+                            (error) => {
+                                this.setState({ error });
+                            }
+                        );
+                   
+            }      
                     
-            });        
+        });        
                         
     }
     

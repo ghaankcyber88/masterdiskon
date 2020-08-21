@@ -61,7 +61,7 @@ export default class SelectPhoneCode extends Component {
     componentDidMount() {   
         var selected=this.props.navigation.state.params.selected;
         this.setState({ loading_spinner: true }, () => {
-            PostData('phone_code_all',{'phoneCode':''})
+            PostData('common/phone_code_all',{'phoneCode':''})
             .then((result) => {
                     this.setState({ loading_spinner: false });
                     this.setState({phoneCode:result});
@@ -145,7 +145,7 @@ export default class SelectPhoneCode extends Component {
         this.setState({ loading_spinner: true }, () => {
 
             console.log('phonecodesxsa',JSON.stringify({'phoneCode':value}));
-            PostData('phone_code_all',{'phoneCode':value})
+            PostData('common/phone_code_all',{'phoneCode':value})
             .then((result) => {
                     this.setState({ loading_spinner: false });
                     this.setState({phoneCode:result});

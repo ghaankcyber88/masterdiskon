@@ -401,7 +401,7 @@ export default function PembayaranDetail(props) {
                     // console.log(JSON.stringify(param));
     
     
-                    return PostData('get_booking_history',param)
+                    return PostData('order/get_booking_history',param)
                         .then((result) => {
                             var dataBooking=result;
                             console.log("---------------get_booking_historyssss ------------");

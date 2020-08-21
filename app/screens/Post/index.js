@@ -26,7 +26,7 @@ export default class Post extends Component {
     }
 
     getBlog(){
-        PostData('get_blog_new_page')
+        PostData('common/get_blog_new_page')
             .then((result) => {
                 this.setState({posts: result});
             },

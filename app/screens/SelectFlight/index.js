@@ -13,6 +13,8 @@ import styles from "./styles";
 // Load sample flight data list
 import { FlightBrandData } from "@data";
 import {PostData} from '../../services/PostData';
+import {PostDataNew} from '../../services/PostDataNew';
+import {AsyncStorage} from 'react-native';
 import {
     Placeholder,
     PlaceholderMedia,
@@ -36,30 +38,39 @@ export default class SelectFlight extends Component {
     componentDidMount() {
 
         this.setState({ loading_spinner: true }, () => {
-            PostData('airport_default',{"param":""})
-            .then((result) => {
-                    this.setState({ loading_spinner: false });
-                    this.setState({flight:result});
-                    const { navigation } = this.props;
-                    const selected = navigation.getParam("selected");
-        
-                    if (selected) {
-                        this.setState({
-                            flight: this.state.flight.map(item => {
-                                return {
-                                    ...item,
-                                    checked: item.code == selected
-                                };
-                            })
-                        });
-                    }
-                },
-                (error) => {
-                    this.setState({ error });
-                }
-            );
-            
+            AsyncStorage.getItem('config', (error, result) => {
+                if (result) {   
+                    let config = JSON.parse(result);
+                    var access_token=config.token;
+                    var path=config.common_airport_default.dir;
+                    var url=config.baseUrl;
 
+                    PostDataNew(url,path,{"param":""})
+                    //PostData('airport_default',{"param":""})
+                    .then((result) => {
+                            this.setState({ loading_spinner: false });
+                            this.setState({flight:result});
+                            const { navigation } = this.props;
+                            const selected = navigation.getParam("selected");
+                
+                            if (selected) {
+                                this.setState({
+                                    flight: this.state.flight.map(item => {
+                                        return {
+                                            ...item,
+                                            checked: item.code == selected
+                                        };
+                                    })
+                                });
+                            }
+                        },
+                        (error) => {
+                            this.setState({ error });
+                        }
+                    );
+            
+                }
+            });             
 
         });
 
@@ -118,31 +129,39 @@ export default class SelectFlight extends Component {
 
     search(value){
         this.setState({ loading_spinner: true }, () => {
-            PostData('airport',{"param":value})
-            .then((result) => {
-                    this.setState({ loading_spinner: false });
-                    this.setState({flight:result});
-                    const { navigation } = this.props;
-                    const selected = navigation.getParam("selected");
-        
-                    if (selected) {
-                        this.setState({
-                            flight: this.state.flight.map(item => {
-                                return {
-                                    ...item,
-                                    checked: item.code == selected
-                                };
-                            })
-                        });
-                    }
-                },
-                (error) => {
-                    this.setState({ error });
+
+            AsyncStorage.getItem('config', (error, result) => {
+                if (result) {   
+                    let config = JSON.parse(result);
+                    var access_token=config.token;
+                    var path=config.common_airport.dir;
+                    var url=config.baseUrl;
+
+                    PostDataNew(url,path,{"param":value})
+                    //PostData('airport',{"param":value})
+                    .then((result) => {
+                            this.setState({ loading_spinner: false });
+                            this.setState({flight:result});
+                            const { navigation } = this.props;
+                            const selected = navigation.getParam("selected");
+                
+                            if (selected) {
+                                this.setState({
+                                    flight: this.state.flight.map(item => {
+                                        return {
+                                            ...item,
+                                            checked: item.code == selected
+                                        };
+                                    })
+                                });
+                            }
+                        },
+                        (error) => {
+                            this.setState({ error });
+                        }
+                    );
                 }
-            );
-            
-
-
+            }); 
         });
 
      }
@@ -218,7 +237,7 @@ export default class SelectFlight extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}

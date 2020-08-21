@@ -64,10 +64,10 @@ export default class Booking extends Component {
     }
     
     
-    getOrder(){
+    fetch(){
         const {config} =this.state;
         var url=config.baseUrl;
-        var path=config.url_md.order.get_booking_history;
+        var path=config.user_order.dir;
         
         var id_user=this.state.id_user;
         var data={"id":id_user,"id_order":"","order_status":this.state.status,"product":""}
@@ -86,7 +86,7 @@ export default class Booking extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getOrder",JSON.stringify(result));
+                    console.log("fetch",JSON.stringify(result));
                     this.setState({loading_spinner: false });
                     this.setState({dataBooking: result});
                  },
@@ -103,7 +103,7 @@ export default class Booking extends Component {
         navigation.addListener ('willFocus', () =>{
             this.setState({ loading_spinner: true });
             setTimeout(() => {
-                this.getOrder();
+                this.fetch();
             }, 200);
         });
     }
@@ -126,7 +126,7 @@ export default class Booking extends Component {
         }
         //this.fetch();
         setTimeout(() => {
-            this.getOrder();
+            this.fetch();
         }, 200);
     }
 
