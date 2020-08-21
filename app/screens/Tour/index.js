@@ -56,7 +56,7 @@ export default class Tour extends Component {
     getProductTrip(){
         const {config} =this.state;
         var url=config.baseUrl;
-        var path=config.url_md.product.product_trip;
+        var path=config.product_trip.dir;
         this.setState({ loading_product_trip: true }, () => {
             var param={
                 method: 'POST',
@@ -115,7 +115,7 @@ export default class Tour extends Component {
                                         
                                             <CardCustom
                                                 item={item}
-                                                img={config.baseUrl+'assets/upload/product/trip/2020/featured/'+item.img_featured}
+                                                img={item.img_featured_url}
                                                 titleIcon={{text:item.product_place,icon:"home"}}
                                                 title={item.product_name}
                                                 subtitle={item.product_duration}
@@ -129,10 +129,10 @@ export default class Tour extends Component {
                                                     //index % 2 ? { marginLeft: 20 } : {marginLeft:20}
                                                     {marginLeft:20,marginBottom:20}
                                                 }
-                                                onPress={() => {
-                                                    alert('Dalam pengembangan');
-                                                    // navigation.navigate(item.route,{type:item.type});
-                                                }}
+                                                
+                                                onPress={() =>
+                                                    navigation.navigate("TourDetailCustom",{product:item})
+                                                }
                                                 url={config.baseUrl+'assets/upload/product/voucher/2020/'}
                                                 loading={this.state.loading_product_trip}
                                                 property={{inFrame:true,innerText:false}}

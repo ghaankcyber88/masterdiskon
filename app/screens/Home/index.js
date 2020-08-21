@@ -116,14 +116,14 @@ export default class Home extends Component {
                     type:'flight',
                     image: Images.flight
                 },
-                {
-                    icon: "tag",
-                    name: "Voucher",
-                    route: "Voucher",
-                    iconAnimation:"flight.json",
-                    type:'voucher',
-                    image: Images.voucher
-                },
+                // {
+                //     icon: "tag",
+                //     name: "Voucher",
+                //     route: "Voucher",
+                //     iconAnimation:"flight.json",
+                //     type:'voucher',
+                //     image: Images.voucher
+                // },
             ],
             
             heightHeader: Utils.heightHeader(),
@@ -221,7 +221,7 @@ export default class Home extends Component {
     getProductTripCountry(){
         const {config} =this.state;
         var url=config.baseUrl;
-        var path=config.url_md.product.trip_country;
+        var path=config.common_country.dir;
         this.setState({ loading_product_trip_country: true }, () => {
             var param={
                 method: 'POST',
@@ -414,7 +414,7 @@ export default class Home extends Component {
         setTimeout(() => {
             this.getMusium();
             this.getculture();
-            // this.getProductTripCountry();
+            this.getProductTripCountry();
             this.getProductTrip();
             this.getProductHotelPackage();
             // this.getProductVoucher();
@@ -533,6 +533,7 @@ export default class Home extends Component {
                             })
                         }
                         scrollEventThrottle={8}
+                        style={{marginBottom:30}}
                     >
                      
                     <View style={styles.containerSwipper}>
@@ -973,7 +974,7 @@ export default class Home extends Component {
                             
                             
                             
-                            <View>
+                            {/* <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
                                         BLOG
@@ -1027,7 +1028,7 @@ export default class Home extends Component {
                                         )}
                                     />
                                 </View>
-                            </View>
+                            </View> */}
                             
                             
                             

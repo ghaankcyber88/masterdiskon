@@ -4,7 +4,13 @@ import {
     ScrollView,
     FlatList,
     Animated,
-    TouchableOpacity
+    RefreshControl,
+    InteractionManager,
+    TouchableOpacity,
+    TextInput,
+    StyleSheet,
+    Dimensions,
+    Image
 } from "react-native";
 import { BaseStyle, BaseColor, Images } from "@config";
 import {
@@ -12,32 +18,791 @@ import {
     SafeAreaView,
     Icon,
     Text,
-    StarRating,
+    Button,
+    RateDetail,
+    CommentItem,
     PostListItem,
     HelpBlock,
-    Button,
-    RoomType
+    StarRating,
+    Tag,
+    QuantityPicker,
 } from "@components";
+import { TabView, TabBar } from "react-native-tab-view";
 import * as Utils from "@utils";
-import { InteractionManager } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
-import styles from "./styles";
+import SetDate from "../../components/SetDate";
+import SetPenumpang from "../../components/SetPenumpang";
+// import styles from "./styles";
+
 // Load sample data
-import { HelpBlockData,DataMasterDiskon } from "@data";
-import {PostDataProduct} from '../../services/PostDataProduct';
+import { HelpBlockData, ReviewData } from "@data";
+import HTML from "react-native-render-html";
+import Modal from "react-native-modal";
+import CalendarPicker from 'react-native-calendar-picker';
+
+const styles = StyleSheet.create({
+    imgBanner: {
+        width: "100%",
+        height: 250,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    contentButtonBottom: {
+        borderTopColor: BaseColor.textSecondaryColor,
+        borderTopWidth: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+    tabbar: {
+        backgroundColor: "white",
+        height: 40
+    },
+    tab: {
+        width: 130
+    },
+    indicator: {
+        backgroundColor: BaseColor.primaryColor,
+        height: 1
+    },
+    label: {
+        fontWeight: "400"
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject
+    },
+    lineInfor: {
+        flexDirection: "row",
+        borderColor: BaseColor.textSecondaryColor,
+        borderBottomWidth: 1,
+        paddingVertical: 10
+    },
+    todoTitle: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: 15,
+        alignItems: "center"
+    },
+    itemReason: {
+        paddingLeft: 10,
+        marginTop: 10,
+        flexDirection: "row"
+    },
+
+    itemPrice: {
+        borderBottomWidth: 1,
+        borderColor: BaseColor.textSecondaryColor,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+    },
+    linePrice: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingVertical: 5,
+    },
+    linePriceMinMax: {
+        backgroundColor: BaseColor.whiteColor,
+        borderRadius: 10
+    },
+    iconRight: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+
+
+
+    contentForm: {
+        padding: 10,
+        borderRadius: 8,
+        width: "100%",
+        //backgroundColor: BaseColor.fieldColor
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: BaseColor.fieldColor,
+    },
+    bottomModal: {
+        justifyContent: "flex-end",
+        margin: 0
+    },
+    contentFilterBottom: {
+        width: "100%",
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        paddingHorizontal: 20,
+        backgroundColor: BaseColor.whiteColor
+    },
+    contentSwipeDown: {
+        paddingTop: 10,
+        alignItems: "center"
+    },
+    lineSwipeDown: {
+        width: 30,
+        height: 2.5,
+        backgroundColor: BaseColor.dividerColor
+    },
+    contentActionModalBottom: {
+        flexDirection: "row",
+        paddingVertical: 10,
+        marginBottom: 10,
+        justifyContent: "space-between",
+        borderBottomColor: BaseColor.textSecondaryColor,
+        borderBottomWidth: 1
+    },
+    contentService: {
+        paddingVertical: 10,
+        //borderBottomColor: BaseColor.textSecondaryColor,
+        //borderBottomWidth: 1,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between"
+    },
+});
+
 
 export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
-        //var paramUrl=this.props.navigation.state.params.paramUrl;
-        var param=this.props.navigation.state.params.param;
-        //var paramOther=this.props.navigation.state.params.paramOther;
-        //var slug=this.props.navigation.state.params.slug;
-        var product=this.props.navigation.state.params.product;
-        //console.log('product',JSON.stringify(product));
+        var product = this.props.navigation.state.params.product;
+        console.log('HotelDetail',JSON.stringify(product));
+
+        var minDate = new Date(); // Today
+        minDate.setDate(minDate.getDate() + 7);
+        var tglAwal=this.convertDate(minDate);
+
+
         // Temp data define
         this.state = {
             heightHeader: Utils.heightHeader(),
+            title: "Europe Cruises",
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            service: [
+                { id: "1", name: "wifi" },
+                { id: "2", name: "coffee" },
+                { id: "3", name: "bath" },
+                { id: "4", name: "car" },
+                { id: "5", name: "paw" },
+                { id: "6", name: "futbol" },
+                { id: "7", name: "user-secret" },
+                { id: "8", name: "clock" },
+                { id: "9", name: "tv" },
+                { id: "10", name: "futbol" }
+            ],
+            index: 0,
+            routes: [
+                // { key: "hotel", title: "Hotel" },
+                { key: "paket", title: "Paket" },
+                { key: "kebijakan", title: "Kebijakan" },
+                { key: "informasi", title: "Informasi" },
+                // { key: "exclude", title: "Exclude" },
+                // { key: "information", title: "Information" },
+                // { key: "review", title: "Review" },
+                // { key: "feedback", title: "Feedback" }
+            ],
+            product: product,
+            minPerson:0,
+            minPrice:0,
+            totalPrice:0,
+            modalVisiblePerson: false,
+            modalVisibleDate: false,
+            dewasa:"0",
+            anak:"0",
+            bayi:"0",
+            selectedStartDate: null,
+            tglAwal:tglAwal,
+            tglAkhir:'',
+
+            tglAwalNumber:0,
+            tglAkhirNumber:0
+
+        };
+        this._deltaY = new Animated.Value(0);
+        this.setPrice = this.setPrice.bind(this);
+        this.setJumlahDewasa = this.setJumlahDewasa.bind(this);
+        this.setJumlahAnak = this.setJumlahAnak.bind(this);
+        this.setJumlahBayi = this.setJumlahBayi.bind(this);
+        this.setMinPerson = this.setMinPerson.bind(this);
+        this.setTglAwal = this.setTglAwal.bind(this);
+        this.setTglAkhir = this.setTglAkhir.bind(this);
+    }
+
+   
+
+    // When tab is activated, set what's index value
+    _handleIndexChange = index =>
+        this.setState({
+            index
+        });
+
+    // Customize UI tab bar
+    _renderTabBar = props => (
+        <TabBar
+            {...props}
+            scrollEnabled
+            indicatorStyle={styles.indicator}
+            style={styles.tabbar}
+            tabStyle={styles.tab}
+            inactiveColor={BaseColor.grayColor}
+            activeColor={BaseColor.textPrimaryColor}
+            renderLabel={({ route, focused, color }) => (
+                <View style={{ flex: 1, width: 130, alignItems: "center" }}>
+                    <Text headline semibold={focused} style={{ color }}>
+                        {route.title}
+                    </Text>
+                </View>
+            )}
+        />
+    );
+    
+    setTglAwal(dateConversion,dateNumber){
+        this.setState({tglAwal:dateConversion});
+        this.setState({tglAwalNumber:dateNumber});
+        //console.log('setTglAwal',dateNumber);
+        //alert(dateNumber);
+    }
+
+    setTglAkhir(dateConversion,dateNumber){
+        this.setState({tglAkhir:dateConversion});
+        this.setState({tglAkhirNumber:dateNumber});
+    }
+
+
+    setPrice(select){
+        var minPerson=select.trip_minimum[0].count_minimum;
+        var minPrice=select.trip_minimum[0].price_minimum;
+        var totalPrice=parseInt(minPerson)*parseInt(minPrice);
+        this.setState({minPerson:minPerson});
+        this.setState({minPrice:minPrice});
+        this.setState({totalPrice:totalPrice});
+        this.setState({select:select});
+        
+    }
+
+    setJumlahDewasa(jml){
+        this.setState({dewasa:jml});
+
+    }
+
+    setJumlahAnak(jml){
+        this.setState({anak:jml});
+    }
+
+    setJumlahBayi(jml){
+        this.setState({bayi:jml});
+    }
+
+    setMinPerson(jml){
+        
+        var select=this.state.select;
+        var trip_minimum=select.trip_minimum;
+        const arrayHasIndex = (array, index) => Array.isArray(array) && array.hasOwnProperty(index);
+        var min_0=arrayHasIndex(trip_minimum,0);
+        var min_1=arrayHasIndex(trip_minimum,1);
+        var min_2=arrayHasIndex(trip_minimum,2);
+        var min_3=arrayHasIndex(trip_minimum,3);
+        var min_4=arrayHasIndex(trip_minimum,4);
+
+        var minPrice=0;
+        var totalPrice=0;
+
+        if(min_0==true){
+            if(min_1==true){
+                if(jml >= trip_minimum[0].count_minimum && jml < trip_minimum[1].count_minimum ){
+                    minPrice=select.trip_minimum[0].price_minimum; 
+                    totalPrice=parseInt(jml)*parseInt(minPrice);
+                }else if(jml >= trip_minimum[1].count_minimum){
+                    minPrice=select.trip_minimum[1].price_minimum; 
+                    totalPrice=parseInt(jml)*parseInt(minPrice);
+                }
+    
+            }
+            
+        }
+
+       
+
+        this.setState({totalPrice:totalPrice});
+        this.setState({minPerson:jml});
+        this.setState({minPrice:minPrice});
+        //this.setPrice();
+    }
+
+
+    componentDidMount(){
+        setTimeout(() => {
+            this.setState({dewasa:this.state.minPerson});
+        }, 500);
+    }
+    // Render correct screen container when tab is activated
+    _renderScene = ({ route, jumpTo }) => {
+        switch (route.key) {
+            // case "hotel":
+            //     return (
+            //         <Hotel
+            //             product={this.state.product}
+            //             jumpTo={jumpTo}
+            //             navigation={this.props.navigation}
+            //             setPrice={this.setPrice}
+            //         />
+            //     );
+            case "paket":
+                    return (
+                        <Paket
+                            product={this.state.product}
+                            jumpTo={jumpTo}
+                            navigation={this.props.navigation}
+                        />
+                    );
+            case "informasi":
+                return (
+                    <Informasi
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "exclude":
+                return (
+                    <Exclude
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "information":
+                return (
+                    <InformationTab
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "kebijakan":
+                return (
+                    <Kebijakan
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "feedback":
+                return (
+                    <Feedback
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "review":
+                return (
+                    <ReviewTab
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+        }
+    };
+
+    convertDate(date){
+
+        var dd = String(date.getDate()).padStart(2, '0');
+        var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = date.getFullYear();
+
+        date = yyyy + '-' + mm + '-' + dd;
+        return date;
+    }
+    
+    setDate(date) {
+    
+        var date = new Date(date);
+        var tempoMonth = (date.getMonth()+1);
+        var tempoDate = (date.getDate());
+        var finaldate="";
+        if (tempoMonth < 10) tempoMonth = '0' + tempoMonth;
+        if (tempoDate < 10) tempoDate = '0' + tempoDate;
+    
+        return finaldate = date.getFullYear()  + '-' +  tempoMonth  + '-' +  tempoDate;
+    };
+    
+    onSubmit() {
+    
+        const {type,product,select} =this.state;
+      var tgl_akhir='';
+
+ 
+      var param = {
+        DepartureDate:this.state.tglAwal,
+        ReturnDate:tgl_akhir,
+        Adults:this.state.dewasa,
+        Children:this.state.anak,
+        Infants:this.state.bayi,
+        }
+        
+        var productPart={}
+        var link='';
+       
+            link='Summary';
+            param.type='trip';
+            param.cityId=this.state.cityId;
+            param.cityText=this.state.cityText;
+            param.cityProvince=this.state.cityProvince;
+            param.Qty=this.state.qty;
+            
+            // console.log('product',JSON.stringify(product));
+            // console.log('param',JSON.stringify(param));
+            // console.log('productPart',JSON.stringify(select));
+            // console.log('this.state.tglAwal',this.state.tglAwal);
+            this.props.navigation.navigate(link,
+                {
+                    param:param,
+                    product:product,
+                    productPart:select
+                    
+                });
+
+    }
+
+
+
+    render() {
+        const { navigation } = this.props;
+        const { title, heightHeader, service, product,minPerson,minPrice,totalPrice} = this.state;
+        const heightImageBanner = Utils.scaleWithPixel(250, 1);
+        const marginTopBanner = heightImageBanner - heightHeader;
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
+        const { modalVisiblePerson,modalVisibleDate} = this.state;
+      
+        
+
+        return (
+            <View style={{ flex: 1 }}>
+                <Animated.View
+                    style={[
+                        styles.imgBanner,
+                        {
+                            height: this._deltaY.interpolate({
+                                inputRange: [
+                                    0,
+                                    Utils.scaleWithPixel(150),
+                                    Utils.scaleWithPixel(150)
+                                ],
+                                outputRange: [
+                                    heightImageBanner,
+                                    heightHeader,
+                                    heightHeader
+                                ]
+                            })
+                        }
+                    ]}
+                >
+                    <Image
+                        source={{ uri: product.img_featured_url }}
+                        style={{ width: "100%", height: "100%" }}
+                        resizeMode="cover"
+                    />
+                    {/* <Text
+                        title2
+                        semibold
+                        whiteColor
+                        style={{
+                            position: "absolute",
+                            paddingTop: heightHeader - 45
+                        }}
+                    >
+                        {product.product_name}
+                    </Text> */}
+                </Animated.View>
+                <SafeAreaView
+                    style={BaseStyle.safeAreaView}
+                    forceInset={{ top: "always" }}
+                >
+                    {/* Header */}
+                    <Header
+                        title="Paket Hotel"
+                        renderLeft={() => {
+                            return (
+                                <Icon
+                                    name="arrow-left"
+                                    size={20}
+                                    color={BaseColor.whiteColor}
+                                />
+                            );
+                        }}
+                        renderRight={() => {
+                            return (
+                                <Icon
+                                    name="images"
+                                    size={20}
+                                    color={BaseColor.whiteColor}
+                                />
+                            );
+                        }}
+                        onPressLeft={() => {
+                            navigation.goBack();
+                        }}
+                        onPressRight={() => {
+                            navigation.navigate("PreviewImage");
+                        }}
+                        // style={{backgroundColor:BaseColor.primaryColor}}
+                        //transparent={true}
+                    />
+                    <ScrollView
+                        onScroll={Animated.event([
+                            {
+                                nativeEvent: {
+                                    contentOffset: { y: this._deltaY }
+                                }
+                            }
+                        ])}
+                        onContentSizeChange={() =>
+                            this.setState({
+                                heightHeader: Utils.heightHeader()
+                            })
+                        }
+                        scrollEventThrottle={8}
+                    >
+                        {/* Main Container */}
+
+
+
+                        <View
+                            style={[
+                                {
+                                    flexDirection: "row",
+                                    paddingHorizontal: 20,
+                                    marginBottom: 10,
+                                    paddingTop: 10
+                                },
+                                { marginTop: marginTopBanner }
+                            ]}
+                        >
+                            <Tag
+                                primary
+                                style={{ marginRight: 15 }}
+                            >
+                                Valid Until {product.product_detail.end_date}
+                            </Tag>
+                        </View>
+
+
+                        <View
+                            style={[
+                                { paddingHorizontal: 20, paddingTop: 0 },
+                            ]}
+                        >
+                            <Text
+                                style={{ marginBottom: 10 }}
+                            >
+                                {product.product_name}
+                            </Text>
+                            
+                        </View>
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20 }}>
+                            <StarRating
+                                    disabled={true}
+                                    starSize={14}
+                                    maxStars={5}
+                                    rating={5}
+                                    selectedStar={rating => {}}
+                                    fullStarColor={BaseColor.yellowColor}
+                                />
+                        </View>
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingBottom: 20 }}>
+                            <Icon
+                                name="map-marker-alt"
+                                color={BaseColor.lightPrimaryColor}
+                                size={10}
+                            />
+                            <Text
+                                caption1
+                                style={{ marginLeft: 10 }}
+                                numberOfLines={1}
+                            >
+                                {product.product_detail.address}, {product.product_detail.capital}
+                            </Text>
+                        </View>
+
+                        
+                        
+
+
+                        <TabView
+                            lazy
+                            navigationState={this.state}
+                            renderScene={this._renderScene}
+                            renderTabBar={this._renderTabBar}
+                            onIndexChange={this._handleIndexChange}
+                        />
+                    </ScrollView>
+                    {/* Pricing & Booking Process */}
+                    <View style={styles.contentButtonBottom}>
+                        <View>
+                            <Text caption1 semibold>
+                                {minPerson} x Rp {priceSplitter(minPrice)}
+                            </Text>
+                            <Text title3 primaryColor s
+                            emibold>
+                                {priceSplitter(totalPrice)}
+                            </Text>
+                        </View>
+                        <View>
+                            <SetDate
+                                labelTglAwal={this.state.tglAwal}
+                                labelTglAkhir={this.state.tglAwal}
+
+                                tglAwalNumber={this.state.tglAwalNumber}
+                                tglAwal={this.state.tglAwal}
+                                setTglAwal={this.setTglAwal}
+
+                                tglAkhirNumber={this.state.tglAkhirNumber}
+                                tglAkhir={this.state.tglAkhir}
+                                setTglAkhir={this.setTglAkhir}
+
+                            />
+                        </View>
+                        
+                        <View>
+                            <SetPenumpang
+                                label={this.state.minPerson}
+                                dewasa={this.state.dewasa}
+                                anak={this.state.anak}
+                                bayi={this.state.bayi}
+                                setJumlahDewasa={this.setJumlahDewasa}
+                                setJumlahAnak={this.setJumlahAnak}
+                                setJumlahBayi={this.setJumlahBayi}
+                                minPerson={this.state.minPerson}
+                                minPrice={this.state.minPrice}
+                                totalPrice={this.state.totalPrice}
+                                setMinPerson={this.setMinPerson}
+                            />
+                        </View>
+                        
+                        
+                        <Button
+                            style={{ height: 46 }}
+                            onPress={() => {  
+                                this.onSubmit();
+                               
+                            }}
+                        >
+                            Next
+                        </Button>
+                    </View>
+                </SafeAreaView>
+            </View>
+        );
+    }
+}
+
+/**
+ * @description Show when tab Information activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class InformationTab extends Component {
+    constructor(props) {
+        super();
+    }
+
+    render() {
+        return (
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                <Text headline semibold>
+                    Day 1: London - Somme - Paris
+                </Text>
+                <Image
+                    source={Images.cruise1}
+                    style={{ height: 120, width: "100%", marginTop: 10 }}
+                />
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text headline semibold style={{ marginTop: 20 }}>
+                    Day 2: Paris - Burgundy - Swiss Alps
+                </Text>
+                <Image
+                    source={Images.cruise2}
+                    style={{ height: 120, width: "100%", marginTop: 10 }}
+                />
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text headline semibold style={{ marginTop: 20 }}>
+                    Day 3: Swiss Alps - Strasbourg - Heidel…
+                </Text>
+                <Image
+                    source={Images.cruise3}
+                    style={{ height: 120, width: "100%", marginTop: 10 }}
+                />
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+            </View>
+        );
+    }
+}
+
+
+
+
+
+class Paket extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
             renderMapView: false,
             region: {
                 latitude: 1.9344,
@@ -45,34 +810,7 @@ export default class HotelDetail extends Component {
                 latitudeDelta: 0.05,
                 longitudeDelta: 0.004
             },
-            roomType: [
-                {
-                    id: "1",
-                    image: Images.room8,
-                    name: "Standard Twin Room",
-                    price: "$399,99",
-                    available: "Hurry Up! This is your last room!",
-                    services: [
-                        { icon: "wifi", name: "Free Wifi" },
-                        { icon: "shower", name: "Shower" },
-                        { icon: "users", name: "Max 3 aduts" },
-                        { icon: "subway", name: "Nearby Subway" }
-                    ]
-                },
-                {
-                    id: "2",
-                    image: Images.room5,
-                    name: "Delux Room",
-                    price: "$399,99",
-                    available: "Hurry Up! This is your last room!",
-                    services: [
-                        { icon: "wifi", name: "Free Wifi" },
-                        { icon: "shower", name: "Shower" },
-                        { icon: "users", name: "Max 3 aduts" },
-                        { icon: "subway", name: "Nearby Subway" }
-                    ]
-                }
-            ],
+            helpBlock: HelpBlockData,
             todo: [
                 {
                     id: "1",
@@ -100,656 +838,506 @@ export default class HotelDetail extends Component {
                     image: Images.trip5
                 }
             ],
-            helpBlock: HelpBlockData,
-            
-            //paramUrl:paramUrl,
-            //slug:slug,
-            param:param,
-            //paramOther:paramOther,
-            product:product,
-            
-            hotelDetail:{},
-            hotelRoom:[],
-            hotelData:{},
-            hotelReview:{
-                s_kebersihan: 15,
-                c_kebersihan: 2,
-                s_kenyamanan: 15,
-                c_kenyamanan: 2,
-                s_lokasi: 15,
-                c_lokasi: 2,
-                s_fasilitas: 15,
-                c_fasilitas: 2,
-                s_staf: 15,
-                c_staf: 2,
-                s_harga: 15,
-                c_harga: 2,
-                s_wifi: 15,
-                c_wifi: 2
-            },
-            hotelReviewCustomer:[
-                {
-                    id_hotel_review: "1",
-                    id_hotel: "1",
-                    id_user: "9",
-                    name: "Ndaru Kurniawan",
-                    nationality: "Indonesia",
-                    summary: "Solo Traveler,Dipesan dari Mobile,Menginap 1 malam",
-                    kebersihan: "7",
-                    kenyamanan: "7",
-                    lokasi: "7",
-                    fasilitas: "7",
-                    staf: "7",
-                    harga: "7",
-                    wifi: "7",
-                    title: "mantap",
-                    pros: "Kolasi strategis",
-                    cons: "Tidak banyak restoran dekat lokasi",
-                    date_order: "2020-05-05",
-                    date_review: "2020-05-06"
-                }],
-            DataMasterDiskon:DataMasterDiskon[0],
+            product_option:props.product.product_option
         };
-        this._deltaY = new Animated.Value(0);
     }
-    getHotel(){
-        var param=this.state.param;
-        this.setState({ loading_spinner: true }, () => {
-            PostDataProduct('hotel/detail_app/'+param.slug_hotel+'?'+param.paramUrl)
-            .then((result) => {
-                    this.setState({ loading_spinner: false });
-                    var hotelData=result;
-                    var hotelDetail=result.hotel;
-                    var hotelRoom=result.room;
-                    var hotelReview=result.review;
-                    var hotelReviewCustomer=result.review_teks;
-                    console.log('hotel',JSON.stringify(hotelDetail));
-                    console.log('room',JSON.stringify(hotelRoom));
-                    this.setState({hotelData:hotelData});
-                    this.setState({hotelDetail:hotelDetail});
-                    this.setState({hotelRoom:hotelRoom});
-                    this.setState({hotelReview:hotelReview});
-                    this.setState({hotelReviewCustomer:hotelReviewCustomer});
-                },
-                (error) => {
-                    this.setState({ error });
-                }
-            );
-            
 
-
-        });
-    }
     componentDidMount() {
-        this.getHotel();
+        const { navigation, product } = this.props;
+        const { product_option } =this.state;
+                    //this.props.setPrice(select);
+                if (product_option.length != 0) {
+                    
+                    var select=product.product_option[0];
+                    const selected = select.id_hotelpackage_detail;
+                    if (selected) {
+                        this.setState({
+                            product_option: this.state.product_option.map(item => {
+                                return {
+                                    ...item,
+                                    checked: item.id_hotelpackage_detail == selected
+                                };
+                            })
+                        });
+                    }
+                }
+    }
+    
+    onChange(select) {
+        const { navigation, product } = this.props;
+        //alert(select.id_hotelpackage_detail)
+        this.setState({
+            product_option: this.state.product_option.map(item => {
+                if (item.id_hotelpackage_detail == select.id_hotelpackage_detail) {
+                    return {
+                        ...item,
+                        checked: true
+                    };
+                } else {
+                    return {
+                        ...item,
+                        checked: false
+                    };
+                }
+               
+            })
+        });
+        
+        //this.props.setPrice(select);
+    }
+
+
+    render() {
+        const { renderMapView, todo, helpBlock,product_option } = this.state;
+        const { navigation} = this.props;
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
+        var content=<View></View>
+        if (product_option.length == 0) {
+            content=<View
+                        style={{
+                                // flexDirection: 'column',
+                                // justifyContent: 'center',
+                                alignItems: 'center',
+                                height: '100%',padding: 20
+                            }}
+                        >       
+                        <Image
+                            source={Images.empty}
+                            style={{ width: "40%", height: "40%" }}
+                            resizeMode="cover"
+                        />
+                        </View>
+        }else{
+            content=<FlatList
+            data={product_option}
+            keyExtractor={(item, index) => item.id_hotelpackage_detail}
+            renderItem={({ item }) => (
+                <TouchableOpacity
+                    // style={styles.item}
+                    onPress={() => 
+                    {
+                    this.onChange(item)
+                    }
+                    
+                    }
+                >
+                    <View style={[styles.itemPrice, { backgroundColor: BaseColor.secondColor == BaseColor.whiteColor ? item.checked : null}]}>
+                            <View style={styles.linePrice}>
+                                <Text headline semibold>
+                                    {item.detail_name}
+                                </Text>
+                                
+                                {item.checked && (
+                                    <View style={styles.iconRight}>
+                                    <Icon
+                                        name="check"
+                                        size={24}
+                                        color={'green'}
+                                        />
+                                    </View>
+                                )}
+                                
+                            </View>
+        
+                            <View style={styles.linePriceMinMax}>
+                                <View style={styles.contentService}>
+                                    {[
+                                        { key: "1", name: "clock",label:item.duration+ 'night' },
+                                        { key: "2", name: "user",label:item.guest_per_room+' guest' },
+                                        { key: "3", name: "crop",label:item.room_size+' m2' },
+                                        { key: "4", name: "bed",label:item.bed_type},
+                                        { key: "5", name: "bath",label:'shower' }
+                                    ].map((item, index) => (
+                                        <View
+                                            style={{ alignItems: "center" }}
+                                            key={"service" + index}
+                                        >
+                                            <Icon
+                                                name={item.name}
+                                                size={24}
+                                                color={BaseColor.primaryColor}
+                                            />
+                                            <Text
+                                                overline
+                                                grayColor
+                                                style={{ marginTop: 4 }}
+                                            >
+                                                {item.label}
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </View>
+                                <View style={styles.linePrice}>
+                                    <Text primaryColor semibold>
+                                        Minimum: 2
+                                                </Text>
+                                    <View style={styles.iconRight}>
+                                        <Text>
+                                            Rp {priceSplitter(item.price)}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                </TouchableOpacity>
+            )}
+        />
+
+
+        }
+
+        return (
+            <View style={{}}>
+                {content}
+            </View>
+        );
+    }
+}
+
+
+
+/**
+ * @description Show when tab Kebijakan activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class Informasi extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ]
+        };
+    }
+
+    componentDidMount() {
         InteractionManager.runAfterInteractions(() => {
             this.setState({ renderMapView: true });
         });
     }
 
     render() {
-        const { navigation } = this.props;
-        const {
-            roomType,
-            heightHeader,
-            helpBlock,
-            todo,
-            renderMapView
-        } = this.state;
-        const heightImageBanner = Utils.scaleWithPixel(250, 1);
-        const marginTopBanner = heightImageBanner - heightHeader - 40;
-        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-
+        const { renderMapView, todo, helpBlock} = this.state;
+        const { navigation,product } = this.props;
+        var product_detail=product.product_detail;
+        
+        var informasi='Biaya penambahan orang dalam kamar mungkin berlaku dan berbeda-beda menurut kebijakan properti.Tanda pengenal berfoto yang dikeluarkan oleh pemerintah dan kartu kredit, kartu debit, dan deposit uang tunai diperlukan saat check-in untuk biaya tidak terduga.Pemenuhan permintaan khusus bergantung pada ketersediaan sewaktu check-in dan mungkin menimbulkan biaya tambahan. Permintaan khusus tidak dijamin akan terpenuhi.';
+        
         return (
-            <View style={{ flex: 1 }}>
-                <Animated.Image
-                    source={{ uri: 'https://masterdiskon.com/assets/upload/product/hotel/img/featured/'+this.state.hotelDetail.img_featured}}
-                    style={[
-                        styles.imgBanner,
-                        {
-                            height: this._deltaY.interpolate({
-                                inputRange: [
-                                    0,
-                                    Utils.scaleWithPixel(200),
-                                    Utils.scaleWithPixel(200)
-                                ],
-                                outputRange: [
-                                    heightImageBanner,
-                                    heightHeader,
-                                    heightHeader
-                                ]
-                            })
-                        }
-                    ]}
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                <HTML
+                  html={informasi}
+                  imagesMaxWidth={Dimensions.get("window").width}
                 />
-                <SafeAreaView
-                    style={BaseStyle.safeAreaView}
-                    forceInset={{ top: "always" }}
-                >
-                    {/* Header */}
-                    <Header
-                        title=""
-                        renderLeft={() => {
-                            return (
-                                <Icon
-                                    name="arrow-left"
-                                    size={20}
-                                    color={BaseColor.whiteColor}
-                                />
-                            );
-                        }}
-                        renderRight={() => {
-                            return (
-                                <Icon
-                                    name="images"
-                                    size={20}
-                                    color={BaseColor.whiteColor}
-                                />
-                            );
-                        }}
-                        onPressLeft={() => {
-                            navigation.goBack();
-                        }}
-                        onPressRight={() => {
-                            navigation.navigate("PreviewImage");
-                        }}
-                    />
-                    <ScrollView
-                        onScroll={Animated.event([
-                            {
-                                nativeEvent: {
-                                    contentOffset: { y: this._deltaY }
-                                }
-                            }
-                        ])}
-                        onContentSizeChange={() =>
-                            this.setState({
-                                heightHeader: Utils.heightHeader()
-                            })
-                        }
-                        scrollEventThrottle={8}
-                    >
-                        {/* Main Container */}
-                        <View style={{ paddingHorizontal: 20 }}>
-                            {/* Information */}
-                            <View
-                                style={[
-                                    styles.contentBoxTop,
-                                    { marginTop: marginTopBanner }
-                                ]}
-                            >
-                                <Text
-                                    title2
-                                    semibold
-                                    style={{ marginBottom: 7 }}
-                                >
-                                    {this.state.hotelDetail.name_hotel}
-                                </Text>
-                                <StarRating
-                                    disabled={true}
-                                    starSize={14}
-                                    maxStars={5}
-                                    rating={this.state.hotelDetail.stars}
-                                    selectedStar={rating => {}}
-                                    fullStarColor={BaseColor.yellowColor}
-                                />
-                                <Text
-                                    body2
-                                    style={{
-                                        marginTop: 7,
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    {this.state.hotelDetail.address}
-                                </Text>
-                            </View>
-                            {/* Rating Review */}
-                            <View style={styles.blockView}>
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        alignItems: "center"
-                                    }}
-                                >
-                                    <View style={styles.circlePoint}>
-                                        <Text title3 whiteColor>
-                                            {this.state.hotelDetail.rating}
-                                        </Text>
-                                    </View>
-                                    <View>
-                                        <Text
-                                            title3
-                                            primaryColor
-                                            style={{ marginBottom: 3 }}
-                                        >
-                                            Excellent
-                                        </Text>
-                                        <Text body2>See 801 reviews</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.contentRateDetail}>
-                                    <View
-                                        style={[
-                                            styles.contentLineRate,
-                                            { marginRight: 10 }
-                                        ]}
-                                    >
-                                        <View style={{ flex: 1 }}>
-                                            <Text
-                                                caption2
-                                                grayColor
-                                                style={{ marginBottom: 5 }}
-                                            >
-                                                Kebersihan
-                                            </Text>
-                                            <View style={styles.lineBaseRate} />
-                                            <View
-                                                style={[
-                                                    styles.linePercent,
-                                                    { width: this.state.hotelReview.s_kebersihan+"%" }
-                                                ]}
-                                            />
-                                        </View>
-                                        <Text
-                                            caption2
-                                            style={{ marginLeft: 15 }}
-                                        >
-                                           {this.state.hotelReview.s_kebersihan}
-                                        </Text>
-                                    </View>
-                                    <View style={styles.contentLineRate}>
-                                        <View style={{ flex: 1 }}>
-                                            <Text
-                                                caption2
-                                                grayColor
-                                                style={{ marginBottom: 5 }}
-                                            >
-                                                Kenyamanan
-                                            </Text>
-                                            <View style={styles.lineBaseRate} />
-                                            <View
-                                                style={[
-                                                    styles.linePercent,
-                                                    { width: this.state.hotelReview.s_kenyamanan+"%" }
-                                                ]}
-                                            />
-                                        </View>
-                                        <Text
-                                            caption2
-                                            style={{ marginLeft: 15 }}
-                                        >
-                                            {this.state.hotelReview.s_kenyamanan}
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View style={styles.contentRateDetail}>
-                                    <View
-                                        style={[
-                                            styles.contentLineRate,
-                                            { marginRight: 10 }
-                                        ]}
-                                    >
-                                        <View style={{ flex: 1 }}>
-                                            <Text
-                                                caption2
-                                                grayColor
-                                                style={{ marginBottom: 5 }}
-                                            >
-                                                Lokasi
-                                            </Text>
-                                            <View style={styles.lineBaseRate} />
-                                            <View
-                                                style={[
-                                                    styles.linePercent,
-                                                    { width: this.state.hotelReview.s_lokasi+"%" }
-                                                ]}
-                                            />
-                                        </View>
-                                        <Text
-                                            caption2
-                                            style={{ marginLeft: 15 }}
-                                        >
-                                            {this.state.hotelReview.s_lokasi}
-                                        </Text>
-                                    </View>
-                                    <View style={styles.contentLineRate}>
-                                        <View style={{ flex: 1 }}>
-                                            <Text
-                                                caption2
-                                                grayColor
-                                                style={{ marginBottom: 5 }}
-                                            >
-                                                Fasilitas
-                                            </Text>
-                                            <View style={styles.lineBaseRate} />
-                                            <View
-                                                style={[
-                                                    styles.linePercent,
-                                                    { width: this.state.hotelReview.s_fasilitas+"%" }
-                                                ]}
-                                            />
-                                        </View>
-                                        <Text
-                                            caption2
-                                            style={{ marginLeft: 15 }}
-                                        >
-                                            {this.state.hotelReview.s_fasilitas}
-                                        </Text>
-                                    </View>
-                                </View>
-                            </View>
-                            {/* Description */}
-                            <View style={styles.blockView}>
-                                <Text headline semibold>
-                                    Hotel Description
-                                </Text>
-                                <Text body2 style={{ marginTop: 5 }}>
-                                    {this.state.hotelDetail.description}
-                                </Text>
-                            </View>
-                            {/* Facilities Icon */}
-                            <View style={styles.contentService}>
-                                {[
-                                    { key: "1", name: "wifi" },
-                                    { key: "2", name: "coffee" },
-                                    { key: "3", name: "bath" },
-                                    { key: "4", name: "car" },
-                                    { key: "5", name: "paw" }
-                                ].map((item, index) => (
-                                    <View
-                                        style={{ alignItems: "center" }}
-                                        key={"service" + index}
-                                    >
-                                        <Icon
-                                            name={item.name}
-                                            size={24}
-                                            color={BaseColor.primaryColor}
-                                        />
-                                        <Text
-                                            overline
-                                            grayColor
-                                            style={{ marginTop: 4 }}
-                                        >
-                                            {item.name}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-                            {/* Map location */}
-                            <View style={styles.blockView}>
-                                <Text
-                                    headline
-                                    style={{ marginBottom: 5 }}
-                                    semibold
-                                >
-                                    Location
-                                </Text>
-                                <Text body2 numberOfLines={2}>
-                                    {this.state.hotelDetail.address}
-                                </Text>
-                                <View
-                                    style={{
-                                        height: 180,
-                                        width: "100%",
-                                        marginTop: 10
-                                    }}
-                                >
-                                    {renderMapView && (
-                                        <MapView
-                                            provider={PROVIDER_GOOGLE}
-                                            style={styles.map}
-                                            region={this.state.region}
-                                            onRegionChange={() => {}}
-                                        >
-                                            <Marker
-                                                coordinate={{
-                                                    latitude: 1.9344,
-                                                    longitude: 103.358727
-                                                }}
-                                            />
-                                        </MapView>
-                                    )}
-                                </View>
-                            </View>
-                            {/* Open Time */}
-                            <View style={styles.blockView}>
-                                <Text headline semibold>
-                                    Good To Know
-                                </Text>
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        marginTop: 5
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            justifyContent: "center"
-                                        }}
-                                    >
-                                        <Text body2 grayColor>
-                                            Check in from
-                                        </Text>
-                                        <Text body2 accentColor semibold style={{color:BaseColor.primaryColor}}>
-                                            {this.state.hotelDetail.checkIn}
-                                        </Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            justifyContent: "center"
-                                        }}
-                                    >
-                                        <Text body2 grayColor>
-                                            Check in from
-                                        </Text>
-                                        <Text body2 accentColor semibold style={{color:BaseColor.primaryColor}}>
-                                            {this.state.hotelDetail.checkOut}
-                                        </Text>
-                                    </View>
-                                </View>
-                            </View>
-                            {/* Rooms */}
-                            <View style={styles.blockView}>
-                                <Text headline semibold>
-                                    Room Type
-                                </Text>
-                                <FlatList
-                                    data={this.state.hotelRoom}
-                                    keyExtractor={(item, index) => item.id_hotel_room}
-                                    renderItem={({ item }) => (
-                                        <RoomType
-                                            image={'dd32d9b188d86d6d8dc40d1ff9a0ebf6.jpg'}
-                                            url={this.state.DataMasterDiskon.site+'assets/upload/product/hotel/img/featured/'}
-                                            name={item.room_type}
-                                            price={'Rp '+priceSplitter(item.price)}
-                                            available={item.available}
-                                            services={item.services}
-                                            amenities={item.amenities}
-                                            style={{ marginTop: 10 }}
-                                            onPress={() => {
-                                                this.props.navigation.navigate(
-                                                    "HotelInformation"
-                                                );
-                                            }}
-                                            buttonBookNow={false}
-                                            onPressBookNow={() => {
-                                                this.props.navigation.navigate(
-                                                    "HotelRoom"
-                                                );
-                                            }}
-                                        />
-                                    )}
-                                />
-                            </View>
-                            
-                            {/* Todo Things */}
-                            <View style={styles.blockView}>
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        justifyContent: "space-between",
-                                        marginBottom: 10,
-                                        alignItems: "flex-end"
-                                    }}
-                                >
-                                    <Text headline semibold>
-                                        Review
-                                    </Text>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            navigation.navigate("Post");
-                                        }}
-                                    >
-                                        <Text caption1 grayColor>
-                                            Show More
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                                <FlatList
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={this.state.hotelReviewCustomer}
-                                    keyExtractor={(item, index) => item.id}
-                                    renderItem={({ item }) => (
-                                        <PostListItem
-                                            style={{ marginRight: 20 }}
-                                            title={item.name}
-                                            date={item.date_review}
-                                            description={item.summary}
-                                            image={item.image}
-                                            pros={item.pros}
-                                            cons={item.cons}
-                                            onPress={() => {
-                                                navigation.navigate(
-                                                    "PostDetail"
-                                                );
-                                            }}
-                                        />
-                                    )}
-                                />
-                            </View>
-                            {/* Help Block Information */}
-                            {/* <View style={styles.blockView}>
-                                <HelpBlock
-                                    title={helpBlock.title}
-                                    description={helpBlock.description}
-                                    phone={helpBlock.phone}
-                                    email={helpBlock.email}
-                                    style={{ margin: 20 }}
-                                    onPress={() => {
-                                        navigation.navigate("ContactUs");
-                                    }}
-                                />
-                            </View> */}
-                            {/* Other Information */}
-                            {/* <View style={{ paddingVertical: 10 }}>
-                                <Text headline semibold>
-                                    4 Reason To Choose Us
-                                </Text>
-                                <View style={styles.itemReason}>
-                                    <Icon
-                                        name="map-marker-alt"
-                                        size={18}
-                                        color={BaseColor.accentColor}
-                                    />
-                                    <View style={{ marginLeft: 10 }}>
-                                        <Text subhead semibold>
-                                            Good Location
-                                        </Text>
-                                        <Text body2>
-                                            Lorem ipsum dolor sit amet, nec et
-                                            suas augue diceret, cu cum malis
-                                            veniam democritum. Eu liber vocibus
-                                            his, qui id cetero
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View style={styles.itemReason}>
-                                    <Icon
-                                        name="pagelines"
-                                        size={18}
-                                        color={BaseColor.accentColor}
-                                    />
-                                    <View style={{ marginLeft: 10 }}>
-                                        <Text subhead semibold>
-                                            Great Food
-                                        </Text>
-                                        <Text body2>
-                                            Excellent cuisine, typical dishes
-                                            from the best Romagna tradition and
-                                            more!
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View style={styles.itemReason}>
-                                    <Icon
-                                        name="servicestack"
-                                        size={18}
-                                        color={BaseColor.accentColor}
-                                    />
-                                    <View style={{ marginLeft: 10 }}>
-                                        <Text subhead semibold>
-                                            Private Beach
-                                        </Text>
-                                        <Text body2>
-                                            Excellent cuisine, typical dishes
-                                            from the best Romagna tradition and
-                                            more!
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View style={styles.itemReason}>
-                                    <Icon
-                                        name="trophy"
-                                        size={18}
-                                        color={BaseColor.accentColor}
-                                    />
-                                    <View style={{ marginLeft: 10 }}>
-                                        <Text subhead semibold>
-                                            5 Stars Hospitality
-                                        </Text>
-                                        <Text body2>
-                                            Romagna hospitality, typical and
-                                            much
-                                        </Text>
-                                    </View>
-                                </View>
-                            </View> */}
-                        </View>
-                    </ScrollView>
-                    {/* Pricing & Booking Process */}
-                    <View style={styles.contentButtonBottom}>
-                        <View>
-                            <Text caption1 semibold>
-                                Price from
-                            </Text>
-                            <Text title3 primaryColor semibold>
-                                Rp {priceSplitter(this.state.hotelDetail.price_from)}
-                            </Text>
-                            <Text caption1 semibold style={{ marginTop: 5 }}>
-                                kamar/Night
-                            </Text>
-                        </View>
-                        <Button
-                            style={{ height: 46 }}
-                            onPress={() =>
-                                {
-                                navigation.navigate("HotelRoom",
-                                    {
-                                        hotelData:this.state.hotelData,
-                                        param:this.state.param,
-                                        product:this.state.product,
-                                    }
-                                )}
-                            }
-                        >
-                            Pilih Kamar
-                        </Button>
-                    </View>
-                </SafeAreaView>
             </View>
+        );
+    }
+}
+
+
+
+/**
+ * @description Show when tab Kebijakan activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class Exclude extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ]
+        };
+    }
+
+    componentDidMount() {
+        InteractionManager.runAfterInteractions(() => {
+            this.setState({ renderMapView: true });
+        });
+    }
+
+    render() {
+        const { renderMapView, todo, helpBlock} = this.state;
+        const { navigation,product } = this.props;
+        var product_detail=product.product_detail;
+        
+        
+        
+        return (
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                <HTML
+                  html={product_detail.exclude}
+                  imagesMaxWidth={Dimensions.get("window").width}
+                />
+            </View>
+        );
+    }
+}
+
+
+/**
+ * @description Show when tab Kebijakan activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class Kebijakan extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ]
+        };
+    }
+
+    componentDidMount() {
+        
+    }
+
+    render() {
+        const { renderMapView, todo, helpBlock} = this.state;
+        const { navigation,product } = this.props;
+        
+        
+        
+        return (
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                <HTML
+                  html={product.product_detail.term}
+                  imagesMaxWidth={Dimensions.get("window").width}
+                />
+            </View>
+        );
+    }
+}
+
+/**
+ * @description Show when tab Package activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class Feedback extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            rate: 4.5,
+            title: "",
+            review: ""
+        };
+    }
+
+    render() {
+        const { rate, title, review } = this.state;
+        return (
+            <View style={{ alignItems: "center", padding: 20 }}>
+                <View style={{ width: 160 }}>
+                    <StarRating
+                        starSize={26}
+                        maxStars={5}
+                        rating={rate}
+                        selectedStar={rating => {
+                            this.setState({ rate: rating });
+                        }}
+                        fullStarColor={BaseColor.yellowColor}
+                        containerStyle={{ padding: 5 }}
+                    />
+                    <Text caption1 grayColor style={{ textAlign: "center" }}>
+                        Tap a star to rate
+                    </Text>
+                </View>
+                <TextInput
+                    style={[BaseStyle.textInput, { marginTop: 10 }]}
+                    onChangeText={text => this.setState({ title: text })}
+                    autoCorrect={false}
+                    placeholder="Title"
+                    placeholderTextColor={BaseColor.grayColor}
+                    value={title}
+                    selectionColor={BaseColor.primaryColor}
+                />
+                <TextInput
+                    style={[
+                        BaseStyle.textInput,
+                        { marginTop: 20, height: 140 }
+                    ]}
+                    onChangeText={text => this.setState({ review: text })}
+                    textAlignVertical="top"
+                    multiline={true}
+                    autoCorrect={false}
+                    placeholder="Reviews"
+                    placeholderTextColor={BaseColor.grayColor}
+                    value={review}
+                    selectionColor={BaseColor.primaryColor}
+                />
+                <Button full style={{ marginTop: 20 }} onPress={() => { }}>
+                    Sent
+                </Button>
+            </View>
+        );
+    }
+}
+
+/**
+ * @description Show when tab Review activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class ReviewTab extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            rateDetail: {
+                point: 4.7,
+                maxPoint: 5,
+                totalRating: 25,
+                data: ["80%", "10%", "10%", "0%", "0%"]
+            },
+            reviewList: ReviewData
+        };
+    }
+    render() {
+        let { rateDetail, reviewList } = this.state;
+        return (
+            <FlatList
+                style={{ padding: 20 }}
+                refreshControl={
+                    <RefreshControl
+                        colors={[BaseColor.primaryColor]}
+                        tintColor={BaseColor.primaryColor}
+                        refreshing={this.state.refreshing}
+                        onRefresh={() => { }}
+                    />
+                }
+                data={reviewList}
+                keyExtractor={(item, index) => item.id}
+                ListHeaderComponent={() => (
+                    <RateDetail
+                        point={rateDetail.point}
+                        maxPoint={rateDetail.maxPoint}
+                        totalRating={rateDetail.totalRating}
+                        data={rateDetail.data}
+                    />
+                )}
+                renderItem={({ item }) => (
+                    <CommentItem
+                        style={{ marginTop: 10 }}
+                        image={item.source}
+                        name={item.name}
+                        rate={item.rate}
+                        date={item.date}
+                        title={item.title}
+                        comment={item.comment}
+                    />
+                )}
+            />
         );
     }
 }

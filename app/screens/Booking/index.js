@@ -1,14 +1,12 @@
 import React, { Component } from "react";
-import { RefreshControl, FlatList,TouchableOpacity,AsyncStorage,ActivityIndicator } from "react-native";
-import { BaseStyle, BaseColor } from "@config";
+import { RefreshControl, FlatList,TouchableOpacity,AsyncStorage,ActivityIndicator,Image } from "react-native";
+import { BaseStyle, BaseColor,Images } from "@config";
 import { Header, SafeAreaView, Icon, ListThumbCircle, Text,Button,CommentItem,Tag} from "@components";
 import styles from "./styles";
 import {PostData} from '../../services/PostData';
 // Load sample data
 // import { NotificationData,DataLoading,DataBooking } from "@data";
 import { View } from "react-native-animatable";
-import { Image } from "@components";
-import { Images } from "@config";
 import NotYetLogin from "../../components/NotYetLogin";
 import PTRView from 'react-native-pull-to-refresh';
 import {
@@ -65,7 +63,9 @@ export default class Booking extends Component {
     
     
     fetch(){
-        const {config} =this.state;
+        const {config,login} =this.state;
+
+        if(login==true){
         var url=config.baseUrl;
         var path=config.user_order.dir;
         
@@ -95,17 +95,21 @@ export default class Booking extends Component {
                  }
             ); 
         });
+        }
     }
    
 
     componentDidMount() {
+        let { login} = this.state;
         const {navigation} = this.props;
-        navigation.addListener ('willFocus', () =>{
-            this.setState({ loading_spinner: true });
-            setTimeout(() => {
-                this.fetch();
-            }, 200);
-        });
+
+            navigation.addListener ('didFocus', () =>{
+                this.setState({ loading_spinner: true });
+                this.setStatus('tagihan');
+                setTimeout(() => {
+                    this.fetch();
+                }, 200);
+            });
     }
     
     setStatus(status){
@@ -133,6 +137,48 @@ export default class Booking extends Component {
     render() {
         const { navigation } = this.props;
         let { login,loading_spinner,dataBooking} = this.state;
+
+        var content=<View></View>
+        if (dataBooking.length == 0) {
+            content=<View
+                        style={{
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: '100%',padding: 20
+                            }}
+                        >       
+                        <Image
+                            source={Images.empty}
+                            style={{ width: "50%", height: "50%" }}
+                            resizeMode="cover"
+                        />
+                        <View><Text>Data Kosong</Text></View>
+                        </View>
+        }else{
+            content=<FlatList
+                        refreshControl={
+                            <RefreshControl
+                                colors={[BaseColor.primaryColor]}
+                                tintColor={BaseColor.primaryColor}
+                                refreshing={this.state.refreshing}
+                                onRefresh={() => { }}
+                            />
+                        }
+                        data={dataBooking}
+                        keyExtractor={(item, index) => item.id}
+                        renderItem={({ item, index }) => (
+                    
+                            <CardCustomBooking
+                                style={{ marginTop: 10 }}
+                                item={item}
+                                loading={this.state.loading_spinner}
+                                navigation={navigation}
+                            
+                            />
+                        )}
+                    /> 
+        }
     
         return (
             <SafeAreaView
@@ -189,28 +235,8 @@ export default class Booking extends Component {
                                         Arsip
                                     </Tag>
                             </View>
-                            <FlatList
-                                refreshControl={
-                                    <RefreshControl
-                                        colors={[BaseColor.primaryColor]}
-                                        tintColor={BaseColor.primaryColor}
-                                        refreshing={this.state.refreshing}
-                                        onRefresh={() => { }}
-                                    />
-                                }
-                                data={dataBooking}
-                                keyExtractor={(item, index) => item.id}
-                                renderItem={({ item, index }) => (
-                               
-                                    <CardCustomBooking
-                                        style={{ marginTop: 10 }}
-                                        item={item}
-                                        loading={this.state.loading_spinner}
-                                        navigation={navigation}
-                                       
-                                    />
-                                )}
-                            /> 
+                            {content}
+                            
                         </View>
                 :
                     <NotYetLogin redirect={'Booking'} navigation={navigation} />

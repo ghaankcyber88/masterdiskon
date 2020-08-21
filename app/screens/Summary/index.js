@@ -1688,7 +1688,7 @@ export default class Summary extends Component {
 
     render() {
         const { navigation } = this.props;
-        let { param,selectDataDeparture,selectDataReturn,dataPrice, packageItem, packageItemDetail,loading, loading_spinner,userData } = this.state;
+        let { param,product,productPart,selectDataDeparture,selectDataReturn,dataPrice, packageItem, packageItemDetail,loading, loading_spinner,userData } = this.state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
         var jumlahPenumpang=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
         const { flights, refreshing, clampedScroll } = this.state;
@@ -1819,13 +1819,33 @@ export default class Summary extends Component {
         var contentProduct=<View></View>
         if(this.state.param.type=='trip')
         {
-            contentProduct=<View><Text title3 style={{ paddingVertical: 10 }}>
-            Product Trip
-            </Text>
-                <Text body1 semibold>
-                    {this.state.product['judul_trip']}
-                </Text>
-            </View>
+            contentProduct=<View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                            <View style={{ flex: 3,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                <View>
+                                    <Image
+                                        style={{width: 70, height: 70, marginRight: 10, borderRadius: 16}}
+                                        resizeMode="contain"
+                                        source={{uri: this.state.product.img_featured_url}}
+                                    />
+                                </View>
+                            </View>
+                            <View style={{flex: 9}}>
+                                   
+                                <View>
+                                    <View>
+                                        <Text>
+                                            {this.state.product.product_name}
+                                        </Text>
+                                        <Text body3 style={{color:BaseColor.prima}}>
+                                            {this.state.product.product_detail.country_name}
+                                        </Text>
+                                        <Text body3 style={{color:BaseColor.prima}}>
+                                            {param.DepartureDate}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
         }else if(this.state.param.type=='hotel'){
             contentProduct=<View><Text title3 style={{ paddingVertical: 10 }}>
             Product hotel

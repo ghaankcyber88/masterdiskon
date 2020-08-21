@@ -514,7 +514,7 @@ export default class TourDetailCustom extends Component {
                 >
                     {/* Header */}
                     <Header
-                        title=""
+                        title="Paket Trip"
                         renderLeft={() => {
                             return (
                                 <Icon
@@ -540,7 +540,7 @@ export default class TourDetailCustom extends Component {
                             navigation.navigate("PreviewImage");
                         }}
                         // style={{backgroundColor:BaseColor.primaryColor}}
-                        transparent={true}
+                        //transparent={true}
                     />
                     <ScrollView
                         onScroll={Animated.event([

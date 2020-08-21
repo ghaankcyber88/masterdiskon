@@ -1,14 +1,12 @@
 import React, { Component } from "react";
-import { RefreshControl, FlatList,TouchableOpacity,AsyncStorage,ActivityIndicator } from "react-native";
-import { BaseStyle, BaseColor } from "@config";
+import { RefreshControl, FlatList,TouchableOpacity,AsyncStorage,ActivityIndicator,Image } from "react-native";
+import { BaseStyle, BaseColor,Images } from "@config";
 import { Header, SafeAreaView, Icon, ListThumbCircle, Text,Button} from "@components";
 import styles from "./styles";
 import {PostData} from '../../services/PostData';
 // Load sample data
 import { NotificationData,DataLoading } from "@data";
 import { View } from "react-native-animatable";
-import { Image } from "@components";
-import { Images } from "@config";
 import CardCustomNotif from "../../components/CardCustomNotif";
 
 import {
@@ -25,7 +23,7 @@ export default class Notification extends Component {
         super(props);
         this.state = {
             refreshing: false,
-            login:true,
+            login:false,
             notification:DataLoading,
 
         };
@@ -59,48 +57,55 @@ export default class Notification extends Component {
     
 
     getNotif(){
-        const {config} =this.state;
-        var url=config.baseUrl;
-        var path=config.url_md.common.notif;
-        
-        var id_user=this.state.id_user;
-        var data={"id_user":id_user}
-        var param={"param":data}
+        const {config,login} =this.state;
 
-        var body=param;
-        this.setState({ loading_spinner: true }, () => {
-            var param={
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: body,
-              }
-             PostDataNew(url,path,param)
-                 .then((result) => {
-                    //console.log("getOrder",JSON.stringify(result));
-                    this.setState({loading_spinner: false });
-                    this.setState({notification:result});
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
-            ); 
-        });
+        if(login==true){
+            var url=config.baseUrl;
+            var path=config.user_notif.dir;
+            
+            var id_user=this.state.id_user;
+            var data={"id_user":id_user}
+            var param={"param":data}
+            console.log("paramnotif",JSON.stringify(param));
+            var body=param;
+            this.setState({ loading_spinner: true }, () => {
+                var param={
+                    method: 'POST',
+                    headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    },
+                    body: body,
+                }
+                PostDataNew(url,path,param)
+                    .then((result) => {
+                        //console.log("getNotif",JSON.stringify(result));
+                        this.setState({loading_spinner: false });
+                        this.setState({notification:result});
+                    },
+                    (error) => {
+                        this.setState({ error });
+                    }
+                ); 
+            });
+        }
     }
     
     
     
 
     componentDidMount() {
+        let { login} = this.state;
         const {navigation} = this.props;
-        navigation.addListener ('willFocus', () =>{
-            this.setState({ loading_spinner: true });
-            setTimeout(() => {
-                this.getNotif();
-            }, 200);
-        });
+
+        //if(login){
+            navigation.addListener ('willFocus', () =>{
+                this.setState({ loading_spinner: true });
+                setTimeout(() => {
+                    this.getNotif();
+                }, 200);
+            });
+        //}
     }
     _refresh() {
         return new Promise((resolve) => {
@@ -111,6 +116,50 @@ export default class Notification extends Component {
     render() {
         const { navigation } = this.props;
         let { notification,login,loading_spinner } = this.state;
+
+        var content=<View></View>
+        if (notification.length == 0) {
+            content=<View
+                        style={{
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                height: '100%',padding: 20
+                            }}
+                        >       
+                        <Image
+                            source={Images.empty}
+                            style={{ width: "50%", height: "50%" }}
+                            resizeMode="cover"
+                        />
+                        <View><Text>Data Kosong</Text></View>
+                        </View>
+        }else{
+            content=<FlatList
+                        refreshControl={
+                            <RefreshControl
+                                colors={[BaseColor.primaryColor]}
+                                tintColor={BaseColor.primaryColor}
+                                refreshing={this.state.refreshing}
+                                onRefresh={() => { }}
+                            />
+                        }
+                        data={notification}
+                        keyExtractor={(item, index) => item.id}
+                        renderItem={({ item, index }) => (
+                            <CardCustomNotif
+                                image={item.image}
+                                txtLeftTitle={item.title}
+                                txtContent={item.content}
+                                txtRight={item.date_added}
+                                loading={this.state.loading_spinner}
+                                onPress={() => {
+                                    this.props.navigation.navigate("WebViewPage",{url:item.tautan+'?access=app',title:'Pembayaran'});
+                                }}
+                            />
+                        )}
+                    /> 
+        }
 
         return (
             <SafeAreaView
@@ -134,31 +183,9 @@ export default class Notification extends Component {
                 />
                  {
                     login ? 
+                    content
                        
-                        <FlatList
-                            refreshControl={
-                                <RefreshControl
-                                    colors={[BaseColor.primaryColor]}
-                                    tintColor={BaseColor.primaryColor}
-                                    refreshing={this.state.refreshing}
-                                    onRefresh={() => { }}
-                                />
-                            }
-                            data={notification}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={({ item, index }) => (
-                                <CardCustomNotif
-                                    image={item.image}
-                                    txtLeftTitle={item.title}
-                                    txtContent={item.content}
-                                    txtRight={item.date_added}
-                                    loading={this.state.loading_spinner}
-                                    onPress={() => {
-                                        this.props.navigation.navigate("WebViewPage",{url:item.tautan+'?access=app',title:'Pembayaran'});
-                                    }}
-                                />
-                            )}
-                        /> 
+                         
                 :
                     <NotYetLogin redirect={'Notification'} navigation={navigation} />
                 }

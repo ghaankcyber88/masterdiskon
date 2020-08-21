@@ -24,7 +24,7 @@ export default StyleSheet.create({
     },
     contentBoxTop: {
         padding: 10,
-        height: 120,
+        height: 140,
         width: "100%",
         borderRadius: 8,
         alignItems: "center",

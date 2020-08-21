@@ -164,7 +164,7 @@ export default function PembayaranDetail(props) {
              var url=config.baseUrl;
              console.log('baseUrl',url);
              
-             return PostDataNew(url,'front/api/apiOrder/payment_update',param)
+             return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
                  .then((result) => {
                            console.log("---------------result payment md ------------");
                             console.log(JSON.stringify(result));

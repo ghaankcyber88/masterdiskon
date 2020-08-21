@@ -296,6 +296,7 @@ export default class CardCustom extends Component {
                             name="map-marker-alt"
                             color={BaseColor.lightPrimaryColor}
                             size={10}
+                            style={{marginRight:5}}
                         />
                         <Text
                             caption1
@@ -314,7 +315,7 @@ export default class CardCustom extends Component {
                           body2
                           semibold
                           numberOfLines={4}
-                          style={[color,{height:80}]}
+                          style={[color,{height:50}]}
                       >
                           {title}
                       </Text>
