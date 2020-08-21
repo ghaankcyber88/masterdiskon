@@ -39,6 +39,8 @@ target 'FelixPro' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
   use_native_modules!
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+
 end
 
 

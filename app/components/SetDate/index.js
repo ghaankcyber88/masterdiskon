@@ -101,7 +101,7 @@ export default class SetDate extends Component {
         if (tempoMonth < 10) tempoMonth = '0' + tempoMonth;
         if (tempoDate < 10) tempoDate = '0' + tempoDate;
 
-        var dates=MyDate.getFullYear()  + '/' +  tempoMonth  + '/' +  tempoDate;
+        var dates=MyDate.getFullYear()  + '-' +  tempoMonth  + '-' +  tempoDate;
         return dates;
       }
      

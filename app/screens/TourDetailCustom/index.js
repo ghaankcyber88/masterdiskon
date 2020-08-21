@@ -403,9 +403,62 @@ export default class TourDetailCustom extends Component {
         var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = date.getFullYear();
 
-        date = yyyy + '/' + mm + '/' + dd;
+        date = yyyy + '-' + mm + '-' + dd;
         return date;
     }
+    
+    setDate(date) {
+    
+        var date = new Date(date);
+        var tempoMonth = (date.getMonth()+1);
+        var tempoDate = (date.getDate());
+        var finaldate="";
+        if (tempoMonth < 10) tempoMonth = '0' + tempoMonth;
+        if (tempoDate < 10) tempoDate = '0' + tempoDate;
+    
+        return finaldate = date.getFullYear()  + '-' +  tempoMonth  + '-' +  tempoDate;
+    };
+    
+    onSubmit() {
+    
+        const {type,product,select} =this.state;
+      var tgl_akhir='';
+
+ 
+      var param = {
+        DepartureDate:this.state.tglAwal,
+        ReturnDate:tgl_akhir,
+        Adults:this.state.dewasa,
+        Children:this.state.anak,
+        Infants:this.state.bayi,
+        }
+        
+        var productPart={}
+        var link='';
+       
+            link='Summary';
+            param.type='trip';
+            param.cityId=this.state.cityId;
+            param.cityText=this.state.cityText;
+            param.cityProvince=this.state.cityProvince;
+            param.Qty=this.state.qty;
+            
+            // console.log('product',JSON.stringify(product));
+            // console.log('param',JSON.stringify(param));
+            // console.log('productPart',JSON.stringify(select));
+            // console.log('this.state.tglAwal',this.state.tglAwal);
+            this.props.navigation.navigate(link,
+                {
+                    param:param,
+                    product:product,
+                    productPart:select
+                    
+                });
+
+    }
+
+
+
     render() {
         const { navigation } = this.props;
         const { title, heightHeader, service, product,minPerson,minPrice,totalPrice} = this.state;
@@ -612,9 +665,10 @@ export default class TourDetailCustom extends Component {
                         
                         <Button
                             style={{ height: 46 }}
-                            onPress={() =>
-                                navigation.navigate("PreviewBooking")
-                            }
+                            onPress={() => {  
+                                this.onSubmit();
+                               
+                            }}
                         >
                             Next
                         </Button>

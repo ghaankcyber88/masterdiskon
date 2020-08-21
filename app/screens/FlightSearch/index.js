@@ -252,7 +252,7 @@ export default class FlightSearch extends Component {
                 
                 
                 this.props.navigation.navigate(link,
-{
+                {
                     param:param,
                 });
                 

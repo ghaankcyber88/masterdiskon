@@ -304,7 +304,7 @@ export default class Home extends Component {
     getProductHotelPackage(){
         const {config} =this.state;
         var url=config.baseUrl;
-        var path=config.url_md.product.product_hotel_package;
+        var path=config.product_hotel_package.dir;
         this.setState({ loading_product_hotel_package: true }, () => {
             var param={
                 method: 'POST',
@@ -316,7 +316,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log("getProductHotelPackage",JSON.stringify(result));
+                    console.log("getProductHotelPackage",JSON.stringify(result));
                     this.setState({loading_product_hotel_package: false });
                     this.setState({listdata_product_hotel_package: result});
                  },
@@ -416,7 +416,7 @@ export default class Home extends Component {
             this.getculture();
             // this.getProductTripCountry();
             this.getProductTrip();
-            // this.getProductHotelPackage();
+            this.getProductHotelPackage();
             // this.getProductVoucher();
             // this.getBlog();
         }, 500);
@@ -728,6 +728,64 @@ export default class Home extends Component {
                                                     navigation.navigate("TourDetailCustom",{product:item})
                                                 }
                                                 loading={this.state.loading_product_trip}
+                                                property={{inFrame:false,innerText:false}}
+                                                type={''}
+                                            />
+                                        
+                                        )}
+                                    />
+                                    
+                                    
+                                </View>
+                            </View>
+                            
+                            
+                            <View>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
+                                    <Text title3 semibold>
+                                        Deals 
+                                    </Text>
+                                    {/* <Text body2>
+                                    Jelajahi sekarang
+                                    </Text> */}
+                                </View>
+                                <View>
+                                <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk horizontal false
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //untuk horizontal false
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_product_hotel_package}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                item={item}
+                                                img={item.img_featured_url}
+                                                imgHeight={150}
+                                                titleIcon={{text:"home",icon:"home"}}
+                                                title={item.product_name}
+                                                subtitle={''}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("HotelDetail",{product:item})
+                                                }
+                                                loading={this.state.loading_product_hotel_package}
                                                 property={{inFrame:false,innerText:false}}
                                                 type={''}
                                             />

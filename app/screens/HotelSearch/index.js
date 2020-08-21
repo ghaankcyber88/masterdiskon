@@ -16,7 +16,7 @@ import {
 import { Image,EventCard} from "@components";
 import { PromotionData, TourData, HotelData,FeaturedDestination,DataMasterDiskon, DataLoading } from "@data";
 import {PostDataProduct} from '../../services/PostDataProduct';
-import { cos } from "react-native-reanimated";
+//import { cos } from "react-native-reanimated";
 const styles = StyleSheet.create({
     contain: {
         paddingHorizontal: 20,

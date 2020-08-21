@@ -29,7 +29,7 @@ import DropdownAlert from 'react-native-dropdownalert';
 import ButtonOrder from "../../components/ButtonOrder";
 
 import moment from 'moment';
-import { cos } from "react-native-reanimated";
+//import { cos } from "react-native-reanimated";
 
 
 

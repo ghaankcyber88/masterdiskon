@@ -901,56 +901,6 @@ export default class Summary extends Component {
                                                 cartToBeSaved.typeProduct=this.state.param.type;
                                                 console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
                                                 this.onSubmitOrder(cartToBeSaved);
-                                                //this.pay(cartToBeSaved);
-                                                // var outputCart={
-                                                //     dataCart:dataCart,
-                                                //     listdata_customer:this.state.listdata_customer,
-                                                //     listdata_participant:this.state.listdata_participant,
-                                                //     otherUser:this.state.otherUser,
-                                                //     param:this.state.param
-                                                // };
-                                                
-                                                //untuk membuat cart satu aja
-                                                // var newcart=[cartToBeSaved];
-                                                // console.log('outputCartFlight',JSON.stringify(outputCart));
-                                                // var newcart=[dataCart];
-                                                // AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
-                                                // AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
-                                                
-                                                
-                                                // setTimeout(() => {
-                                                //     this.props.navigation.navigate("Cart",
-                                                //     {
-                                                //         outputCart:outputCart
-                                                //     }); 
-                                                //     this.setState({ loading: false });
-                                                // }, 500);
-                                                
-                                                
-                                                
-                                                
-            
-                                                //untuk membuat cart
-                                                // AsyncStorage.getItem('dataCartArray', (err, result) => {
-                                                // let newcart = JSON.parse(result);
-                                                // console.log('cartopp',JSON.stringify(newcart));
-            
-                                                // if(!newcart){
-                                                // newcart=[]
-                                                // }
-                                            
-                                                // newcart.push(cartToBeSaved);
-                                                // this.updateUserSession();
-                                                //     setTimeout(() => {
-                                                //     console.log('newcart',JSON.stringify(newcart));
-                                                        
-                                                //         AsyncStorage.setItem('dataCartArray', JSON.stringify(newcart));
-                                                //         AsyncStorage.setItem('dataCartArrayReal', JSON.stringify(newcart));
-                                                //         this.props.navigation.navigate("Loading",{redirect:'Cart'});
-                                                //         this.setState({ loading: false });
-                                                //     }, 500);
-                                                // });  
-                            
                                         }
                                      },
                                      (error) => {
