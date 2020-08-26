@@ -151,6 +151,17 @@ export default class Pembayaran extends Component {
                                     
                                 ]
                 },
+                {
+                    payment_type:"credit_card",
+                    payment_type_label: "Kartu Kredit",
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
             ],
         };
 
@@ -688,7 +699,6 @@ export default class Pembayaran extends Component {
         var order_id_aero=this.state.order_id_aero;
         
         
-        //var order_status=dataBooking[0].order_status.order_status_slug;
 
         if(dataReturns != null){
         
@@ -714,17 +724,8 @@ export default class Pembayaran extends Component {
                             borderColor: BaseColor.textSecondaryColor,
                             borderRadius: 10,
                             marginBottom:10,
-                            // padding:10,
-                            // justifyContent: 'center', alignItems: 'center'
                             }}
                         >
-                            {/* <Text>
-                                PNR No Reservation / E-Ticket Departure
-                            </Text> */}
-                            {/* <Text style={{fontSize:40}}>
-                                {pnrDeparture}
-                            </Text>
-                            <Barcode value={pnrDeparture} format="CODE128" /> */}
                                 <CardCustomProfile 
                                     title={'E-Ticket Departure'}
                                     subtitle={'Check tiket keberangkatan Anda'}
@@ -753,8 +754,6 @@ export default class Pembayaran extends Component {
 
     
     componentDidMount(){
-        // this.fetch();
-
         const {navigation} = this.props;
         navigation.addListener ('willFocus', () =>{
             this.setState({ loading_spinner: true });
@@ -808,54 +807,6 @@ export default class Pembayaran extends Component {
         });
     }
     
-    // fetch(){
-    //     const { navigation} = this.props;
-    //     const {id_order} =this.state;
-    //     this.setState({ loading_spinner: true }, () => {
-    //         AsyncStorage.getItem('userSession', (error, result) => {
-    //         if (result) {
-    //             let userSession = JSON.parse(result);
-    //             console.log("---------------data session user  ------------");
-    //             console.log(JSON.stringify(userSession));
-    //             this.setState({userSession:userSession});
-    //             this.setState({login:true});
-                
-    //             var id_user=userSession.id_user;
-    //                 const data={"id":id_user,"id_order":this.state.id_order,"order_status":"","product":""}
-    //                 const param={"param":data}
-    //                 console.log('-------------param booking-------------');
-    //                 console.log(JSON.stringify(param));
-
-
-    //                 PostData('get_booking_history',param)
-    //                     .then((result) => {
-    //                         var dataBooking=result;
-    //                         console.log("---------------get_booking_historys ------------");
-    //                         console.log(JSON.stringify(result));
-                            
-    //                         this.setState({ loading_spinner: false });
-    //                         this.setState({dataBooking:dataBooking});
-                            
-    //                         var order_status=dataBooking[0].order_status.order_status_slug;
-    //                         var product=dataBooking[0].product;
-                            
-    //                         if(product=='Flight' && order_status=='complete'){
-    //                             var order_code=dataBooking[0].aero_orderid;
-    //                             this.checkBooking(order_code);
-    //                         }
-    //                     },
-    //                     (error) => {
-    //                         this.setState({ error });
-    //                     }
-    //                 ); 
-    //          }else{
-    //             this.setState({login:false});
-    //          }
-            
-    //         });
-    //     });
-
-    // }
     
     checkBooking(order_code){
     
@@ -882,8 +833,6 @@ export default class Pembayaran extends Component {
                 
                 PostDataNew(url,'crm/MyOrder/v3/'+order_code,requestOptions)
                              .then((result) => {
-                                // console.log("---------------checkBooking  ------------");
-                                // console.log(JSON.stringify(result));
                                 this.setState({dataBookingAero:result.data});
                                 
                                 var order_id_aero=result.data.order_id;
@@ -979,7 +928,6 @@ export default class Pembayaran extends Component {
             
             <ScrollView>
                 <View  style={{ padding: 20 }}>
-                {/* {this.content_countdown()} */}
                 {this.content_payment()}
                 {this.content_booking_code()}
                 {this.content_bank()}    

@@ -26,6 +26,7 @@ import {PostDataNew} from '../../services/PostDataNew';
 import {fcmService} from '../../src/FCMService';
 import {localNotificationService} from '../../src/LocalNotificationService';
 // import Clipboard from "@react-native-community/clipboard";
+import { Form, TextValidator } from 'react-native-validator-form';
 
 
 const styles = StyleSheet.create({
@@ -79,6 +80,13 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center"
     },
+    contentProfile: {
+        // marginTop: 15,
+        flexDirection: "row",
+        // backgroundColor: BaseColor.fieldColor,
+        marginBottom: 15,
+        width: '100%',
+    },
 });
 
 
@@ -98,6 +106,19 @@ export default function PembayaranDetail(props) {
       const [statusMidtrans, setStatusMidtrans]=useState({"va_numbers":[{"bank":"bca","va_number":"81174157162"}],"payment_amounts":[],"transaction_time":"2020-07-06 16:33:07","gross_amount":"740800.00","currency":"IDR","order_id":"MD2007060026","payment_type":"bank_transfer","signature_key":"7eb271c8362f64dd96c7519a7067ccb5d8f563ee45e7c64e4606773332aad32841e522fcdfb30dae96c183d57a044db425f07a3772a3e4d848ccbb1d65765884","status_code":"201","transaction_id":"1df337f3-5dc2-4cc7-a445-ae8c46eabefa","transaction_status":"pending","fraud_status":"accept","status_message":"Success, transaction is found","merchant_id":"G042781174"});
       const [fee, setFee]= useState(0);
       const [totalPembayaran, setTotalPembayaran]= useState(0);
+      
+      const [cardNumber, setCardNumber]= useState('5573381072196900');
+      const [cardExpMonth, setCardExpMonth]= useState('01');
+      const [cardExpYear, setCardExpYear]= useState('2025');
+      const [cardCVV, setCardCVV]= useState('123');
+      const [cardToken, setCardToken]= useState(0);
+      
+      
+      const [colorButton,setColorButton] =useState(BaseColor.greyColor);
+      const [colorButtonText,setColorButtonText] =useState(BaseColor.whiteColor);
+      const [disabledButton,setDisabledButton] =useState(true);
+
+      
       
       const [config, setConfig]=useState({
         "aeroStatus": false,
@@ -120,7 +141,24 @@ export default function PembayaranDetail(props) {
         }
     });
     
-    
+    function validation(){
+        if( 
+            cardNumber != '' && 
+            cardExpMonth !='' &&
+            cardExpYear !='' &&
+            cardCVV !=''
+        ){
+                console.log('perfect');
+                setColorButton(BaseColor.secondColor);
+                setColorButtonText(BaseColor.primaryColor);
+                setDisabledButton(false);
+        }else{
+            console.log('not yet');
+            setColorButton(BaseColor.greyColor);
+            setColorButtonText(BaseColor.whiteColor);
+            setDisabledButton(true);
+        }
+    }
 
     
     function getConfig(){
@@ -135,15 +173,52 @@ export default function PembayaranDetail(props) {
 
     
     function submitPayment(){
+        var payment_type=dataPayment.payment_type;
+        //console.log(payment_type);
+        
+        
         var paramPayMD={
             "total_pembayaran":totalPembayaran,
             "fee":fee,
             "id_invoice":dataBooking[0].order_payment_recent.id_invoice,
             "dataPayment":dataPayment,
+            "token":""
             }
         console.log('paramPayMD',JSON.stringify(paramPayMD));
-        payMasterDiskon(paramPayMD);
         
+        
+        if(payment_type=='bank_transfer'){
+            payMasterDiskon(paramPayMD);
+        }else if(payment_type=='credit_card'){
+            tokenCC(paramPayMD);
+        }
+        
+    }
+    
+    function tokenCC(paramPayMD){
+        var param={
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(),
+          }
+       
+         var url='https://api.sandbox.midtrans.com/';
+         console.log('baseUrl',url);
+         
+         return PostDataNew(url,'v2/token?client_key='+config.midtransKey.client+'&card_number='+cardNumber+'&card_exp_month='+cardExpMonth+'&card_exp_year='+cardExpYear+'&card_cvv='+cardCVV,param)
+             .then((result) => {
+                var tokenCC=result.token_id;
+                paramPayMD.token=tokenCC;
+                payMasterDiskon(paramPayMD);
+                },
+             (error) => {
+                 this.setState({ error });
+             }
+        );  
+    
     }
     
     function payMasterDiskon(paramPayMD){
@@ -166,10 +241,15 @@ export default function PembayaranDetail(props) {
              
              return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
                  .then((result) => {
-                           console.log("---------------result payment md ------------");
+                            console.log("---------------result payment md ------------");
                             console.log(JSON.stringify(result));
-                        var id_invoice=result.id_invoice;
-                        payMidtrans(id_invoice);
+                            var id_invoice=result.id_invoice;
+                            var token=result.token;
+                            var dataSendMidTrans={
+                                id_invoice:id_invoice,
+                                token:token
+                            }
+                            payMidtrans(dataSendMidTrans);
                  },
                  (error) => {
                      this.setState({ error });
@@ -179,14 +259,16 @@ export default function PembayaranDetail(props) {
     }
     
     
-    function payMidtrans(id_invoice){
+    
+    function payMidtrans(dataSendMidTrans){
         var payment_type=dataPayment.payment_type;
         var payment_sub=dataPayment.payment_sub;
         
         
+        
         var transaction_details={
             gross_amount: totalPembayaran,
-            order_id: id_invoice
+            order_id: dataSendMidTrans.id_invoice
         }
         var customer_details={
             email: dataBooking[0].contact.contact_email,
@@ -208,6 +290,17 @@ export default function PembayaranDetail(props) {
                   bank: payment_sub
                 }
             }
+        }else if(payment_type=='credit_card'){
+            var paramPay={
+                payment_type: payment_type,
+                transaction_details: transaction_details,
+                customer_details: customer_details,
+                credit_card: {
+                    token_id: dataSendMidTrans.token,
+                    authentication:false
+                    
+                }
+            }
         }
         
         
@@ -215,8 +308,7 @@ export default function PembayaranDetail(props) {
         
         console.log('paramPay',JSON.stringify(paramPay))
         
-          
-          var param={
+        var param={
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -234,7 +326,6 @@ export default function PembayaranDetail(props) {
                 console.log("---------------result payment midtarns ------------");
                 console.log(JSON.stringify(result));
                 
-                //this.setState({ loading_spinner: false });
                 setLoading(false);
                 
                 var redirect='PembayaranDetail';
@@ -434,11 +525,11 @@ export default function PembayaranDetail(props) {
                                     }
                                     
                                     var fee='';
-                                    
                                     if(order_payment_num == 1){
-                                        if(payment_type=='bank_transfer'){
-                                            fee=config.transaction_fee;
-                                        }
+                                        // if(payment_type=='bank_transfer'){
+                                        //     fee=config.transaction_fee;
+                                        // }
+                                        fee=config.transaction_fee;
                                     }else{
                                         fee=0;
                                     }
@@ -567,9 +658,8 @@ export default function PembayaranDetail(props) {
     }
     
     
+    
     function content_payment(){
-        //const { navigation} = props;
-        //const {dataPayment,loading,dataBooking,statusMidtrans} =state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         var order_payment_num=dataBooking[0].order_payment_num;
@@ -577,16 +667,7 @@ export default function PembayaranDetail(props) {
         var content=<View></View>;
         var virtual_account='';
         
-        
-       
-        
-        
-        
-      
-        
             if(order_payment_recent != null){
-               
-                
                 if(order_payment_recent.payment_type==""){
                     var payment_type=dataPayment.payment_type;
                     var payment_sub=dataPayment.payment_sub;
@@ -606,10 +687,6 @@ export default function PembayaranDetail(props) {
                     }
                     
                 }
-                
-                
-                
-                
                 
                 
                 if(order_payment_recent.payment_type == ""){
@@ -833,6 +910,187 @@ export default function PembayaranDetail(props) {
         )
     }
     
+    
+    function content_payment_form(){
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
+        var order_payment_recent=dataBooking[0].order_payment_recent;
+        var content=<View></View>;
+
+            if(order_payment_recent != null){
+                var cardNumberForm=<View style={{marginBottom: 10}}>
+                                        <TouchableOpacity 
+                                        style={{width:'100%'}}
+                                    >
+                                            <View style={styles.contentProfile}>
+                                                <View style={{ flex: 6}}>
+                                                <TextValidator
+                                                name="cardNumber"
+                                                label="cardNumber"
+                                                validators={['required']}
+                                                errorMessages={['This field is required']}
+                                                placeholder="e.g., 4811 1111 1111 1114"
+                                                type="text"
+                                                // keyboardType="email-address"
+                                                value={cardNumber}
+                                                onChangeText={(cardNumber)=> {
+                                                    setCardNumber(cardNumber);
+                                                    setTimeout(() => {
+                                                        validation();
+                                                    }, 500);
+                                                }}
+                                                
+                                               
+                                            />
+                                                </View>
+                                               
+                                            </View>
+                                        </TouchableOpacity>
+                                        
+                                        <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                             Card Number
+                                        </Text>
+                                        
+            </View>
+            
+            
+            var cardExpired=<View style={{marginBottom: 10}}>
+                            <View style={{flexDirection: "row"}}>
+                                <View style={{flex: 6,marginRight: 15}}>
+                                    <TouchableOpacity 
+                                    style={{width:'100%',flexDirection: "row"}}
+                                    >
+                                        <View style={styles.contentProfile}>
+                                            <View style={{ flex: 6 }}>
+                                            <TextValidator
+                                                            name="firstname"
+                                                            label="lastname"
+                                                            validators={['required']}
+                                                            errorMessages={['This field is required']}
+                                                            placeholder="e.g., 01"
+                                                            type="text"
+                                                            value={cardExpMonth}
+                                                            onChangeText={(cardExpMonth)=> {
+                                                                setCardExpMonth(cardExpMonth);
+                                                                setTimeout(() => {
+                                                                    validation();
+                                                                }, 500);
+                                                                
+                                                            }} 
+                                                        />
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <Text body2 style={{marginTop:-20,color:BaseColor.primaryColor}}>
+                                        Month Expired
+                                    </Text>
+                                </View>                    
+                                        
+                                <View style={{flex: 6}}>
+
+                                                    <TouchableOpacity 
+                                                    style={{width:'100%',flexDirection: "row"}}
+                                                >
+                                                        <View style={styles.contentProfile}>
+                                                            <View style={{ flex: 6 }}>
+                                                                <TextValidator
+                                                                    name="lastname"
+                                                                    label="lastname"
+                                                                    validators={['required']}
+                                                                    errorMessages={['This field is required']}
+                                                                    placeholder="e.g., 2025"
+                                                                    type="text"
+                                                                    value={cardExpYear}
+                                                                    onChangeText={(cardExpYear)=> {
+                                                                        setCardExpYear(cardExpYear);
+                                                                        setTimeout(() => {
+                                                                            validation();
+                                                                        }, 500);
+                                                                    }} 
+                                                                />
+                                                            </View>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                    <Text body2 style={{marginTop:-20,color:BaseColor.primaryColor}}>
+                                                        Year Expired
+                                                    </Text>
+                                </View>
+                            </View>
+                            
+                       </View>
+                
+                
+                
+                var ccv=<View style={{marginBottom: 10}}>
+                                        <TouchableOpacity 
+                                        style={{width:'100%'}}
+                                    >
+                                            <View style={styles.contentProfile}>
+                                                <View style={{ flex: 6}}>
+                                                <TextValidator
+                                                name="cardNumber"
+                                                label="cardNumber"
+                                                validators={['required']}
+                                                errorMessages={['This field is required']}
+                                                placeholder="e.g., 123"
+                                                type="text"
+                                                // keyboardType="email-address"
+                                                value={cardCVV}
+                                                onChangeText={(cardCVV)=> {
+                                                    setCardCVV(cardCVV);
+                                                    setTimeout(() => {
+                                                        validation();
+                                                    }, 500);
+                                                }}
+                                                
+                                               
+                                            />
+                                                </View>
+                                               
+                                            </View>
+                                        </TouchableOpacity>
+                                        
+                                        <Text body2 style={{marginTop:-15,color:BaseColor.primaryColor}}>
+                                             CCV
+                                        </Text>
+                                        
+            </View>
+            
+            if(order_payment_recent.payment_type==""){
+                var payment_type=dataPayment.payment_type;
+                var payment_sub=dataPayment.payment_sub;
+                virtual_account='';
+            }
+            
+             
+                        if(payment_type=='credit_card'){
+                            content=<View style={{
+                                    borderWidth: 1, 
+                                    borderColor: BaseColor.textSecondaryColor,
+                                    borderRadius: 10,
+                                    marginBottom:10,
+                                    padding:10
+                                    }}>
+                                    <Form
+                                        onSubmit={this.submit}
+                                    >
+                                    {cardNumberForm}
+                                    {cardExpired}
+                                    {ccv}
+                                    </Form>
+                                    </View>
+                        }
+                                    
+                                
+                            
+            }
+        
+        return content;
+            
+        
+        
+    }
+    
     function content_button(){
         //var dataBooking=dataBooking;
         //const { navigation} = props;
@@ -845,6 +1103,9 @@ export default function PembayaranDetail(props) {
         
         if(order_payment_recent != null){
             if(order_payment_recent.payment_type == ""){
+                var payment_type=dataPayment.payment_type;
+                var payment_sub=dataPayment.payment_sub;
+                if(payment_type=='bank_transfer'){
                 content=<View style={styles.contentButtonBottom}>
                             <Button
                                 full
@@ -863,6 +1124,34 @@ export default function PembayaranDetail(props) {
                                 Bayar
                             </Button>
                     </View>
+                    }else{
+                        content=<View>
+                                    <TouchableOpacity  disabled={disabledButton} 
+                                        onPress={() => {
+                                        Alert.alert(
+                                            'Confirm',
+                                            'Yakin ingin membayar tagihan ini ?',
+                                            [
+                                              {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                              {text: 'YES', onPress: () => submitPayment()},
+                                            ]
+                                          );
+                                        }} 
+                                        
+                                        
+                                        >
+                                        <View pointerEvents='none' style={styles.groupinput}>
+                                            <Button
+                                                loading={loading}
+                                                style={{backgroundColor:colorButton}}
+                                                full
+                                            >
+                                                <Text style={{color:colorButtonText}}>Bayar</Text>
+                                            </Button>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                    }
             }else{
                 
                     
@@ -926,7 +1215,7 @@ export default function PembayaranDetail(props) {
         AsyncStorage.setItem('tokenFirebase', token);
       }
   
-      function onNotification(notify) {
+    function onNotification(notify) {
         console.log("[App] onNotification: ", notify)
         var body_msg=notify.body;
         var body_array = body_msg.split("|||");
@@ -959,7 +1248,7 @@ export default function PembayaranDetail(props) {
         )
       }
   
-      function onOpenNotification(notify) {
+    function onOpenNotification(notify) {
         console.log("[App] onOpenNotification: ", notify)
         //alert("Open Notification: " + notify.body)
       }
@@ -970,7 +1259,7 @@ export default function PembayaranDetail(props) {
         localNotificationService.unregister()
       }
   
-  },[]);
+    },[]);
 
   return (
       
@@ -1032,6 +1321,7 @@ export default function PembayaranDetail(props) {
                 {content_button()} */}
                 {content_countdown()}
                 {content_payment()}
+                {content_payment_form()}
                 {content_button()}
             </View>
         </ScrollView>

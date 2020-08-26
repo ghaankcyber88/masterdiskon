@@ -107,7 +107,6 @@ export default class Summary extends Component {
                 // var id_user='9';
                 var id_user=userSession.id_user;
                 this.setState({id_user:id_user});
-               
              }
             
         });
@@ -168,7 +167,6 @@ export default class Summary extends Component {
         
         //------------------------parameter inti------------------------//
         var param=this.props.navigation.state.params.param;
-        //var param=this.props.navigation.state.params.param;
         var product=this.props.navigation.state.params.product;
         var productPart=this.props.navigation.state.params.productPart;
         
@@ -180,11 +178,7 @@ export default class Summary extends Component {
         }
         
         console.log('params',JSON.stringify(param));
-        // var param=[];
-        // if(this.props.navigation.state.params.param){
-        //     param=this.props.navigation.state.params.param;
-        // }
-        
+   
         //------------------------parameter inti------------------------//
 
         
@@ -876,6 +870,8 @@ export default class Summary extends Component {
                         body: raw,
                         redirect: 'follow'
                         };
+                        
+                        console.log('paramcart',raw);
                         
                         PostDataNew(url,'flight/Cart',requestOptions)
                                      .then((result) => {
@@ -1954,7 +1950,7 @@ export default class Summary extends Component {
                         <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
                                
                                 <Text headline semibold numberOfLines={1}>
-                                {'IDR '+priceSplitter(this.state.dataPrice.total_price)}
+                                {'IDR '+priceSplitter(this.state.param.totalPrice)}
                                 </Text>
                         </View>
                     </View>
@@ -1983,7 +1979,7 @@ export default class Summary extends Component {
                         <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
                             <View>
                                 <Text footnote grayColor numberOfLines={1}>
-                                    Insurance
+                                    Fee
                                 </Text>
                             
                             </View>
@@ -2166,7 +2162,7 @@ export default class Summary extends Component {
                         style={{backgroundColor:this.state.colorButton}}
                         full
                     >
-                        <Text style={{color:this.state.colorButtonText}}>Sign In</Text>
+                        <Text style={{color:this.state.colorButtonText}}>Book Now</Text>
                 </Button>
                 </View> 
                 </TouchableOpacity>

@@ -442,6 +442,9 @@ export default class TourDetailCustom extends Component {
             param.cityText=this.state.cityText;
             param.cityProvince=this.state.cityProvince;
             param.Qty=this.state.qty;
+            param.minPrice=this.state.minPrice;
+            param.minPerson=this.state.minPerson;
+            param.totalPrice=this.state.totalPrice;
             
             // console.log('product',JSON.stringify(product));
             // console.log('param',JSON.stringify(param));
@@ -619,7 +622,6 @@ export default class TourDetailCustom extends Component {
                             onIndexChange={this._handleIndexChange}
                         />
                     </ScrollView>
-                    {/* Pricing & Booking Process */}
                     <View style={styles.contentButtonBottom}>
                         <View>
                             <Text caption1 semibold>
@@ -773,41 +775,6 @@ class Hotel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            renderMapView: false,
-            region: {
-                latitude: 1.9344,
-                longitude: 103.358727,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.004
-            },
-            helpBlock: HelpBlockData,
-            todo: [
-                {
-                    id: "1",
-                    title: "South Travon",
-                    image: Images.trip1
-                },
-                {
-                    id: "2",
-                    title: "South Travon",
-                    image: Images.trip2
-                },
-                {
-                    id: "3",
-                    title: "South Travon",
-                    image: Images.trip3
-                },
-                {
-                    id: "4",
-                    title: "South Travon",
-                    image: Images.trip4
-                },
-                {
-                    id: "5",
-                    title: "South Travon",
-                    image: Images.trip5
-                }
-            ],
             product_option:props.product.product_option
         };
     }
@@ -818,10 +785,6 @@ class Hotel extends Component {
         
         this.props.setPrice(select);
         
-        
-        InteractionManager.runAfterInteractions(() => {
-            this.setState({ renderMapView: true });
-        });
         
                     const selected = select.id_trip_option;
         
@@ -839,7 +802,6 @@ class Hotel extends Component {
     
     onChange(select) {
         const { navigation, product } = this.props;
-        //alert(select.id_trip_option)
         this.setState({
             product_option: this.state.product_option.map(item => {
                 if (item.id_trip_option == select.id_trip_option) {
@@ -858,15 +820,6 @@ class Hotel extends Component {
         });
         
         this.props.setPrice(select);
-        
-        // setTimeout(() => {
-        //     this.props.navigation.state.params.setBandaraTujuan(
-        //         selected[0].code,selected[0].label
-        //         )
-        //     navigation.goBack();
-        // }, 500);
-
-
     }
 
 
@@ -952,14 +905,6 @@ class Hotel extends Component {
 }
 
 
-
-/**
- * @description Show when tab Itinerary activated
- * @author Passion UI <passionui.com>
- * @date 2019-08-03
- * @class PreviewTab
- * @extends {Component}
- */
 class Include extends Component {
     constructor(props) {
         super(props);
@@ -1028,13 +973,6 @@ class Include extends Component {
 
 
 
-/**
- * @description Show when tab Itinerary activated
- * @author Passion UI <passionui.com>
- * @date 2019-08-03
- * @class PreviewTab
- * @extends {Component}
- */
 class Exclude extends Component {
     constructor(props) {
         super(props);
@@ -1102,13 +1040,6 @@ class Exclude extends Component {
 }
 
 
-/**
- * @description Show when tab Itinerary activated
- * @author Passion UI <passionui.com>
- * @date 2019-08-03
- * @class PreviewTab
- * @extends {Component}
- */
 class Itinerary extends Component {
     constructor(props) {
         super(props);
@@ -1197,132 +1128,6 @@ class Itinerary extends Component {
             <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
                 {contentIntinerary}
             </View>
-        );
-    }
-}
-
-/**
- * @description Show when tab Package activated
- * @author Passion UI <passionui.com>
- * @date 2019-08-03
- * @class PreviewTab
- * @extends {Component}
- */
-class Feedback extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            rate: 4.5,
-            title: "",
-            review: ""
-        };
-    }
-
-    render() {
-        const { rate, title, review } = this.state;
-        return (
-            <View style={{ alignItems: "center", padding: 20 }}>
-                <View style={{ width: 160 }}>
-                    <StarRating
-                        starSize={26}
-                        maxStars={5}
-                        rating={rate}
-                        selectedStar={rating => {
-                            this.setState({ rate: rating });
-                        }}
-                        fullStarColor={BaseColor.yellowColor}
-                        containerStyle={{ padding: 5 }}
-                    />
-                    <Text caption1 grayColor style={{ textAlign: "center" }}>
-                        Tap a star to rate
-                    </Text>
-                </View>
-                <TextInput
-                    style={[BaseStyle.textInput, { marginTop: 10 }]}
-                    onChangeText={text => this.setState({ title: text })}
-                    autoCorrect={false}
-                    placeholder="Title"
-                    placeholderTextColor={BaseColor.grayColor}
-                    value={title}
-                    selectionColor={BaseColor.primaryColor}
-                />
-                <TextInput
-                    style={[
-                        BaseStyle.textInput,
-                        { marginTop: 20, height: 140 }
-                    ]}
-                    onChangeText={text => this.setState({ review: text })}
-                    textAlignVertical="top"
-                    multiline={true}
-                    autoCorrect={false}
-                    placeholder="Reviews"
-                    placeholderTextColor={BaseColor.grayColor}
-                    value={review}
-                    selectionColor={BaseColor.primaryColor}
-                />
-                <Button full style={{ marginTop: 20 }} onPress={() => { }}>
-                    Sent
-                </Button>
-            </View>
-        );
-    }
-}
-
-/**
- * @description Show when tab Review activated
- * @author Passion UI <passionui.com>
- * @date 2019-08-03
- * @class PreviewTab
- * @extends {Component}
- */
-class ReviewTab extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            rateDetail: {
-                point: 4.7,
-                maxPoint: 5,
-                totalRating: 25,
-                data: ["80%", "10%", "10%", "0%", "0%"]
-            },
-            reviewList: ReviewData
-        };
-    }
-    render() {
-        let { rateDetail, reviewList } = this.state;
-        return (
-            <FlatList
-                style={{ padding: 20 }}
-                refreshControl={
-                    <RefreshControl
-                        colors={[BaseColor.primaryColor]}
-                        tintColor={BaseColor.primaryColor}
-                        refreshing={this.state.refreshing}
-                        onRefresh={() => { }}
-                    />
-                }
-                data={reviewList}
-                keyExtractor={(item, index) => item.id}
-                ListHeaderComponent={() => (
-                    <RateDetail
-                        point={rateDetail.point}
-                        maxPoint={rateDetail.maxPoint}
-                        totalRating={rateDetail.totalRating}
-                        data={rateDetail.data}
-                    />
-                )}
-                renderItem={({ item }) => (
-                    <CommentItem
-                        style={{ marginTop: 10 }}
-                        image={item.source}
-                        name={item.name}
-                        rate={item.rate}
-                        date={item.date}
-                        title={item.title}
-                        comment={item.comment}
-                    />
-                )}
-            />
         );
     }
 }

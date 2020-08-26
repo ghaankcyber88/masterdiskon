@@ -1243,7 +1243,7 @@ export default class DetailContact extends Component {
                 <ScrollView>
                 
                     <View style={styles.contain}>
-                    <Form
+                        <Form
                             ref="form"
                             onSubmit={this.submit}
                         >
@@ -1254,15 +1254,15 @@ export default class DetailContact extends Component {
                 </ScrollView>
                 <View style={{ padding: 20 }}>
                     <TouchableOpacity  disabled={this.state.disabledButton} onPress={() => this.updateParticipant()} >
-                    <View pointerEvents='none' style={styles.groupinput}>
-                    <Button
-                        loading={this.state.loading}
-                        style={{backgroundColor:this.state.colorButton}}
-                        full
-                    >
-                        <Text style={{color:this.state.colorButtonText}}>Sign In</Text>
-                    </Button>
-                    </View>
+                        <View pointerEvents='none' style={styles.groupinput}>
+                            <Button
+                                loading={this.state.loading}
+                                style={{backgroundColor:this.state.colorButton}}
+                                full
+                            >
+                                <Text style={{color:this.state.colorButtonText}}>Save</Text>
+                            </Button>
+                        </View>
                     </TouchableOpacity>
                 </View>
                
