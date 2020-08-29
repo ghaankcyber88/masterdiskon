@@ -46,7 +46,7 @@
 // }
 
 
-import React, {useEffect} from 'react'
+import React, {useEffect,useState} from 'react'
 import {View, StyleSheet, Text, Button} from 'react-native'
 import {fcmService} from './src/FCMService';
 import {localNotificationService} from './src/LocalNotificationService';
@@ -57,7 +57,11 @@ import { BaseColor } from "@config";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import I18n from "react-native-i18n";
+import {PostDataNew} from './services/PostDataNew';
+
 export default function index() {
+  const [config, setConfig]= useState({});
+
   useEffect(() => {
     console.disableYellowBox = true;
     I18n.fallbacks = true;
@@ -77,7 +81,6 @@ export default function index() {
     fcmService.register(onRegister, onNotification, onOpenNotification)
     localNotificationService.configure(onOpenNotification)
     
-
 
     function onRegister(token) {
       console.log("[App] onRegister: ", token);
@@ -100,6 +103,7 @@ export default function index() {
       }
   
       console.log('body_notif',JSON.stringify(body_notif));
+      aeroPayment(body_notif);
       
       //alert("Notification " + id_invoice);
       
@@ -124,33 +128,76 @@ export default function index() {
     }
     
     
+    
+    
     function aeroPayment(body_notif){
     
-      var raw=JSON.stringify()
-      var param={
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(body_notif),
+      
+      
+      AsyncStorage.getItem('config', (error, result) => {
+        if (result) {    
+            let config = JSON.parse(result);
+            body_notif.config=config;
+            var paramPost={"param":body_notif}
+            console.log('aeroPaymentParam',JSON.stringify(paramPost));
+            
+            // var param={
+            //     method: 'POST',
+            //     headers: {
+            //       Accept: 'application/json',
+            //       'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(paramPost),
+            //   }
+           
+            //  var url='https://masterdiskon.com/';
+            //  var dir='front/api/payment/notification';
+             
+            //   return PostDataNew(url,dir,param)
+            //      .then((result) => {
+            //           console.log('aeroPaymentResult',JSON.stringify(result));
+            //         },
+            //      (error) => {
+            //          this.setState({ error });
+            //      }
+            //   );  
         }
-     
-       var url='https://masterdiskon.com/';
-       var dir='';
+    });
+    
+    
+      
+  
+  }
+  
+    function getConfig(){
+    
+        var param={
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(),
+          }
        
-       return PostDataNew(url,dir,param)
+         var url='https://masterdiskon.com/';
+         var dir='front/api/common/config';
+         
+         return PostDataNew(url,dir,param)
            .then((result) => {
-              
+            //console.log('getConfigIndex',JSON.stringify(result));
+            AsyncStorage.setItem('config', JSON.stringify(result)); 
+            setConfig(result);
               },
            (error) => {
                this.setState({ error });
            }
-      );  
+        );  
+         
+    
+    }
   
-  }
-  
-  
+    getConfig();
     return () => {
       console.log("[App] unRegister")
       fcmService.unRegister()

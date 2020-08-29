@@ -144,7 +144,8 @@ class Loading extends Component {
                 navigation.navigate(redirect,{param:param});
             }, 500);
         }else{
-            this.getConfig();
+            navigation.navigate("Home");
+            //this.getConfig();
         }
     }
     
