@@ -136,7 +136,7 @@ export default function PembayaranDetail(props) {
         
     AsyncStorage.getItem('tokenFirebase', (error, result) => {
         if (result) {
-            console.log('Token Firebase',result);
+            //console.log('Token Firebase',result);
             setTokenFirebase(result);
         }
     });
@@ -148,12 +148,12 @@ export default function PembayaranDetail(props) {
             cardExpYear !='' &&
             cardCVV !=''
         ){
-                console.log('perfect');
+                //console.log('perfect');
                 setColorButton(BaseColor.secondColor);
                 setColorButtonText(BaseColor.primaryColor);
                 setDisabledButton(false);
         }else{
-            console.log('not yet');
+            //console.log('not yet');
             setColorButton(BaseColor.greyColor);
             setColorButtonText(BaseColor.whiteColor);
             setDisabledButton(true);
@@ -174,7 +174,7 @@ export default function PembayaranDetail(props) {
     
     function submitPayment(){
         var payment_type=dataPayment.payment_type;
-        //console.log(payment_type);
+        ////console.log(payment_type);
         
         
         var paramPayMD={
@@ -184,7 +184,7 @@ export default function PembayaranDetail(props) {
             "dataPayment":dataPayment,
             "token":""
             }
-        console.log('paramPayMD',JSON.stringify(paramPayMD));
+        //console.log('paramPayMD',JSON.stringify(paramPayMD));
         
         
         if(payment_type=='bank_transfer'){
@@ -206,7 +206,7 @@ export default function PembayaranDetail(props) {
           }
        
          var url='https://api.sandbox.midtrans.com/';
-         console.log('baseUrl',url);
+         //console.log('baseUrl',url);
          
          return PostDataNew(url,'v2/token?client_key='+config.midtransKey.client+'&card_number='+cardNumber+'&card_exp_month='+cardExpMonth+'&card_exp_year='+cardExpYear+'&card_cvv='+cardCVV,param)
              .then((result) => {
@@ -223,8 +223,8 @@ export default function PembayaranDetail(props) {
     
     function payMasterDiskon(paramPayMD){
             setLoading(true);
-            console.log("---------------paramPayMD ------------");
-            console.log(JSON.stringify(paramPayMD));
+            //console.log("---------------paramPayMD ------------");
+            //console.log(JSON.stringify(paramPayMD));
 
             
             var param={
@@ -237,12 +237,12 @@ export default function PembayaranDetail(props) {
               }
            
              var url=config.baseUrl;
-             console.log('baseUrl',url);
+             //console.log('baseUrl',url);
              
              return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
                  .then((result) => {
-                            console.log("---------------result payment md ------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("---------------result payment md ------------");
+                            //console.log(JSON.stringify(result));
                             var id_invoice=result.id_invoice;
                             var token=result.token;
                             var dataSendMidTrans={
@@ -306,7 +306,7 @@ export default function PembayaranDetail(props) {
         
         
         
-        console.log('paramPay',JSON.stringify(paramPay))
+        //console.log('paramPay',JSON.stringify(paramPay))
         
         var param={
             method: 'POST',
@@ -319,12 +319,12 @@ export default function PembayaranDetail(props) {
           }
        
          var url='https://api.sandbox.midtrans.com/';
-         console.log('baseUrl',url);
+         //console.log('baseUrl',url);
          
          return PostDataNew(url,'v2/charge',param)
              .then((result) => {
-                console.log("---------------result payment midtarns ------------");
-                console.log(JSON.stringify(result));
+                //console.log("---------------result payment midtarns ------------");
+                //console.log(JSON.stringify(result));
                 
                 setLoading(false);
                 
@@ -359,11 +359,11 @@ export default function PembayaranDetail(props) {
                 "payment_sub_label": ""
             }
         }
-        console.log('paramPayMD',JSON.stringify(paramPayMD));
+        //console.log('paramPayMD',JSON.stringify(paramPayMD));
        
         setLoading(true);
-            console.log("---------------paramPayMD ------------");
-            console.log(JSON.stringify(paramPayMD));
+            //console.log("---------------paramPayMD ------------");
+            //console.log(JSON.stringify(paramPayMD));
 
             
             var param={
@@ -376,13 +376,13 @@ export default function PembayaranDetail(props) {
               }
            
              var url=config.baseUrl;
-             console.log('baseUrl',url);
+             //console.log('baseUrl',url);
              
              return PostDataNew(url,'front/api/apiOrder/payment_update',param)
                  .then((result) => {
                         //     setLoading(false);
-                        //    console.log("---------------result payment md ------------");
-                        //     console.log(JSON.stringify(result));
+                        //    //console.log("---------------result payment md ------------");
+                        //     //console.log(JSON.stringify(result));
                         //     var redirect='Pembayaran';
                         //     var param={
                         //         id_order:idOrder,
@@ -423,8 +423,8 @@ export default function PembayaranDetail(props) {
         //   .then(result => {
         //                     setLoading(false);
         //                     //this.setState({ loading_spinner: false });
-        //                     console.log("---------------cancel midtrans ------------");
-        //                     console.log(JSON.stringify(result));
+        //                     //console.log("---------------cancel midtrans ------------");
+        //                     //console.log(JSON.stringify(result));
         //                     var redirect='Pembayaran';
         //                     var param={
         //                         id_order:this.state.id_order,
@@ -432,7 +432,7 @@ export default function PembayaranDetail(props) {
         //                     }
         //                     navigation.navigate("Loading",{redirect:redirect,param:param});
         //   })
-        //   .catch(error => console.log('error', error)); 
+        //   .catch(error => //console.log('error', error)); 
           
           
           
@@ -450,15 +450,15 @@ export default function PembayaranDetail(props) {
           }
        
          var url='https://api.sandbox.midtrans.com/';
-         console.log('baseUrl',url);
+         //console.log('baseUrl',url);
          
          return PostDataNew(url,"v2/"+order_code+"/deny",param)
              .then((result) => {
              
                             setLoading(false);
                             //this.setState({ loading_spinner: false });
-                            console.log("---------------cancel midtrans ------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("---------------cancel midtrans ------------");
+                            //console.log(JSON.stringify(result));
                             var redirect='Pembayaran';
                             var param={
                                 id_order:idOrder,
@@ -488,15 +488,15 @@ export default function PembayaranDetail(props) {
                     var id_user=userSession.id_user;
                     const data={"id":id_user,"id_order":idOrder,"order_status":"","product":""}
                     const param={"param":data}
-                    // console.log('-------------param booking-------------');
-                    // console.log(JSON.stringify(param));
+                    // //console.log('-------------param booking-------------');
+                    // //console.log(JSON.stringify(param));
     
     
                     return PostData('order/get_booking_history',param)
                         .then((result) => {
                             var dataBooking=result;
-                            console.log("---------------get_booking_historyssss ------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("---------------get_booking_historyssss ------------");
+                            //console.log(JSON.stringify(result));
                             setLoading(false);
                             setDataBooking(dataBooking);
                             
@@ -571,12 +571,12 @@ export default function PembayaranDetail(props) {
           }
        
          var url=config.midtransUrl;
-         console.log('baseUrl',url);
+         //console.log('baseUrl',url);
          
          return PostDataNew(url,"v2/"+id_invoice+"/status",param)
              .then((result) => {
                             var statusMidtrans=result;
-                console.log('status_midtransasd',JSON.stringify(result));
+                //console.log('status_midtransasd',JSON.stringify(result));
                 setStatusMidtrans(statusMidtrans);
 
                 },
@@ -1176,7 +1176,7 @@ export default function PembayaranDetail(props) {
                                               'Confirm',
                                               'Ingin mengganti metode pembayaran ?',
                                               [
-                                                {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                                {text: 'NO', onPress: () => //console.warn('NO Pressed'), style: 'cancel'},
                                                 {text: 'YES', onPress: () => changePayment()},
                                               ]
                                             );
@@ -1211,12 +1211,12 @@ export default function PembayaranDetail(props) {
     
 
     function onRegister(token) {
-        console.log("[App] onRegister: ", token);
+        //console.log("[App] onRegister: ", token);
         AsyncStorage.setItem('tokenFirebase', token);
       }
   
     function onNotification(notify) {
-        console.log("[App] onNotification: ", notify)
+        //console.log("[App] onNotification: ", notify)
         var body_msg=notify.body;
         var body_array = body_msg.split("|||");
         var message=body_array[0];
@@ -1249,12 +1249,12 @@ export default function PembayaranDetail(props) {
       }
   
     function onOpenNotification(notify) {
-        console.log("[App] onOpenNotification: ", notify)
+        //console.log("[App] onOpenNotification: ", notify)
         //alert("Open Notification: " + notify.body)
       }
       
       return () => {
-        console.log("[App] unRegister")
+        //console.log("[App] unRegister")
         fcmService.unRegister()
         localNotificationService.unregister()
       }

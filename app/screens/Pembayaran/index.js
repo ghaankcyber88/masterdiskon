@@ -173,7 +173,7 @@ export default class Pembayaran extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                console.log('getConfig',config);
+                //console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -185,7 +185,7 @@ export default class Pembayaran extends Component {
             if (result) {    
                 let userSession = JSON.parse(result);
                 var id_user=userSession.id_user;
-                console.log('getSession',userSession);
+                //console.log('getSession',userSession);
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
                 this.setState({login:true});
@@ -773,7 +773,7 @@ export default class Pembayaran extends Component {
         var parameter={"param":data}
 
         var body=parameter;
-        console.log('bodyparamter',JSON.stringify(body));
+        //console.log('bodyparamter',JSON.stringify(body));
         this.setState({ loading_spinner: true }, () => {
             var param={
                 method: 'POST',
@@ -786,8 +786,8 @@ export default class Pembayaran extends Component {
              PostDataNew(url,path,param)
                  .then((result) => {
                     var dataBooking=result;
-                            console.log("---------------get_booking_historys ------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("---------------get_booking_historys ------------");
+                            //console.log(JSON.stringify(result));
                             
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:dataBooking});
@@ -972,7 +972,7 @@ class Bank extends Component {
                                     id_order:this.props.id_order,
                                     dataPayment:dataPayment
                                 }
-                                console.log('dataPayment',JSON.stringify(dataPayment));
+                                //console.log('dataPayment',JSON.stringify(dataPayment));
                                 navigation.navigate("PembayaranDetail",{
                                     param:param,
                                 });

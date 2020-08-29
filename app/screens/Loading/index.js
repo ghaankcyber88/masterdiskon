@@ -88,8 +88,35 @@ class Loading extends Component {
                      this.setState({ error });
                  }
         ); 
-             
-             
+    }
+    
+    getConfig(){
+        let { navigation, auth } = this.props;
+    
+        var param={
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(),
+          }
+       
+         var url='https://masterdiskon.com/';
+         var dir='front/api/common/config';
+         
+         PostDataNew(url,dir,param)
+             .then((result) => {
+                    var config=result;
+                    console.log('getConfig',JSON.stringify(config));
+                    AsyncStorage.setItem('config', JSON.stringify(config)); 
+                    navigation.navigate("Home");
+             },
+             (error) => {
+                 this.setState({ error });
+             }
+        ); 
+    
     }
 
     onProcess() {
@@ -117,7 +144,7 @@ class Loading extends Component {
                 navigation.navigate(redirect,{param:param});
             }, 500);
         }else{
-            this.isProduction();
+            this.getConfig();
         }
     }
     

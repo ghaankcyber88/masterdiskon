@@ -316,7 +316,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getProductHotelPackage",JSON.stringify(result));
+                    //console.log("getProductHotelPackage",JSON.stringify(result));
                     this.setState({loading_product_hotel_package: false });
                     this.setState({listdata_product_hotel_package: result});
                  },

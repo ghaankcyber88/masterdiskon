@@ -875,9 +875,8 @@ export default class Summary extends Component {
                         
                         PostDataNew(url,'flight/Cart',requestOptions)
                                      .then((result) => {
-                                        
-                                        console.log("---------------cart  ------------");
-                                        console.log(JSON.stringify(result));
+                                        // console.log("---------------cart  ------------");
+                                        // console.log(JSON.stringify(result));
                                         if(result.errors){
                                             this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.errors));
                                             this.setState({ loading_spinner: false });
@@ -895,7 +894,7 @@ export default class Summary extends Component {
                                                 var cartToBeSaved = dataCart;
                                                 cartToBeSaved.participant=this.state.listdata_participant;
                                                 cartToBeSaved.typeProduct=this.state.param.type;
-                                                console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
+                                                //console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
                                                 this.onSubmitOrder(cartToBeSaved);
                                         }
                                      },

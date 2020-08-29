@@ -122,7 +122,35 @@ export default function index() {
       console.log("[App] onOpenNotification: ", notify)
       //alert("Open Notification: " + notify.body)
     }
-
+    
+    
+    function aeroPayment(body_notif){
+    
+      var raw=JSON.stringify()
+      var param={
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body_notif),
+        }
+     
+       var url='https://masterdiskon.com/';
+       var dir='';
+       
+       return PostDataNew(url,dir,param)
+           .then((result) => {
+              
+              },
+           (error) => {
+               this.setState({ error });
+           }
+      );  
+  
+  }
+  
+  
     return () => {
       console.log("[App] unRegister")
       fcmService.unRegister()
