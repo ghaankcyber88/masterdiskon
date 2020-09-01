@@ -828,7 +828,9 @@ export default class DetailContact extends Component {
             var formBirthday=<View style={{marginBottom: 10}}>
                         <TouchableOpacity 
                         style={{width:'100%'}}
-                        onPress={() => {this.datePickerRef.onPressDate()}}
+                        onPress={() => {
+                        this.datePickerRef.onPressDate()
+                        }}
                        >
 
                             <View style={styles.contentProfile} pointerEvents='none'>

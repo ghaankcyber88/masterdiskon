@@ -60,7 +60,7 @@ import I18n from "react-native-i18n";
 import {PostDataNew} from './services/PostDataNew';
 
 export default function index() {
-  const [config, setConfig]= useState({});
+  //const [config, setConfig]= useState({});
 
   useEffect(() => {
     console.disableYellowBox = true;
@@ -141,26 +141,26 @@ export default function index() {
             var paramPost={"param":body_notif}
             console.log('aeroPaymentParam',JSON.stringify(paramPost));
             
-            // var param={
-            //     method: 'POST',
-            //     headers: {
-            //       Accept: 'application/json',
-            //       'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(paramPost),
-            //   }
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paramPost),
+              }
            
-            //  var url='https://masterdiskon.com/';
-            //  var dir='front/api/payment/notification';
+              var url=config.baseUrl;
+              var dir=config.user_payment.dir;
              
-            //   return PostDataNew(url,dir,param)
-            //      .then((result) => {
-            //           console.log('aeroPaymentResult',JSON.stringify(result));
-            //         },
-            //      (error) => {
-            //          this.setState({ error });
-            //      }
-            //   );  
+              return PostDataNew(url,dir,param)
+                 .then((result) => {
+                      console.log('aeroPaymentResult',JSON.stringify(result));
+                    },
+                 (error) => {
+                     this.setState({ error });
+                 }
+              );  
         }
     });
     
@@ -187,7 +187,7 @@ export default function index() {
            .then((result) => {
             //console.log('getConfigIndex',JSON.stringify(result));
             AsyncStorage.setItem('config', JSON.stringify(result)); 
-            setConfig(result);
+            //setConfig(result);
               },
            (error) => {
                this.setState({ error });

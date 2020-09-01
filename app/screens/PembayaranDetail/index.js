@@ -107,7 +107,7 @@ export default function PembayaranDetail(props) {
       const [fee, setFee]= useState(0);
       const [totalPembayaran, setTotalPembayaran]= useState(0);
       
-      const [cardNumber, setCardNumber]= useState('5573381072196900');
+      const [cardNumber, setCardNumber]= useState('4811 1111 1111 1114');
       const [cardExpMonth, setCardExpMonth]= useState('01');
       const [cardExpYear, setCardExpYear]= useState('2025');
       const [cardCVV, setCardCVV]= useState('123');
@@ -118,7 +118,7 @@ export default function PembayaranDetail(props) {
       const [colorButtonText,setColorButtonText] =useState(BaseColor.whiteColor);
       const [disabledButton,setDisabledButton] =useState(true);
 
-      
+      //console.log('dataBookings',JSON.stringify(dataBooking));
       
       const [config, setConfig]=useState({
         "aeroStatus": false,

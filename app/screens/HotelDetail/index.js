@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     contentButtonBottom: {
         borderTopColor: BaseColor.textSecondaryColor,
         borderTopWidth: 1,
-        paddingVertical: 10,
+        //paddingVertical: 5,
         paddingHorizontal: 20,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -224,7 +224,6 @@ export default class HotelDetail extends Component {
             selectedStartDate: null,
             tglAwal:tglAwal,
             tglAkhir:'',
-
             tglAwalNumber:0,
             tglAkhirNumber:0
 
@@ -652,32 +651,7 @@ export default class HotelDetail extends Component {
                     {/* Pricing & Booking Process */}
                     <View style={styles.contentButtonBottom}>
                         <View>
-                            <Text caption1 semibold>
-                                {minPerson} x Rp {priceSplitter(minPrice)}
-                            </Text>
-                            <Text title3 primaryColor s
-                            emibold>
-                                {priceSplitter(totalPrice)}
-                            </Text>
-                        </View>
-                        <View>
-                            <SetDate
-                                labelTglAwal={this.state.tglAwal}
-                                labelTglAkhir={this.state.tglAwal}
-
-                                tglAwalNumber={this.state.tglAwalNumber}
-                                tglAwal={this.state.tglAwal}
-                                setTglAwal={this.setTglAwal}
-
-                                tglAkhirNumber={this.state.tglAkhirNumber}
-                                tglAkhir={this.state.tglAkhir}
-                                setTglAkhir={this.setTglAkhir}
-
-                            />
-                        </View>
-                        
-                        <View>
-                            <SetPenumpang
+                            {/* <SetPenumpang
                                 label={this.state.minPerson}
                                 dewasa={this.state.dewasa}
                                 anak={this.state.anak}
@@ -689,7 +663,31 @@ export default class HotelDetail extends Component {
                                 minPrice={this.state.minPrice}
                                 totalPrice={this.state.totalPrice}
                                 setMinPerson={this.setMinPerson}
-                            />
+                            /> */}
+                            <View style={{ flexDirection: "row",marginBottom:10 }}>
+                                
+                                <Icon
+                                        name="user"
+                                        size={24}
+                                        color={BaseColor.grayColor}
+                                        style={{marginTop:10,marginRight:10}}
+                                    />
+                                <TouchableOpacity onPress={() => this.onChange("up")} style={{marginTop:10}}>
+                                    <Icon
+                                        name="plus-circle"
+                                        size={24}
+                                        color={BaseColor.primaryColor}
+                                    />
+                                </TouchableOpacity>
+                                <Text title1 style={{marginHorizontal:10}}>0</Text>
+                                <TouchableOpacity onPress={() => this.onChange("down")} style={{marginTop:10}}>
+                                    <Icon
+                                        name="minus-circle"
+                                        size={24}
+                                        color={BaseColor.grayColor}
+                                    />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                         
                         

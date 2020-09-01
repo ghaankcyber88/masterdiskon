@@ -21,7 +21,7 @@ export default StyleSheet.create({
                                 shadowOpacity: 0.25,
                                 shadowRadius: 3.84,
                                 elevation: 5,
-        marginTop:20
+        marginVertical:10
     },
     textDefault: {
         ...Typography.headline,
