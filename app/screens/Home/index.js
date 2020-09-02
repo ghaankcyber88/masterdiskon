@@ -442,7 +442,7 @@ export default class Home extends Component {
                             style={styles.itemService}
                             activeOpacity={0.9}
                             onPress={() => {
-                                navigation.navigate(item.route,{param:item.type});
+                                navigation.navigate(item.route,{type:item.type});
                             }}
                         >
                             <View style={styles.iconContent}>

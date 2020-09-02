@@ -441,23 +441,22 @@ export default class TourDetailCustom extends Component {
             param.cityId=this.state.cityId;
             param.cityText=this.state.cityText;
             param.cityProvince=this.state.cityProvince;
-            param.Qty=this.state.qty;
             param.minPrice=this.state.minPrice;
             param.minPerson=this.state.minPerson;
             param.totalPrice=this.state.totalPrice;
+            param.Qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
             
-            // console.log('product',JSON.stringify(product));
-            // console.log('param',JSON.stringify(param));
-            // console.log('productPart',JSON.stringify(select));
-            // console.log('this.state.tglAwal',this.state.tglAwal);
+            
+            
             this.props.navigation.navigate(link,
                 {
                     param:param,
                     product:product,
                     productPart:select
-                    
                 });
-
+                // console.log('paramHotel',JSON.stringify(param));
+                // console.log('productHotel',JSON.stringify(product));
+                // console.log('productPartHotel',JSON.stringify(select));
     }
 
 

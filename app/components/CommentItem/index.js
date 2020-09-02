@@ -44,8 +44,6 @@ export default class CommentItem extends Component {
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         const { style, image, name, rate, date, title, comment, item,onPress,status,loading } = this.props;
-
-        
         var fieldsArray = [];
         item.detail.map(item => {
             fieldsArray.push(

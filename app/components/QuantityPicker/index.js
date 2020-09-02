@@ -55,7 +55,6 @@ export default class QuantityPicker extends Component {
 
         }else if(this.props.typeOld=='3'){
             this.props.setJumlahBayi(value);
-
         }
     }
 

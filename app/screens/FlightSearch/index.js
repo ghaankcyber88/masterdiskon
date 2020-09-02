@@ -10,15 +10,17 @@ import {
     FlightPlan,
     FormOption,
     QuantityPicker,
+    // QuantityPickerHorizontalHorizontal,
     Button
 } from "@components";
 import styles from "./styles";
 import { Image } from "@components";
 import NotYetLogin from "../../components/NotYetLogin";
+import QuantityPickerHorizontal from "../../components/QuantityPickerHorizontal";
+
 export default class FlightSearch extends Component {
     constructor(props) {
         super(props);
-       
         
         
         var product=[];
@@ -28,15 +30,23 @@ export default class FlightSearch extends Component {
             var product=[];
         }
         
-        var type='';
-        if(this.props.navigation.state.params && this.props.navigation.state.params.param){
-            var type=this.props.navigation.state.params.param;
+        var productPart=[];
+        if(this.props.navigation.state.params && this.props.navigation.state.params.productPart){
+            var productPart=this.props.navigation.state.params.productPart;
         }else{
-            var type='';
+            var productPart=[];
         }
         
         
-        //var type=this.props.navigation.state.params.type;
+        var type='';
+        if(this.props.navigation.state.params && this.props.navigation.state.params.type){
+            var type=this.props.navigation.state.params.type;
+        }else{
+            var type='';
+        }
+      
+        
+        
         var tglAwal=this.getDate(2);
         var tglAkhir=this.getDate(3);
         
@@ -58,6 +68,7 @@ export default class FlightSearch extends Component {
             //item:item,
             title:title,
             product:product,
+            productPart:productPart,
             type:type,
             login:true,
             loading: false,
@@ -97,8 +108,8 @@ export default class FlightSearch extends Component {
             qty:1,
             
             
-            dewasa:"2",
-            anak:"1",
+            dewasa:"1",
+            anak:"0",
             bayi:"0",
             tglAwal:tglAwal,
             tglAkhir:tglAkhir,
@@ -219,8 +230,7 @@ export default class FlightSearch extends Component {
     
     
     onSubmit() {
-    
-            const {type,product} =this.state;
+            const {type,product,productPart} =this.state;
           var tgl_akhir='';
           if(this.state.round==true){
             tgl_akhir=this.state.tglAkhir;
@@ -249,6 +259,7 @@ export default class FlightSearch extends Component {
                 param.type='flight';
                 param.bandaraAsalLabel=this.state.bandaraAsalLabel;
                 param.bandaraTujuanLabel=this.state.bandaraTujuanLabel;
+                param.Qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
                 
                 
                 this.props.navigation.navigate(link,
@@ -257,16 +268,25 @@ export default class FlightSearch extends Component {
                 });
                 
             }else if(type=='hotel'){
-                link='Hotel';
+                link='Summary';
                 param.type='hotel';
                 param.cityId=this.state.cityId;
                 param.cityText=this.state.cityText;
                 param.cityProvince=this.state.cityProvince;
                 param.Qty=this.state.qty;
+                param.totalPrice=parseInt(this.state.qty)*parseInt(productPart.price);
+
                 
+                console.log('paramHotel',JSON.stringify(param));
+                console.log('productHotel',JSON.stringify(product));
+                console.log('productPartHotel',JSON.stringify(productPart));
+            
+            
                 this.props.navigation.navigate(link,
                     {
-                                        param:param,
+                        param:param,
+                        product:product,
+                        productPart:productPart
                     });
             }else if(type=='trip'){
                 link='Summary';
@@ -315,7 +335,6 @@ export default class FlightSearch extends Component {
         this.setState({bandaraTujuanLabel: label});
     }
     
-
 
     setJumlahDewasa(jml){
           this.setState({dewasa:jml});
@@ -366,21 +385,7 @@ export default class FlightSearch extends Component {
         const { round, from, to, loading,login  } = this.state;
         const { navigation } = this.props;
         var content=<View>
-                                <View  style={{ flexDirection: "row",paddingBottom:20}}>
-                                    <View style={styles.contentPickDate}>
-                                        <TouchableOpacity
-                                            
-                                            onPress={() => this.props.navigation.navigate('SelectCity',{setCity:this.setCity,selected:this.state.cityId})}
-                                        >
-                                            <Text caption2 light style={{ marginBottom: 5 }}>
-                                                Destination
-                                            </Text>
-                                            <Text body1 semibold>
-                                                {this.state.cityText} - {this.state.cityProvince} 
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
+                                
                                 
                                 
                                 {
@@ -438,8 +443,19 @@ export default class FlightSearch extends Component {
        
            
            
-                                <View style={{ marginTop: 20, flexDirection: "row" }}>
-                                    <QuantityPicker
+                                <View style={{ marginTop: 20}}>
+                                    
+                                    
+                                    
+                                    <QuantityPickerHorizontal
+                                        label="Rooms"
+                                        detail="3 tamu/room"
+                                        value={this.state.qty}
+                                        setJumlahBayi={this.setqty}
+                                        typeOld="3"
+                                    />
+                                    
+                                    <QuantityPickerHorizontal
                                         label="Adults"
                                         detail=">= 12 years"
                                         value={this.state.dewasa}
@@ -448,21 +464,17 @@ export default class FlightSearch extends Component {
                                     />
                             
                             
-                                    <QuantityPicker
+                                    <QuantityPickerHorizontal
                                         label="Children"
                                         detail="2 - 12 years"
                                         value={this.state.anak}
-                                        style={{ marginHorizontal: 15 }}
                                         setJumlahAnak={this.setJumlahAnak}
                                         typeOld="2"
                                     />
-                                    <QuantityPicker
-                                        label="Rooms"
-                                        detail=""
-                                        value={this.state.qty}
-                                        setJumlahBayi={this.setqty}
-                                        typeOld="3"
-                                    />
+                                    
+                                    
+                                    
+                                    
                                 </View>
         </View>
         
@@ -667,7 +679,7 @@ export default class FlightSearch extends Component {
             } 
             
             <View style={{ marginTop: 20, flexDirection: "row" }}>
-                <QuantityPicker
+                <QuantityPickerHorizontal
                     label="Adults"
                     detail=">= 12 years"
                     value={this.state.dewasa}
@@ -676,7 +688,7 @@ export default class FlightSearch extends Component {
                 />
         
         
-                <QuantityPicker
+                <QuantityPickerHorizontal
                     label="Children"
                     detail="2 - 12 years"
                     value={this.state.anak}
@@ -684,7 +696,7 @@ export default class FlightSearch extends Component {
                     setJumlahAnak={this.setJumlahAnak}
                     typeOld="2"
                 />
-                <QuantityPicker
+                <QuantityPickerHorizontal
                     label="Infants"
                     detail="<= 2 years"
                     value={this.state.bayi}

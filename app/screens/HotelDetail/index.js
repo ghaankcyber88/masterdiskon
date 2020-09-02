@@ -10,7 +10,7 @@ import {
     TextInput,
     StyleSheet,
     Dimensions,
-    Image
+    Image,
 } from "react-native";
 import { BaseStyle, BaseColor, Images } from "@config";
 import {
@@ -32,6 +32,7 @@ import * as Utils from "@utils";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import SetDate from "../../components/SetDate";
 import SetPenumpang from "../../components/SetPenumpang";
+import FormOptionQty from "../../components/FormOptionQty";
 // import styles from "./styles";
 
 // Load sample data
@@ -172,7 +173,7 @@ export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
         var product = this.props.navigation.state.params.product;
-        console.log('HotelDetail',JSON.stringify(product));
+        //console.log('HotelDetail',JSON.stringify(product));
 
         var minDate = new Date(); // Today
         minDate.setDate(minDate.getDate() + 7);
@@ -225,7 +226,16 @@ export default class HotelDetail extends Component {
             tglAwal:tglAwal,
             tglAkhir:'',
             tglAwalNumber:0,
-            tglAkhirNumber:0
+            tglAkhirNumber:0,
+            
+            listdataPerson:[{
+                value: 1,
+                text: "1"
+                }
+            ],
+            
+            kelas:'Economy Class',
+            kelasId:'E',
 
         };
         this._deltaY = new Animated.Value(0);
@@ -236,6 +246,8 @@ export default class HotelDetail extends Component {
         this.setMinPerson = this.setMinPerson.bind(this);
         this.setTglAwal = this.setTglAwal.bind(this);
         this.setTglAkhir = this.setTglAkhir.bind(this);
+        this.setListdataPerson=this.setListdataPerson.bind(this);
+        // this.setKelasPesawat = this.setKelasPesawat.bind(this);
     }
 
    
@@ -280,12 +292,6 @@ export default class HotelDetail extends Component {
 
 
     setPrice(select){
-        var minPerson=select.trip_minimum[0].count_minimum;
-        var minPrice=select.trip_minimum[0].price_minimum;
-        var totalPrice=parseInt(minPerson)*parseInt(minPrice);
-        this.setState({minPerson:minPerson});
-        this.setState({minPrice:minPrice});
-        this.setState({totalPrice:totalPrice});
         this.setState({select:select});
         
     }
@@ -304,65 +310,50 @@ export default class HotelDetail extends Component {
     }
 
     setMinPerson(jml){
-        
-        var select=this.state.select;
-        var trip_minimum=select.trip_minimum;
-        const arrayHasIndex = (array, index) => Array.isArray(array) && array.hasOwnProperty(index);
-        var min_0=arrayHasIndex(trip_minimum,0);
-        var min_1=arrayHasIndex(trip_minimum,1);
-        var min_2=arrayHasIndex(trip_minimum,2);
-        var min_3=arrayHasIndex(trip_minimum,3);
-        var min_4=arrayHasIndex(trip_minimum,4);
-
-        var minPrice=0;
-        var totalPrice=0;
-
-        if(min_0==true){
-            if(min_1==true){
-                if(jml >= trip_minimum[0].count_minimum && jml < trip_minimum[1].count_minimum ){
-                    minPrice=select.trip_minimum[0].price_minimum; 
-                    totalPrice=parseInt(jml)*parseInt(minPrice);
-                }else if(jml >= trip_minimum[1].count_minimum){
-                    minPrice=select.trip_minimum[1].price_minimum; 
-                    totalPrice=parseInt(jml)*parseInt(minPrice);
-                }
-    
-            }
-            
-        }
-
-       
-
-        this.setState({totalPrice:totalPrice});
         this.setState({minPerson:jml});
-        this.setState({minPrice:minPrice});
-        //this.setPrice();
+        setTimeout(() => {
+        this.setListdataPerson();
+        }, 500);
+    }
+    
+    setListdataPerson(){
+        var listdataPerson=[];
+            for(a=this.state.minPerson;a<=this.state.maxPerson;a++){
+                var obj = {};
+                obj['value'] = a;
+                obj['text'] = a + ' Voucher';
+                listdataPerson.push(obj);
+            }
+        this.setState({listdataPerson:listdataPerson});
     }
 
-
     componentDidMount(){
+        const {product}=this.state;
+          min = Math.min.apply(null, product.product_option.map(function(item) {
+            return item.minimum_book;
+          })),
+          max = Math.max.apply(null, product.product_option.map(function(item) {
+            return item.minimum_book;
+          }));
+          
+          this.setState({maxPerson:max});
+          this.setState({minPerson:min});
+         
         setTimeout(() => {
-            this.setState({dewasa:this.state.minPerson});
+            this.setListdataPerson();
         }, 500);
     }
     // Render correct screen container when tab is activated
     _renderScene = ({ route, jumpTo }) => {
         switch (route.key) {
-            // case "hotel":
-            //     return (
-            //         <Hotel
-            //             product={this.state.product}
-            //             jumpTo={jumpTo}
-            //             navigation={this.props.navigation}
-            //             setPrice={this.setPrice}
-            //         />
-            //     );
             case "paket":
                     return (
                         <Paket
                             product={this.state.product}
                             jumpTo={jumpTo}
                             navigation={this.props.navigation}
+                            setMinPerson={this.setMinPerson}
+                            setPrice={this.setPrice}
                         />
                     );
             case "informasi":
@@ -438,43 +429,89 @@ export default class HotelDetail extends Component {
     onSubmit() {
     
         const {type,product,select} =this.state;
-      var tgl_akhir='';
+        var tgl_akhir='';
 
  
-      var param = {
-        DepartureDate:this.state.tglAwal,
-        ReturnDate:tgl_akhir,
-        Adults:this.state.dewasa,
-        Children:this.state.anak,
-        Infants:this.state.bayi,
-        }
+          var param = {
+            DepartureDate:this.state.tglAwal,
+            ReturnDate:tgl_akhir,
+            Adults:this.state.dewasa,
+            Children:this.state.anak,
+            Infants:this.state.bayi,
+            }
         
         var productPart={}
         var link='';
        
             link='Summary';
-            param.type='trip';
+            param.type='hotel';
             param.cityId=this.state.cityId;
             param.cityText=this.state.cityText;
             param.cityProvince=this.state.cityProvince;
-            param.Qty=this.state.qty;
+            param.Qty=parseInt(this.state.minPerson);
+            param.totalPrice=parseInt(this.state.minPerson)*parseInt(select.price);
             
-            // console.log('product',JSON.stringify(product));
-            // console.log('param',JSON.stringify(param));
-            // console.log('productPart',JSON.stringify(select));
-            // console.log('this.state.tglAwal',this.state.tglAwal);
             this.props.navigation.navigate(link,
                 {
                     param:param,
                     product:product,
                     productPart:select
-                    
                 });
+                
+            // console.log('paramHotel',JSON.stringify(param));
+            // console.log('productHotel',JSON.stringify(product));
+            // console.log('productPartHotel',JSON.stringify(select));
 
     }
-
-
-
+    
+    content_button(){
+        const {product}=this.state;
+        const { navigation } = this.props;
+        var content=<View></View>
+        
+        if(product.product_detail.detail_category=='voucher_hotel'){
+        content=<View style={styles.contentButtonBottom}>
+                        <FormOptionQty
+                                style={{ marginVertical: 10 }} 
+                                label={'Quantity'}
+                                listdata={this.state.listdataPerson}
+                                setMinPerson={this.setMinPerson}
+                                selectedText={this.state.minPerson + ' Voucher'}
+                        />
+                        
+                        <Button
+                            style={{ height: 46 }}
+                            onPress={() => {  
+                                this.onSubmit();
+                               
+                            }}
+                        >
+                            Book Now
+                        </Button>
+                    </View>
+        }else{
+        
+            content=<View style={styles.contentButtonBottom}>
+                        <Button
+                            style={{ height: 46,width:'100%' }}
+                            onPress={() => {  
+                                navigation.navigate('FlightSearch',{type:'hotel',product:this.state.product,productPart:this.state.select})
+                               
+                            }}
+                        >
+                            Book Now
+                        </Button>
+                    </View>
+        
+        }
+        return(
+            <View>
+                {content}
+            </View>
+            
+        )
+    }
+   
     render() {
         const { navigation } = this.props;
         const { title, heightHeader, service, product,minPerson,minPrice,totalPrice} = this.state;
@@ -512,17 +549,7 @@ export default class HotelDetail extends Component {
                         style={{ width: "100%", height: "100%" }}
                         resizeMode="cover"
                     />
-                    {/* <Text
-                        title2
-                        semibold
-                        whiteColor
-                        style={{
-                            position: "absolute",
-                            paddingTop: heightHeader - 45
-                        }}
-                    >
-                        {product.product_name}
-                    </Text> */}
+                  
                 </Animated.View>
                 <SafeAreaView
                     style={BaseStyle.safeAreaView}
@@ -555,8 +582,6 @@ export default class HotelDetail extends Component {
                         onPressRight={() => {
                             navigation.navigate("PreviewImage");
                         }}
-                        // style={{backgroundColor:BaseColor.primaryColor}}
-                        //transparent={true}
                     />
                     <ScrollView
                         onScroll={Animated.event([
@@ -636,10 +661,6 @@ export default class HotelDetail extends Component {
                             </Text>
                         </View>
 
-                        
-                        
-
-
                         <TabView
                             lazy
                             navigationState={this.state}
@@ -648,59 +669,8 @@ export default class HotelDetail extends Component {
                             onIndexChange={this._handleIndexChange}
                         />
                     </ScrollView>
-                    {/* Pricing & Booking Process */}
-                    <View style={styles.contentButtonBottom}>
-                        <View>
-                            {/* <SetPenumpang
-                                label={this.state.minPerson}
-                                dewasa={this.state.dewasa}
-                                anak={this.state.anak}
-                                bayi={this.state.bayi}
-                                setJumlahDewasa={this.setJumlahDewasa}
-                                setJumlahAnak={this.setJumlahAnak}
-                                setJumlahBayi={this.setJumlahBayi}
-                                minPerson={this.state.minPerson}
-                                minPrice={this.state.minPrice}
-                                totalPrice={this.state.totalPrice}
-                                setMinPerson={this.setMinPerson}
-                            /> */}
-                            <View style={{ flexDirection: "row",marginBottom:10 }}>
-                                
-                                <Icon
-                                        name="user"
-                                        size={24}
-                                        color={BaseColor.grayColor}
-                                        style={{marginTop:10,marginRight:10}}
-                                    />
-                                <TouchableOpacity onPress={() => this.onChange("up")} style={{marginTop:10}}>
-                                    <Icon
-                                        name="plus-circle"
-                                        size={24}
-                                        color={BaseColor.primaryColor}
-                                    />
-                                </TouchableOpacity>
-                                <Text title1 style={{marginHorizontal:10}}>0</Text>
-                                <TouchableOpacity onPress={() => this.onChange("down")} style={{marginTop:10}}>
-                                    <Icon
-                                        name="minus-circle"
-                                        size={24}
-                                        color={BaseColor.grayColor}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        
-                        
-                        <Button
-                            style={{ height: 46 }}
-                            onPress={() => {  
-                                this.onSubmit();
-                               
-                            }}
-                        >
-                            Next
-                        </Button>
-                    </View>
+                   {this.content_button()}
+                    
                 </SafeAreaView>
             </View>
         );
@@ -843,10 +813,11 @@ class Paket extends Component {
     componentDidMount() {
         const { navigation, product } = this.props;
         const { product_option } =this.state;
-                    //this.props.setPrice(select);
+        
+        
                 if (product_option.length != 0) {
-                    
                     var select=product.product_option[0];
+                    this.props.setPrice(select);
                     const selected = select.id_hotelpackage_detail;
                     if (selected) {
                         this.setState({
@@ -862,8 +833,10 @@ class Paket extends Component {
     }
     
     onChange(select) {
-        const { navigation, product } = this.props;
-        //alert(select.id_hotelpackage_detail)
+        const { navigation, product,setMinPerson,setListdataPerson} = this.props;
+        var minPerson=select.minimum_book;
+        setMinPerson(minPerson);
+        
         this.setState({
             product_option: this.state.product_option.map(item => {
                 if (item.id_hotelpackage_detail == select.id_hotelpackage_detail) {
@@ -881,7 +854,7 @@ class Paket extends Component {
             })
         });
         
-        //this.props.setPrice(select);
+        this.props.setPrice(select);
     }
 
 
