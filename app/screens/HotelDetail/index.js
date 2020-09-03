@@ -444,12 +444,13 @@ export default class HotelDetail extends Component {
         var link='';
        
             link='Summary';
-            param.type='hotel';
+            param.type='hotelpackage';
             param.cityId=this.state.cityId;
             param.cityText=this.state.cityText;
             param.cityProvince=this.state.cityProvince;
             param.Qty=parseInt(this.state.minPerson);
             param.totalPrice=parseInt(this.state.minPerson)*parseInt(select.price);
+            param.participant=false;
             
             this.props.navigation.navigate(link,
                 {
@@ -495,7 +496,7 @@ export default class HotelDetail extends Component {
                         <Button
                             style={{ height: 46,width:'100%' }}
                             onPress={() => {  
-                                navigation.navigate('FlightSearch',{type:'hotel',product:this.state.product,productPart:this.state.select})
+                                navigation.navigate('FlightSearch',{type:'hotelpackage',product:this.state.product,productPart:this.state.select})
                                
                             }}
                         >

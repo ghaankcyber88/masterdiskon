@@ -134,7 +134,7 @@ export default class Home extends Component {
             listdata_product_trip_country:DataLoading,
             listdata_product_trip:DataLoading,
             listdata_product_hotel_package:DataLoading,
-            listdata_product_voucher:DataLoading,
+            listdata_product_flash:DataLoading,
             config:DataConfig,
 
 
@@ -210,7 +210,7 @@ export default class Home extends Component {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
                     let config = JSON.parse(result);
-                    console.log('getConfig',config);
+                    //console.log('getConfig',config);
                     this.setState({config:config});
                 }
             });
@@ -233,7 +233,6 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log("getProductTripCountry",JSON.stringify(result));
                     this.setState({loading_product_trip_country: false });
                     this.setState({listdata_product_trip_country: result});
                  },
@@ -262,7 +261,6 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log("getProductTrip",JSON.stringify(result));
                     this.setState({loading_product_trip: false });
                     this.setState({listdata_product_trip: result});
                  },
@@ -289,7 +287,6 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log("getProductvoucher",JSON.stringify(result));
                     this.setState({loading_product_voucher: false });
                     this.setState({listdata_product_voucher: result});
                  },
@@ -316,9 +313,34 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log("getProductHotelPackage",JSON.stringify(result));
                     this.setState({loading_product_hotel_package: false });
                     this.setState({listdata_product_hotel_package: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
+    
+    getProductFlash(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.product_flash.dir;
+        this.setState({ loading_product_flash: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    console.log('getProductFlash',JSON.stringify(result));
+                    this.setState({loading_product_flash: false });
+                    this.setState({listdata_product_flash: result.daftar});
                  },
                  (error) => {
                      this.setState({ error });
@@ -343,7 +365,6 @@ export default class Home extends Component {
            
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log("getMusium",JSON.stringify(result));
                     this.setState({loading_musium: false });
                     this.setState({listdata_musium: result});
                  },
@@ -370,7 +391,6 @@ export default class Home extends Component {
            
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log("getblog",JSON.stringify(result));
                     this.setState({loading_blog: false });
                     this.setState({listdata_blog: result});
                  },
@@ -397,7 +417,6 @@ export default class Home extends Component {
            
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log("getculture",JSON.stringify(result));
                     this.setState({loading_culture: false });
                     this.setState({listdata_culture: result});
                  },
@@ -408,6 +427,7 @@ export default class Home extends Component {
         });
     }
     
+    
 
 
     componentDidMount() {
@@ -417,7 +437,7 @@ export default class Home extends Component {
             this.getProductTripCountry();
             this.getProductTrip();
             this.getProductHotelPackage();
-            // this.getProductVoucher();
+            this.getProductFlash();
             // this.getBlog();
         }, 500);
 
@@ -682,6 +702,122 @@ export default class Home extends Component {
                                     {example1}
                                 </View>
                             </View> */}
+                            
+                            
+                            {/* <View>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
+                                    <Text title3 semibold>
+                                        Flash
+                                    </Text>
+                                    <Text body2>
+                                    Jelajahi sekarang
+                                    </Text>
+                                </View>
+                                <View>
+                                <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk horizontal false
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //untuk horizontal false
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_product_flash.daftar}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                item={item}
+                                                img={item.img_featured_url}
+                                                imgHeight={150}
+                                                titleIcon={{text:"home",icon:"home"}}
+                                                title={item.product_name}
+                                                subtitle={''}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("TourDetailCustom",{product:item})
+                                                }
+                                                loading={this.state.loading_product_trip}
+                                                property={{inFrame:false,innerText:false}}
+                                                type={''}
+                                            />
+                                        
+                                        )}
+                                    />
+                                    
+                                    
+                                </View>
+                            </View> */}
+                            
+                            <View>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
+                                    <Text title3 semibold>
+                                        Flash 
+                                    </Text>
+                                    {/* <Text body2>
+                                    Jelajahi sekarang
+                                    </Text> */}
+                                </View>
+                                <View>
+                                <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk horizontal false
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //untuk horizontal false
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_product_flash}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                item={item}
+                                                img={item.img_featured_url}
+                                                imgHeight={150}
+                                                titleIcon={{text:"home",icon:"home"}}
+                                                title={item.product_name}
+                                                subtitle={''}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("HotelDetail",{product:item})
+                                                }
+                                                loading={this.state.loading_product_hotel_package}
+                                                property={{inFrame:false,innerText:false}}
+                                                type={''}
+                                            />
+                                        
+                                        )}
+                                    />
+                                    
+                                    
+                                </View>
+                            </View>
+                            
                             
                             <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>

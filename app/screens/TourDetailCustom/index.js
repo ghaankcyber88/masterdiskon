@@ -445,7 +445,7 @@ export default class TourDetailCustom extends Component {
             param.minPerson=this.state.minPerson;
             param.totalPrice=this.state.totalPrice;
             param.Qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
-            
+            param.participant=true;
             
             
             this.props.navigation.navigate(link,

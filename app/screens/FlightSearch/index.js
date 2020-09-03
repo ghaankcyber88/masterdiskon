@@ -56,9 +56,9 @@ export default class FlightSearch extends Component {
             round=false;
             title='Search Flight';
             
-        }else if(type=='hotel'){
+        }else if(type=='hotelpackage'){
             round=true;
-            title='Search Hotel';
+            title='Search Hotel Package';
         }else if(type=='trip'){
             round=true;
             title='Set Tour';
@@ -260,22 +260,22 @@ export default class FlightSearch extends Component {
                 param.bandaraAsalLabel=this.state.bandaraAsalLabel;
                 param.bandaraTujuanLabel=this.state.bandaraTujuanLabel;
                 param.Qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
-                
+                param.participant=true;
                 
                 this.props.navigation.navigate(link,
                 {
                     param:param,
                 });
                 
-            }else if(type=='hotel'){
+            }else if(type=='hotelpackage'){
                 link='Summary';
-                param.type='hotel';
+                param.type='hotelpackage';
                 param.cityId=this.state.cityId;
                 param.cityText=this.state.cityText;
                 param.cityProvince=this.state.cityProvince;
                 param.Qty=this.state.qty;
                 param.totalPrice=parseInt(this.state.qty)*parseInt(productPart.price);
-
+                param.participant=true;
                 
                 console.log('paramHotel',JSON.stringify(param));
                 console.log('productHotel',JSON.stringify(product));
@@ -295,6 +295,7 @@ export default class FlightSearch extends Component {
                 param.cityText=this.state.cityText;
                 param.cityProvince=this.state.cityProvince;
                 param.Qty=this.state.qty;
+                param.participant=true;
                 
                 this.props.navigation.navigate(link,
                     {
@@ -368,7 +369,7 @@ export default class FlightSearch extends Component {
         var content=<View></View>
         if(type=="flight"){
             content=this.renderContentFlight();
-        }else if(type=="hotel"){
+        }else if(type=="hotelpackage"){
             content=this.renderContentHotel();
         }else if(type=="trip"){
             content=this.renderContentTour();
