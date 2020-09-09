@@ -77,7 +77,7 @@ export default class SetPenumpang extends Component {
     
 
     render() {
-        const { style, label,onPress,minPerson,minPrice,totalPrice } = this.props;
+        const { style, label,onPress,minPerson,minPrice,totalPrice,minPersonDef } = this.props;
         const {modalVisible } = this.state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
@@ -134,6 +134,7 @@ export default class SetPenumpang extends Component {
                                     setJumlahDewasa={this.props.setJumlahDewasa}
                                     typeOld="1"
                                     minPerson={this.props.minPerson}
+                                    minPersonDef={this.props.minPersonDef}
                                     setMinPerson={this.props.setMinPerson}
                                 />
                         
@@ -146,6 +147,7 @@ export default class SetPenumpang extends Component {
                                     setJumlahAnak={this.props.setJumlahAnak}
                                     typeOld="2"
                                     minPerson={this.props.minPerson}
+                                    minPersonDef={this.props.minPersonDef}
                                     setMinPerson={this.props.setMinPerson}
                                 />
                                 <QuantityPicker
@@ -155,6 +157,7 @@ export default class SetPenumpang extends Component {
                                     setJumlahBayi={this.props.setJumlahBayi}
                                     typeOld="3"
                                     minPerson={this.props.minPerson}
+                                    minPersonDef={this.props.minPersonDef}
                                     setMinPerson={this.props.setMinPerson}
                                 />
                         </View>
@@ -181,6 +184,7 @@ export default class SetPenumpang extends Component {
 SetPenumpang.propTypes = {
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     label: PropTypes.string,
+    minPriceDef: PropTypes.number,
     minPrice: PropTypes.number,
     minPerson: PropTypes.number,
     totalPrice:PropTypes.number,
@@ -190,6 +194,7 @@ SetPenumpang.propTypes = {
 SetPenumpang.defaultProps = {
     style: {},
     label: "",
+    minPriceDef: 2,
     minPrice: 0,
     minPerson: 0,
     totalPrice:0,

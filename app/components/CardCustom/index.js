@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     listImage: {
         height: Utils.scaleWithPixel(140),
         width: Utils.scaleWithPixel(120),
-        borderRadius: 8
+        borderRadius: 0
     },
     listContent: {
         flexDirection: "row"
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
     //gird css
     girdImage: {
-        borderRadius: 8,
+        borderRadius: 0,
         height: Utils.scaleWithPixel(120),
         width: "100%"
     },
@@ -88,10 +88,10 @@ const styles = StyleSheet.create({
     },
     girdContentInFrame: {
         flex: 1,
-        borderBottomColor: BaseColor.textSecondaryColor,
-        borderBottomWidth: 1,
+        borderColor: BaseColor.textSecondaryColor,
+        borderWidth: 2,
         backgroundColor: "#fff",
-        borderRadius: 8,
+        borderRadius: 5,
                                 shadowColor: "#000",
                                 shadowOffset: {
                                     width: 0,
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
                                 },
                                 shadowOpacity: 0.25,
                                 shadowRadius: 3.84,
-                                elevation: 5,
+                                //elevation: 5,
     },
     girdContentLocation: {
         flexDirection: "row",
@@ -216,8 +216,8 @@ export default class CardCustom extends Component {
         var styleInnerText={};
         var color={}
         if(this.props.property.innerText==true){
-            styleInnerText={position: "absolute",bottom: 0,padding: 10};
-            color={color:BaseColor.whiteColor}
+            styleInnerText={position: "absolute",bottom: -65,padding: 10};
+            //color={color:BaseColor.whiteColor}
         }else{
             styleInnerText={padding: 10};
             color={}
@@ -264,7 +264,7 @@ export default class CardCustom extends Component {
                     :
                     <Image source={{uri :img}} 
                     style={{
-                          borderRadius: 8,
+                          borderRadius: 0,
                           height: Utils.scaleWithPixel(imgHeight),
                           width: "100%"
                           }}
@@ -281,7 +281,7 @@ export default class CardCustom extends Component {
                                       Animation={Fade}
                                       style={{marginTop: 5}}
                                     >
-                                        <PlaceholderLine width={50} style={{marginTop: 2,marginBottom:0,borderRadius: 5}} />
+                                        <PlaceholderLine width={50} style={{marginTop: 2,marginBottom:0,borderRadius: 0}} />
                                         <PlaceholderLine width={100} style={{marginTop: 2,marginBottom:0}} />
                                         <PlaceholderLine width={50} style={{marginTop: 2,marginBottom:0}} />
                                     </Placeholder>
@@ -291,16 +291,16 @@ export default class CardCustom extends Component {
                 :             
                 <View style={styleInnerText}>
                     {this.props.titleIcon.text != "" ?
-                    <View style={{flexDirection: "row",marginTop: 3,alignItems: "center"}}>
-                        <Icon
+                    <View style={{alignSelf: 'flex-start',marginTop: -30,paddingHorizontal:5,alignItems: "center",backgroundColor:'yellow',width:'auto',borderRadius:5}}>
+                        {/* <Icon
                             name="map-marker-alt"
                             color={BaseColor.lightPrimaryColor}
                             size={10}
                             style={{marginRight:5}}
-                        />
+                        /> */}
                         <Text
                             caption1
-                            grayColor
+                            //grayColor
                             style={color}
                             numberOfLines={1}
                         >
@@ -310,16 +310,20 @@ export default class CardCustom extends Component {
                     :
                     <View></View>
                     }
-                    <View style={{marginTop: 0}}>
+                    
+                    <View style={{marginTop: 10}}>
                       <Text
                           body2
                           semibold
-                          numberOfLines={4}
+                          numberOfLines={2}
                           style={[color,{height:50}]}
                       >
                           {title}
                       </Text>
                     </View>
+                    
+                   
+                    
                     {subtitle != "" ?
                     <View style={{marginTop: 0}}>
                         <Text caption2 grayColor>
@@ -371,6 +375,7 @@ CardCustom.propTypes = {
     title: PropTypes.string,
     subtitle: PropTypes.string,
     subtitle2: PropTypes.string,
+    star: PropTypes.node.number,
     type: PropTypes.string,
     loading:PropTypes.bool,
     property: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
@@ -386,6 +391,7 @@ CardCustom.defaultProps = {
     title: "",
     subtitle: "",
     subtitle2: "",
+    star:"",
     onPress: () => {},
     onPressTag: () => {},
      loading: true,

@@ -16,7 +16,22 @@ class Loading extends Component {
         super(props);
         this.state={
             DataMasterDiskon:DataMasterDiskon[0],
+            login:false,
         }
+        this.getSession();
+    }
+    
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                var id_user=userSession.id_user;
+                console.log('getSessionLoading',userSession);
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+            }
+        });
     }
 
     isProduction(){
@@ -137,16 +152,26 @@ class Loading extends Component {
         SplashScreen.hide();
         let { navigation, auth } = this.props;
         let status = auth.login.success;
+        let login =this.state.login;
        
 
         if(redirect != ''){
             setTimeout(() => {
-            //console.log(JSON.stringify(param));
                 navigation.navigate(redirect,{param:param});
             }, 500);
         }else{
-            //navigation.navigate("Home");
-            this.getConfig();
+        
+        setTimeout(() => {
+            if(login){
+                navigation.navigate("Home");
+            }else{
+                navigation.navigate("SignIn",{redirect:"Home"});
+            }
+        }, 500);
+        
+        
+         
+            
         }
     }
     
@@ -157,7 +182,11 @@ class Loading extends Component {
     }
 
     componentDidMount() {
-        this.onProcess();
+        setTimeout(() => {
+            console.log('statusLogin',this.state.login);
+            this.onProcess();
+        }, 500);
+        
     }
 
     render() {

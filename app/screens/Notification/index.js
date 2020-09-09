@@ -79,7 +79,7 @@ export default class Notification extends Component {
                 }
                 PostDataNew(url,path,param)
                     .then((result) => {
-                        //console.log("getNotif",JSON.stringify(result));
+                        console.log("getNotif",JSON.stringify(result));
                         this.setState({loading_spinner: false });
                         this.setState({notification:result});
                     },
@@ -154,7 +154,14 @@ export default class Notification extends Component {
                                 txtRight={item.date_added}
                                 loading={this.state.loading_spinner}
                                 onPress={() => {
-                                    this.props.navigation.navigate("WebViewPage",{url:item.tautan+'?access=app',title:'Pembayaran'});
+                                    var param={
+                                        url:item.tautan+'?access=app',
+                                        title:'Order Detail',
+                                        subTitle:''
+                                    }
+                                    
+                                    this.props.navigation.navigate("WebViewPage",{param:param});
+                                    //this.props.navigation.navigate("WebViewPage",{url:item.tautan+'?access=app',title:'Pembayaran'});
                                 }}
                             />
                         )}

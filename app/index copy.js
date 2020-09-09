@@ -60,7 +60,7 @@ import I18n from "react-native-i18n";
 import {PostDataNew} from './services/PostDataNew';
 
 export default function index() {
-  const [config, setConfig]= useState({});
+  //const [config, setConfig]= useState({});
 
   useEffect(() => {
     console.disableYellowBox = true;
@@ -73,6 +73,9 @@ export default function index() {
     StatusBar.setBackgroundColor(BaseColor.primaryColor, true);
     StatusBar.setBackgroundColor("rgba(0,0,0,0)");
     
+    
+    
+
 
     fcmService.registerAppWithFCM()
     fcmService.register(onRegister, onNotification, onOpenNotification)
@@ -86,6 +89,7 @@ export default function index() {
 
     function onNotification(notify) {
       console.log("[App] onNotificationx: ", JSON.stringify(notify));
+      //alert("Open Notification: " + notify.body);
       var body_msg=notify.body;
       var body_array = body_msg.split("#");
       var body_notif={
@@ -99,7 +103,7 @@ export default function index() {
       }
   
       console.log('body_notif',JSON.stringify(body_notif));
-      //aeroPayment(body_notif);
+      aeroPayment(body_notif);
       
       
       const options = {
@@ -119,12 +123,16 @@ export default function index() {
 
     function onOpenNotification(notify) {
       console.log("[App] onOpenNotification: ", notify)
+      //alert("Open Notification: " + notify.body)
     }
     
     
     
     
     function aeroPayment(body_notif){
+    
+      
+      
       AsyncStorage.getItem('config', (error, result) => {
         if (result) {    
             let config = JSON.parse(result);
@@ -141,8 +149,8 @@ export default function index() {
                 body: JSON.stringify(paramPost),
               }
            
-              var url='https://masterdiskon.com/';
-              var dir='front/api/payment/notification';
+              var url=config.baseUrl;
+              var dir=config.user_payment.dir;
              
               return PostDataNew(url,dir,param)
                  .then((result) => {
@@ -154,36 +162,41 @@ export default function index() {
               );  
         }
     });
+    
+    
+      
+  
   }
   
-    // function getConfig(){
+    function getConfig(){
     
-    //     var param={
-    //         method: 'POST',
-    //         headers: {
-    //           Accept: 'application/json',
-    //           'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(),
-    //       }
+        var param={
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(),
+          }
        
-    //      var url='https://masterdiskon.com/';
-    //      var dir='front/api/common/config';
+         var url='https://masterdiskon.com/';
+         var dir='front/api/common/config';
          
-    //      return PostDataNew(url,dir,param)
-    //        .then((result) => {
-    //         AsyncStorage.setItem('config', JSON.stringify(result)); 
-    //           },
-    //        (error) => {
-    //            this.setState({ error });
-    //        }
-    //     );  
+         return PostDataNew(url,dir,param)
+           .then((result) => {
+            //console.log('getConfigIndex',JSON.stringify(result));
+            AsyncStorage.setItem('config', JSON.stringify(result)); 
+            //setConfig(result);
+              },
+           (error) => {
+               this.setState({ error });
+           }
+        );  
          
     
-    // }
+    }
   
-    // getConfig();
-    
+    getConfig();
     return () => {
       console.log("[App] unRegister")
       fcmService.unRegister()

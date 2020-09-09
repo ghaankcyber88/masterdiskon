@@ -20,14 +20,18 @@ import { WebView } from 'react-native-webview';
 
 export default class WebViewPage extends Component {
     constructor(props) {
-        var url=props.navigation.state.params.url;
-        var title=props.navigation.state.params.title;
+        // var url=props.navigation.state.params.url;
+        // var title=props.navigation.state.params.title;
+        // var subTitle=props.navigation.state.params.subTitle;
+        var param=props.navigation.state.params.param;
         // var url='https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app';
-        console.log('url',url);
+        //alert(url);
+        //console.log('url',url);
         super(props);
         this.state = {
-            url:url,
-            title:title
+            url:param.url,
+            title:param.title,
+            subTitle:param.subTitle
         };
     }
 
@@ -68,19 +72,67 @@ export default class WebViewPage extends Component {
         > 
         <Header
                     title={this.state.title}
+                    subTitle={this.state.subTitle}
                     renderLeft={() => {
                         return (
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
                     onPressLeft={() => {
                         navigation.goBack();
                     }}
+                    
+                    renderRight={() => {
+                        return (
+                            <Icon
+                                name="sync-alt"
+                                size={20}
+                                color={BaseColor.whiteColor}
+                            />
+                            
+                        );
+                    }}
+                    
+                    renderRightSecond={() => {
+                        return (
+                            <Icon
+                                name="home"
+                                size={24}
+                                color={BaseColor.whiteColor}
+                            />
+                        );
+                    }}
+                    
+                    onPressRight={() => {
+                        //navigation.goBack();
+                        //alert('asd');
+                        //alert(this.state.url);
+                        //var url=this.state.url;
+                        //this.props.navigation.navigate("WebViewPage",{url:url,title:'Detail Order',subTitle:''})
+                        
+                        var redirect='WebViewPage';
+                        var param={
+                            url:this.state.url,
+                            title:this.state.title,
+                            subTitle:this.state.subTitle
+                        }
+                        //console.log('JSON PARAM',JSON.stringify(param));
+                        
+                        navigation.navigate("Loading",{redirect:redirect,param:param});
+                        
+                        
+                    }}
+                    
+                    onPressRightSecond={() => {
+                        navigation.navigate("Home");
+                    }}
                 />
+                
+               
         
                 <View style={{flex:1,marginTop:20}}>
                     {/* <Text>{this.state.url}</Text> */}

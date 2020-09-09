@@ -20,7 +20,7 @@ import styles from "./styles";
 import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
 import CardCustom from "../../components/CardCustom";
-import {DataLoading,DataConfig } from "@data";
+import {DataLoading,DataConfig,DataTrip,DataHotelPackage } from "@data";
 // import Swiper from 'react-native-swiper'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { sliderWidth, itemWidth } from '../../components/CarouselItem/styles/SliderEntry.style';
@@ -132,8 +132,8 @@ export default class Home extends Component {
             listdata_musium:DataLoading,
             listdata_culture:DataLoading,
             listdata_product_trip_country:DataLoading,
-            listdata_product_trip:DataLoading,
-            listdata_product_hotel_package:DataLoading,
+            listdata_product_trip:DataTrip,
+            listdata_product_hotel_package:DataHotelPackage,
             listdata_product_flash:DataLoading,
             config:DataConfig,
 
@@ -210,7 +210,7 @@ export default class Home extends Component {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
                     let config = JSON.parse(result);
-                    //console.log('getConfig',config);
+                    ////console.log('getConfig',config);
                     this.setState({config:config});
                 }
             });
@@ -263,6 +263,7 @@ export default class Home extends Component {
                  .then((result) => {
                     this.setState({loading_product_trip: false });
                     this.setState({listdata_product_trip: result});
+                    console.log('listdatatrip',JSON.stringify(result));
                  },
                  (error) => {
                      this.setState({ error });
@@ -367,6 +368,7 @@ export default class Home extends Component {
                  .then((result) => {
                     this.setState({loading_musium: false });
                     this.setState({listdata_musium: result});
+                    console.log(JSON.stringify(result));
                  },
                  (error) => {
                      this.setState({ error });
@@ -523,15 +525,15 @@ export default class Home extends Component {
                             );
                         }}
                         
-                        renderRight={() => {
-                            return (
-                                <Icon
-                                    name="search"
-                                    size={20}
-                                    color={BaseColor.whiteColor}
-                                />
-                            );
-                        }}
+                        // renderRight={() => {
+                        //     return (
+                        //         <Icon
+                        //             name="search"
+                        //             size={20}
+                        //             color={BaseColor.whiteColor}
+                        //         />
+                        //     );
+                        // }}
                         
                         onPressLeft={() => {
                             navigation.goBack();
@@ -553,7 +555,7 @@ export default class Home extends Component {
                             })
                         }
                         scrollEventThrottle={8}
-                        style={{marginBottom:30}}
+                        style={{marginBottom:0}}
                     >
                      
                     <View style={styles.containerSwipper}>
@@ -761,14 +763,14 @@ export default class Home extends Component {
                                 </View>
                             </View> */}
                             
-                            <View>
+                            {/* <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
                                         Flash 
                                     </Text>
-                                    {/* <Text body2>
+                                    <Text body2>
                                     Jelajahi sekarang
-                                    </Text> */}
+                                    </Text>
                                 </View>
                                 <View>
                                 <FlatList
@@ -791,7 +793,7 @@ export default class Home extends Component {
                                                 item={item}
                                                 img={item.img_featured_url}
                                                 imgHeight={150}
-                                                titleIcon={{text:"home",icon:"home"}}
+                                                titleIcon={{text:"Pay Now Start Later",icon:"home"}}
                                                 title={item.product_name}
                                                 subtitle={''}
                                                 subtitle2={''}
@@ -807,7 +809,7 @@ export default class Home extends Component {
                                                     navigation.navigate("HotelDetail",{product:item})
                                                 }
                                                 loading={this.state.loading_product_hotel_package}
-                                                property={{inFrame:false,innerText:false}}
+                                                property={{inFrame:true,innerText:false}}
                                                 type={''}
                                             />
                                         
@@ -816,7 +818,7 @@ export default class Home extends Component {
                                     
                                     
                                 </View>
-                            </View>
+                            </View> */}
                             
                             
                             <View>
@@ -849,10 +851,10 @@ export default class Home extends Component {
                                                 item={item}
                                                 img={item.img_featured_url}
                                                 imgHeight={150}
-                                                titleIcon={{text:"home",icon:"home"}}
+                                                titleIcon={{text:item.product_detail.duration+' hari',icon:"home"}}
                                                 title={item.product_name}
                                                 subtitle={''}
-                                                subtitle2={''}
+                                                subtitle2={'Rp '+priceSplitter(item.product_price)}
                                                 subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
                                                 style={
                                                     //style untuk horizontal true
@@ -862,10 +864,11 @@ export default class Home extends Component {
                                                     // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
                                                 }
                                                 onPress={() =>
+                                                    //console.log('TourDetailCustom',)
                                                     navigation.navigate("TourDetailCustom",{product:item})
                                                 }
                                                 loading={this.state.loading_product_trip}
-                                                property={{inFrame:false,innerText:false}}
+                                                property={{inFrame:true,innerText:false}}
                                                 type={''}
                                             />
                                         
@@ -907,10 +910,10 @@ export default class Home extends Component {
                                                 item={item}
                                                 img={item.img_featured_url}
                                                 imgHeight={150}
-                                                titleIcon={{text:"home",icon:"home"}}
+                                                titleIcon={{text:item.product_detail.detail_category.replace(/_/g, " "),icon:"home"}}
                                                 title={item.product_name}
-                                                subtitle={''}
-                                                subtitle2={''}
+                                                subtitle={'Start from'}
+                                                subtitle2={'Rp '+priceSplitter(item.product_detail.start_price)}
                                                 subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
                                                 style={
                                                     //style untuk horizontal true
@@ -923,7 +926,7 @@ export default class Home extends Component {
                                                     navigation.navigate("HotelDetail",{product:item})
                                                 }
                                                 loading={this.state.loading_product_hotel_package}
-                                                property={{inFrame:false,innerText:false}}
+                                                property={{inFrame:true,innerText:false}}
                                                 type={''}
                                             />
                                         
@@ -1026,7 +1029,7 @@ export default class Home extends Component {
                                                 item={item}
                                                 img={'https:'+item[2]}
                                                 imgHeight={200}
-                                                titleIcon={{text:"home",icon:"home"}}
+                                                titleIcon={{text:item[0],icon:"home"}}
                                                 title={item[0]}
                                                 subtitle={''}
                                                 subtitle2={''}
@@ -1081,7 +1084,7 @@ export default class Home extends Component {
                                                 item={item}
                                                 img={'https:'+item[2]}
                                                 imgHeight={150}
-                                                titleIcon={{text:"home",icon:"home"}}
+                                                titleIcon={{text:"",icon:"home"}}
                                                 title={item[0]}
                                                 subtitle={item[1]}
                                                 subtitle2={''}

@@ -70,7 +70,8 @@ export default class Booking extends Component {
         var path=config.user_order.dir;
         
         var id_user=this.state.id_user;
-        var data={"id":id_user,"id_order":"","order_status":this.state.status,"product":""}
+        // var data={"id":id_user,"id_order":"","order_status":this.state.status,"product":""}
+        var data={"id":id_user,"id_order":"","order_status":"","product":""}
         var parameter={"param":data}
 
         var body=parameter;
@@ -204,7 +205,7 @@ export default class Booking extends Component {
                  {
                     login ? 
                         <View style={{paddingTop: 10}}>
-                            <View style={{flexDirection: "row",
+                            {/* <View style={{flexDirection: "row",
                                         alignItems: "center",
                                         justifyContent: 'center',
                                         alignItems: "center",textAlignVertical: "center",textAlign: "center"}}>
@@ -234,7 +235,7 @@ export default class Booking extends Component {
                                     >
                                         Arsip
                                     </Tag>
-                            </View>
+                            </View> */}
                             {content}
                             
                         </View>

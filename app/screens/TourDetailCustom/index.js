@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     TextInput,
     StyleSheet,
-    Dimensions
+    Dimensions,
+    AsyncStorage
 } from "react-native";
 import { BaseStyle, BaseColor, Images } from "@config";
 import {
@@ -32,6 +33,8 @@ import * as Utils from "@utils";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import SetDate from "../../components/SetDate";
 import SetPenumpang from "../../components/SetPenumpang";
+import NotYetLogin from "../../components/NotYetLogin";
+
 // import styles from "./styles";
 
 // Load sample data
@@ -204,6 +207,7 @@ export default class TourDetailCustom extends Component {
                 // { key: "feedback", title: "Feedback" }
             ],
             product: product,
+            minPersonDef:0,
             minPerson:0,
             minPrice:0,
             totalPrice:0,
@@ -217,7 +221,10 @@ export default class TourDetailCustom extends Component {
             tglAkhir:'',
 
             tglAwalNumber:0,
-            tglAkhirNumber:0
+            tglAkhirNumber:0,
+            login:true,
+            
+
 
         };
         this._deltaY = new Animated.Value(0);
@@ -272,67 +279,102 @@ export default class TourDetailCustom extends Component {
 
 
     setPrice(select){
-        var minPerson=select.trip_minimum[0].count_minimum;
-        var minPrice=select.trip_minimum[0].price_minimum;
-        var totalPrice=parseInt(minPerson)*parseInt(minPrice);
-        this.setState({minPerson:minPerson});
-        this.setState({minPrice:minPrice});
-        this.setState({totalPrice:totalPrice});
-        this.setState({select:select});
-        
+        if(select.trip_minimum.length != 0){
+            var minPerson=select.trip_minimum[0].count_minimum;
+            var minPrice=select.trip_minimum[0].price_minimum;
+            var totalPrice=parseInt(minPerson)*parseInt(minPrice);
+            var minPersonDef=select.trip_minimum[0].count_minimum;
+            
+            this.setState({minPersonDef:minPerson});
+            this.setState({minPerson:minPerson});
+            this.setState({minPrice:minPrice});
+            this.setState({totalPrice:totalPrice});
+            this.setState({select:select});
+        }
     }
 
     setJumlahDewasa(jml){
         this.setState({dewasa:jml});
-
+        setTimeout(() => {
+            var minPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
+            this.setState({minPerson:minPerson});
+            var totalPrice=parseInt(minPerson)*parseInt(this.state.minPrice);
+            this.setState({totalPrice:totalPrice});
+            
+            
+            // console.log('adult :'+this.state.dewasa);
+            // console.log('anak :'+this.state.anak);
+            // console.log('bayi :'+this.state.bayi);
+        }, 200);
     }
 
     setJumlahAnak(jml){
         this.setState({anak:jml});
+        setTimeout(() => {
+            var minPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
+            this.setState({minPerson:minPerson});
+            var totalPrice=parseInt(minPerson)*parseInt(this.state.minPrice);
+            this.setState({totalPrice:totalPrice});
+            // console.log('adult :'+this.state.dewasa);
+            // console.log('anak :'+this.state.anak);
+            // console.log('bayi :'+this.state.bayi);
+        }, 200);
     }
 
     setJumlahBayi(jml){
         this.setState({bayi:jml});
+        setTimeout(() => {
+            var minPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
+            this.setState({minPerson:minPerson});
+            var totalPrice=parseInt(minPerson)*parseInt(this.state.minPrice);
+            this.setState({totalPrice:totalPrice});
+            
+            // console.log('adult :'+this.state.dewasa);
+            // console.log('anak :'+this.state.anak);
+            // console.log('bayi :'+this.state.bayi);
+        }, 200);
     }
 
     setMinPerson(jml){
+    
         
         var select=this.state.select;
         var trip_minimum=select.trip_minimum;
-        const arrayHasIndex = (array, index) => Array.isArray(array) && array.hasOwnProperty(index);
-        var min_0=arrayHasIndex(trip_minimum,0);
-        var min_1=arrayHasIndex(trip_minimum,1);
-        var min_2=arrayHasIndex(trip_minimum,2);
-        var min_3=arrayHasIndex(trip_minimum,3);
-        var min_4=arrayHasIndex(trip_minimum,4);
-
+        var product=this.state.product;
+        var select=this.state.select;
+        var minPersonDef=this.state.minPersonDef;
         var minPrice=0;
         var totalPrice=0;
+        
 
-        if(min_0==true){
-            if(min_1==true){
-                if(jml >= trip_minimum[0].count_minimum && jml < trip_minimum[1].count_minimum ){
-                    minPrice=select.trip_minimum[0].price_minimum; 
-                    totalPrice=parseInt(jml)*parseInt(minPrice);
-                }else if(jml >= trip_minimum[1].count_minimum){
-                    minPrice=select.trip_minimum[1].price_minimum; 
-                    totalPrice=parseInt(jml)*parseInt(minPrice);
-                }
-    
-            }
-            
+
+        
+        if(jml==minPersonDef){
+            totalPrice=parseInt(this.state.minPrice)*parseInt(jml);
+            minPrice=this.state.minPrice;
+        }else{
+            totalPrice=parseInt(product.product_price)*parseInt(jml);
+            minPrice=product.product_price;
         }
-
-       
+        
 
         this.setState({totalPrice:totalPrice});
         this.setState({minPerson:jml});
         this.setState({minPrice:minPrice});
-        //this.setPrice();
     }
 
 
     componentDidMount(){
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {
+                this.setState({login:true});
+             }else{
+                this.setState({login:false});
+
+             }
+        });
+        
+        
         setTimeout(() => {
             this.setState({dewasa:this.state.minPerson});
         }, 500);
@@ -463,15 +505,70 @@ export default class TourDetailCustom extends Component {
 
     render() {
         const { navigation } = this.props;
-        const { title, heightHeader, service, product,minPerson,minPrice,totalPrice} = this.state;
+        const { title, heightHeader, service, product,minPerson,minPrice,totalPrice,login} = this.state;
         const heightImageBanner = Utils.scaleWithPixel(250, 1);
         const marginTopBanner = heightImageBanner - heightHeader;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         const { modalVisiblePerson,modalVisibleDate} = this.state;
       
-        
+        var contentButton=<View></View>
+        if(product.product_option[0].trip_minimum.length != 0){
+            contentButton=<View style={styles.contentButtonBottom}>
+            <View>
+                <Text caption1 semibold>
+                    {minPerson} x Rp {priceSplitter(minPrice)}
+                </Text>
+                <Text title3 primaryColor s
+                emibold>
+                    {priceSplitter(totalPrice)}
+                </Text>
+            </View>
+            <View>
+                <SetDate
+                    labelTglAwal={this.state.tglAwal}
+                    labelTglAkhir={this.state.tglAwal}
 
+                    tglAwalNumber={this.state.tglAwalNumber}
+                    tglAwal={this.state.tglAwal}
+                    setTglAwal={this.setTglAwal}
+
+                    tglAkhirNumber={this.state.tglAkhirNumber}
+                    tglAkhir={this.state.tglAkhir}
+                    setTglAkhir={this.setTglAkhir}
+
+                />
+            </View>
+            
+            <View>
+                <SetPenumpang
+                    label={this.state.minPerson}
+                    dewasa={this.state.dewasa}
+                    anak={this.state.anak}
+                    bayi={this.state.bayi}
+                    setJumlahDewasa={this.setJumlahDewasa}
+                    setJumlahAnak={this.setJumlahAnak}
+                    setJumlahBayi={this.setJumlahBayi}
+                    minPersonDef={this.state.minPersonDef}
+                    minPerson={this.state.minPerson}
+                    minPrice={this.state.minPrice}
+                    totalPrice={this.state.totalPrice}
+                    setMinPerson={this.setMinPerson}
+                />
+            </View>
+            
+            
+            <Button
+                style={{ height: 46 }}
+                onPress={() => {  
+                    this.onSubmit();
+                   
+                }}
+            >
+                Next
+            </Button>
+        </View>
+        }
         return (
             <View style={{ flex: 1 }}>
                 <Animated.View
@@ -498,18 +595,10 @@ export default class TourDetailCustom extends Component {
                         style={{ width: "100%", height: "100%" }}
                         resizeMode="cover"
                     />
-                    {/* <Text
-                        title2
-                        semibold
-                        whiteColor
-                        style={{
-                            position: "absolute",
-                            paddingTop: heightHeader - 45
-                        }}
-                    >
-                        {product.product_name}
-                    </Text> */}
+                   
                 </Animated.View>
+                {
+                    login ?
                 <SafeAreaView
                     style={BaseStyle.safeAreaView}
                     forceInset={{ top: "always" }}
@@ -544,6 +633,7 @@ export default class TourDetailCustom extends Component {
                         // style={{backgroundColor:BaseColor.primaryColor}}
                         //transparent={true}
                     />
+                   
                     <ScrollView
                         onScroll={Animated.event([
                             {
@@ -621,60 +711,12 @@ export default class TourDetailCustom extends Component {
                             onIndexChange={this._handleIndexChange}
                         />
                     </ScrollView>
-                    <View style={styles.contentButtonBottom}>
-                        <View>
-                            <Text caption1 semibold>
-                                {minPerson} x Rp {priceSplitter(minPrice)}
-                            </Text>
-                            <Text title3 primaryColor s
-                            emibold>
-                                {priceSplitter(totalPrice)}
-                            </Text>
-                        </View>
-                        <View>
-                            <SetDate
-                                labelTglAwal={this.state.tglAwal}
-                                labelTglAkhir={this.state.tglAwal}
-
-                                tglAwalNumber={this.state.tglAwalNumber}
-                                tglAwal={this.state.tglAwal}
-                                setTglAwal={this.setTglAwal}
-
-                                tglAkhirNumber={this.state.tglAkhirNumber}
-                                tglAkhir={this.state.tglAkhir}
-                                setTglAkhir={this.setTglAkhir}
-
-                            />
-                        </View>
-                        
-                        <View>
-                            <SetPenumpang
-                                label={this.state.minPerson}
-                                dewasa={this.state.dewasa}
-                                anak={this.state.anak}
-                                bayi={this.state.bayi}
-                                setJumlahDewasa={this.setJumlahDewasa}
-                                setJumlahAnak={this.setJumlahAnak}
-                                setJumlahBayi={this.setJumlahBayi}
-                                minPerson={this.state.minPerson}
-                                minPrice={this.state.minPrice}
-                                totalPrice={this.state.totalPrice}
-                                setMinPerson={this.setMinPerson}
-                            />
-                        </View>
-                        
-                        
-                        <Button
-                            style={{ height: 46 }}
-                            onPress={() => {  
-                                this.onSubmit();
-                               
-                            }}
-                        >
-                            Next
-                        </Button>
-                    </View>
+                    {contentButton}
                 </SafeAreaView>
+                :
+                <NotYetLogin redirect={'Home'} param={this.state.product} navigation={navigation} />
+                
+    }
             </View>
         );
     }
@@ -780,11 +822,9 @@ class Hotel extends Component {
 
     componentDidMount() {
         const { navigation, product } = this.props;
-        var select=product.product_option[0];
-        
-        this.props.setPrice(select);
-        
-        
+            if(product.product_option[0].trip_minimum.length != 0){
+                    var select=product.product_option[0];
+                    this.props.setPrice(select);
                     const selected = select.id_trip_option;
         
                     if (selected) {
@@ -797,6 +837,8 @@ class Hotel extends Component {
                             })
                         });
                     }
+            }
+        
     }
     
     onChange(select) {
@@ -819,6 +861,30 @@ class Hotel extends Component {
         });
         
         this.props.setPrice(select);
+    }
+    
+    contentTripMinimum(items){
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+        var fieldsArray = [];
+
+        items.trip_minimum.map(item => {
+            fieldsArray.push(
+                <View style={styles.linePrice}>
+                                                    <Text primaryColor semibold style={{ paddingHorizontal: 10 }}>
+                                                        Minimum: {item.count_minimum}
+                                                                </Text>
+                                                    <View style={styles.iconRight}>
+                                                        <Text
+                                                            style={{ paddingHorizontal: 10 }}
+                                                        >
+                                                            Rp {priceSplitter(item.price_minimum)}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+            );
+        });
+        return fieldsArray;
+        
     }
 
 
@@ -868,7 +934,8 @@ class Hotel extends Component {
                                             </View>
                         
                                             <View style={styles.linePriceMinMax}>
-                                                <View style={styles.linePrice}>
+                                                {this.contentTripMinimum(item)}
+                                                {/* <View style={styles.linePrice}>
                                                     <Text primaryColor semibold style={{ paddingHorizontal: 10 }}>
                                                         Minimum: 2
                                                                 </Text>
@@ -879,9 +946,9 @@ class Hotel extends Component {
                                                             Rp {priceSplitter(item.trip_minimum[0].price_minimum)}
                                                         </Text>
                                                     </View>
-                                                </View>
+                                                </View> */}
                         
-                                                <View style={styles.linePrice}>
+                                                {/* <View style={styles.linePrice}>
                                                     <Text primaryColor semibold style={{ paddingHorizontal: 10 }}>
                                                         Minimum: 4
                                                                 </Text>
@@ -892,7 +959,7 @@ class Hotel extends Component {
                                                             Rp {priceSplitter(item.trip_minimum[1].price_minimum)}
                                                         </Text>
                                                     </View>
-                                                </View>
+                                                </View> */}
                                             </View>
                                         </View>
                                 </TouchableOpacity>
@@ -1088,7 +1155,7 @@ class Itinerary extends Component {
     }
 
     render() {
-        const { renderMapView, todo, helpBlock} = this.state;
+        const { renderMapView, todo, helpBlock,login} = this.state;
         const { navigation,product } = this.props;
         var product_itinerary=product.product_itinerary;
         

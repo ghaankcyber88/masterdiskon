@@ -141,12 +141,11 @@ class Loading extends Component {
 
         if(redirect != ''){
             setTimeout(() => {
-            //console.log(JSON.stringify(param));
                 navigation.navigate(redirect,{param:param});
             }, 500);
         }else{
-            //navigation.navigate("Home");
-            this.getConfig();
+            navigation.navigate("Home");
+            //this.getConfig();
         }
     }
     

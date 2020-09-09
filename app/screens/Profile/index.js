@@ -253,12 +253,12 @@ class Profile extends Component {
                                     ]}
                                 >
                                     <View>   
-                                    <Icon
+                                    {/* <Icon
                                                 name="pencil-alt"
                                                 size={18}
                                                 color={BaseColor.primaryColor}
                                                 style={{position: 'absolute', right: 0}}
-                                    />
+                                    /> */}
                                     <Text
                                         title2
                                         semibold

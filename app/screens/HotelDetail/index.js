@@ -11,6 +11,7 @@ import {
     StyleSheet,
     Dimensions,
     Image,
+    AsyncStorage
 } from "react-native";
 import { BaseStyle, BaseColor, Images } from "@config";
 import {
@@ -33,6 +34,8 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import SetDate from "../../components/SetDate";
 import SetPenumpang from "../../components/SetPenumpang";
 import FormOptionQty from "../../components/FormOptionQty";
+import NotYetLogin from "../../components/NotYetLogin";
+
 // import styles from "./styles";
 
 // Load sample data
@@ -228,14 +231,24 @@ export default class HotelDetail extends Component {
             tglAwalNumber:0,
             tglAkhirNumber:0,
             
-            listdataPerson:[{
+            listdataPerson:[
+                {
                 value: 1,
-                text: "1"
-                }
+                text: "1 Voucher"
+                },
+                {
+                    value: 2,
+                    text: "2 Voucher"
+                    },
+                    {
+                        value: 3,
+                        text: "3 Voucher"
+                        }
             ],
             
             kelas:'Economy Class',
             kelasId:'E',
+            login:true
 
         };
         this._deltaY = new Animated.Value(0);
@@ -317,18 +330,28 @@ export default class HotelDetail extends Component {
     }
     
     setListdataPerson(){
-        var listdataPerson=[];
-            for(a=this.state.minPerson;a<=this.state.maxPerson;a++){
-                var obj = {};
-                obj['value'] = a;
-                obj['text'] = a + ' Voucher';
-                listdataPerson.push(obj);
-            }
-        this.setState({listdataPerson:listdataPerson});
+        // var listdataPerson=[];
+        //     for(a=this.state.minPerson;a<=this.state.maxPerson;a++){
+        //         var obj = {};
+        //         obj['value'] = a;
+        //         obj['text'] = a + ' Voucher';
+        //         listdataPerson.push(obj);
+        //     }
+        // this.setState({listdataPerson:listdataPerson});
     }
 
     componentDidMount(){
         const {product}=this.state;
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {
+                this.setState({login:true});
+             }else{
+                this.setState({login:false});
+
+             }
+        });
+        
+        
           min = Math.min.apply(null, product.product_option.map(function(item) {
             return item.minimum_book;
           })),
@@ -470,7 +493,7 @@ export default class HotelDetail extends Component {
         const { navigation } = this.props;
         var content=<View></View>
         
-        if(product.product_detail.detail_category=='voucher_hotel'){
+        if(product.product_detail.detail_category=='pay_now_stay_later'){
         content=<View style={styles.contentButtonBottom}>
                         <FormOptionQty
                                 style={{ marginVertical: 10 }} 
@@ -515,7 +538,7 @@ export default class HotelDetail extends Component {
    
     render() {
         const { navigation } = this.props;
-        const { title, heightHeader, service, product,minPerson,minPrice,totalPrice} = this.state;
+        const { title, heightHeader, service, product,minPerson,minPrice,totalPrice,login} = this.state;
         const heightImageBanner = Utils.scaleWithPixel(250, 1);
         const marginTopBanner = heightImageBanner - heightHeader;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
@@ -584,6 +607,8 @@ export default class HotelDetail extends Component {
                             navigation.navigate("PreviewImage");
                         }}
                     />
+                    {
+                    login ?
                     <ScrollView
                         onScroll={Animated.event([
                             {
@@ -670,6 +695,10 @@ export default class HotelDetail extends Component {
                             onIndexChange={this._handleIndexChange}
                         />
                     </ScrollView>
+                    :
+                    <NotYetLogin redirect={'Home'} param={this.state.product} navigation={navigation} />
+                    
+        }
                    {this.content_button()}
                     
                 </SafeAreaView>

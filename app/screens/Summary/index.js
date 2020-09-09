@@ -996,8 +996,8 @@ export default class Summary extends Component {
                     "otherUser":this.state.otherUser
                     }
                     
-                    //console.log("---------------data cart array cart kirim  ------------");
-                    //console.log(JSON.stringify(dataCartArrayRealSend));
+                    console.log("---------------data cart array cart kirim  ------------");
+                    console.log(JSON.stringify(dataCartArrayRealSend));
 
              
                     
@@ -1022,12 +1022,21 @@ export default class Summary extends Component {
     
                                 var redirect='Pembayaran';
                                 var id_order=dataOrderSubmit.id_order;
+                                
                                 var param={
-                                    id_order:id_order,
-                                    dataPayment:{},
+                                    url:'https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app',
+                                    title:'Order Detail',
+                                    subTitle:id_order
                                 }
                                 
-                                this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
+                                //var url='https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app'
+                                this.props.navigation.navigate("WebViewPage",{param:param});
+    
+                                // var param={
+                                //     id_order:id_order,
+                                //     dataPayment:{},
+                                // }
+                                //this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
                                
                                
                     });

@@ -167,7 +167,8 @@ containerSwipper: {
   },
   top_background: {
     width: sHeight * 2,
-    height: sHeight * 2,
+    //height: sHeight * 2,
+    height: sHeight * 6,
     borderRadius: sHeight * 1,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,

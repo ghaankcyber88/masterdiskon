@@ -314,6 +314,16 @@ export default class CardCustomBooking extends Component {
             >
                  {item.product_name}
             </Text>
+    
+    var statusOrder=<Text
+                        note
+                        numberOfLines={2}
+                        style={{
+                            padding: 5,alignItems: "center",backgroundColor:'yellow',width:'auto',borderRadius:5
+                        }}
+                    >
+                         {item.order_status.order_status_name}
+                    </Text>
 
     var content='';
     if(loading==true){
@@ -393,6 +403,7 @@ export default class CardCustomBooking extends Component {
                                 {no_tagihan}
                                 {jumlah_tagihan}
                                 {countDown}
+                                {statusOrder}
                             </View>
                             <View style={styles.right}>
                                 <Icon
@@ -427,8 +438,19 @@ export default class CardCustomBooking extends Component {
                 style={[styles.item, style]}
                 //onPress={onPress}
                 onPress={() => {
-                            this.props.navigation.navigate(urlRedirect,{param:param});
+                            //aslinya
+                            //this.props.navigation.navigate(urlRedirect,{param:param});
+                            
+                            
+                            var param={
+                                url:'https://masterdiskon.com/front/user/purchase/detail/'+item.id_order+'?access=app',
+                                title:'Detail Order',
+                                subTitle:item.id_order
+                            }
+                            // var url='https://masterdiskon.com/front/user/purchase/detail/'+item.id_order+'?access=app'
+                            // this.props.navigation.navigate("WebViewPage",{url:url,title:'Detail Order',subTitle:item.id_order})
 
+                            this.props.navigation.navigate("WebViewPage",{param:param});
                             // if(order_payment_recent != null){
                             //     if(expiredTime > 0){
                             //         var dataPayment={

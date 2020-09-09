@@ -57,6 +57,7 @@ export default class DatePickerRange extends Component {
     constructor(props) {
         super(props);
         var round=this.props.navigation.state.params.round;
+       
         this.state = {
           selectedStartDate: null,
           selectedEndDate: null,
@@ -83,18 +84,41 @@ export default class DatePickerRange extends Component {
       }
      
       onDateChange(date, type) {
-        if (type === 'END_DATE') {
+        const { navigation } = this.props;
+        const {round}=this.state;
+        
+        if(round==true){
+          if (type === 'END_DATE') {
 
-          this.setState({
-            selectedEndDate: date,
-          });
+            this.setState({
+              selectedEndDate: date,
+            });
+  
+            this.setState({
+              selectedEndDateBooking: this.convertDate(date),
+            });
+            
+                          setTimeout(() => {
+                            this.props.navigation.state.params.setBookingTime(this.state.selectedStartDateBooking,this.state.selectedEndDateBooking);
+                            navigation.goBack();
+                
+                                    }, 500);
+                        
 
-          this.setState({
-            selectedEndDateBooking: this.convertDate(date),
-          });
-          
-        } else {
-
+          } else {
+  
+            this.setState({
+              selectedStartDate: date,
+              selectedEndDate: null,
+            });
+  
+            this.setState({
+              selectedStartDateBooking: this.convertDate(date),
+              selectedEndDateBooking: null,
+            });
+          }
+        }else{
+        
           this.setState({
             selectedStartDate: date,
             selectedEndDate: null,
@@ -104,7 +128,16 @@ export default class DatePickerRange extends Component {
             selectedStartDateBooking: this.convertDate(date),
             selectedEndDateBooking: null,
           });
+   
+          
+          setTimeout(() => {
+            this.props.navigation.state.params.setBookingTime(this.state.selectedStartDateBooking,this.state.selectedEndDateBooking);
+            navigation.goBack();
+
+                    }, 500);
+          
         }
+        
         
         // alert(this.convertDate(date));
         
@@ -138,7 +171,7 @@ export default class DatePickerRange extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.primaryColor}
+                                color={BaseColor.whiteColor}
                             />
                         );
                     }}
@@ -166,7 +199,7 @@ export default class DatePickerRange extends Component {
         </View> */}
       </View>
             </ScrollView>
-                <View style={{ padding: 20 }}>
+                {/* <View style={{ padding: 20 }}>
                     <Button
                         loading={this.state.loading}
                         full
@@ -186,7 +219,7 @@ export default class DatePickerRange extends Component {
                     >
                         Save
                     </Button>
-                </View>
+                </View> */}
             </SafeAreaView>
         );
     }

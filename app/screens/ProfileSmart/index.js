@@ -619,7 +619,7 @@ class ProfileSmart extends Component {
                         navigation.navigate("Messenger");
                     }}
                 /> 
-                    <View style={{marginHorizontal: 20}}>
+                    {/* <View style={{marginHorizontal: 20}}>
                         <TextInput
                             style={[BaseStyle.textInput,{marginTop:10}]}
                             onChangeText={text => this.search(text)}
@@ -629,7 +629,7 @@ class ProfileSmart extends Component {
                             // value={airplane}
                             selectionColor={BaseColor.primaryColor}
                         />
-                    </View>
+                    </View> */}
                     <ScrollView 
                         onScroll={Animated.event([
                             {
