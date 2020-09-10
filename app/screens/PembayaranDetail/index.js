@@ -1276,7 +1276,7 @@ export default function PembayaranDetail(props) {
                     <Icon
                         name="arrow-left"
                         size={20}
-                        color={BaseColor.whiteColor}
+                        color={BaseColor.blackColor}
                     />
                 );
             }}

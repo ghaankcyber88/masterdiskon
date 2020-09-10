@@ -68,7 +68,7 @@ class Redirect extends Component {
                     </Text>
                     <ActivityIndicator
                         size="large"
-                        color={BaseColor.whiteColor}
+                        color={BaseColor.blackColor}
                         style={{
                             marginTop: 20
                         }}

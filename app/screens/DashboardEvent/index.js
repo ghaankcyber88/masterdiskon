@@ -179,7 +179,7 @@ export default class DashboardEvent extends Component {
                                         <Icon
                                             name={item.icon}
                                             size={20}
-                                            color={BaseColor.whiteColor}
+                                            color={BaseColor.blackColor}
                                             solid
                                         />
                                     </View>

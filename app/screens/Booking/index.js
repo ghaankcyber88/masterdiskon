@@ -24,14 +24,30 @@ export default class Booking extends Component {
         super(props);
         this.state = {
             refreshing: false,
-            login:false,
+            login:true,
             dataBooking:DataBooking,
             loading_spinner:false,
             
             statusTagihan:false,
             statusComplete:true,
             statusArsip:true,
-            status:'tagihan'
+            status:'tagihan',
+            
+            facilities: [
+                { id: "1", name: "New Order", checked: true },
+                { id: "3", name: "Processed" },
+                { id: "5", name: "Paid" },
+                { id: "7", name: "Booked" },
+                { id: "9", name: "Complete" },
+                { id: "11", name: "Canceled" },
+                { id: "13", name: "Expired" },
+                { id: "15", name: "Billed" },
+                { id: "17", name: "Deny" },
+                { id: "19", name: "Error" },
+                { id: "21", name: "Dropped" },
+                { id: "23", name: "Refunded" }
+            ],
+            id:"1"
         };
         this.getConfig();
         this.getSession();
@@ -62,20 +78,21 @@ export default class Booking extends Component {
     }
     
     
-    fetch(){
+    fetch(id){
         const {config,login} =this.state;
-
         if(login==true){
         var url=config.baseUrl;
         var path=config.user_order.dir;
         
         var id_user=this.state.id_user;
         // var data={"id":id_user,"id_order":"","order_status":this.state.status,"product":""}
-        var data={"id":id_user,"id_order":"","order_status":"","product":""}
+        var data={"id":id_user,"id_order":"","id_order_status":id,"product":""}
+        //console.log("param_order",JSON.stringify(data));
+
         var parameter={"param":data}
 
         var body=parameter;
-        console.log('bodyparamter',JSON.stringify(body));
+        //console.log('bodyparamter',JSON.stringify(body));
         this.setState({ loading_spinner: true }, () => {
             var param={
                 method: 'POST',
@@ -103,13 +120,14 @@ export default class Booking extends Component {
     componentDidMount() {
         let { login} = this.state;
         const {navigation} = this.props;
-
+        
+        
             navigation.addListener ('didFocus', () =>{
                 this.setState({ loading_spinner: true });
                 this.setStatus('tagihan');
-                setTimeout(() => {
-                    this.fetch();
-                }, 200);
+                //setTimeout(() => {
+                    this.fetch(this.state.id);
+                //}, 200);
             });
     }
     
@@ -134,10 +152,29 @@ export default class Booking extends Component {
             this.fetch();
         }, 200);
     }
+    
+    // onSelectFacilities(select) {
+    //     this.setState({
+    //         facilities: this.state.facilities.map(item => {
+    //             if (item.id == select.id) {
+    //                 return {
+    //                     ...item,
+    //                     checked: true
+    //                 };
+    //             } else {
+    //                 return {
+    //                     ...item,
+    //                     checked: false
+    //                 };
+    //             }
+    //         })
+    //     });
+    //     this.fetch(select.id);
+    // }
 
     render() {
         const { navigation } = this.props;
-        let { login,loading_spinner,dataBooking} = this.state;
+        let { login,loading_spinner,dataBooking,facilities} = this.state;
 
         var content=<View></View>
         if (dataBooking.length == 0) {
@@ -158,6 +195,8 @@ export default class Booking extends Component {
                         </View>
         }else{
             content=<FlatList
+                        // horizontal={true}
+                        // showsHorizontalScrollIndicator={false}
                         refreshControl={
                             <RefreshControl
                                 colors={[BaseColor.primaryColor]}
@@ -166,6 +205,7 @@ export default class Booking extends Component {
                                 onRefresh={() => { }}
                             />
                         }
+                        style={{marginTop:10}}
                         data={dataBooking}
                         keyExtractor={(item, index) => item.id}
                         renderItem={({ item, index }) => (
@@ -183,28 +223,46 @@ export default class Booking extends Component {
     
         return (
             <SafeAreaView
-                style={BaseStyle.safeAreaView}
+                style={[BaseStyle.safeAreaView,{backgroundColor:'#f5f6fa'}]}
                 forceInset={{ top: "always" }}
             >
                 <Header
                     title="Booking"
-                    subTitle={"Menampilkan riwayat  90 hari terakhir"}
+                    subTitle={""}
                     renderLeft={() => {
                         return (
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.whiteColor}
+                                color={BaseColor.primaryColor}
                             />
                         );
                     }}
+                    
+                    renderRight={() => {
+                        return (
+                            <Icon
+                                name="sync-alt"
+                                size={20}
+                                color={BaseColor.primaryColor}
+                            />
+                            
+                        );
+                    }}
+                    
                     onPressLeft={() => {
                         navigation.goBack();
+                    }}
+                    
+                    onPressRight={() => {
+                        var redirect='Booking';
+                        var param={}
+                        navigation.navigate("Loading",{redirect:redirect,param:param});
                     }}
                 />
                  {
                     login ? 
-                        <View style={{paddingTop: 10}}>
+                        <View style={{}}>
                             {/* <View style={{flexDirection: "row",
                                         alignItems: "center",
                                         justifyContent: 'center',
@@ -236,6 +294,29 @@ export default class Booking extends Component {
                                         Arsip
                                     </Tag>
                             </View> */}
+                            
+                            <View style={[styles.contentList,{backgroundColor:BaseColor.whiteColor,borderBottomLeftRadius: 20,borderBottomRightRadius: 20}]}>
+                                <View style={{marginLeft:20,marginRight:20}}>
+                                <FlatList
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={facilities}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item, index }) => (
+                                        <Tag
+                                            primary={item.checked}
+                                            style={{ marginRight: 10, width: 80 }}
+                                            outline={!item.checked}
+                                            onPress={() =>
+                                                this.onSelectFacilities(item)
+                                            }
+                                        >
+                                            {item.name}
+                                        </Tag>
+                                    )}
+                                />
+                                </View>
+                            </View>
                             {content}
                             
                         </View>

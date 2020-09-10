@@ -114,7 +114,7 @@ export default class OurService extends Component {
                                     name="creative-commons"
                                     solid
                                     size={24}
-                                    color={BaseColor.whiteColor}
+                                    color={BaseColor.blackColor}
                                 />
                                 <View style={{ marginLeft: 10 }}>
                                     <Text title3 semibold whiteColor>
@@ -146,7 +146,7 @@ export default class OurService extends Component {
                                     name="app-store-ios"
                                     solid
                                     size={24}
-                                    color={BaseColor.whiteColor}
+                                    color={BaseColor.blackColor}
                                 />
                                 <View style={{ marginLeft: 10 }}>
                                     <Text title3 semibold whiteColor>
@@ -178,7 +178,7 @@ export default class OurService extends Component {
                                     name="algolia"
                                     solid
                                     size={24}
-                                    color={BaseColor.whiteColor}
+                                    color={BaseColor.blackColor}
                                 />
                                 <View style={{ marginLeft: 10 }}>
                                     <Text title3 semibold whiteColor>

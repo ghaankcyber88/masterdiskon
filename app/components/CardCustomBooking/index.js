@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, FlatList, Animated,StyleSheet } from "react-native";
+import { View, TouchableOpacity, FlatList, Animated,StyleSheet,Dimensions } from "react-native";
 import { Image, Text, Icon, StarRating, Tag } from "@components";
 import { BaseColor,Images } from "@config";
 import PropTypes from "prop-types";
@@ -19,9 +19,12 @@ const styles = StyleSheet.create({
     item: {
         paddingLeft: 20,
         paddingRight: 20,
-        paddingTop: 5,
-        paddingBottom: 5,
-       
+        // paddingTop: 20,
+        // paddingBottom: 20,
+        
+        // flex:12,
+        // flexDirection: "row",
+        // height:200
     },
     contain: {
         flexDirection: "row",
@@ -45,17 +48,32 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
     },
+    
+    leftSub: {
+        flex: 5,
+        alignItems: "flex-start",
+        justifyContent: "center",
+        //marginLeft:30
+        
+    },
+    rightSub: {
+        flex: 5,
+        alignItems: "flex-end",
+        justifyContent: "center"
+    },
+    
+    
     left: {
-        flex: 7.5,
+        flex: 2,
         alignItems: "flex-start",
         justifyContent: "center",
         //marginLeft:30
         
     },
     right: {
-        flex: 2.5,
-        alignItems: "flex-end",
-        justifyContent: "center"
+        flex: 10,
+        // alignItems: "flex-end",
+        // justifyContent: "center"
     }
 });
 
@@ -94,13 +112,13 @@ export default class CardCustomBooking extends Component {
             fieldsArray.push(
                 <View>
                     <View style={styles.line} />
-                    <View style={styles.validContent}>
-                        <View style={{ flex: 1 }}>
-                            <Text caption3>
-                            {item.product_name} ({item.type})
-                            </Text>
+                        <View style={styles.validContent}>
+                            <View style={{ flex: 1 }}>
+                                <Text caption3>
+                                {item.product_name} ({item.type})
+                                </Text>
+                            </View>
                         </View>
-                    </View>
                 </View>
             );
         });
@@ -109,8 +127,18 @@ export default class CardCustomBooking extends Component {
     var order_payment_recent=item.order_payment_recent;
     var status_name='';
     var no_tagihan=<View></View>
-    var jumlah_tagihan=<View></View>
-
+    var total_price=<View></View>
+    var masa_tagihan=<View></View>
+    
+    
+    total_price=<Text
+                            title3
+                            numberOfLines={1}
+                            style={{color:BaseColor.primaryColor}}
+                        >
+                            Rp {priceSplitter(item.total_price)}
+                        </Text>
+                        
             if(order_payment_recent != null){
                 var expiredTime=this.duration(order_payment_recent.expired);
                 
@@ -124,20 +152,12 @@ export default class CardCustomBooking extends Component {
                                 No.Tagihan  {order_payment_recent.id_invoice}
                             </Text>
                             
-                jumlah_tagihan=<Text
-                            note
-                            numberOfLines={2}
-                            style={{
-                                paddingTop: 5
-                            }}
-                        >
-                            Rp {priceSplitter(order_payment_recent.iv_total_amount)}
-                        </Text>
+                
 
                 if(expiredTime > 0){
                     if(item.order_status.order_status_slug != 'cancel' || item.order_status.order_status_slug != 'expired'  || item.order_status.order_status_slug != 'deny'){
                         countDown=<CountDown
-                                size={12}
+                                size={10}
                                 until={expiredTime}
                                 // onFinish={() => alert('Finished')}
                                 style={{float:'left',paddingVertical:5}}
@@ -173,10 +193,11 @@ export default class CardCustomBooking extends Component {
                     }
                 }else{
                     countDown=<Text
-                            note
-                            numberOfLines={2}
+                            overline
+                            numberOfLines={1}
                             style={{
-                                paddingTop: 5
+                                color:BaseColor.whiteColor,
+                                alignItems: "center",backgroundColor:BaseColor.redColor,width:'auto',borderRadius:5,paddingHorizontal:5
                             }}
                         >
                             Waktu Habis
@@ -201,6 +222,23 @@ export default class CardCustomBooking extends Component {
                     }
                 
                 }
+                
+                
+                masa_tagihan=<View style={{ flex: 1,flexDirection: "row"}}>
+                                <View style={styles.leftSub}>
+                                    <Text
+                                        numberOfLines={1}
+                                        overline
+                                        style={{color:BaseColor.greyColor}}
+                                    >
+                                        Masa Tagihan
+                                    </Text>
+                                </View>
+                                <View style={styles.rightSub}>
+                                    {countDown}
+                                </View>
+                    
+                            </View>
             }else{
                 status_name=item.order_status.order_status_name;
                 var param={
@@ -249,30 +287,8 @@ export default class CardCustomBooking extends Component {
 
 
     var title_product=<View></View>;
-    // if(item.product=='Flight'){
-    //     title_product=<Text headline semibold style={{fontSize:20}}>
-    //            {item.product_name} - {item.detail[0].order_detail[0].airline_name} 
-    //         </Text>
-    // }else if(item.product=='Trip'){
-    //     title_product=<Text headline semibold style={{fontSize:20}}>
-    //             {item.product_name} 
-    //         </Text>
-    // }else if(item.product=='Hotelpackage'){
-    //     title_product=<Text headline semibold style={{fontSize:20}}>
-    //             {item.product_name} 
-    //         </Text>
-    // }else if(item.product=='Hotel'){
-    //     title_product=<Text headline semibold style={{fontSize:20}}>
-    //             {item.product_name} 
-    //         </Text>
-    // }else if(item.product=='Voucher'){
-    //     title_product=<Text headline semibold style={{fontSize:20}}>
-    //             {item.product_name} 
-    //         </Text>
-    // }
-    
     title_product=<View style={{flex: 1,flexDirection:'row',paddingTop:5,paddingBottom:5,borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}} >
-                        <View style={{flexDirection:'row',flex: 11,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{flexDirection:'row',flex: 8,justifyContent: "flex-start",alignItems: "center"}}>
                             <Icon
                                 name={icon_name_type}
                                 size={18}
@@ -284,13 +300,14 @@ export default class CardCustomBooking extends Component {
                             </Text>
                         </View>
                         <View
-                            style={{flex: 1}}
-                        >
+                            style={{flexDirection:'row',flex: 4,justifyContent: "flex-end",alignItems: "center"}}
+                        >   
+                                        {countDown}
                                          <Icon
                                             name="ellipsis-v"
                                             size={18}
                                             color={BaseColor.textSecondaryColor}
-                                            style={{ textAlign: "right"}}
+                                            style={{ textAlign: "right",marginLeft:5}}
                                         />
                         </View>
                     </View>
@@ -326,6 +343,8 @@ export default class CardCustomBooking extends Component {
                     </Text>
 
     var content='';
+    
+    var urlImage='https://masterdiskon.com/assets/upload/product/hotelpackage/2020/4be994f3bf41842cbef6626c815d18a5.jpg';
     if(loading==true){
     content=<View style={styles.contain}>
                                 <Icon
@@ -359,28 +378,8 @@ export default class CardCustomBooking extends Component {
                     </View>
                 </View>
     }else{
-        // content=<View style={styles.contain}>
-        //             <View style={styles.content}>
-        //                 {/* <View style={{flex: 1}}>
-        //                 {title_product}
-        //                 </View> */}
-                        
-        //                 <View style={{flex: 1}}>
-        //                     {title_product}
-        //                     <View style={styles.left}>
-        //                         {no_order}
-        //                         {no_tagihan}
-        //                         {jumlah_tagihan}
-        //                         {countDown}
-        //                     </View>
-        //                     <View style={styles.right}>
-        //                         <Text>asd</Text>
-        //                     </View>
-        //                 </View>
-        //             </View>
-        //         </View>
-                
-            content=<View style={{borderBottomColor: BaseColor.textSecondaryColor,
+        
+            content=<View style={{  borderBottomColor: BaseColor.textSecondaryColor,
                                     borderBottomWidth: 1,
                                     backgroundColor: "#fff",
                                     borderRadius: 18,
@@ -391,27 +390,24 @@ export default class CardCustomBooking extends Component {
                                     },
                                     shadowOpacity: 0.25,
                                     shadowRadius: 3.84,
-                                    elevation: 5,
-                                    padding:10}}>
+                                    // elevation: 5,
+                                    padding:10,
+                                    }}>
                         <View style={{ flex: 1,flexDirection: "row"}}>
                             {title_product}
                         </View>
                         <View style={{ flex: 1,flexDirection: "row"}}>
                             <View style={styles.left}>
-                                {product_name}
-                                {no_order}
-                                {no_tagihan}
-                                {jumlah_tagihan}
-                                {countDown}
-                                {statusOrder}
+                                <Image source={{uri :urlImage}} style={{width:50,height:50,borderRadius: 5}} />
                             </View>
                             <View style={styles.right}>
-                                <Icon
-                                            name="chevron-right"
-                                            size={18}
-                                            color={BaseColor.textSecondaryColor}
-                                            style={{ textAlign: "right"}}
-                                        />
+                                {product_name}
+                                {/* {no_order}
+                                {no_tagihan} */}
+                                {total_price}
+                                {/* {masa_tagihan} */}
+                                {/* {countDown}
+                                {statusOrder} */}
                             </View>
                         </View>
                     </View>

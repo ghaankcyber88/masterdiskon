@@ -174,7 +174,7 @@ class Profile extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.whiteColor}
+                                color={BaseColor.blackColor}
                             />
                         );
                     }}

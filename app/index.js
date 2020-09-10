@@ -70,7 +70,7 @@ export default function index() {
             ko: require("./lang/ko.json"),
             vi: require("./lang/vi.json")
     };
-    StatusBar.setBackgroundColor(BaseColor.primaryColor, true);
+    StatusBar.setBackgroundColor(BaseColor.whiteColor, true);
     StatusBar.setBackgroundColor("rgba(0,0,0,0)");
     
 

@@ -520,7 +520,7 @@ export default class Home extends Component {
                                 <Icon
                                     name="home"
                                     size={20}
-                                    color={BaseColor.whiteColor}
+                                    color={BaseColor.blackColor}
                                 />
                             );
                         }}
@@ -530,7 +530,7 @@ export default class Home extends Component {
                         //         <Icon
                         //             name="search"
                         //             size={20}
-                        //             color={BaseColor.whiteColor}
+                        //             color={BaseColor.blackColor}
                         //         />
                         //     );
                         // }}

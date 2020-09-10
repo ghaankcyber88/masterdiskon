@@ -71,7 +71,7 @@ export default class PostDetail extends Component {
                                 <Icon
                                     name="arrow-left"
                                     size={20}
-                                    color={BaseColor.whiteColor}
+                                    color={BaseColor.blackColor}
                                 />
                             );
                         }}
@@ -81,7 +81,7 @@ export default class PostDetail extends Component {
                                     name="bookmark"
                                     solid
                                     size={20}
-                                    color={BaseColor.whiteColor}
+                                    color={BaseColor.blackColor}
                                 />
                             );
                         }}

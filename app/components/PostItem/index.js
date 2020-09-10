@@ -25,7 +25,7 @@ export default class PostItem extends Component {
                         name="bookmark"
                         solid
                         size={24}
-                        color={BaseColor.whiteColor}
+                        color={BaseColor.blackColor}
                         style={{ position: "absolute", top: 10, right: 10 }}
                     />
                 </TouchableOpacity>

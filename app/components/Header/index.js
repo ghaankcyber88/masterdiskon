@@ -29,24 +29,24 @@ export default class Header extends Component {
       transparent
     } = this.props;
     
-    var bgColor=BaseColor.primaryColor;
+    var bgColor=BaseColor.whiteColor;
     if(transparent==true){
       bgColor='transparent';
     }
     return (
       <View style={[{ height: 45, flexDirection: "row",backgroundColor:bgColor}, style]}>
-        <View style={{ flex: 1 }}>
+        {/* <View style={{ flex: 1 }}>
           <TouchableOpacity
             style={[styles.contentLeft, styleLeft]}
             onPress={onPressLeft}
           >
             {this.props.renderLeft()}
           </TouchableOpacity>
-        </View>
-        <View style={[styles.contentCenter, styleCenter]}>
-        <Text headline style={{color:BaseColor.whiteColor}}>{title}</Text>
+        </View> */}
+        <View style={[styles.contentLeft, styleCenter]}>
+        <Text title1 style={{color:BaseColor.primaryColor}}>{title}</Text>
           {subTitle != "" && (
-            <Text caption2 light style={{color:BaseColor.whiteColor}}>
+            <Text caption2 light style={{color:BaseColor.greyColor}}>
               {subTitle}
             </Text>
           )}

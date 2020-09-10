@@ -373,7 +373,7 @@ export default class Filter extends Component {
                                         <Icon
                                             name="check"
                                             size={16}
-                                            color={BaseColor.whiteColor}
+                                            color={BaseColor.blackColor}
                                         />
                                     )}
                                 </TouchableOpacity>

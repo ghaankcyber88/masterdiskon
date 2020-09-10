@@ -182,7 +182,7 @@ export default class CruiseDetail extends Component {
                                 <Icon
                                     name="arrow-left"
                                     size={20}
-                                    color={BaseColor.whiteColor}
+                                    color={BaseColor.blackColor}
                                 />
                             );
                         }}
@@ -191,7 +191,7 @@ export default class CruiseDetail extends Component {
                                 <Icon
                                     name="images"
                                     size={20}
-                                    color={BaseColor.whiteColor}
+                                    color={BaseColor.blackColor}
                                 />
                             );
                         }}

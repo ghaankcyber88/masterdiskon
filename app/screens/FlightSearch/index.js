@@ -55,7 +55,6 @@ export default class FlightSearch extends Component {
         if(type=='flight'){
             round=false;
             title='Search Flight';
-            
         }else if(type=='hotelpackage'){
             round=true;
             title='Search Hotel Package';
@@ -128,6 +127,7 @@ export default class FlightSearch extends Component {
         
         this.setCity = this.setCity.bind(this);
         this.setqty=this.setqty.bind(this);
+        
     }
     
     
@@ -732,7 +732,7 @@ export default class FlightSearch extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.whiteColor}
+                                color={BaseColor.blackColor}
                             />
                         );
                     }}
@@ -758,7 +758,7 @@ export default class FlightSearch extends Component {
                 </ScrollView>
 
                 :
-                <NotYetLogin redirect={'FlightSearch'} param={this.state.type} navigation={navigation} />
+                <NotYetLogin redirect={'Home'} param={this.state.type} navigation={navigation} />
                 
     }
 

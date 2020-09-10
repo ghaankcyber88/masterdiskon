@@ -436,7 +436,7 @@ export default class FlightFilter extends Component {
                             <Icon
                                 name="times"
                                 size={20}
-                                color={BaseColor.whiteColor}
+                                color={BaseColor.blackColor}
                             />
                         );
                     }}

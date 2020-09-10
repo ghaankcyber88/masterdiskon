@@ -78,7 +78,7 @@ export default class WebViewPage extends Component {
                             <Icon
                                 name="arrow-left"
                                 size={20}
-                                color={BaseColor.whiteColor}
+                                color={BaseColor.blackColor}
                             />
                         );
                     }}
@@ -91,7 +91,7 @@ export default class WebViewPage extends Component {
                             <Icon
                                 name="sync-alt"
                                 size={20}
-                                color={BaseColor.whiteColor}
+                                color={BaseColor.blackColor}
                             />
                             
                         );
@@ -102,29 +102,19 @@ export default class WebViewPage extends Component {
                             <Icon
                                 name="home"
                                 size={24}
-                                color={BaseColor.whiteColor}
+                                color={BaseColor.blackColor}
                             />
                         );
                     }}
                     
                     onPressRight={() => {
-                        //navigation.goBack();
-                        //alert('asd');
-                        //alert(this.state.url);
-                        //var url=this.state.url;
-                        //this.props.navigation.navigate("WebViewPage",{url:url,title:'Detail Order',subTitle:''})
-                        
                         var redirect='WebViewPage';
                         var param={
                             url:this.state.url,
                             title:this.state.title,
                             subTitle:this.state.subTitle
                         }
-                        //console.log('JSON PARAM',JSON.stringify(param));
-                        
                         navigation.navigate("Loading",{redirect:redirect,param:param});
-                        
-                        
                     }}
                     
                     onPressRightSecond={() => {
