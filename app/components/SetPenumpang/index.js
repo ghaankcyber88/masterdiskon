@@ -12,10 +12,10 @@ const styles = StyleSheet.create({
         paddingVertical:5,
         borderRadius: 8,
         flex: 1,
-        //backgroundColor: BaseColor.fieldColor,
         alignItems: "center",
+        justifyContent: 'center',
         borderRadius: 8,
-        borderWidth: 3,
+        borderWidth: 0,
         borderColor: BaseColor.fieldColor,
     },
 
@@ -109,19 +109,21 @@ export default class SetPenumpang extends Component {
                         </View>
 
                         <View style={{ marginTop: 20, flexDirection: "row" }}>
-                            <View>
-                                                    <View>
-                                                        <Text primaryColor semibold style={{ paddingHorizontal: 10 }}>
-                                                            {minPerson} x Rp {priceSplitter(minPrice)}
-                                                        </Text>
-                                                    </View>
+                            <View>                  
                                                     <View style={styles.iconRight}>
                                                         <Text
-                                                            style={{ paddingHorizontal: 10 }}
+                                                            headline primaryColor
+                                                            style={{ paddingHorizontal: 10}}
                                                         >
                                                             Rp {priceSplitter(totalPrice)}
                                                         </Text>
                                                     </View>
+                                                    <View>
+                                                        <Text caption2 style={{ paddingHorizontal: 10 }}>
+                                                            {minPerson} x Rp {priceSplitter(minPrice)}
+                                                        </Text>
+                                                    </View>
+                                                    
                             </View>
                         </View>
                         <View style={{ marginTop: 20, flexDirection: "row" }}>
@@ -165,16 +167,16 @@ export default class SetPenumpang extends Component {
                     </Modal>
 
 
-                    <TouchableOpacity onPress={() => this.openModal()}>
-                        <Icon
-                            name="user"
-                            size={24}
-                            color={BaseColor.primaryColor}
-                        />
-                    </TouchableOpacity>
-                    <Text  style={{ marginBottom: 5 }}>
-                        {label} Orang
-                    </Text>
+                        <TouchableOpacity onPress={() => this.openModal()}>
+                            <Icon
+                                name="user"
+                                size={18}
+                                color={BaseColor.primaryColor}
+                            />
+                        </TouchableOpacity>
+                        <Text caption2 style={{}}>
+                            {label} Orang
+                        </Text>
 
                     </View>
         );

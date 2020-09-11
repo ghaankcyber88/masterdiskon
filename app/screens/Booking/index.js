@@ -47,7 +47,7 @@ export default class Booking extends Component {
                 { id: "21", name: "Dropped" },
                 { id: "23", name: "Refunded" }
             ],
-            id:"1"
+            idParam:"1"
         };
         this.getConfig();
         this.getSession();
@@ -78,41 +78,39 @@ export default class Booking extends Component {
     }
     
     
-    fetch(id){
+    fetch(){
         const {config,login} =this.state;
-        if(login==true){
-        var url=config.baseUrl;
-        var path=config.user_order.dir;
         
-        var id_user=this.state.id_user;
-        // var data={"id":id_user,"id_order":"","order_status":this.state.status,"product":""}
-        var data={"id":id_user,"id_order":"","id_order_status":id,"product":""}
-        //console.log("param_order",JSON.stringify(data));
+        if(login==true){
+            var url=config.baseUrl;
+            var path=config.user_order.dir;
+            
+            var id_user=this.state.id_user;
+            var data={"id":id_user,"id_order":"","id_order_status":this.state.idParam,"product":""};
+            var parameter={"param":data}
+            var body=parameter;
+            
+            console.log(JSON.stringify(body));
 
-        var parameter={"param":data}
-
-        var body=parameter;
-        //console.log('bodyparamter',JSON.stringify(body));
-        this.setState({ loading_spinner: true }, () => {
-            var param={
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(body),
-              }
-             PostDataNew(url,path,param)
-                 .then((result) => {
-                    console.log("fetch",JSON.stringify(result));
-                    this.setState({loading_spinner: false });
-                    this.setState({dataBooking: result});
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
-            ); 
-        });
+            this.setState({ loading_spinner: true }, () => {
+                var param={
+                    method: 'POST',
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body),
+                  }
+                 PostDataNew(url,path,param)
+                     .then((result) => {
+                        this.setState({loading_spinner: false });
+                        this.setState({dataBooking: result});
+                     },
+                     (error) => {
+                         this.setState({ error });
+                     }
+                ); 
+            });
         }
     }
    
@@ -124,53 +122,38 @@ export default class Booking extends Component {
         
             navigation.addListener ('didFocus', () =>{
                 this.setState({ loading_spinner: true });
-                this.setStatus('tagihan');
-                //setTimeout(() => {
-                    this.fetch(this.state.id);
-                //}, 200);
+                setTimeout(() => {
+                    console.log('idParam',this.state.idParam);
+                    this.fetch();
+                }, 200);
             });
     }
+  
     
-    setStatus(status){
-        this.setState({status:status});
-        if(status=='tagihan'){
-            this.setState({statusTagihan:false});
-            this.setState({statusComplete:true});
-            this.setState({statusArsip:true});
-        }else if(status=='complete'){
-            this.setState({statusTagihan:true});
-            this.setState({statusComplete:false});
-            this.setState({statusArsip:true});
+    onSelectFacilities(select) {
+        this.setState({
+            facilities: this.state.facilities.map(item => {
+                if (item.id == select.id) {
+                    return {
+                        ...item,
+                        checked: true
+                    };
+                } else {
+                    return {
+                        ...item,
+                        checked: false
+                    };
+                }
+            })
+        });
         
-        }else if(status=='arsip'){
-            this.setState({statusTagihan:true});
-            this.setState({statusComplete:true});
-            this.setState({statusArsip:false});
-        }
-        //this.fetch();
+        this.setState({idParam:select.id});
         setTimeout(() => {
             this.fetch();
         }, 200);
+        
+        
     }
-    
-    // onSelectFacilities(select) {
-    //     this.setState({
-    //         facilities: this.state.facilities.map(item => {
-    //             if (item.id == select.id) {
-    //                 return {
-    //                     ...item,
-    //                     checked: true
-    //                 };
-    //             } else {
-    //                 return {
-    //                     ...item,
-    //                     checked: false
-    //                 };
-    //             }
-    //         })
-    //     });
-    //     this.fetch(select.id);
-    // }
 
     render() {
         const { navigation } = this.props;
@@ -205,7 +188,7 @@ export default class Booking extends Component {
                                 onRefresh={() => { }}
                             />
                         }
-                        style={{marginTop:10}}
+                        style={{}}
                         data={dataBooking}
                         keyExtractor={(item, index) => item.id}
                         renderItem={({ item, index }) => (
@@ -223,7 +206,7 @@ export default class Booking extends Component {
     
         return (
             <SafeAreaView
-                style={[BaseStyle.safeAreaView,{backgroundColor:'#f5f6fa'}]}
+                style={[BaseStyle.safeAreaView,{backgroundColor:BaseColor.bgColor}]}
                 forceInset={{ top: "always" }}
             >
                 <Header
@@ -263,40 +246,8 @@ export default class Booking extends Component {
                  {
                     login ? 
                         <View style={{}}>
-                            {/* <View style={{flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: 'center',
-                                        alignItems: "center",textAlignVertical: "center",textAlign: "center"}}>
-                                    <Tag
-                                        outline={this.state.statusTagihan}
-                                        primary={true}
-                                        //round
-                                        onPress={() => this.setStatus('tagihan')}
-                                        style={{ marginRight: 20 }}
-                                    >
-                                        Tagihan
-                                    </Tag>
-                                    <Tag
-                                        outline={this.state.statusComplete}
-                                        primary={true}
-                                        //round
-                                        onPress={() => this.setStatus('complete')}
-                                        style={{ marginRight: 20 }}
-                                    >
-                                        Complete
-                                    </Tag>
-                                    <Tag
-                                        outline={this.state.statusArsip}
-                                        primary={true}
-                                        //round
-                                        onPress={() => this.setStatus('arsip')}
-                                    >
-                                        Arsip
-                                    </Tag>
-                            </View> */}
-                            
-                            <View style={[styles.contentList,{backgroundColor:BaseColor.whiteColor,borderBottomLeftRadius: 20,borderBottomRightRadius: 20}]}>
-                                <View style={{marginLeft:20,marginRight:20}}>
+                            <View style={[styles.contentList]}>
+                                <View style={{marginLeft:20}}>
                                 <FlatList
                                     horizontal={true}
                                     showsHorizontalScrollIndicator={false}

@@ -16,8 +16,9 @@ const styles = StyleSheet.create({
         flex: 1,
         //backgroundColor: BaseColor.fieldColor,
         alignItems: "center",
+        justifyContent: 'center',
         borderRadius: 8,
-        borderWidth: 3,
+        borderWidth: 0,
         borderColor: BaseColor.fieldColor,
     },
 
@@ -187,11 +188,11 @@ export default class SetDate extends Component {
                     <TouchableOpacity onPress={() => this.openModal()}>
                         <Icon
                             name="calendar-alt"
-                            size={24}
+                            size={18}
                             color={BaseColor.primaryColor}
                         />
                     </TouchableOpacity>
-                    <Text  style={{ marginBottom: 5 }}>
+                    <Text caption2 style={{}}>
                         {tglAwal}
                     </Text>
                     <Modal

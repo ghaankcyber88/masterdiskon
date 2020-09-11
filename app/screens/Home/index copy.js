@@ -5,7 +5,6 @@ import {
     Animated,
     TouchableOpacity,
     FlatList,
-    StatusBar
 } from "react-native";
 import {
     Text,
@@ -434,8 +433,6 @@ export default class Home extends Component {
 
 
     componentDidMount() {
-        StatusBar.setBackgroundColor("rgba(0,0,0,0)");
-        StatusBar.setTranslucent(true);
         setTimeout(() => {
             this.getMusium();
             this.getculture();
@@ -482,7 +479,7 @@ export default class Home extends Component {
                                     style={styles.imgProfile}
                                 />
                             </View>
-                            <Text footnote>
+                            <Text footnote whiteColor>
                                 {item.name}
                             </Text>
                         </TouchableOpacity>
@@ -497,49 +494,20 @@ export default class Home extends Component {
 
         const { navigation } = this.props;
         const { heightHeader} = this.state;
-        //const heightImageBanner = Utils.scaleWithPixel(140);
-        //const marginTopBanner = heightImageBanner - heightHeader-50;
+        const heightImageBanner = Utils.scaleWithPixel(140);
+        const marginTopBanner = heightImageBanner - heightHeader-50;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
         const {config} =this.state;
         
-        const heightImageBanner = Utils.scaleWithPixel(300, 1);
-        const marginTopBanner = heightImageBanner - heightHeader;
-
         
    
         const example1 = this.mainExample(1, 'Default layout | Loop | Autoplay | Parallax | Scale | Opacity | Pagination with tappable dots');
         return (
             <View style={{ flex: 1 }}>
                 
-                <Animated.View
-                    style={[
-                        styles.imgBanner,
-                        {
-                            height: this._deltaY.interpolate({
-                                inputRange: [
-                                    0,
-                                    Utils.scaleWithPixel(150),
-                                    Utils.scaleWithPixel(150)
-                                ],
-                                outputRange: [
-                                    heightImageBanner,
-                                    heightHeader,
-                                    heightHeader
-                                ]
-                            })
-                        }
-                    ]}
-                >
-                    <Image
-                        source={{ uri: 'https://masterdiskon.com/assets/front/img/homebanner/shutterstock_1298526841-min.jpg' }}
-                        style={{ width: "100%", height: "100%" }}
-                        resizeMode="cover"
-                    />
-                   
-                </Animated.View>
                 
                 <SafeAreaView
-                    style={[BaseStyle.safeAreaView]}
+                    style={[BaseStyle.safeAreaView,{backgroundColor:BaseColor.primaryColor}]}
                     forceInset={{ top: "always" }}
                 >
                 
@@ -568,47 +536,27 @@ export default class Home extends Component {
                         style={{marginBottom:0}}
                     >
                      
-                        {/* <View style={styles.containerSwipper}>
-                            <View style={styles.top_background}>
-                              <View style={styles.top_content}>
-                                <View style={{ marginTop: 20,borderRadius:30,width:'90%',alignSelf: 'center'}}>
-                                    <View>
-                                        <Text whiteColor style={ {
-                                                fontSize: 20,
-                                                fontWeight: "700",
-                                                fontFamily: "Lato",
-                                                alignSelf: 'center'
-                                        }}>
-                                        Wherever you are,
-                                        </Text>
-                                        
-                                        <Text whiteColor  style={ {
-                                                fontSize: 20,
-                                                fontWeight: "700",
-                                                fontFamily: "Lato",
-                                                alignSelf: 'center'
-                                        }}>
-                                        you are always traveling
-                                        </Text>
-                                        
-                                    </View>
-                                    <View>
-                                        {this.renderIconService()}
-                                    </View>
-                                </View>
-                              </View>
-                            </View>
-                      </View> */}
-                      
-                      
-                        <View style={{marginTop:100}}>
-                                <View style={{marginHorizontal:20}}>
-                                    <Text header bold style={{color:BaseColor.whiteColor}}>
-                                    VIVRE ET AIMER
+                    <View style={styles.containerSwipper}>
+                        <View style={styles.top_background}>
+                          <View style={styles.top_content}>
+                            <View style={{ marginTop: 20,borderRadius:30,width:'90%',alignSelf: 'center'}}>
+                                <View>
+                                    <Text whiteColor style={ {
+                                            fontSize: 20,
+                                            fontWeight: "700",
+                                            fontFamily: "Lato",
+                                            alignSelf: 'center'
+                                    }}>
+                                    Wherever you are,
                                     </Text>
                                     
-                                    <Text headline style={{color:BaseColor.whiteColor}}>
-                                    Temukan dan pesanlah destinasi paket tur dan travel dengan harga yang kompetitif
+                                    <Text whiteColor  style={ {
+                                            fontSize: 20,
+                                            fontWeight: "700",
+                                            fontFamily: "Lato",
+                                            alignSelf: 'center'
+                                    }}>
+                                    you are always traveling
                                     </Text>
                                     
                                     {/* <Text whiteColor>
@@ -616,24 +564,43 @@ export default class Home extends Component {
                                     </Text> */}
                                     
                                 </View>
-                                
-                            <View style={{ 
-                                marginTop:20,
-                                backgroundColor:'#fff',
-                                width:'90%',
-                                alignSelf: 'center',
-                                borderRadius: 18,
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5,
-                                padding:10
-                                }}>
                                 <View>
+                                    {this.renderIconService()}
+                                </View>
+                            </View>
+                                {/* <Swiper
+                                    renderPagination={renderPagination}
+                                    loop={false}
+                                    style={styles.wrapper}
+                                    style={{marginTop: 5}}
+                                    >
+
+                                    {
+                                        this.state.listdata_promo.map((item, key) => {
+                                            return (
+
+                                                <View
+                                                    style={styles.slide}
+                                                    title={
+                                                        <Text numberOfLines={1}>{item.title_promo}</Text>
+                                                    }
+                                                    >
+                                                    <Text>asd</Text>
+                                                    </View>
+
+                                            )
+                                        })
+                                    }
+
+                                </Swiper> */}
+                          </View>
+                        </View>
+                      </View>
+                      
+                      
+                        <View style={{backgroundColor:'#fff',marginTop:0}}>
+                            {/* <View style={{ marginTop: -50,backgroundColor:'#fff',borderRadius:30,width:'90%',alignSelf: 'center'}}>
+                                <View style={styles.contentHiking2}>
                                     <Text title3 semibold style={{alignSelf: 'center'}}>
                                     Hey Kamu Mau Kemana ?
                                     </Text>
@@ -642,10 +609,10 @@ export default class Home extends Component {
                                     {this.renderIconService()}
                                 </View>
                             </View>
+                             */}
                             
                             
-{/*                             
-                            <View>
+                            {/* <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
                                         Featured Destination
@@ -702,19 +669,142 @@ export default class Home extends Component {
                             </View> */}
                             
                             
+                            {/* <View>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
+                                    <Text title3 semibold>
+                                        Voucher
+                                    </Text>
+                                    <Text body2>
+                                    Dapatkan penawaran terbaik dari voucher yang tersedia
+                                    </Text>
+                                </View>
+                                <View>
+                                    {example1}
+                                </View>
+                            </View> */}
                             
                             
+                            {/* <View>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
+                                    <Text title3 semibold>
+                                        Flash
+                                    </Text>
+                                    <Text body2>
+                                    Jelajahi sekarang
+                                    </Text>
+                                </View>
+                                <View>
+                                <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk horizontal false
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //untuk horizontal false
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_product_flash.daftar}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                item={item}
+                                                img={item.img_featured_url}
+                                                imgHeight={150}
+                                                titleIcon={{text:"home",icon:"home"}}
+                                                title={item.product_name}
+                                                subtitle={''}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("TourDetailCustom",{product:item})
+                                                }
+                                                loading={this.state.loading_product_trip}
+                                                property={{inFrame:false,innerText:false}}
+                                                type={''}
+                                            />
+                                        
+                                        )}
+                                    />
+                                    
+                                    
+                                </View>
+                            </View> */}
                             
-                            
-                            
+                            {/* <View>
+                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
+                                    <Text title3 semibold>
+                                        Flash 
+                                    </Text>
+                                    <Text body2>
+                                    Jelajahi sekarang
+                                    </Text>
+                                </View>
+                                <View>
+                                <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        //untuk horizontal false
+                                        // columnWrapperStyle={{ marginBottom: 10 }}
+                                        // numColumns={2}
+                                        
+                                        //untuk horizontal false
+                                        horizontal={true}
+                                        
+                                        data={this.state.listdata_product_flash}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                item={item}
+                                                img={item.img_featured_url}
+                                                imgHeight={150}
+                                                titleIcon={{text:"Pay Now Start Later",icon:"home"}}
+                                                title={item.product_name}
+                                                subtitle={''}
+                                                subtitle2={''}
+                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                style={
+                                                    //style untuk horizontal true
+                                                    { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
+                                                    
+                                                    //style untuk horizontal false
+                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                }
+                                                onPress={() =>
+                                                    navigation.navigate("HotelDetail",{product:item})
+                                                }
+                                                loading={this.state.loading_product_hotel_package}
+                                                property={{inFrame:true,innerText:false}}
+                                                type={''}
+                                            />
+                                        
+                                        )}
+                                    />
+                                    
+                                    
+                                </View>
+                            </View> */}
                             
                             
                             <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
-                                    <Text title1 bold>
+                                    <Text title3 semibold>
                                         Trip
                                     </Text>
-                                    <Text body1 style={{color:BaseColor.greyColor}}>
+                                    <Text body2>
                                     Jelajahi sekarang
                                     </Text>
                                 </View>
@@ -770,10 +860,10 @@ export default class Home extends Component {
                             
                             <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
-                                <Text title1 bold>
-                                    Hotel Deals
+                                    <Text title3 semibold>
+                                        Deals 
                                     </Text>
-                                    {/* <Text body1 style={{color:BaseColor.greyColor}}>
+                                    {/* <Text body2>
                                     Jelajahi sekarang
                                     </Text> */}
                                 </View>
@@ -888,7 +978,7 @@ export default class Home extends Component {
                             
                             
 
-                            {/* <View>
+                            <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
                                     National Musium Collection
@@ -939,11 +1029,11 @@ export default class Home extends Component {
                                         )}
                                     />
                                 </View>
-                            </View> */}
+                            </View>
                             
                             
                             
-                            {/* <View>
+                            <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                     <Text title3 semibold>
                                         Art & Culture Stories
@@ -994,7 +1084,7 @@ export default class Home extends Component {
                                         )}
                                     />
                                 </View>
-                            </View> */}
+                            </View>
                             
                             
                             

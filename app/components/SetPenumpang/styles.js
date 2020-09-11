@@ -4,12 +4,11 @@ import { BaseColor } from "@config";
 export default StyleSheet.create({
     contentPicker: {
         padding: 10,
-        borderRadius: 8,
         flex: 1,
         //backgroundColor: BaseColor.fieldColor,
         alignItems: "center",
-        borderRadius: 8,
-        borderWidth: 3,
+        borderRadius: 0,
+        borderWidth: 1,
         borderColor: BaseColor.fieldColor,
     }
 });

@@ -26,20 +26,17 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         // paddingTop: 5,
         // paddingBottom: 5,
-
-         backgroundColor: "#fff",
-
-         borderRadius: 18,
-                                // backgroundColor: BaseColor.fieldColor,
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5,
-                                padding:10,
+        backgroundColor: "#fff",
+        borderRadius: 18,
+        shadowColor: "#000",
+        shadowOffset: {
+             width: 0,
+             height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3,
+        padding:10,
     },
     thumb: { width: 48, height: 48, marginRight: 10, borderRadius: 24 },
     content: {

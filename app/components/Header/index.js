@@ -7,7 +7,7 @@ import { BaseStyle,BaseColor } from "@config";
 
 export default class Header extends Component {
   componentDidMount() {
-    StatusBar.setBarStyle(this.props.barStyle, true);
+    StatusBar.setBarStyle(this.props.barStyle, false);
   }
 
   componentWillUnmount() {
@@ -29,12 +29,12 @@ export default class Header extends Component {
       transparent
     } = this.props;
     
-    var bgColor=BaseColor.whiteColor;
+    var bgColor=BaseColor.bgColor;
     if(transparent==true){
       bgColor='transparent';
     }
     return (
-      <View style={[{ height: 45, flexDirection: "row",backgroundColor:bgColor}, style]}>
+      <View style={[{ height: 45, flexDirection: "row",backgroundColor:bgColor,marginTop:20}, style]}>
         {/* <View style={{ flex: 1 }}>
           <TouchableOpacity
             style={[styles.contentLeft, styleLeft]}
@@ -44,7 +44,7 @@ export default class Header extends Component {
           </TouchableOpacity>
         </View> */}
         <View style={[styles.contentLeft, styleCenter]}>
-        <Text title1 style={{color:BaseColor.primaryColor}}>{title}</Text>
+        <Text header style={{color:BaseColor.primaryColor}}>{title}</Text>
           {subTitle != "" && (
             <Text caption2 light style={{color:BaseColor.greyColor}}>
               {subTitle}

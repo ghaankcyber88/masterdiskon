@@ -170,7 +170,7 @@ export default class Notification extends Component {
 
         return (
             <SafeAreaView
-                style={BaseStyle.safeAreaView}
+            style={[BaseStyle.safeAreaView,{backgroundColor:BaseColor.bgColor}]}
                 forceInset={{ top: "always" }}
             >
                 <Header

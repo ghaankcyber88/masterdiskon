@@ -73,88 +73,89 @@ export default function index() {
     StatusBar.setBackgroundColor(BaseColor.whiteColor, true);
     StatusBar.setBackgroundColor("rgba(0,0,0,0)");
     
+    // StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+    // StatusBar.setTranslucent(true);
 
-    fcmService.registerAppWithFCM()
-    fcmService.register(onRegister, onNotification, onOpenNotification)
-    localNotificationService.configure(onOpenNotification)
+    // fcmService.registerAppWithFCM()
+    // fcmService.register(onRegister, onNotification, onOpenNotification)
+    // localNotificationService.configure(onOpenNotification)
     
 
-    function onRegister(token) {
-      console.log("[App] onRegister: ", token);
-      AsyncStorage.setItem('tokenFirebase', token);
-    }
+    // function onRegister(token) {
+    //   console.log("[App] onRegister: ", token);
+    //   AsyncStorage.setItem('tokenFirebase', token);
+    // }
 
-    function onNotification(notify) {
-      console.log("[App] onNotificationx: ", JSON.stringify(notify));
-      var body_msg=notify.body;
-      var body_array = body_msg.split("#");
-      var body_notif={
-        transaction: body_array[0],
-        type: body_array[1],
-        order_id: body_array[2],
-        gross_amount: body_array[3],
-        transaction_id: body_array[4],
-        fraud: body_array[5],
-        bank: body_array[6]
-      }
+  //   function onNotification(notify) {
+  //     console.log("[App] onNotificationx: ", JSON.stringify(notify));
+  //     var body_msg=notify.body;
+  //     var body_array = body_msg.split("#");
+  //     var body_notif={
+  //       transaction: body_array[0],
+  //       type: body_array[1],
+  //       order_id: body_array[2],
+  //       gross_amount: body_array[3],
+  //       transaction_id: body_array[4],
+  //       fraud: body_array[5],
+  //       bank: body_array[6]
+  //     }
   
-      console.log('body_notif',JSON.stringify(body_notif));
-      //aeroPayment(body_notif);
+  //     console.log('body_notif',JSON.stringify(body_notif));
       
       
-      const options = {
-        soundName: 'default',
-        playSound: true //,
-        // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
-        // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
-      }
-      localNotificationService.showNotification(
-        0,
-        notify.title,
-        notify.body,
-        notify,
-        options
-      )
-    }
+  //     const options = {
+  //       soundName: 'default',
+  //       playSound: true //,
+  //       // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
+  //       // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
+  //     }
+  //     localNotificationService.showNotification(
+  //       0,
+  //       notify.title,
+  //       notify.body,
+  //       notify,
+  //       options
+  //     )
+  //   }
 
-    function onOpenNotification(notify) {
-      console.log("[App] onOpenNotification: ", notify)
-    }
+  //   function onOpenNotification(notify) {
+  //     console.log("[App] onOpenNotification: ", notify)
+  //   }
     
     
     
     
-    function aeroPayment(body_notif){
-      AsyncStorage.getItem('config', (error, result) => {
-        if (result) {    
-            let config = JSON.parse(result);
-            body_notif.config=config;
-            var paramPost={"param":body_notif}
-            console.log('aeroPaymentParam',JSON.stringify(paramPost));
+  //   function aeroPayment(body_notif){
+  //     AsyncStorage.getItem('config', (error, result) => {
+  //       if (result) {    
+  //           let config = JSON.parse(result);
+  //           body_notif.config=config;
+  //           var paramPost={"param":body_notif}
+  //           console.log('aeroPaymentParam',JSON.stringify(paramPost));
             
-            var param={
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(paramPost),
-              }
+  //           var param={
+  //               method: 'POST',
+  //               headers: {
+  //                 Accept: 'application/json',
+  //                 'Content-Type': 'application/json',
+  //               },
+  //               body: JSON.stringify(paramPost),
+  //             }
            
-              var url='https://masterdiskon.com/';
-              var dir='front/api/payment/notification';
+  //             var url='https://masterdiskon.com/';
+  //             var dir='front/api/payment/notification';
              
-              return PostDataNew(url,dir,param)
-                 .then((result) => {
-                      console.log('aeroPaymentResult',JSON.stringify(result));
-                    },
-                 (error) => {
-                     this.setState({ error });
-                 }
-              );  
-        }
-    });
-  }
+  //             return PostDataNew(url,dir,param)
+  //                .then((result) => {
+  //                     console.log('aeroPaymentResult',JSON.stringify(result));
+  //                   },
+  //                (error) => {
+  //                    this.setState({ error });
+  //                }
+  //             );  
+  //       }
+  //   });
+  // }
   
     // function getConfig(){
     
@@ -185,9 +186,9 @@ export default function index() {
     // getConfig();
     
     return () => {
-      console.log("[App] unRegister")
-      fcmService.unRegister()
-      localNotificationService.unregister()
+      // console.log("[App] unRegister")
+      // fcmService.unRegister()
+      // localNotificationService.unregister()
     }
 
   }, [])

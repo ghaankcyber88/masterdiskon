@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         
     },
     right: {
-        flex: 10,
+        flex: 9,
         // alignItems: "flex-end",
         // justifyContent: "center"
     }
@@ -129,15 +129,150 @@ export default class CardCustomBooking extends Component {
     var no_tagihan=<View></View>
     var total_price=<View></View>
     var masa_tagihan=<View></View>
+    var desc=<View></View>
+    var schedule=<View></View>
     
+    if(item.product=='Flight'){
+        desc=<Text
+                overline
+                numberOfLines={1}
+                style={{
+                    color:BaseColor.greyColor
+                }}
+            >
+                 {item.detail[0].type}, {item.detail[0].order_detail[0].cabin_name} Class, {item.detail[0].pax.length} orang
+            </Text>
+    }else if(item.product=='Trip'){
+        desc=<Text
+                overline
+                numberOfLines={1}
+                style={{
+                    color:BaseColor.greyColor
+                }}
+            >
+                 {item.detail[0].order.country}, {item.detail[0].order.duration} hari, {item.detail[0].pax.length} orang
+            </Text>
+    }else if(item.product=='Hotel'){
+        desc=<Text
+                caption1
+                numberOfLines={1}
+                style={{
+                    color:BaseColor.greyColor
+                }}
+            >
+                 {item.product_name}
+            </Text>
+    }else if(item.product=='Hotelpackage'){
+        desc=<Text
+                caption1
+                numberOfLines={1}
+                style={{
+                    color:BaseColor.greyColor
+                }}
+            >
+                 {item.product_name}
+            </Text>
+    }else if(item.product=='Voucher'){
+        desc=<Text
+                caption1
+                numberOfLines={1}
+                style={{
+                    color:BaseColor.greyColor
+                }}
+            >
+                 {item.product_name}
+            </Text>
+    }
+    
+    
+    
+
+
+    
+    if(item.product=='Flight'){
+    schedule=<View style={{flex: 1,flexDirection:'row'}} >
+                <View style={{flexDirection:'row',flex: 6,justifyContent: "flex-start",alignItems: "center"}}>
+                    <Text caption2 style={{color:BaseColor.redColor}}>
+                        Start Date : {item.detail[0].order.start_date}
+                    </Text>
+                </View>
+                <View
+                    style={{flexDirection:'row',flex: 6,justifyContent: "flex-end",alignItems: "center"}}
+                >   
+                    <Text caption2 style={{color:BaseColor.redColor}}>
+                        End Date : {item.detail[0].order.start_date}
+                    </Text>
+                </View>
+            </View>
+    }else if(item.product=='Trip'){
+        schedule=<View style={{flex: 1,flexDirection:'row'}} >
+                    <View style={{flexDirection:'row',flex: 6,justifyContent: "flex-start",alignItems: "center"}}>
+                        <Text caption2 style={{color:BaseColor.redColor}}>
+                            Start Date : {item.detail[0].order.start_date}
+                        </Text>
+                    </View>
+                    <View
+                        style={{flexDirection:'row',flex: 6,justifyContent: "flex-end",alignItems: "center"}}
+                    >   
+                        <Text caption2 style={{color:BaseColor.redColor}}>
+                            End Date : {item.detail[0].order.start_date}
+                        </Text>
+                    </View>
+                </View>
+    }else if(item.product=='Hotel'){
+        schedule=<View style={{flex: 1,flexDirection:'row'}} >
+                    <View style={{flexDirection:'row',flex: 6,justifyContent: "flex-start",alignItems: "center"}}>
+                        <Text caption2 style={{color:BaseColor.redColor}}>
+                            Start Date : {item.detail[0].order.start_date}
+                        </Text>
+                    </View>
+                    <View
+                        style={{flexDirection:'row',flex: 6,justifyContent: "flex-end",alignItems: "center"}}
+                    >   
+                        <Text caption2 style={{color:BaseColor.redColor}}>
+                            End Date : {item.detail[0].order.start_date}
+                        </Text>
+                    </View>
+                </View>
+    }else if(item.product=='Hotelpackage'){
+        schedule=<View style={{flex: 1,flexDirection:'row'}} >
+                    <View style={{flexDirection:'row',flex: 6,justifyContent: "flex-start",alignItems: "center"}}>
+                        <Text caption2 style={{color:BaseColor.redColor}}>
+                            Start Date : {item.detail[0].order.start_date}
+                        </Text>
+                    </View>
+                    <View
+                        style={{flexDirection:'row',flex: 6,justifyContent: "flex-end",alignItems: "center"}}
+                    >   
+                        <Text caption2 style={{color:BaseColor.redColor}}>
+                            End Date : {item.detail[0].order.start_date}
+                        </Text>
+                    </View>
+                </View>
+    }else if(item.product=='Voucher'){
+        schedule=<View style={{flex: 1,flexDirection:'row'}} >
+                    <View style={{flexDirection:'row',flex: 6,justifyContent: "flex-start",alignItems: "center"}}>
+                        <Text caption2 style={{color:BaseColor.redColor}}>
+                            Start Date : {item.detail[0].order.start_date}
+                        </Text>
+                    </View>
+                    <View
+                        style={{flexDirection:'row',flex: 6,justifyContent: "flex-end",alignItems: "center"}}
+                    >   
+                        <Text caption2 style={{color:BaseColor.redColor}}>
+                            End Date : {item.detail[0].order.start_date}
+                        </Text>
+                    </View>
+                </View>
+    }
     
     total_price=<Text
-                            title3
-                            numberOfLines={1}
-                            style={{color:BaseColor.primaryColor}}
-                        >
-                            Rp {priceSplitter(item.total_price)}
-                        </Text>
+                    title3
+                    numberOfLines={1}
+                    style={{color:BaseColor.primaryColor}}
+                >
+                Rp {priceSplitter(item.total_price)}
+                </Text>
                         
             if(order_payment_recent != null){
                 var expiredTime=this.duration(order_payment_recent.expired);
@@ -160,11 +295,11 @@ export default class CardCustomBooking extends Component {
                                 size={10}
                                 until={expiredTime}
                                 // onFinish={() => alert('Finished')}
-                                style={{float:'left',paddingVertical:5}}
-                                digitStyle={{backgroundColor: '#FFF', borderWidth: 2, borderColor: BaseColor.primaryColor}}
-                                digitTxtStyle={{color: BaseColor.primaryColor}}
-                                timeLabelStyle={{color: BaseColor.primaryColor, fontWeight: 'bold'}}
-                                separatorStyle={{color: BaseColor.primaryColor}}
+                                style={{float:'left'}}
+                                digitStyle={{backgroundColor: BaseColor.secondColor}}
+                                digitTxtStyle={{color: BaseColor.blackColor}}
+                                timeLabelStyle={{color: BaseColor.primaryColor}}
+                                separatorStyle={{color: BaseColor.blackColor}}
                                 timeToShow={['H', 'M', 'S']}
                                 timeLabels={{m: null, s: null}}
                                 showSeparator
@@ -379,7 +514,8 @@ export default class CardCustomBooking extends Component {
                 </View>
     }else{
         
-            content=<View style={{  borderBottomColor: BaseColor.textSecondaryColor,
+            content=<View style={{  
+                                    borderBottomColor: BaseColor.textSecondaryColor,
                                     borderBottomWidth: 1,
                                     backgroundColor: "#fff",
                                     borderRadius: 18,
@@ -390,7 +526,7 @@ export default class CardCustomBooking extends Component {
                                     },
                                     shadowOpacity: 0.25,
                                     shadowRadius: 3.84,
-                                    // elevation: 5,
+                                    //elevation: 5,
                                     padding:10,
                                     }}>
                         <View style={{ flex: 1,flexDirection: "row"}}>
@@ -398,13 +534,15 @@ export default class CardCustomBooking extends Component {
                         </View>
                         <View style={{ flex: 1,flexDirection: "row"}}>
                             <View style={styles.left}>
-                                <Image source={{uri :urlImage}} style={{width:50,height:50,borderRadius: 5}} />
+                                <Image source={{uri :urlImage}} style={{width:50,height:50,borderRadius: 5,marginTop:5}} />
                             </View>
                             <View style={styles.right}>
                                 {product_name}
+                                {desc}
                                 {/* {no_order}
                                 {no_tagihan} */}
                                 {total_price}
+                                {/* {schedule} */}
                                 {/* {masa_tagihan} */}
                                 {/* {countDown}
                                 {statusOrder} */}

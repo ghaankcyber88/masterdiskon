@@ -11,6 +11,7 @@ import {
     StyleSheet,
     Dimensions,
     AsyncStorage,
+    StatusBar
 } from "react-native";
 import { BaseStyle, BaseColor, Images } from "@config";
 import {
@@ -100,9 +101,10 @@ const styles = StyleSheet.create({
     },
 
     itemPrice: {
-        borderBottomWidth: 0,
+        borderBottomWidth: 1,
         borderColor: BaseColor.textSecondaryColor,
         paddingVertical: 10,
+        paddingHorizontal: 20,
     },
     linePrice: {
         flexDirection: "row",
@@ -238,6 +240,32 @@ export default class TourDetailCustom extends Component {
 
    
 
+    // When tab is activated, set what's index value
+    _handleIndexChange = index =>
+        this.setState({
+            index
+        });
+
+    // Customize UI tab bar
+    _renderTabBar = props => (
+        <TabBar
+            {...props}
+            scrollEnabled
+            indicatorStyle={styles.indicator}
+            style={styles.tabbar}
+            tabStyle={styles.tab}
+            inactiveColor={BaseColor.grayColor}
+            activeColor={BaseColor.textPrimaryColor}
+            renderLabel={({ route, focused, color }) => (
+                <View style={{ flex: 1, width: 130, alignItems: "center" }}>
+                    <Text headline semibold={focused} style={{ color }}>
+                        {route.title}
+                    </Text>
+                </View>
+            )}
+        />
+    );
+    
     setTglAwal(dateConversion,dateNumber){
         this.setState({tglAwal:dateConversion});
         this.setState({tglAwalNumber:dateNumber});
@@ -338,6 +366,9 @@ export default class TourDetailCustom extends Component {
 
 
     componentDidMount(){
+          
+        StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+        StatusBar.setTranslucent(true);
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 this.setState({login:true});
@@ -352,7 +383,66 @@ export default class TourDetailCustom extends Component {
             this.setState({dewasa:this.state.minPerson});
         }, 500);
     }
-    
+    // Render correct screen container when tab is activated
+    _renderScene = ({ route, jumpTo }) => {
+        switch (route.key) {
+            case "hotel":
+                return (
+                    <Hotel
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                        setPrice={this.setPrice}
+                    />
+                );
+            case "include":
+                return (
+                    <Include
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "exclude":
+                return (
+                    <Exclude
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "information":
+                return (
+                    <InformationTab
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "itinerary":
+                return (
+                    <Itinerary
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "feedback":
+                return (
+                    <Feedback
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "review":
+                return (
+                    <ReviewTab
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+        }
+    };
+
     convertDate(date){
 
         var dd = String(date.getDate()).padStart(2, '0');
@@ -439,6 +529,7 @@ export default class TourDetailCustom extends Component {
                 <Text caption2 style={{marginTop:-3}}>
                     {minPerson} x Rp {priceSplitter(minPrice)}
                 </Text>
+                
             </View>
             <View>
                 <SetDate
@@ -541,6 +632,9 @@ export default class TourDetailCustom extends Component {
                         scrollEventThrottle={8}
                     >
                         {/* Main Container */}
+
+
+
                         <View
                             style={[
                                 {
@@ -567,7 +661,6 @@ export default class TourDetailCustom extends Component {
                             ]}
                         >
                             <Text
-                                header
                                 style={{ marginBottom: 10 }}
                             >
                                 {product.product_name}
@@ -590,72 +683,15 @@ export default class TourDetailCustom extends Component {
                                 {product.product_detail.country_name}, {product.product_detail.capital}
                             </Text>
                         </View>
-                        <View style={{
-                            flexDirection: "row",
-                            borderColor: BaseColor.textSecondaryColor,
-                            borderBottomWidth: 1,
-                            marginHorizontal:20,
-                            marginBottom:10
-                        }}></View>
-                        
-                        
-                        
-                        <Hotel
-                            product={this.state.product}
-                            setPrice={this.setPrice}
-                        />
-                        
-                        <View
-                            style={[
-                                { paddingHorizontal: 20, paddingTop: 0 },
-                            ]}
-                        >
-                            <Text
-                                title1
-                                bold
-                                style={{}}
-                            >
-                                Include
-                            </Text>
-                        </View>
-                        
-                        <Include
-                            product={this.state.product}
-                        />
-                        <View
-                            style={[
-                                { paddingHorizontal: 20, paddingTop: 0 },
-                            ]}
-                        >
-                            <Text
-                                title1
-                                bold
-                                style={{}}
-                            >
-                                Exclude
-                            </Text>
-                        </View>
-                        <Exclude
-                            product={this.state.product}
-                        />
-                        
-                        <View
-                            style={[
-                                { paddingHorizontal: 20, paddingTop: 0 },
-                            ]}
-                        >
-                            <Text
-                                title1
-                                bold
-                                style={{}}
-                            >
-                                Itenarry
-                            </Text>
-                        </View>
-                        <Itinerary
-                            product={this.state.product}
-                        />
 
+
+                        <TabView
+                            lazy
+                            navigationState={this.state}
+                            renderScene={this._renderScene}
+                            renderTabBar={this._renderTabBar}
+                            onIndexChange={this._handleIndexChange}
+                        />
                     </ScrollView>
                     {contentButton}
                 </SafeAreaView>
@@ -816,13 +852,12 @@ class Hotel extends Component {
         items.trip_minimum.map(item => {
             fieldsArray.push(
                 <View style={styles.linePrice}>
-                                                    <Text caption1 style={{color:BaseColor.greyColor}}>
+                                                    <Text primaryColor semibold style={{ paddingHorizontal: 10 }}>
                                                         Minimum: {item.count_minimum}
                                                                 </Text>
                                                     <View style={styles.iconRight}>
                                                         <Text
-                                                            caption1
-                                                            style={{color:BaseColor.greyColor}}
+                                                            style={{ paddingHorizontal: 10 }}
                                                         >
                                                             Rp {priceSplitter(item.price_minimum)}
                                                         </Text>
@@ -842,30 +877,21 @@ class Hotel extends Component {
 
 
         return (
-            <View style={{
-                    borderColor: BaseColor.textSecondaryColor,
-                    borderBottomWidth: 1,
-                    marginHorizontal:20,
-                    marginBottom:10}}
-                    >
-                <View
-                        >
-                            <Text title1 bold>
-                                Pilihan Hotel
-                            </Text>
-                            <Text caption2>
-                                Pilihan Hotel
-                            </Text>
-                </View>
+            <View style={{}}>
+                {/* {contentHotelOption} */}
+                
                 <FlatList
                             data={product_option}
                             keyExtractor={(item, index) => item.id_trip_option}
                             renderItem={({ item }) => (
                                 <TouchableOpacity
+                                    // style={styles.item}
                                     onPress={() => 
                                     
                                     {
+                                    //alert(item.id_trip_option);
                                     this.onChange(item)
+                                    //console.log('product_option',item.id_trip_option);
                                     
                                     }
                                     
@@ -873,7 +899,7 @@ class Hotel extends Component {
                                 >
                                     <View style={[styles.itemPrice, { backgroundColor: BaseColor.secondColor == BaseColor.whiteColor ? item.checked : null}]}>
                                             <View style={styles.linePrice}>
-                                                <Text headline style={{color:BaseColor.primaryColor}}>
+                                                <Text headline semibold>
                                                     {item.name_trip_option}
                                                 </Text>
                                                 
@@ -891,6 +917,31 @@ class Hotel extends Component {
                         
                                             <View style={styles.linePriceMinMax}>
                                                 {this.contentTripMinimum(item)}
+                                                {/* <View style={styles.linePrice}>
+                                                    <Text primaryColor semibold style={{ paddingHorizontal: 10 }}>
+                                                        Minimum: 2
+                                                                </Text>
+                                                    <View style={styles.iconRight}>
+                                                        <Text
+                                                            style={{ paddingHorizontal: 10 }}
+                                                        >
+                                                            Rp {priceSplitter(item.trip_minimum[0].price_minimum)}
+                                                        </Text>
+                                                    </View>
+                                                </View> */}
+                        
+                                                {/* <View style={styles.linePrice}>
+                                                    <Text primaryColor semibold style={{ paddingHorizontal: 10 }}>
+                                                        Minimum: 4
+                                                                </Text>
+                                                    <View style={styles.iconRight}>
+                                                        <Text
+                                                            style={{ paddingHorizontal: 10 }}
+                                                        >
+                                                            Rp {priceSplitter(item.trip_minimum[1].price_minimum)}
+                                                        </Text>
+                                                    </View>
+                                                </View> */}
                                             </View>
                                         </View>
                                 </TouchableOpacity>
@@ -958,12 +1009,7 @@ class Include extends Component {
         
         
         return (
-            <View style={{
-                borderColor: BaseColor.textSecondaryColor,
-                borderBottomWidth: 1,
-                marginHorizontal:20,
-                marginBottom:10
-                }}>
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
                 <HTML
                   html={product_detail.include}
                   imagesMaxWidth={Dimensions.get("window").width}
@@ -1031,12 +1077,7 @@ class Exclude extends Component {
         
         
         return (
-            <View style={{
-                    borderColor: BaseColor.textSecondaryColor,
-                    borderBottomWidth: 1,
-                    marginHorizontal:20,
-                    marginBottom:10
-                    }}>
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
                 <HTML
                   html={product_detail.exclude}
                   imagesMaxWidth={Dimensions.get("window").width}
@@ -1132,12 +1173,7 @@ class Itinerary extends Component {
         
         
         return (
-            <View style={{
-                borderColor: BaseColor.textSecondaryColor,
-                borderBottomWidth: 1,
-                marginHorizontal:20,
-                marginBottom:10
-                }}>
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
                 {contentIntinerary}
             </View>
         );

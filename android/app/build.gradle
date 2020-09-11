@@ -26,7 +26,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.masterdiskon"
+        applicationId "com.masterdiskoncustomer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 29
         versionCode 8

@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:254255805430:android:354477aacb484aed44cdd7",
         "android_client_info": {
-          "package_name": "com.masterdiskon"
+          "package_name": "com.masterdiskoncustomer"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "254255805430-kr2l4j9aontj124ibga196rpi29qj39u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.masterdiskon",
+            "package_name": "com.masterdiskoncustomer",
             "certificate_hash": "cea55faf9218df054827d55bfa27db546c9b2837"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "254255805430-p93vrmi97uomebr8ilh4j10dkutu9esr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.masterdiskon",
+            "package_name": "com.masterdiskoncustomer",
             "certificate_hash": "f6571934260035d63eaf963b03800bcbeef0dea1"
           }
         },

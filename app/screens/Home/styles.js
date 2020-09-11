@@ -78,7 +78,7 @@ export default StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 18,
-        backgroundColor: BaseColor.whiteColor,
+        backgroundColor: BaseColor.secondColor,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -207,5 +207,18 @@ containerSwipper: {
 },
   carousel: {
         flex:1
-} 
+} ,
+
+
+imgBanner: {
+  width: "100%",
+  height: 250,
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  justifyContent: "center",
+  alignItems: "center"
+},
 });
