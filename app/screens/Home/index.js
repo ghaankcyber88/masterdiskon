@@ -482,7 +482,7 @@ export default class Home extends Component {
                                     style={styles.imgProfile}
                                 />
                             </View>
-                            <Text footnote>
+                            <Text overline>
                                 {item.name}
                             </Text>
                         </TouchableOpacity>
@@ -634,7 +634,7 @@ export default class Home extends Component {
                                 padding:10
                                 }}>
                                 <View>
-                                    <Text title3 semibold style={{alignSelf: 'center'}}>
+                                    <Text body2 bold style={{alignSelf: 'center'}}>
                                     Hey Kamu Mau Kemana ?
                                     </Text>
                                 </View>
@@ -702,19 +702,12 @@ export default class Home extends Component {
                             </View> */}
                             
                             
-                            
-                            
-                            
-                            
-                            
-                            
-                            
                             <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
-                                    <Text title1 bold>
+                                    <Text body2 bold>
                                         Trip
                                     </Text>
-                                    <Text body1 style={{color:BaseColor.greyColor}}>
+                                    <Text caption2 grayColor>
                                     Jelajahi sekarang
                                     </Text>
                                 </View>
@@ -737,27 +730,35 @@ export default class Home extends Component {
                                         
                                             <CardCustom
                                                 item={item}
-                                                img={item.img_featured_url}
-                                                imgHeight={150}
-                                                titleIcon={{text:item.product_detail.duration+' hari',icon:"home"}}
-                                                title={item.product_name}
-                                                subtitle={''}
-                                                subtitle2={'Rp '+priceSplitter(item.product_price)}
-                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
                                                 style={
                                                     //style untuk horizontal true
                                                     { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
                                                     
                                                     //style untuk horizontal false
-                                                    // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
+                                                    //index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
                                                 }
+                                                propImage={{height:200,url:item.img_featured_url}}
+                                                propInframe={{top:'top',bottom:'bottom'}}
+                                                propTitle={{text:item.product_name}}
+                                                propDesc={{text:'Temukan penerbangan nyaman dengan penawaran terbaik'}}
+                                                propPrice={{price:'2000',startFrom:true}}
+                                                propLeftRight={{left:'ss',right:'dsf'}}
                                                 onPress={() =>
                                                     //console.log('TourDetailCustom',)
                                                     navigation.navigate("TourDetailCustom",{product:item})
                                                 }
                                                 loading={this.state.loading_product_trip}
-                                                property={{inFrame:true,innerText:false}}
-                                                type={''}
+                                                propOther={{inFrame:true,horizontal:false,width:200}}
+                                                
+                                                // img={item.img_featured_url}
+                                                // imgHeight={150}
+                                                // titleIcon={{text:item.product_detail.duration+' hari',icon:"home"}}
+                                                // title={item.product_name}
+                                                // subtitle={''}
+                                                // subtitle2={'Rp '+priceSplitter(item.product_price)}
+                                                // subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
+                                                // property={{inFrame:true,innerText:false}}
+                                                // type={''}
                                             />
                                         
                                         )}
@@ -768,14 +769,14 @@ export default class Home extends Component {
                             </View>
                             
                             
-                            <View>
+                            {/* <View>
                                 <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
                                 <Text title1 bold>
                                     Hotel Deals
                                     </Text>
-                                    {/* <Text body1 style={{color:BaseColor.greyColor}}>
+                                    <Text body1 style={{color:BaseColor.greyColor}}>
                                     Jelajahi sekarang
-                                    </Text> */}
+                                    </Text>
                                 </View>
                                 <View>
                                 <FlatList
@@ -823,7 +824,7 @@ export default class Home extends Component {
                                     
                                     
                                 </View>
-                            </View>
+                            </View> */}
                             
                             
                             
