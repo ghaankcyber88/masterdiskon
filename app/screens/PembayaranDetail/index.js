@@ -118,21 +118,9 @@ export default function PembayaranDetail(props) {
       const [colorButtonText,setColorButtonText] =useState(BaseColor.whiteColor);
       const [disabledButton,setDisabledButton] =useState(true);
 
-      //console.log('dataBookings',JSON.stringify(dataBooking));
+      console.log('dataBookingBro',JSON.stringify(dataBooking));
       
-      const [config, setConfig]=useState({
-        "aeroStatus": false,
-        "aeroUrl": "https://staging-api.megaelectra.co.id/",
-        "midtransStatus": false,
-        "midtransUrl": "https://api.sandbox.midtrans.com/",
-        "baseUrl": "https://masterdiskon.com/",
-        "banner": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80",
-        "transaction_fee": "5000",
-        "transaction_fee_cc" :"",
-        "norek": "1290080508050 (Mandiri) an. PT Master Diskon Internasional",
-        "voucher_markup": "20000"
-    
-    });
+      const [config, setConfig]=useState();
         
     AsyncStorage.getItem('tokenFirebase', (error, result) => {
         if (result) {
@@ -170,7 +158,8 @@ export default function PembayaranDetail(props) {
             });
        
     }
-
+    
+    
     
     function submitPayment(){
         var payment_type=dataPayment.payment_type;
@@ -192,7 +181,6 @@ export default function PembayaranDetail(props) {
         }else if(payment_type=='credit_card'){
             tokenCC(paramPayMD);
         }
-        
     }
     
     function tokenCC(paramPayMD){
@@ -205,7 +193,8 @@ export default function PembayaranDetail(props) {
             body: JSON.stringify(),
           }
        
-         var url='https://api.sandbox.midtrans.com/';
+         //var url='https://api.sandbox.midtrans.com/';
+         var url=config.midtransUrl;
          //console.log('baseUrl',url);
          
          return PostDataNew(url,'v2/token?client_key='+config.midtransKey.client+'&card_number='+cardNumber+'&card_exp_month='+cardExpMonth+'&card_exp_year='+cardExpYear+'&card_cvv='+cardCVV,param)
@@ -318,7 +307,8 @@ export default function PembayaranDetail(props) {
             body: JSON.stringify(paramPay),
           }
        
-         var url='https://api.sandbox.midtrans.com/';
+         //var url='https://api.sandbox.midtrans.com/';
+         var url=config.midtransUrl;
          //console.log('baseUrl',url);
          
          return PostDataNew(url,'v2/charge',param)
@@ -449,7 +439,8 @@ export default function PembayaranDetail(props) {
             redirect: 'follow'
           }
        
-         var url='https://api.sandbox.midtrans.com/';
+         //var url='https://api.sandbox.midtrans.com/';
+         var url=config.midtransUrl;
          //console.log('baseUrl',url);
          
          return PostDataNew(url,"v2/"+order_code+"/deny",param)
@@ -482,75 +473,88 @@ export default function PembayaranDetail(props) {
         
             AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
-                let userSession = JSON.parse(result);
-              
+                AsyncStorage.getItem('config', (error, resultx) => {
+                    if (resultx) {
+                        let userSession = JSON.parse(result);
+                        let config = JSON.parse(resultx);
+                        
+                        var id_user=userSession.id_user;
+                        var url=config.baseUrl;
+                        var path=config.user_order.dir;
+                        
+                        var data={"id":id_user,"id_order":idOrder,"id_order_status":"","product":""}
+                        var parameter={"param":data}
                 
-                    var id_user=userSession.id_user;
-                    const data={"id":id_user,"id_order":idOrder,"order_status":"","product":""}
-                    const param={"param":data}
-                    // //console.log('-------------param booking-------------');
-                    // //console.log(JSON.stringify(param));
-    
-    
-                    return PostData('order/get_booking_history',param)
-                        .then((result) => {
-                            var dataBooking=result;
-                            //console.log("---------------get_booking_historyssss ------------");
-                            //console.log(JSON.stringify(result));
-                            setLoading(false);
-                            setDataBooking(dataBooking);
-                            
-                            //jika refresh setelah pembayaran lunas
-                            var statusOrder=dataBooking[0].order_status.order_status_slug;
-                            if(statusOrder=='complete'){
-                                var redirect='Pembayaran';
-                                var param={
-                                    id_order:idOrder,
-                                    dataPayment:{}
-                                }
-                                navigation.navigate("Loading",{redirect:redirect,param:param});
-                            }else{
-                                //-------------------------------
-                                var order_payment_recent=dataBooking[0].order_payment_recent;
-                                var order_payment_num=dataBooking[0].order_payment_num;
-                                if(order_payment_recent != null){
-                                    var id_invoice=order_payment_recent.id_invoice;
-                                    if(order_payment_recent.payment_type==""){
-                                        var payment_type=dataPayment.payment_type;
-                                        var payment_sub=dataPayment.payment_sub;
-                                    }else{
-                                        var payment_type=order_payment_recent.payment_type;
-                                        var payment_sub=order_payment_recent.payment_sub;
-                                        fetchMidtrans(id_invoice);
+                        var body=parameter;
+                        console.log('bodyparamter',JSON.stringify(body));
+                        
+                        var param={
+                            method: 'POST',
+                            headers: {
+                              Accept: 'application/json',
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(body),
+                          }
+                          
+                          
+                        return PostDataNew(url,path,param)
+                            .then((result) => {
+                                var dataBooking=result;
+                                console.log("---------------get_booking_historyssss ------------");
+                                console.log(JSON.stringify(result));
+                                setLoading(false);
+                                setDataBooking(dataBooking);
+                                
+                                //jika refresh setelah pembayaran lunas
+                                var statusOrder=dataBooking[0].order_status.order_status_slug;
+                                if(statusOrder=='complete'){
+                                    var redirect='Pembayaran';
+                                    var param={
+                                        id_order:idOrder,
+                                        dataPayment:{}
                                     }
-                                    
-                                    var fee='';
-                                    if(order_payment_num == 1){
-                                        // if(payment_type=='bank_transfer'){
-                                        //     fee=config.transaction_fee;
-                                        // }
-                                        fee=config.transaction_fee;
-                                    }else{
-                                        fee=0;
+                                    navigation.navigate("Loading",{redirect:redirect,param:param});
+                                }else{
+                                    //-------------------------------
+                                    var order_payment_recent=dataBooking[0].order_payment_recent;
+                                    var order_payment_num=dataBooking[0].order_payment_num;
+                                    if(order_payment_recent != null){
+                                        var id_invoice=order_payment_recent.id_invoice;
+                                        if(order_payment_recent.payment_type==""){
+                                            var payment_type=dataPayment.payment_type;
+                                            var payment_sub=dataPayment.payment_sub;
+                                        }else{
+                                            var payment_type=order_payment_recent.payment_type;
+                                            var payment_sub=order_payment_recent.payment_sub;
+                                            fetchMidtrans(id_invoice);
+                                        }
+                                        
+                                        var fee='';
+                                        if(order_payment_num == 1){
+                                            // if(payment_type=='bank_transfer'){
+                                            //     fee=config.transaction_fee;
+                                            // }
+                                            fee=config.transaction_fee;
+                                        }else{
+                                            fee=0;
+                                        }
+                                        
+                                        var totalPembayaran=parseInt(order_payment_recent.iv_amount)+parseInt(fee);
+                                        setFee(fee);
+                                        setTotalPembayaran(totalPembayaran);
                                     }
-                                    
-                                    var totalPembayaran=parseInt(order_payment_recent.iv_amount)+parseInt(fee);
-                                    setFee(fee);
-                                    setTotalPembayaran(totalPembayaran);
-                                    
-                                   
-                                  
                                 }
+                                
+                                
+                            },
+                            (error) => {
+                                setState({ error });
                             }
-                            
-                            
-                        },
-                        (error) => {
-                            setState({ error });
-                        }
-                    ); 
+                        ); 
+                    }
+                });
              }
-            
             });
        
     
@@ -1260,6 +1264,17 @@ export default function PembayaranDetail(props) {
       }
   
     },[]);
+    
+    
+    
+    var payment_type=dataPayment.payment_type;
+    var title='';
+    if(payment_type=='bank_transfer'){
+        title=dataPayment.payment_type_label+' - '+dataPayment.payment_sub_label;
+    }else if(payment_type=='credit_card'){
+        title=dataPayment.payment_type_label;
+    }
+    
 
   return (
       
@@ -1269,7 +1284,7 @@ export default function PembayaranDetail(props) {
         forceInset={{ top: "always" }}
     >
         <Header
-            title={dataPayment.payment_type_label+' - '+dataPayment.payment_sub_label}
+            title={title}
             subTitle={'No.Order :'+dataBooking[0].order_code}
             renderLeft={() => {
                 return (
@@ -1319,6 +1334,9 @@ export default function PembayaranDetail(props) {
                 {/* {content_countdown()}
                 {content_payment()}
                 {content_button()} */}
+                
+                
+                
                 {content_countdown()}
                 {content_payment()}
                 {content_payment_form()}

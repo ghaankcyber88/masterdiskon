@@ -573,18 +573,17 @@ export default class CardCustomBooking extends Component {
                 //onPress={onPress}
                 onPress={() => {
                             //aslinya
-                            //this.props.navigation.navigate(urlRedirect,{param:param});
+                            this.props.navigation.navigate(urlRedirect,{param:param});
+                            
+                            //pake snap
+                            // var param={
+                            //     url:'https://masterdiskon.com/front/user/purchase/detail/'+item.id_order+'?access=app',
+                            //     title:'Detail Order',
+                            //     subTitle:item.id_order
+                            // }
+                            // this.props.navigation.navigate("WebViewPage",{param:param});
                             
                             
-                            var param={
-                                url:'https://masterdiskon.com/front/user/purchase/detail/'+item.id_order+'?access=app',
-                                title:'Detail Order',
-                                subTitle:item.id_order
-                            }
-                            // var url='https://masterdiskon.com/front/user/purchase/detail/'+item.id_order+'?access=app'
-                            // this.props.navigation.navigate("WebViewPage",{url:url,title:'Detail Order',subTitle:item.id_order})
-
-                            this.props.navigation.navigate("WebViewPage",{param:param});
                             // if(order_payment_recent != null){
                             //     if(expiredTime > 0){
                             //         var dataPayment={

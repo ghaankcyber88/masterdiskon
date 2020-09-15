@@ -252,6 +252,10 @@ export default class Summary extends Component {
                 }
             },
             
+            loading_spinner:true,
+            loading_spinner_file:require("app/assets/hotel.json"),
+            loading_spinner_title:'Connecting with masterdiskon',
+            
             config:{"aeroStatus":false,"aeroUrl":"https://staging-api.megaelectra.co.id/","baseUrl":"https://masterdiskon.co.id/","banner":"https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80","transaction_fee":"5000","norek":"1290080508050 (Mandiri) an. PT Master Diskon Internasional","voucher_markup":"20000","token":"EfVwMeH5HgFokJknYDYHto_DcxundKflSmevqUHTNNU"}
         };
 
@@ -335,29 +339,33 @@ export default class Summary extends Component {
         let {param,product,productPart}=this.state;
         var total_price=0;
         if(param.type=='trip'){
-            var dataPrice={      
-                required_dob:true,
-                required_passport:false,
-                total_price:total_price,
-                nett_price:0,
-                insurance_total:0,
-                transaction_fee:0
-            };
-            this.setState({dataPrice:dataPrice});
-            this.setState({total_all:parseInt(param.totalPrice)+parseInt(dataPrice.transaction_fee)});
-            
+            this.setState({ loading_spinner: true }, () => {
+                this.setState({ loading_spinner: false });
+                var dataPrice={      
+                    required_dob:true,
+                    required_passport:false,
+                    total_price:total_price,
+                    nett_price:0,
+                    insurance_total:0,
+                    transaction_fee:0
+                };
+                this.setState({dataPrice:dataPrice});
+                this.setState({total_all:parseInt(param.totalPrice)+parseInt(dataPrice.transaction_fee)});
+            });
         }else if(param.type=='hotelpackage'){
-            
-            var dataPrice={      
-                required_dob:true,
-                required_passport:false,
-                total_price:total_price,
-                nett_price:0,
-                insurance_total:0,
-                transaction_fee:0
-            };
-            this.setState({dataPrice:dataPrice});
-            this.setState({total_all:parseInt(param.totalPrice)+parseInt(dataPrice.transaction_fee)});
+            this.setState({ loading_spinner: true }, () => {
+                this.setState({ loading_spinner: false });
+                var dataPrice={      
+                    required_dob:true,
+                    required_passport:false,
+                    total_price:total_price,
+                    nett_price:0,
+                    insurance_total:0,
+                    transaction_fee:0
+                };
+                this.setState({dataPrice:dataPrice});
+                this.setState({total_all:parseInt(param.totalPrice)+parseInt(dataPrice.transaction_fee)});
+            });
         }else{
             var departurePost=this.removePrice(this.state.selectDataDeparture); 
             var returnPost=this.removePrice(this.state.selectDataReturn);   
@@ -894,7 +902,11 @@ export default class Summary extends Component {
             //console.log('------------------');
 
             
-            this.setState({ loading_spinner: true }, () => {
+                this.setState({ loading_spinner: true }, () => {
+                this.setState({loading_spinner_file:require("app/assets/loader_flight.json")});
+                this.setState({loading_spinner_title:'Connecting to Maskapai'});
+                
+    
                 AsyncStorage.getItem('config', (error, result) => {
                     if (result) {    
                         
@@ -922,24 +934,21 @@ export default class Summary extends Component {
                                      .then((result) => {
                                         // //console.log("---------------cart  ------------");
                                         // //console.log(JSON.stringify(result));
+                                        //this.setState({ loading_spinner: false });
+
                                         if(result.errors){
                                             this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.errors));
-                                            this.setState({ loading_spinner: false });
                                         }else if(result.status==="error"){
                                             this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
-                                            this.setState({ loading_spinner: false });
                                         }else if(result.status==="success"){
                                             var dataCartArray = [];
                                             var dataCart = {};
                                             var dataCart=result.data;
-                                            
-                                            
-                
             
                                                 var cartToBeSaved = dataCart;
                                                 cartToBeSaved.participant=this.state.listdata_participant;
                                                 cartToBeSaved.typeProduct=this.state.param.type;
-                                                ////console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
+                                                
                                                 this.onSubmitOrder(cartToBeSaved);
                                         }
                                      },
@@ -975,7 +984,8 @@ export default class Summary extends Component {
     
     onSubmitOrder(cartToBeSaved){
         var item=cartToBeSaved;
-        
+        this.setState({loading_spinner_file:require("app/assets/loader_wait.json")});
+        this.setState({loading_spinner_title:'Create Order'});
         //this.setState({ loading: true }, () => {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
@@ -1014,6 +1024,7 @@ export default class Summary extends Component {
                     };
                     PostDataNew(url,path,requestOptions)
                     .then((result) => {
+                        this.setState({ loading_spinner: false });
                         this.updateUserSession();
                         var dataOrderSubmit=result;
                                 
@@ -1023,20 +1034,19 @@ export default class Summary extends Component {
                                 var redirect='Pembayaran';
                                 var id_order=dataOrderSubmit.id_order;
                                 
-                                var param={
-                                    url:'https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app',
-                                    title:'Order Detail',
-                                    subTitle:id_order
-                                }
-                                
-                                //var url='https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app'
-                                this.props.navigation.navigate("WebViewPage",{param:param});
-    
                                 // var param={
-                                //     id_order:id_order,
-                                //     dataPayment:{},
+                                //     url:'https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app',
+                                //     title:'Order Detail',
+                                //     subTitle:id_order
                                 // }
-                                //this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
+                                
+                                // this.props.navigation.navigate("WebViewPage",{param:param});
+    
+                                var param={
+                                    id_order:id_order,
+                                    dataPayment:{},
+                                }
+                                this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
                                
                                
                     });
@@ -1738,7 +1748,7 @@ export default class Summary extends Component {
 
     render() {
         const { navigation } = this.props;
-        let { param,product,productPart,selectDataDeparture,selectDataReturn,dataPrice, packageItem, packageItemDetail,loading, loading_spinner,userData } = this.state;
+        let { param,product,productPart,selectDataDeparture,selectDataReturn,dataPrice, packageItem, packageItemDetail,loading, loading_spinner,userData,loading_spinner_file,loading_spinner_title } = this.state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
         const { flights, refreshing, clampedScroll } = this.state;
        
@@ -2301,12 +2311,13 @@ export default class Summary extends Component {
                                     <AnimatedLoader
                                         visible={true}
                                         overlayColor="rgba(255,255,255,0.1)"
-                                        source={require("app/assets/loader_paperline.json")}
-                                        animationStyle={{width: 300,height: 300}}
+                                        //source={require("app/assets/loader_paperline.json")}
+                                        source={loading_spinner_file}
+                                        animationStyle={{width: 250,height: 250}}
                                         speed={1}
                                       />
                                     <Text>
-                                        Connecting.. to Masterdiskon
+                                        {loading_spinner_title}
                                     </Text>
                                 </View>
                             </View>

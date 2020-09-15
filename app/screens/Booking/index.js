@@ -90,7 +90,7 @@ export default class Booking extends Component {
             var parameter={"param":data}
             var body=parameter;
             
-            //console.log(JSON.stringify(body));
+            console.log(JSON.stringify(body));
 
             this.setState({ loading_spinner: true }, () => {
                 var param={

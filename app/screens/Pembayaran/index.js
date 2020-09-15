@@ -764,16 +764,16 @@ export default class Pembayaran extends Component {
     }
 
     fetch(){
-        const {config} =this.state;
+        const {config,id_order,id_user} =this.state;
         var url=config.baseUrl;
         var path=config.user_order.dir;
         
-        var id_user=this.state.id_user;
-        var data={"id":id_user,"id_order":"","order_status":"","product":""}
+        var data={"id":id_user,"id_order":id_order,"id_order_status":"","product":""}
         var parameter={"param":data}
 
         var body=parameter;
-        //console.log('bodyparamter',JSON.stringify(body));
+        console.log('bodyparamter',JSON.stringify(body));
+        
         this.setState({ loading_spinner: true }, () => {
             var param={
                 method: 'POST',
@@ -786,8 +786,8 @@ export default class Pembayaran extends Component {
              PostDataNew(url,path,param)
                  .then((result) => {
                     var dataBooking=result;
-                            //console.log("---------------get_booking_historys ------------");
-                            //console.log(JSON.stringify(result));
+                            // console.log("---------------get_booking_historys ------------");
+                            // console.log(JSON.stringify(result));
                             
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:dataBooking});
@@ -915,12 +915,12 @@ export default class Pembayaran extends Component {
                                     <AnimatedLoader
                                         visible={true}
                                         overlayColor="rgba(255,255,255,0.1)"
-                                        source={require("app/assets/loader_paperline.json")}
-                                        animationStyle={{width: 300,height: 300}}
+                                        source={require("app/assets/loader_payment.json")}
+                                        animationStyle={{width: 250,height: 250}}
                                         speed={1}
                                       />
                                     <Text>
-                                        Connecting.. to Masterdiskon
+                                        Prepare Payment
                                     </Text>
                                 </View>
                             </View>
