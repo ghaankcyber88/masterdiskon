@@ -34,6 +34,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import SetDate from "../../components/SetDate";
 import SetPenumpang from "../../components/SetPenumpang";
 import NotYetLogin from "../../components/NotYetLogin";
+import CardCustomTitle from "../../components/CardCustomTitle";
 
 // import styles from "./styles";
 
@@ -273,11 +274,6 @@ export default class TourDetailCustom extends Component {
             this.setState({minPerson:minPerson});
             var totalPrice=parseInt(minPerson)*parseInt(this.state.minPrice);
             this.setState({totalPrice:totalPrice});
-            
-            
-            // console.log('adult :'+this.state.dewasa);
-            // console.log('anak :'+this.state.anak);
-            // console.log('bayi :'+this.state.bayi);
         }, 200);
     }
 
@@ -288,9 +284,6 @@ export default class TourDetailCustom extends Component {
             this.setState({minPerson:minPerson});
             var totalPrice=parseInt(minPerson)*parseInt(this.state.minPrice);
             this.setState({totalPrice:totalPrice});
-            // console.log('adult :'+this.state.dewasa);
-            // console.log('anak :'+this.state.anak);
-            // console.log('bayi :'+this.state.bayi);
         }, 200);
     }
 
@@ -302,9 +295,6 @@ export default class TourDetailCustom extends Component {
             var totalPrice=parseInt(minPerson)*parseInt(this.state.minPrice);
             this.setState({totalPrice:totalPrice});
             
-            // console.log('adult :'+this.state.dewasa);
-            // console.log('anak :'+this.state.anak);
-            // console.log('bayi :'+this.state.bayi);
         }, 200);
     }
 
@@ -540,7 +530,7 @@ export default class TourDetailCustom extends Component {
                         }
                         scrollEventThrottle={8}
                     >
-                        {/* Main Container */}
+                        {/* START */}
                         <View
                             style={[
                                 {
@@ -559,8 +549,10 @@ export default class TourDetailCustom extends Component {
                                 {product.product_detail.name_trip_category}
                             </Tag>
                         </View>
+                        {/* END */}
+                        
 
-
+                        {/* START */}
                         <View
                             style={[
                                 { paddingHorizontal: 20, paddingTop: 0 },
@@ -572,10 +564,11 @@ export default class TourDetailCustom extends Component {
                             >
                                 {product.product_name}
                             </Text>
-                            
                         </View>
+                        {/* END */}
 
-
+                        
+                        {/* START */}
                         <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingBottom: 20 }}>
                             <Icon
                                 name="map-marker-alt"
@@ -590,6 +583,9 @@ export default class TourDetailCustom extends Component {
                                 {product.product_detail.country_name}, {product.product_detail.capital}
                             </Text>
                         </View>
+                        {/* END */}
+
+                        {/* START */}
                         <View style={{
                             flexDirection: "row",
                             borderColor: BaseColor.textSecondaryColor,
@@ -597,7 +593,7 @@ export default class TourDetailCustom extends Component {
                             marginHorizontal:20,
                             marginBottom:10
                         }}></View>
-                        
+                        {/* END */}
                         
                         
                         <Hotel
@@ -605,53 +601,14 @@ export default class TourDetailCustom extends Component {
                             setPrice={this.setPrice}
                         />
                         
-                        <View
-                            style={[
-                                { paddingHorizontal: 20, paddingTop: 0 },
-                            ]}
-                        >
-                            <Text
-                                title1
-                                bold
-                                style={{}}
-                            >
-                                Include
-                            </Text>
-                        </View>
-                        
                         <Include
                             product={this.state.product}
                         />
-                        <View
-                            style={[
-                                { paddingHorizontal: 20, paddingTop: 0 },
-                            ]}
-                        >
-                            <Text
-                                title1
-                                bold
-                                style={{}}
-                            >
-                                Exclude
-                            </Text>
-                        </View>
+                        
                         <Exclude
                             product={this.state.product}
                         />
-                        
-                        <View
-                            style={[
-                                { paddingHorizontal: 20, paddingTop: 0 },
-                            ]}
-                        >
-                            <Text
-                                title1
-                                bold
-                                style={{}}
-                            >
-                                Itenarry
-                            </Text>
-                        </View>
+                       
                         <Itinerary
                             product={this.state.product}
                         />
@@ -667,95 +624,6 @@ export default class TourDetailCustom extends Component {
         );
     }
 }
-
-/**
- * @description Show when tab Information activated
- * @author Passion UI <passionui.com>
- * @date 2019-08-03
- * @class PreviewTab
- * @extends {Component}
- */
-class InformationTab extends Component {
-    constructor(props) {
-        super();
-    }
-
-    render() {
-        return (
-            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-                <Text headline semibold>
-                    Day 1: London - Somme - Paris
-                </Text>
-                <Image
-                    source={Images.cruise1}
-                    style={{ height: 120, width: "100%", marginTop: 10 }}
-                />
-                <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text>
-                <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text>
-                <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text>
-                <Text headline semibold style={{ marginTop: 20 }}>
-                    Day 2: Paris - Burgundy - Swiss Alps
-                </Text>
-                <Image
-                    source={Images.cruise2}
-                    style={{ height: 120, width: "100%", marginTop: 10 }}
-                />
-                <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text>
-                <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text>
-                <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text>
-                <Text headline semibold style={{ marginTop: 20 }}>
-                    Day 3: Swiss Alps - Strasbourg - Heidel…
-                </Text>
-                <Image
-                    source={Images.cruise3}
-                    style={{ height: 120, width: "100%", marginTop: 10 }}
-                />
-                <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text>
-                <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text>
-                <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text>
-            </View>
-        );
-    }
-}
-
-
-
 
 
 class Hotel extends Component {
@@ -836,7 +704,7 @@ class Hotel extends Component {
 
 
     render() {
-        const { renderMapView, todo, helpBlock,product_option } = this.state;
+        const { product_option } = this.state;
         const { navigation} = this.props;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
@@ -848,14 +716,13 @@ class Hotel extends Component {
                     marginHorizontal:20,
                     marginBottom:10}}
                     >
-                <View
-                        >
-                            <Text title1 bold>
-                                Pilihan Hotel
-                            </Text>
-                            <Text caption2>
-                                Pilihan Hotel
-                            </Text>
+                <View>
+                    <Text title1 bold>
+                        Pilihan Hotel
+                    </Text>
+                    <Text caption2>
+                        Pilihan Hotel
+                    </Text>
                 </View>
                 <FlatList
                             data={product_option}
@@ -906,56 +773,18 @@ class Include extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            renderMapView: false,
-            region: {
-                latitude: 1.9344,
-                longitude: 103.358727,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.004
-            },
-            helpBlock: HelpBlockData,
-            todo: [
-                {
-                    id: "1",
-                    title: "South Travon",
-                    image: Images.trip1
-                },
-                {
-                    id: "2",
-                    title: "South Travon",
-                    image: Images.trip2
-                },
-                {
-                    id: "3",
-                    title: "South Travon",
-                    image: Images.trip3
-                },
-                {
-                    id: "4",
-                    title: "South Travon",
-                    image: Images.trip4
-                },
-                {
-                    id: "5",
-                    title: "South Travon",
-                    image: Images.trip5
-                }
-            ]
+          
         };
     }
 
     componentDidMount() {
-        InteractionManager.runAfterInteractions(() => {
-            this.setState({ renderMapView: true });
-        });
+        
     }
 
     render() {
-        const { renderMapView, todo, helpBlock} = this.state;
+        const {} = this.state;
         const { navigation,product } = this.props;
         var product_detail=product.product_detail;
-        
-        
         
         return (
             <View style={{
@@ -964,6 +793,11 @@ class Include extends Component {
                 marginHorizontal:20,
                 marginBottom:10
                 }}>
+                <View>
+                    <Text title1 bold>
+                        Include
+                    </Text>
+                </View>
                 <HTML
                   html={product_detail.include}
                   imagesMaxWidth={Dimensions.get("window").width}
@@ -979,52 +813,16 @@ class Exclude extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            renderMapView: false,
-            region: {
-                latitude: 1.9344,
-                longitude: 103.358727,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.004
-            },
-            helpBlock: HelpBlockData,
-            todo: [
-                {
-                    id: "1",
-                    title: "South Travon",
-                    image: Images.trip1
-                },
-                {
-                    id: "2",
-                    title: "South Travon",
-                    image: Images.trip2
-                },
-                {
-                    id: "3",
-                    title: "South Travon",
-                    image: Images.trip3
-                },
-                {
-                    id: "4",
-                    title: "South Travon",
-                    image: Images.trip4
-                },
-                {
-                    id: "5",
-                    title: "South Travon",
-                    image: Images.trip5
-                }
-            ]
+            
         };
     }
 
     componentDidMount() {
-        InteractionManager.runAfterInteractions(() => {
-            this.setState({ renderMapView: true });
-        });
+        
     }
 
     render() {
-        const { renderMapView, todo, helpBlock} = this.state;
+        const {} = this.state;
         const { navigation,product } = this.props;
         var product_detail=product.product_detail;
         
@@ -1037,6 +835,11 @@ class Exclude extends Component {
                     marginHorizontal:20,
                     marginBottom:10
                     }}>
+                <View>
+                    <Text title1 bold>
+                    Exclude
+                    </Text>
+                </View>
                 <HTML
                   html={product_detail.exclude}
                   imagesMaxWidth={Dimensions.get("window").width}
@@ -1051,52 +854,15 @@ class Itinerary extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            renderMapView: false,
-            region: {
-                latitude: 1.9344,
-                longitude: 103.358727,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.004
-            },
-            helpBlock: HelpBlockData,
-            todo: [
-                {
-                    id: "1",
-                    title: "South Travon",
-                    image: Images.trip1
-                },
-                {
-                    id: "2",
-                    title: "South Travon",
-                    image: Images.trip2
-                },
-                {
-                    id: "3",
-                    title: "South Travon",
-                    image: Images.trip3
-                },
-                {
-                    id: "4",
-                    title: "South Travon",
-                    image: Images.trip4
-                },
-                {
-                    id: "5",
-                    title: "South Travon",
-                    image: Images.trip5
-                }
-            ]
         };
     }
 
     componentDidMount() {
-        InteractionManager.runAfterInteractions(() => {
-            this.setState({ renderMapView: true });
-        });
+        
     }
 
     render() {
-        const { renderMapView, todo, helpBlock,login} = this.state;
+        const {} = this.state;
         const { navigation,product } = this.props;
         var product_itinerary=product.product_itinerary;
         
@@ -1109,16 +875,6 @@ class Itinerary extends Component {
                 <Text headline semibold style={{marginVertical:10}}>
                     Day {b}: {product_itinerary[a].title_day}
                 </Text>
-                {/* <Image
-                    source={Images.cruise1}
-                    style={{ height: 120, width: "100%", marginTop: 10 }}
-                /> */}
-                {/* <Text body2 style={{ marginTop: 10 }}>
-                    Curabitur non nulla sit amet nisl tempus convallis quis ac
-                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
-                    elit.
-                </Text> */}
-                
                 <HTML
                   html={product_itinerary[a].desc_day}
                   imagesMaxWidth={Dimensions.get("window").width}
@@ -1128,8 +884,6 @@ class Itinerary extends Component {
             );
             b++;
         }
-
-        
         
         return (
             <View style={{
@@ -1138,6 +892,11 @@ class Itinerary extends Component {
                 marginHorizontal:20,
                 marginBottom:10
                 }}>
+                <View>
+                    <Text title1 bold>
+                    Itinerary
+                    </Text>
+                </View>
                 {contentIntinerary}
             </View>
         );

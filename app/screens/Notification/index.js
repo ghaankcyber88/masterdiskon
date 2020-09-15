@@ -35,7 +35,7 @@ export default class Notification extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                console.log('getConfig',config);
+                //console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -47,7 +47,7 @@ export default class Notification extends Component {
             if (result) {    
                 let userSession = JSON.parse(result);
                 var id_user=userSession.id_user;
-                console.log('getSession',userSession);
+                //console.log('getSession',userSession);
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
                 this.setState({login:true});
@@ -66,7 +66,7 @@ export default class Notification extends Component {
             var id_user=this.state.id_user;
             var data={"id_user":id_user}
             var param={"param":data}
-            console.log("paramnotif",JSON.stringify(param));
+            //console.log("paramnotif",JSON.stringify(param));
             var body=param;
             this.setState({ loading_spinner: true }, () => {
                 var param={
@@ -79,7 +79,7 @@ export default class Notification extends Component {
                 }
                 PostDataNew(url,path,param)
                     .then((result) => {
-                        console.log("getNotif",JSON.stringify(result));
+                        //console.log("getNotif",JSON.stringify(result));
                         this.setState({loading_spinner: false });
                         this.setState({notification:result});
                     },

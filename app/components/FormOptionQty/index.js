@@ -7,8 +7,19 @@ import Modal from "react-native-modal";
 import { BaseColor } from "@config";
 
 const styles = StyleSheet.create({
+    contentPicker: {
+        paddingHorizontal: 5,
+        paddingVertical:5,
+        borderRadius: 8,
+        flex: 1,
+        alignItems: "center",
+        justifyContent: 'center',
+        borderRadius: 8,
+        borderWidth: 0,
+        borderColor: BaseColor.fieldColor,
+    },
     contentForm: {
-        padding: 10,
+        padding: 0,
         borderRadius: 8,
         width: "100%",
         //backgroundColor: BaseColor.fieldColor
@@ -107,10 +118,10 @@ export default class FormOptionQty extends Component {
 
 
     render() {
-        const { style, label, onCancel } = this.props;
+        const { style, title,titleSub, onCancel,icon } = this.props;
         const { modalVisible, option, value } = this.state;
         return (
-            <View>
+            <View style={[styles.contentPicker, style]}>
                 <Modal
                     isVisible={modalVisible}
                     onBackdropPress={() => {
@@ -138,14 +149,14 @@ export default class FormOptionQty extends Component {
                             <View>
                                                     <View>
                                                         <Text primaryColor semibold >
-                                                            Quantity
+                                                            {title}
                                                         </Text>
                                                     </View>
                                                     <View style={styles.iconRight}>
                                                         <Text
                                                             
                                                         >
-                                                           Anda dapat mengambil 3 voucher dalam sekali transaksi
+                                                           {titleSub}
                                                         </Text>
                                                     </View>
                             </View>
@@ -175,17 +186,18 @@ export default class FormOptionQty extends Component {
                       
                     </View>
                 </Modal>
-                <TouchableOpacity
-                    style={[styles.contentForm, style]}
-                    onPress={() => this.openModal()}
-                >
-                    <Text caption2 light style={{ marginBottom: 5 }}>
-                        {label}
-                    </Text>
-                    <Text body1 semibold>
+                
+
+                <TouchableOpacity  onPress={() => this.openModal()}>
+                            <Icon
+                                name={icon}
+                                size={18}
+                                color={BaseColor.primaryColor}
+                            />
+                        </TouchableOpacity>
+                        <Text caption2 style={{}}>
                         {this.props.selectedText}
-                    </Text>
-                </TouchableOpacity>
+                        </Text>
             </View>
         );
     }
@@ -195,7 +207,9 @@ export default class FormOptionQty extends Component {
 
 FormOptionQty.propTypes = {
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-    label: PropTypes.string,
+    title: PropTypes.string,
+    titleSub: PropTypes.string,
+    icon: PropTypes.string,
     value: PropTypes.string,
     option: PropTypes.array,
     onCancel: PropTypes.func,
@@ -205,7 +219,9 @@ FormOptionQty.propTypes = {
 
 FormOptionQty.defaultProps = {
     style: {},
-    label: "Seat Class",
+    title: "Seat Class",
+    titleSub: "Seat Class",
+    icon: "",
     value: "E",
     option: [
         {

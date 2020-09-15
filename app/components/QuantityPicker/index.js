@@ -12,97 +12,126 @@ export default class QuantityPicker extends Component {
             value: props.value,
             minPerson:props.minPerson,
             minPersonDef:props.minPersonDef,
-
+            maksPersonRoom:props.maksPersonRoom,
+            sisaPersonRoom:props.sisaPersonRoom,
+            type:props.type,
         };
     }
     
 
-    onChange(type) {
-        const{setMinPerson}=this.props;
-        var value=0;
-        var minPerson=0;
-        if (type == "up") {
-            this.setState({
-                value: parseInt(this.state.value) + 1
-            });
-            value=parseInt(this.state.value) + 1;
+    onChange(types) {
+        const{setMinPerson,sisaPersonRoom}=this.props;
 
-
-            this.setState({
-                minPerson: parseInt(this.state.minPerson) + 1
-            });
-            minPerson=parseInt(this.state.minPerson) + 1;
-            setMinPerson(minPerson);
             
-            if(this.props.typeOld=='1'){
-                this.props.setJumlahDewasa(value);
+        var values=0;
+        var minPerson=0;
+        if (types == "up") {
+            if(this.state.type=='hotel_package_room'){
+                if(sisaPersonRoom == 0){
+                }else if(sisaPersonRoom != 0){
+                    this.setState({
+                        value: parseInt(this.state.value) + 1
+                    });
+                    values=parseInt(this.state.value) + 1;
     
-            }else if(this.props.typeOld=='2'){
-                this.props.setJumlahAnak(value);
-    
-            }else if(this.props.typeOld=='3'){
-                this.props.setJumlahBayi(value);
+                    this.setState({
+                        minPerson: parseInt(this.state.minPerson) + 1
+                    });
+                    minPerson=parseInt(this.state.minPerson) + 1;
+                    setMinPerson(minPerson);
+                    
+                    if(this.props.typeOld=='1'){
+                        this.props.setJumlahDewasa(values);
+            
+                    }else if(this.props.typeOld=='2'){
+                        this.props.setJumlahAnak(values);
+            
+                    }else if(this.props.typeOld=='3'){
+                        this.props.setJumlahBayi(values);
+                    }
+
+                }
+            }else{
+                this.setState({
+                    value: parseInt(this.state.value) + 1
+                });
+                values=parseInt(this.state.value) + 1;
+
+                this.setState({
+                    minPerson: parseInt(this.state.minPerson) + 1
+                });
+                minPerson=parseInt(this.state.minPerson) + 1;
+                setMinPerson(minPerson);
+                
+                if(this.props.typeOld=='1'){
+                    this.props.setJumlahDewasa(values);
+        
+                }else if(this.props.typeOld=='2'){
+                    this.props.setJumlahAnak(values);
+        
+                }else if(this.props.typeOld=='3'){
+                    this.props.setJumlahBayi(values);
+                }
             }
         } else {
-     
-            if(this.props.typeOld=='1'){
-            
-                if(this.state.value > this.state.minPersonDef){
-                    this.setState({
-                        value: this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
-                    });
-                    value=this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
-        
-                    this.setState({
-                        minPerson: this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
-                    });
-                    minPerson=this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
-                    
-                    setMinPerson(minPerson);
-                    this.props.setJumlahDewasa(value);
-                }else{
-                    minPerson=this.state.minPersonDef;
-                    
-                    setMinPerson(minPerson);
-                    this.props.setJumlahDewasa(minPerson);
-                   
+                if(this.props.typeOld=='1'){
                 
-                }
-            }else if(this.props.typeOld=='2'){
+                    if(this.state.value > this.state.minPersonDef){
+                        this.setState({
+                            value: this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
+                        });
+                        values=this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
             
-                if(this.state.value != 0){
-                    this.setState({
-                        value: this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
-                    });
-                    value=this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
-        
-                    this.setState({
-                        minPerson: this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
-                    });
-                    minPerson=this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
-                    setMinPerson(minPerson);
-                    this.props.setJumlahAnak(value);
+                        this.setState({
+                            minPerson: this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
+                        });
+                        minPerson=this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
+                        
+                        setMinPerson(minPerson);
+                        this.props.setJumlahDewasa(values);
+                    }else{
+                        minPerson=this.state.minPersonDef;
+                        
+                        setMinPerson(minPerson);
+                        this.props.setJumlahDewasa(minPerson);
                     
+                    
+                    }
+                }else if(this.props.typeOld=='2'){
                 
-                }
-            }else if(this.props.typeOld=='3'){
+                    if(this.state.value != 0){
+                        this.setState({
+                            value: this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
+                        });
+                        values=this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
             
-                if(this.state.value != 0){
-                    this.setState({
-                        value: this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
-                    });
-                    value=this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
-        
-                    this.setState({
-                        minPerson: this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
-                    });
-                    minPerson=this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
-                    setMinPerson(minPerson);
-                    this.props.setJumlahBayi(value);
+                        this.setState({
+                            minPerson: this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
+                        });
+                        minPerson=this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
+                        setMinPerson(minPerson);
+                        this.props.setJumlahAnak(values);
+                        
                     
+                    }
+                }else if(this.props.typeOld=='3'){
                 
+                    if(this.state.value != 0){
+                        this.setState({
+                            value: this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
+                        });
+                        values=this.state.value - 1 > 0 ? parseInt(this.state.value) - 1 : 0
+            
+                        this.setState({
+                            minPerson: this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
+                        });
+                        minPerson=this.state.minPerson - 1 > 0 ? parseInt(this.state.minPerson) - 1 : 0
+                        setMinPerson(minPerson);
+                        this.props.setJumlahBayi(values);
+                        
+                    
+                    }
                 }
-            }
         
         }
 
@@ -122,7 +151,10 @@ export default class QuantityPicker extends Component {
                 <Text caption1 light style={{ marginBottom: 5 }}>
                     {detail}
                 </Text>
-                <TouchableOpacity onPress={() => this.onChange("up")}>
+                <TouchableOpacity onPress={() => {
+                        this.onChange("up")
+
+                    }}>
                     <Icon
                         name="plus-circle"
                         size={24}
@@ -130,7 +162,10 @@ export default class QuantityPicker extends Component {
                     />
                 </TouchableOpacity>
                 <Text title1>{value}</Text>
-                <TouchableOpacity onPress={() => this.onChange("down")}>
+                <TouchableOpacity onPress={() => {
+                   
+                        this.onChange("down")
+                    }}>
                     <Icon
                         name="minus-circle"
                         size={24}
@@ -150,7 +185,11 @@ QuantityPicker.propTypes = {
     onChange: PropTypes.func,
     setMinPerson:PropTypes.func,
     minPerson:PropTypes.number,
-    minPersonDef:PropTypes.number
+    minPersonDef:PropTypes.number,
+    maksPersonRoom:PropTypes.number,
+    sisaPersonRoom:PropTypes.number,
+    type:PropTypes.string,
+
 };
 
 QuantityPicker.defaultProps = {
@@ -162,5 +201,8 @@ QuantityPicker.defaultProps = {
     setMinPerson: () => {},
     minPerson:2,
     minPersonDef:2,
+    maksPersonRoom:0,
+    sisaPersonRoom:0,
+    type:''
     
 };

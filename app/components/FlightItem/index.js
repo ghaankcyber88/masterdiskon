@@ -56,6 +56,7 @@ export default class FlightItem extends Component {
             route,
             image,
             brand,
+            brandCode,
             type,
             price,
             onPress,
@@ -80,6 +81,13 @@ export default class FlightItem extends Component {
         }else if(type=='F'){
             kelas="First Class";
         }
+        var imageUrl='';
+        if(brandCode=='GA'){
+            imageUrl='https:'+image;
+        }else{
+            imageUrl=image;
+        }
+
 
         return (
             <View style={[styles.content, style]}>
@@ -161,12 +169,12 @@ export default class FlightItem extends Component {
                                 <Image
                                     style={styles.image}
                                     resizeMode="contain"
-                                    source={{uri: image}}
+                                    source={{uri: imageUrl}}
                                     // source={image}
                                 />
                                 <View>
                                     <Text caption1 semibold accentColor>
-                                        {brand}
+                                        {brand} / {brandCode}
                                     </Text>
                                     <Text caption2 light>
                                         {kelas}
@@ -226,6 +234,7 @@ FlightItem.propTypes = {
     toFlight: PropTypes.object,
     totalHour: PropTypes.number,
     brand: PropTypes.string,
+    brandCode: PropTypes.string,
     image: PropTypes.node.isRequired,
     type: PropTypes.string,
     price: PropTypes.string,
@@ -251,6 +260,7 @@ FlightItem.defaultProps = {
     },
     totalHour: 13.5,
     brand: "Vietjet",
+    brandCode: "Vietjet",
     image: Images.airline2,
     type: "Economy",
     price: "$499,99",

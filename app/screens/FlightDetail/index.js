@@ -121,6 +121,15 @@ export default class FlightDetail extends Component {
         var select=this.props.navigation.state.params.select;
         var detailPrice=select.price.detail_price;
         var price=select.price;
+
+        var imageUrl='';
+        if(select.airline_code=='GA'){
+            imageUrl='https:'+select.airline_logo;
+        }else{
+            imageUrl=select.airline_logo;
+        }
+
+
         this.state = {
           select:select,
           detailPrice: detailPrice,
@@ -133,7 +142,7 @@ export default class FlightDetail extends Component {
                 description:'Departure at :'+select.flight_schedule[0].departure_date+' '+select.flight_schedule[0].departure_time,
                 lineColor:'#009688', 
                 icon: Images.dot,
-                imageUrl: select.flight_schedule[0].airline_logo,
+                imageUrl: imageUrl,
                 entertainment:select.flight_schedule[0].inflight_entertainment,
                 baggage:select.flight_schedule[0].baggage,
                 meal:select.flight_schedule[0].meal,

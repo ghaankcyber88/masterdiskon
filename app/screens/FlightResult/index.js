@@ -241,11 +241,13 @@ export default class FlightResult extends Component {
                               redirect: 'follow'
                             };
                             
-                            fetch(url+"flight/search?"+paramUrl, requestOptions)
+                            var urlReq=url+"flight/search?"+paramUrl;
+                            console.log('urlReq',urlReq);
+                            fetch(urlReq, requestOptions)
                               .then(response => response.json())
                               .then(result => {
                                                             var length=result.data.departure.length;
-                                                            //console.log('result',JSON.stringify(result));
+                                                            console.log('getProduct',JSON.stringify(result.data.departure));
                                                             console.log('flight_result',length);   
 
                                                             if(length != 0){
@@ -305,7 +307,7 @@ export default class FlightResult extends Component {
                             fetch(url+"flight/search/"+dataKey, requestOptions)
                               .then(response => response.json())
                               .then(result => {
-                                //console.log('flight_result_next',result.data.departure.length);                            
+                                console.log('getProductNext',JSON.stringify(result.data.departure));
                                     
                                     var length=result.data.departure.length;
                                     console.log('flight_result_next',length);   
@@ -597,6 +599,7 @@ export default class FlightResult extends Component {
                     toFlight={item.flight_schedule[0]['to']}
                     totalHour={item.flight_schedule[0]['duration']}
                     brand={item.airline_name}
+                    brandCode={item.airline_code}
                     image={item.flight_schedule[0]['airline_logo']}
                     type={item.flight_schedule[0]['cabin']}
                     price={item.currency+ " "+priceSplitter(item.price['total_price'])}

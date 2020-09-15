@@ -44,7 +44,7 @@ export default class Header extends Component {
           </TouchableOpacity>
         </View> */}
         <View style={[styles.contentLeft, styleCenter]}>
-        <Text header style={{color:BaseColor.primaryColor}}>{title}</Text>
+        <Text title2 style={{color:BaseColor.primaryColor}}>{title}</Text>
           {subTitle != "" && (
             <Text caption2 light style={{color:BaseColor.greyColor}}>
               {subTitle}

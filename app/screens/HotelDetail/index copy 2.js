@@ -33,7 +33,6 @@ import * as Utils from "@utils";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import SetDate from "../../components/SetDate";
 import SetPenumpang from "../../components/SetPenumpang";
-
 import FormOptionQty from "../../components/FormOptionQty";
 import NotYetLogin from "../../components/NotYetLogin";
 
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     contentButtonBottom: {
         borderTopColor: BaseColor.textSecondaryColor,
         borderTopWidth: 1,
-        //paddingVertical: 10,
+        //paddingVertical: 5,
         paddingHorizontal: 20,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -177,7 +176,7 @@ export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
         var product = this.props.navigation.state.params.product;
-        console.log('HotelDetail',JSON.stringify(product));
+        //console.log('HotelDetail',JSON.stringify(product));
 
         var minDate = new Date(); // Today
         minDate.setDate(minDate.getDate() + 7);
@@ -218,16 +217,12 @@ export default class HotelDetail extends Component {
                 // { key: "feedback", title: "Feedback" }
             ],
             product: product,
-            minPerson:1,
-            minRoom:1,
-            minVoucher:1,
+            minPerson:0,
             minPrice:0,
-            maksPersonRoom:0,
-            sisaPersonRoom:0,
             totalPrice:0,
             modalVisiblePerson: false,
             modalVisibleDate: false,
-            dewasa:"2",
+            dewasa:"0",
             anak:"0",
             bayi:"0",
             selectedStartDate: null,
@@ -242,35 +237,13 @@ export default class HotelDetail extends Component {
                 text: "1 Voucher"
                 },
                 {
-                value: 2,
-                text: "2 Voucher"
-                },
-                {
-                value: 3,
-                text: "3 Voucher"
-                }
-            ],
-            listdataRoom:[
-                {
-                    value: 1,
-                    text: "1 Room"
-                },
-                {
                     value: 2,
-                    text: "2 Room"
-                },
-                {
-                    value: 3,
-                    text: "3 Room"
-                },
-                {
-                    value: 4,
-                    text: "4 Room"
-                },
-                {
-                    value: 5,
-                    text: "5 Room"
-                }
+                    text: "2 Voucher"
+                    },
+                    {
+                        value: 3,
+                        text: "3 Voucher"
+                        }
             ],
             
             kelas:'Economy Class',
@@ -284,8 +257,6 @@ export default class HotelDetail extends Component {
         this.setJumlahAnak = this.setJumlahAnak.bind(this);
         this.setJumlahBayi = this.setJumlahBayi.bind(this);
         this.setMinPerson = this.setMinPerson.bind(this);
-        this.setVoucher = this.setVoucher.bind(this);
-        this.setRoom = this.setRoom.bind(this);
         this.setTglAwal = this.setTglAwal.bind(this);
         this.setTglAkhir = this.setTglAkhir.bind(this);
         this.setListdataPerson=this.setListdataPerson.bind(this);
@@ -332,100 +303,29 @@ export default class HotelDetail extends Component {
         this.setState({tglAkhirNumber:dateNumber});
     }
 
-    setPersonMaks(){
 
-
-
-    }
     setPrice(select){
-        var minPerson=this.state.minPerson;
-        var maksPersonRoom=parseInt(minPerson)*parseInt(select.guest_per_room);
-        var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-        var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-
-        this.setState({maksPersonRoom:maksPersonRoom});
-        this.setState({sisaPersonRoom:sisaPersonRoom});
-
-        this.setState({minPersonDef:minPerson});
-        this.setState({minPerson:minPerson});
         this.setState({select:select});
-
-
+        
     }
 
     setJumlahDewasa(jml){
-            var maksPersonRoom=this.state.maksPersonRoom;
-            var jmlPerson=parseInt(jml)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-    
-            console.log('maksPersonRoom',maksPersonRoom);
-            console.log('jmlPerson',jmlPerson);
-            console.log('sisaPersonRoom',sisaPersonRoom);
+        this.setState({dewasa:jml});
 
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({jmlPerson:jmlPerson});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-            this.setState({dewasa:jml});
     }
 
     setJumlahAnak(jml){
-       
-
-            var maksPersonRoom=this.state.maksPersonRoom;
-            var jmlPerson=parseInt(this.state.dewasa)+parseInt(jml)+parseInt(this.state.bayi);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-    
-            console.log('maksPersonRoom',maksPersonRoom);
-            console.log('jmlPerson',jmlPerson);
-            console.log('sisaPersonRoom',sisaPersonRoom);
-
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({jmlPerson:jmlPerson});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-            this.setState({anak:jml});
+        this.setState({anak:jml});
     }
 
     setJumlahBayi(jml){
-        var maksPersonRoom=this.state.maksPersonRoom;
-            var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(jml);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-    
-            console.log('maksPersonRoom',maksPersonRoom);
-            console.log('jmlPerson',jmlPerson);
-            console.log('sisaPersonRoom',sisaPersonRoom);
-
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({jmlPerson:jmlPerson});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-            this.setState({bayi:jml});
+        this.setState({bayi:jml});
     }
 
     setMinPerson(jml){
         this.setState({minPerson:jml});
-    }
-
-    setVoucher(jml){
-        this.setState({minVoucher:jml});
-        this.setState({dewasa:jml.toString()});
-    }
-
-    setRoom(jml){
-        this.setState({dewasa:this.state.select.guest_per_room});
-        this.setState({anak:"0"});
-        this.setState({bayi:"0"});
         setTimeout(() => {
-            var maksPersonRoom=parseInt(jml)*parseInt(this.state.select.guest_per_room);
-            var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-
-            console.log('maksPersonRoom',maksPersonRoom);
-            console.log('jmlPerson',jmlPerson);
-            console.log('sisaPersonRoom',sisaPersonRoom);
-            this.setState({minRoom:jml});
-            this.setListdataPerson();
+        this.setListdataPerson();
         }, 500);
     }
     
@@ -452,15 +352,15 @@ export default class HotelDetail extends Component {
         });
         
         
-        //   min = Math.min.apply(null, product.product_option.map(function(item) {
-        //     return item.minimum_book;
-        //   })),
-        //   max = Math.max.apply(null, product.product_option.map(function(item) {
-        //     return item.minimum_book;
-        //   }));
+          min = Math.min.apply(null, product.product_option.map(function(item) {
+            return item.minimum_book;
+          })),
+          max = Math.max.apply(null, product.product_option.map(function(item) {
+            return item.minimum_book;
+          }));
           
-        //   this.setState({maxPerson:max});
-        //   this.setState({minPerson:min});
+          this.setState({maxPerson:max});
+          this.setState({minPerson:min});
          
         setTimeout(() => {
             this.setListdataPerson();
@@ -565,20 +465,14 @@ export default class HotelDetail extends Component {
         
         var productPart={}
         var link='';
-        var qty='';
-        if(product.product_detail.detail_category=='pay_now_stay_later'){
-            qty=this.state.minVoucher;
-        }else{
-            qty=this.state.minRoom;
-
-        } 
+       
             link='Summary';
             param.type='hotelpackage';
             param.cityId=this.state.cityId;
             param.cityText=this.state.cityText;
             param.cityProvince=this.state.cityProvince;
-            param.Qty=parseInt(qty);
-            param.totalPrice=parseInt(qty)*parseInt(select.price);
+            param.Qty=parseInt(this.state.minPerson);
+            param.totalPrice=parseInt(this.state.minPerson)*parseInt(select.price);
             param.participant=false;
             
             this.props.navigation.navigate(link,
@@ -588,7 +482,7 @@ export default class HotelDetail extends Component {
                     productPart:select
                 });
                 
-            console.log('paramHotel',JSON.stringify(param));
+            // console.log('paramHotel',JSON.stringify(param));
             // console.log('productHotel',JSON.stringify(product));
             // console.log('productPartHotel',JSON.stringify(select));
 
@@ -600,110 +494,36 @@ export default class HotelDetail extends Component {
         var content=<View></View>
         
         if(product.product_detail.detail_category=='pay_now_stay_later'){
-        content=<View style={[styles.contentButtonBottom]}>
+        content=<View style={styles.contentButtonBottom}>
                         <FormOptionQty
-                                title={'Quantity'}
-                                titleSub={'Anda dapat mengambil 3 voucher dalam sekali transaksi'}
+                                style={{ marginVertical: 10 }} 
+                                label={'Quantity'}
                                 listdata={this.state.listdataPerson}
-                                setMinPerson={this.setVoucher}
-                                selectedText={this.state.minVoucher + ' Voucher'}
-                                icon={'user'}
+                                setMinPerson={this.setMinPerson}
+                                selectedText={this.state.minPerson + ' Voucher'}
                         />
                         
                         <Button
-                            style={{ height: 40,width:'80%'}}
+                            style={{ height: 46 }}
                             onPress={() => {  
                                 this.onSubmit();
                                
                             }}
                         >
-                            Next
+                            Book Now
                         </Button>
                     </View>
         }else{
         
             content=<View style={styles.contentButtonBottom}>
-                        <View>
-                            <SetDate
-                                labelTglAwal={this.state.tglAwal}
-                                labelTglAkhir={this.state.tglAwal}
-
-                                tglAwalNumber={this.state.tglAwalNumber}
-                                tglAwal={this.state.tglAwal}
-                                setTglAwal={this.setTglAwal}
-
-                                tglAkhirNumber={this.state.tglAkhirNumber}
-                                tglAkhir={this.state.tglAkhir}
-                                setTglAkhir={this.setTglAkhir}
-
-                            />
-                        </View>
-                        
-                        <View>
-                            <FormOptionQty
-                                    title={'Room'}
-                                    titleSub={'Maximum 2 tamu/room'}
-                                    listdata={this.state.listdataRoom}
-                                    setMinPerson={this.setRoom}
-                                    selectedText={this.state.minRoom + ' Room'}
-                                    icon={'bed'}
-                            />
-                        </View>
-
-                        {/* <View>
-                            <FormOptionQty
-                                    title={'Room'}
-                                    titleSub={'Maximum 2 tamu/room'}
-                                    listdata={this.state.listdataRoom}
-                                    setMinPerson={this.setMinPerson}
-                                    selectedText={this.state.minPerson + ' Room'}
-                                    icon={'male'}
-                            />
-                        </View>
-
-                        <View>
-                            <FormOptionQty
-                                    title={'Room'}
-                                    titleSub={'Maximum 2 tamu/room'}
-                                    listdata={this.state.listdataRoom}
-                                    setMinPerson={this.setMinPerson}
-                                    selectedText={this.state.minPerson + ' Room'}
-                                    icon={'child'}
-                            />
-                        </View> */}
-
-
-                        <View>
-                            <SetPenumpang
-                                label={parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi)}
-                                dewasa={this.state.dewasa}
-                                anak={this.state.anak}
-                                bayi={this.state.bayi}
-                                setJumlahDewasa={this.setJumlahDewasa}
-                                setJumlahAnak={this.setJumlahAnak}
-                                setJumlahBayi={this.setJumlahBayi}
-                                minPersonDef={this.state.minPersonDef}
-                                minPerson={this.state.minPerson}
-                                minPrice={this.state.minPrice}
-                                totalPrice={this.state.totalPrice}
-                                setMinPerson={this.setMinPerson}
-                                maksPersonRoom={this.state.maksPersonRoom}
-                                sisaPersonRoom={this.state.sisaPersonRoom}
-                                includeBayi={false}
-                                type={'hotel_package_room'}
-
-                            />
-                        </View>
-                        
                         <Button
-                            style={{ height: 40}}
+                            style={{ height: 46,width:'100%' }}
                             onPress={() => {  
-                                this.onSubmit();
-                                //navigation.navigate('FlightSearch',{type:'hotelpackage',product:this.state.product,productPart:this.state.select})
+                                navigation.navigate('FlightSearch',{type:'hotelpackage',product:this.state.product,productPart:this.state.select})
                                
                             }}
                         >
-                            Next
+                            Book Now
                         </Button>
                     </View>
         
@@ -841,28 +661,7 @@ export default class HotelDetail extends Component {
                             </Text>
                         </View>
 
-                        {/* <TabView
-                            lazy
-                            navigationState={this.state}
-                            renderScene={this._renderScene}
-                            renderTabBar={this._renderTabBar}
-                            onIndexChange={this._handleIndexChange}
-                        /> */}
-
-                        <Paket
-                            product={this.state.product}
-                            setMinPerson={this.setMinPerson}
-                            setPrice={this.setPrice}
-                        />
-                        <Informasi
-                            product={this.state.product}
-                        />
-                        <Exclude
-                            product={this.state.product}
-                        />
-                    <Kebijakan
-                        product={this.state.product}
-                    />
+                        
                     </ScrollView>
                     :
                     <NotYetLogin redirect={'Home'} param={this.state.product} navigation={navigation} />
@@ -1033,8 +832,8 @@ class Paket extends Component {
     
     onChange(select) {
         const { navigation, product,setMinPerson,setListdataPerson} = this.props;
-        // var minPerson=select.minimum_book;
-        // setMinPerson(minPerson);
+        var minPerson=select.minimum_book;
+        setMinPerson(minPerson);
         
         this.setState({
             product_option: this.state.product_option.map(item => {

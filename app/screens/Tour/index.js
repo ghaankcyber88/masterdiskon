@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import { FlatList, RefreshControl, View, Animated,ScrollView } from "react-native";
 import { BaseStyle, BaseColor } from "@config";
-import { Header, SafeAreaView, Icon, TourItem, FilterSort,Text } from "@components";
+import { Header, SafeAreaView, Icon, HotelItem, FilterSort,Text } from "@components";
 import styles from "./styles";
 import * as Utils from "@utils";
 import {PostData} from '../../services/PostData';
 import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
 import CardCustom from "../../components/CardCustom";
-import CardCustomProduct from "../../components/CardCustomProduct";
+import CardCustomTitle from "../../components/CardCustomTitle";
 
 // Load sample data
-import {DataLoading,DataConfig} from "@data";
+import {DataLoading,DataConfig,DataHotelPackage,DataTrip} from "@data";
 import {
     Placeholder,
     PlaceholderMedia,
@@ -29,15 +29,11 @@ export default class Tour extends Component {
         }else{
             id_country='';
         }
-        
 
         this.state = {
-            
             id_country:id_country,
-            listdata_product_trip:DataLoading,
+            listdata_product_trip:DataTrip,
             config:DataConfig,
-
-
         };
         this.getConfig();
 
@@ -51,7 +47,8 @@ export default class Tour extends Component {
                 this.setState({config:config});
             }
         });
-}
+    }
+    
     
     getProductTrip(){
         const {config} =this.state;
@@ -95,54 +92,43 @@ export default class Tour extends Component {
 
       
                 return (
-                            <View>
                                 <View style={{marginTop: 20}}>
-                                    <FlatList
-                                        contentContainerStyle={{
-                                            paddingRight: 20
-                                        }}
-                                        //untuk horizontal false
-                                        // columnWrapperStyle={{ marginBottom: 10 }}
-                                        // numColumns={2}
-                                        
-                                        //untuk horizontal false
-                                        //horizontal={true}
-                                        
-                                        data={this.state.listdata_product_trip}
-                                        showsHorizontalScrollIndicator={false}
-                                        keyExtractor={(item, index) => item.id}
-                                        renderItem={({ item, index }) => (
-                                        
-                                            <CardCustom
-                                                item={item}
-                                                img={item.img_featured_url}
-                                                titleIcon={{text:item.product_place,icon:"home"}}
-                                                title={item.product_name}
-                                                subtitle={item.product_duration}
-                                                subtitle2={'Rp '+priceSplitter(item.product_price)}
-                                                subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
-                                                style={
-                                                    //style untuk horizontal true
-                                                    // { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
-                                                    
-                                                    //style untuk horizontal false
-                                                    //index % 2 ? { marginLeft: 20 } : {marginLeft:20}
-                                                    {marginLeft:20,marginBottom:20}
-                                                }
+
+                                {   
+                                    this.state.listdata_product_trip.length != 0 ?
+                                    <View>
+                                        <FlatList
+                                                contentContainerStyle={{
+                                                    paddingRight: 20
+                                                }}
+                                                horizontal={false}
+                                                data={this.state.listdata_product_trip}
+                                                showsHorizontalScrollIndicator={false}
+                                                keyExtractor={(item, index) => item.id}
+                                                renderItem={({ item, index }) => (
                                                 
-                                                onPress={() =>
-                                                    navigation.navigate("TourDetailCustom",{product:item})
-                                                }
-                                                url={config.baseUrl+'assets/upload/product/voucher/2020/'}
-                                                loading={this.state.loading_product_trip}
-                                                property={{inFrame:true,innerText:false}}
-                                                type={''}
+                                                    <CardCustom
+                                                        propImage={{height:250,url:item.img_featured_url}}
+                                                        propInframe={{top:'top',bottom:'bottom'}}
+                                                        propTitle={{text:item.product_name}}
+                                                        propDesc={{text:'Temukan penerbangan nyaman dengan penawaran terbaik'}}
+                                                        propPrice={{price:'2000',startFrom:true}}
+                                                        propStar={{rating:10,enabled:true}}
+                                                        propLeftRight={{left:'ss',right:'dsf'}}
+                                                        onPress={() =>
+                                                            navigation.navigate("TourDetailCustom",{product:item})
+                                                        }
+                                                        loading={this.state.loading_product_trip}
+                                                        propOther={{inFrame:true,horizontal:false,width:Utils.scaleWithPixel(200)}}
+                                                    />
+                                                
+                                                )}
                                             />
-                                        
-                                        )}
-                                    />
+                                    </View>
+                                    :
+                                    <View></View>
+                                    }
                                 </View>
-                            </View>
                 );
             
     }
@@ -152,12 +138,12 @@ export default class Tour extends Component {
         const { navigation } = this.props;
         return (
             <SafeAreaView
-                style={BaseStyle.safeAreaView}
+                style={[BaseStyle.safeAreaView,{backgroundColor:BaseColor.bgColor}]}
                 forceInset={{ top: "always" }}
             >
                 <Header
-                    title="Tours"
-                    subTitle="24 Dec 2018, 2 Nights, 1 Room"
+                    title="Trip"
+                    // subTitle="24 Dec 2018, 2 Nights, 1 Room"
                     renderLeft={() => {
                         return (
                             <Icon

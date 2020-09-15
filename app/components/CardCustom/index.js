@@ -14,174 +14,16 @@ import {
 } from "rn-placeholder";
 
 const styles = StyleSheet.create({
-    //block css
-    blockImage: {
-        height: Utils.scaleWithPixel(200),
-        width: "100%"
-    },
-    blockContentAddress: {
-        flexDirection: "row",
-        marginTop: 3,
-        alignItems: "center"
-    },
-    blockContentDetail: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-        marginTop: 10
-    },
-    blockListContentIcon: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        height: 50,
-        width: "100%",
-        marginTop: 4
-    },
-    contentService: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingHorizontal: 20,
-        marginTop: 10,
-        borderColor: BaseColor.fieldColor,
-        borderBottomWidth: 1
-    },
-    serviceItemBlock: {
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 10,
-        width: 60
-    },
-    //list css
-    listImage: {
-        height: Utils.scaleWithPixel(140),
-        width: Utils.scaleWithPixel(120),
-        borderRadius: 0
-    },
-    listContent: {
-        flexDirection: "row"
-    },
-    listContentRight: {
-        paddingHorizontal: 10,
-        paddingVertical: 2,
-        flex: 1
-    },
-    listContentRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 5
-    },
-    //gird css
-    girdImage: {
-        borderRadius: 0,
-        height: Utils.scaleWithPixel(120),
-        width: "100%"
-    },
-    girdImageInFrame: {
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-        height: Utils.scaleWithPixel(120),
-        width: "100%"
-    },
-    girdContent: {
-        flex: 1,
-    },
-    girdContentInFrame: {
-        flex: 1,
-        borderColor: BaseColor.textSecondaryColor,
-        borderWidth: 2,
-        backgroundColor: "#fff",
-        borderRadius: 5,
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                //elevation: 5,
-    },
-    girdContentLocation: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        marginTop: 5
-    },
-    girdContentRate: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 10
-    }
+    
 });
 
 export default class CardCustom extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          loaded: false,
-          imageOpacity: new Animated.Value(0.0),
-          placeholderOpacity: new Animated.Value(1.0),
-          placeholderScale: new Animated.Value(1.0),
         }
       
     }
-
-
-
-       _onLoad = () => {
-    const {
-      placeholderScale,
-      placeholderOpacity,
-      imageOpacity
-    } = this.state
-
-    Animated.sequence([
-      // Delay is just so here so it can be seen
-      Animated.timing(placeholderOpacity, {
-        delay: 1000,
-        toValue: 1.0
-      }),
-      // Begin explode animation
-      Animated.parallel([
-        Animated.timing(placeholderScale, {
-          toValue: 0.7,
-          duration: 100,
-          useNativeDriver: true
-        }),
-        Animated.timing(placeholderOpacity, {
-          toValue: 0.66,
-          duration: 100,
-          useNativeDriver: true
-        }),
-      ]),
-      Animated.parallel([
-        Animated.parallel([
-          Animated.timing(placeholderOpacity, {
-            toValue: 0,
-            duration: 200,
-            useNativeDriver: true
-          }),
-          Animated.timing(placeholderScale, {
-            toValue: 1.2,
-            duration: 200,
-            useNativeDriver: true
-          }),
-        ]),
-        Animated.timing(imageOpacity, {
-          toValue: 1.0,
-          delay: 200,
-          duration: 300,
-          useNativeDriver: true
-        })
-      ])
-    ]).start(() => {
-      this.setState(() => ({ loaded: true }))
-    })
-  }
-
-
-
-
-    
 
 
 
@@ -189,12 +31,12 @@ export default class CardCustom extends Component {
         const {
          
             style,
-            item,
             propImage,
             propInframe,
             propTitle,
             propDesc,
             propPrice,
+            propStar,
             propLeftRight,
             onPress,
             propOther,
@@ -202,38 +44,9 @@ export default class CardCustom extends Component {
         } = this.props;
 
 
-          const {
-          placeholderColor,
-          source
-        } = this.props
-
-        const {
-          imageOpacity,
-          placeholderOpacity,
-          placeholderScale
-        } = this.state
         
-        var styleInnerText={};
-        var color={}
-        
-        
-        // if(this.props.property.innerText==true){
-        //     styleInnerText={position: "absolute",bottom: -65,padding: 10};
-        // }else{
-        //     styleInnerText={padding: 10};
-        //     color={}
-        // }
-        
-        // var styleContent=styles.girdContent;
-        // if(this.props.property.inFrame==true){
-        //   styleContent=styles.girdContentInFrame;
-        // }
-        
-        
-        var content=<View></View>
         var contentImage=<View></View>
         var contentStar=<View></View>
-        var contenInframe=<View></View>
         var contentText=<View></View>
         
         var contenInframeBottom=<View></View>
@@ -248,10 +61,11 @@ export default class CardCustom extends Component {
         var contentTextTitleLeftRight=<View></View>
         var contentLeft=<View></View>
         var contentRight=<View></View>
+        var contentStar=<View></View>
           
       //---------content untuk inframe---------//
       if(propInframe.top != ""){
-        contenInframeTop=<View style={{margin:10,position: "absolute",top: 0,padding: 2,backgroundColor:'yellow',width:'auto',borderRadius:5}}
+        contenInframeTop=<View style={{margin:10,position: "absolute",top: 0}}
                                       
                                 >
                                 <Text
@@ -287,12 +101,20 @@ export default class CardCustom extends Component {
                     <PlaceholderLine width={100} height={Utils.scaleWithPixel(propImage.height)} style={{marginTop: 2,marginBottom:0,borderRadius: 5}} />
                 </Placeholder>
         }else{
-          contentImage=<View style={{flex: 1}}><Image source={{uri :propImage.url}} 
-                    style={{
-                    borderRadius: 0,
-                    height: Utils.scaleWithPixel(propImage.height),
-                    width: "100%"
-                    }}
+          var styleCustomImage={
+                              borderRadius: 0,
+                              height: Utils.scaleWithPixel(propImage.height),
+                              width: "100%"
+          }
+        if(propOther.inFrame==true){
+          styleCustomImage.borderTopRightRadius=8;
+          styleCustomImage.borderTopLeftRadius=8;
+        }else{
+          styleCustomImage.borderRadius=8;
+        } 
+          contentImage=<View style={{flex: 1}}>
+              <Image source={{uri :propImage.url}} 
+                    style={styleCustomImage}
                     onLoad={this._onLoad} 
               />
               {contenInframeTop}
@@ -403,12 +225,38 @@ export default class CardCustom extends Component {
           
           
         contentTextTitleLeftRight=<View style={{flex: 1,flexDirection: "row"}}>{contentLeft}{contentRight}</View>
-                          
-                          
-        contentText=<View style={{flex: 1}}>
+        
+        if(propStar.enabled==true){
+        contentStar=<View style={{flexDirection: "row",
+                                justifyContent: "space-between"}}>
+                      <StarRating
+                          disabled={true}
+                          starSize={12}
+                          maxStars={5}
+                          rating={propStar.rating}
+                          //selectedStar={rating => {}}
+                          fullStarColor={BaseColor.yellowColor}
+                      />
+                      {/* <Text caption2 grayColor>
+                          {10} reviews
+                      </Text> */}
+                  </View>
+        }
+        
+        var styleCustomText={flex:1}
+        if(propOther.inFrame==true){
+          styleCustomText.paddingHorizontal=10;
+          styleCustomText.borderBottomRightRadius=8;
+          styleCustomText.borderBottomLeftRadius=8;
+          styleCustomText.borderWidth= 1;
+          styleCustomText.borderColor= BaseColor.dividerColor;
+          styleCustomText.borderStyle="solid";
+        } 
+        contentText=<View style={styleCustomText}>
                     {contentTextTitle}
                     {contentTextTitleDesc}
                     {contentTextTitlePrice}
+                    {contentStar}
                     {contentTextTitleLeftRight}
                     </View>
         
@@ -419,10 +267,14 @@ export default class CardCustom extends Component {
         var styleCustom={};
         if(propOther.horizontal==false){
           styleCustom.marginBottom=10;
+          styleCustom.marginLeft=20;
         }else{
           styleCustom.marginLeft=20;
+          styleCustom.borderRadius=5;
+          styleCustom.width=propOther.width;
+          styleCustom.marginLeft=20;
         }
-        styleCustom.width=Utils.scaleWithPixel(propOther.width)
+        //styleCustom.width=Utils.scaleWithPixel(propOther.width)
         return (
             <View style={[styleCustom,style]}>
                 <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
@@ -441,45 +293,27 @@ export default class CardCustom extends Component {
 
 CardCustom.propTypes = {
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-    item: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     propImage :PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     propInframe :PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     propTitle :PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     propDesc :PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     propPrice :PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     propLeftRight :PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    propStar :PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     propOther:PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     onPress : PropTypes.func,
     loading : PropTypes.bool,
 };
 
 CardCustom.defaultProps = {
-    // style: {},
-    // item: {},
-    // img: "",
-    // imgHeight:150,
-    // titleIcon:{text:"xxx",icon:"home"},
-    // title: "",
-    // subtitle: "",
-    // subtitle2: "",
-    // star:"",
-    // onPress: () => {},
-    // onPressTag: () => {},
-    //  loading: true,
-    //  type:"default",
-    //  property:{inFrame:true,innerText:false},
-    //  subtitleLeftRight:{enable:false,textLeft:"",textRight:""}
-     
-     
-     
     style: {},
-    item: {},
     propImage :{},
     propInframe :{},
     propTitle :{},
     propDesc :{},
     propPrice :{},
     propLeftRight :{},
+    propStar : {},
     propOther : {},
     onPress: () => {},
     loading : true,

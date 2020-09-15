@@ -19,80 +19,80 @@ class Loading extends Component {
         }
     }
 
-    isProduction(){
-        const {DataMasterDiskon} =this.state;
-        this.setState({ loading_production: true }, () => {
-            var param={
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(),
-              }
+    // isProduction(){
+    //     const {DataMasterDiskon} =this.state;
+    //     this.setState({ loading_production: true }, () => {
+    //         var param={
+    //             method: 'POST',
+    //             headers: {
+    //               Accept: 'application/json',
+    //               'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(),
+    //           }
            
-             var url=this.state.DataMasterDiskon.baseUrl;
+    //          var url=this.state.DataMasterDiskon.baseUrl;
              
-             PostDataNew(url,DataMasterDiskon.urlApiMd.common.config.path,param)
-                 .then((result) => {
-                    var aeroStatus=result.aeroStatus;
-                    var aeroUrl=result.aeroUrl;
-                    if(aeroStatus==false){
-                        var details=this.state.DataMasterDiskon.aeroStag;
-                    }else{
-                        var details=this.state.DataMasterDiskon.aeroProd;
-                    }
-                    var config=result;
-                    this.getToken(details,aeroUrl,config);
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
-            ); 
-        });
+    //          PostDataNew(url,DataMasterDiskon.urlApiMd.common.config.path,param)
+    //              .then((result) => {
+    //                 var aeroStatus=result.aeroStatus;
+    //                 var aeroUrl=result.aeroUrl;
+    //                 if(aeroStatus==false){
+    //                     var details=this.state.DataMasterDiskon.aeroStag;
+    //                 }else{
+    //                     var details=this.state.DataMasterDiskon.aeroProd;
+    //                 }
+    //                 var config=result;
+    //                 this.getToken(details,aeroUrl,config);
+    //              },
+    //              (error) => {
+    //                  this.setState({ error });
+    //              }
+    //         ); 
+    //     });
     
-    }
+    // }
     
-    getToken(details,url,config){
-        const {DataMasterDiskon} =this.state;
-        let { navigation, auth } = this.props;
-        let status = auth.login.success;
-        var formBody = [];
-        for (var property in details) {
-          var encodedKey = encodeURIComponent(property);
-          var encodedValue = encodeURIComponent(details[property]);
-          formBody.push(encodedKey + "=" + encodedValue);
-        }
-        formBody = formBody.join("&");
+    // getToken(details,url,config){
+    //     const {DataMasterDiskon} =this.state;
+    //     let { navigation, auth } = this.props;
+    //     let status = auth.login.success;
+    //     var formBody = [];
+    //     for (var property in details) {
+    //       var encodedKey = encodeURIComponent(property);
+    //       var encodedValue = encodeURIComponent(details[property]);
+    //       formBody.push(encodedKey + "=" + encodedValue);
+    //     }
+    //     formBody = formBody.join("&");
                 
         
-        var param={
-            method: 'POST',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: formBody
-          }
+    //     var param={
+    //         method: 'POST',
+    //         headers: {
+    //           'Accept': 'application/json',
+    //           'Content-Type': 'application/x-www-form-urlencoded'
+    //         },
+    //         body: formBody
+    //       }
 
 
-        PostDataNew(url,DataMasterDiskon.urlApiAero.token.path,param)
-                 .then((result) => {
-                    var access_token=result.access_token;
-                    config.token=access_token;
-                    AsyncStorage.setItem('config', JSON.stringify(config)); 
-                    navigation.navigate("Home");
+    //     PostDataNew(url,DataMasterDiskon.urlApiAero.token.path,param)
+    //              .then((result) => {
+    //                 var access_token=result.access_token;
+    //                 config.token=access_token;
+    //                 AsyncStorage.setItem('config', JSON.stringify(config)); 
+    //                 navigation.navigate("Home");
                     
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
-        ); 
-    }
+    //              },
+    //              (error) => {
+    //                  this.setState({ error });
+    //              }
+    //     ); 
+    // }
     
     getConfig(){
         let { navigation, auth } = this.props;
-    
+        const {DataMasterDiskon} =this.state;
         var param={
             method: 'POST',
             headers: {
@@ -102,7 +102,7 @@ class Loading extends Component {
             body: JSON.stringify(),
           }
        
-         var url='https://masterdiskon.com/';
+         var url=DataMasterDiskon.baseUrl;
          var dir='front/api/common/config';
          
          PostDataNew(url,dir,param)

@@ -77,13 +77,70 @@ export default class SetPenumpang extends Component {
     
 
     render() {
-        const { style, label,onPress,minPerson,minPrice,totalPrice,minPersonDef } = this.props;
+        const { 
+            style,
+            label,
+            dewasa,
+            anak,
+            bayi,
+            setJumlahDewasa,
+            setJumlahAnak,
+            setJumlahBayi,
+            minPersonDef,
+            minPerson,
+            minPrice,
+            totalPrice,
+            setMinPerson,
+            maksPersonRoom,
+            sisaPersonRoom,
+            includeBayi,
+            type
+        } = this.props;
         const {modalVisible } = this.state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
-        return (
-            
 
+        var contentLabel=<View></View>
+
+        if(totalPrice != 0){
+        contentLabel=<View style={{ marginTop: 20, flexDirection: "row" }}>
+                        <View>                  
+                                                <View style={styles.iconRight}>
+                                                    <Text
+                                                        headline primaryColor
+                                                        style={{ paddingHorizontal: 10}}
+                                                    >
+                                                        Rp {priceSplitter(totalPrice)}
+                                                    </Text>
+                                                </View>
+                                                <View>
+                                                    <Text caption2 style={{ paddingHorizontal: 10 }}>
+                                                        {minPerson} x Rp {priceSplitter(minPrice)}
+                                                    </Text>
+                                                </View>
+                                                
+                        </View>
+                    </View>
+        }
+
+        contentBayi=<View></View>
+
+        if(includeBayi==true){
+        contentBayi=<QuantityPicker
+                                    label="Infants"
+                                    detail="<= 2 years"
+                                    value={bayi}
+                                    setJumlahBayi={setJumlahBayi}
+                                    typeOld="3"
+                                    minPerson={minPerson}
+                                    minPersonDef={minPersonDef}
+                                    setMinPerson={setMinPerson}
+                                    maksPersonRoom={maksPersonRoom}
+                                    sisaPersonRoom={sisaPersonRoom}
+                                    type={type}
+                                />
+        }
+        return (
             <View style={[styles.contentPicker, style]}>
 
                     <Modal
@@ -108,60 +165,39 @@ export default class SetPenumpang extends Component {
                             <View style={styles.lineSwipeDown} />
                         </View>
 
+                        {contentLabel}
                         <View style={{ marginTop: 20, flexDirection: "row" }}>
-                            <View>                  
-                                                    <View style={styles.iconRight}>
-                                                        <Text
-                                                            headline primaryColor
-                                                            style={{ paddingHorizontal: 10}}
-                                                        >
-                                                            Rp {priceSplitter(totalPrice)}
-                                                        </Text>
-                                                    </View>
-                                                    <View>
-                                                        <Text caption2 style={{ paddingHorizontal: 10 }}>
-                                                            {minPerson} x Rp {priceSplitter(minPrice)}
-                                                        </Text>
-                                                    </View>
-                                                    
-                            </View>
-                        </View>
-                        <View style={{ marginTop: 20, flexDirection: "row" }}>
-
-                        
                                 <QuantityPicker
                                     label="Adults"
                                     detail=">= 12 years"
-                                    value={this.props.dewasa}
-                                    setJumlahDewasa={this.props.setJumlahDewasa}
+                                    value={dewasa}
+                                    setJumlahDewasa={setJumlahDewasa}
                                     typeOld="1"
-                                    minPerson={this.props.minPerson}
-                                    minPersonDef={this.props.minPersonDef}
-                                    setMinPerson={this.props.setMinPerson}
+                                    minPerson={minPerson}
+                                    minPersonDef={minPersonDef}
+                                    setMinPerson={setMinPerson}
+                                    maksPersonRoom={maksPersonRoom}
+                                    sisaPersonRoom={sisaPersonRoom}
+                                    type={type}
                                 />
                         
                         
                                 <QuantityPicker
                                     label="Children"
                                     detail="2 - 12 years"
-                                    value={this.props.anak}
+                                    value={anak}
                                     style={{ marginHorizontal: 15 }}
-                                    setJumlahAnak={this.props.setJumlahAnak}
+                                    setJumlahAnak={setJumlahAnak}
                                     typeOld="2"
-                                    minPerson={this.props.minPerson}
-                                    minPersonDef={this.props.minPersonDef}
-                                    setMinPerson={this.props.setMinPerson}
+                                    minPerson={minPerson}
+                                    minPersonDef={minPersonDef}
+                                    setMinPerson={setMinPerson}
+                                    maksPersonRoom={maksPersonRoom}
+                                    sisaPersonRoom={sisaPersonRoom}
+                                    type={type}
                                 />
-                                <QuantityPicker
-                                    label="Infants"
-                                    detail="<= 2 years"
-                                    value={this.props.bayi}
-                                    setJumlahBayi={this.props.setJumlahBayi}
-                                    typeOld="3"
-                                    minPerson={this.props.minPerson}
-                                    minPersonDef={this.props.minPersonDef}
-                                    setMinPerson={this.props.setMinPerson}
-                                />
+                                {contentBayi}
+                                
                         </View>
                     </View>
                     </Modal>
@@ -184,21 +220,53 @@ export default class SetPenumpang extends Component {
 }
 
 SetPenumpang.propTypes = {
+    // style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    // label: PropTypes.string,
+    // minPriceDef: PropTypes.number,
+    // minPrice: PropTypes.number,
+    // minPerson: PropTypes.number,
+    // totalPrice:PropTypes.number,
+    // maksPersonRoom:PropTypes.number,
+    // sisaPersonRoom:PropTypes.number,
+    // exclude:PropTypes.string,
+    // onPress: PropTypes.func
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     label: PropTypes.string,
-    minPriceDef: PropTypes.number,
-    minPrice: PropTypes.number,
-    minPerson: PropTypes.number,
+    dewasa: PropTypes.string,
+    anak: PropTypes.string,
+    bayi: PropTypes.string,
+    setJumlahDewasa: PropTypes.func,
+    setJumlahAnak:PropTypes.func,
+    setJumlahBayi:PropTypes.func,
+    minPersonDef:PropTypes.number,
+    minPerson:PropTypes.number,
+    minPrice:PropTypes.number,
     totalPrice:PropTypes.number,
-    onPress: PropTypes.func
+    setMinPerson:PropTypes.func,
+    maksPersonRoom:PropTypes.number,
+    sisaPersonRoom:PropTypes.number,
+    includeBayi:PropTypes.bool,
+    type: PropTypes.string,
+    
+    
 };
 
 SetPenumpang.defaultProps = {
     style: {},
     label: "",
-    minPriceDef: 2,
-    minPrice: 0,
-    minPerson: 0,
+    dewasa: "",
+    anak: "",
+    bayi: "",
+    setJumlahDewasa: () => {},
+    setJumlahAnak:() => {},
+    setJumlahBayi:() => {},
+    minPersonDef:0,
+    minPerson:0,
+    minPrice:0,
     totalPrice:0,
-    onPress: () => {}
+    setMinPerson:() => {},
+    maksPersonRoom:0,
+    sisaPersonRoom:0,
+    includeBayi:true,
+    type:'',
 };

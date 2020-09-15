@@ -24,7 +24,7 @@ export default class Booking extends Component {
         super(props);
         this.state = {
             refreshing: false,
-            login:true,
+            login:false,
             dataBooking:DataBooking,
             loading_spinner:false,
             
@@ -57,7 +57,7 @@ export default class Booking extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                console.log('getConfig',config);
+                //console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -69,7 +69,7 @@ export default class Booking extends Component {
             if (result) {    
                 let userSession = JSON.parse(result);
                 var id_user=userSession.id_user;
-                console.log('getSession',userSession);
+                //console.log('getSession',userSession);
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
                 this.setState({login:true});
@@ -90,7 +90,7 @@ export default class Booking extends Component {
             var parameter={"param":data}
             var body=parameter;
             
-            console.log(JSON.stringify(body));
+            //console.log(JSON.stringify(body));
 
             this.setState({ loading_spinner: true }, () => {
                 var param={
@@ -123,7 +123,7 @@ export default class Booking extends Component {
             navigation.addListener ('didFocus', () =>{
                 this.setState({ loading_spinner: true });
                 setTimeout(() => {
-                    console.log('idParam',this.state.idParam);
+                    //console.log('idParam',this.state.idParam);
                     this.fetch();
                 }, 200);
             });

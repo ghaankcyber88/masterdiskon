@@ -138,7 +138,6 @@ export default class QuantityPickerHorizontal extends Component {
             // </View>
             
             <View style={{ padding: 20 }}>
-                        
                         <View style={styles.contentQuest}>
                             <View style={styles.lineRow}>
                                 <View>
@@ -170,9 +169,8 @@ export default class QuantityPickerHorizontal extends Component {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            
                         </View>
-                    </View>
+            </View>
         );
     }
 }

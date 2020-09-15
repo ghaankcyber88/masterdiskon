@@ -21,6 +21,10 @@ import styles from "./styles";
 import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
 import CardCustom from "../../components/CardCustom";
+import CardCustomTitle from "../../components/CardCustomTitle";
+import NotYetLogin from "../../components/NotYetLogin";
+
+
 import {DataLoading,DataConfig,DataTrip,DataHotelPackage } from "@data";
 // import Swiper from 'react-native-swiper'
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -50,6 +54,7 @@ export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            login:false,
             slider1ActiveSlide: SLIDER_1_FIRST_ITEM,
             icons: [
             
@@ -142,6 +147,8 @@ export default class Home extends Component {
         };
         this._deltaY = new Animated.Value(0);
         this.getConfig();
+        this.getSession();
+
     }
     
     
@@ -211,10 +218,23 @@ export default class Home extends Component {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
                     let config = JSON.parse(result);
-                    ////console.log('getConfig',config);
+                    //////console.log('getConfig',config);
                     this.setState({config:config});
                 }
             });
+    }
+
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                var id_user=userSession.id_user;
+                //console.log('getSession',userSession);
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+            }
+        });
     }
 
 
@@ -264,7 +284,7 @@ export default class Home extends Component {
                  .then((result) => {
                     this.setState({loading_product_trip: false });
                     this.setState({listdata_product_trip: result});
-                    console.log('listdatatrip',JSON.stringify(result));
+                    //console.log('listdatatrip',JSON.stringify(result));
                  },
                  (error) => {
                      this.setState({ error });
@@ -340,7 +360,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log('getProductFlash',JSON.stringify(result));
+                    //console.log('getProductFlash',JSON.stringify(result));
                     this.setState({loading_product_flash: false });
                     this.setState({listdata_product_flash: result.daftar});
                  },
@@ -369,7 +389,7 @@ export default class Home extends Component {
                  .then((result) => {
                     this.setState({loading_musium: false });
                     this.setState({listdata_musium: result});
-                    console.log(JSON.stringify(result));
+                    //console.log(JSON.stringify(result));
                  },
                  (error) => {
                      this.setState({ error });
@@ -394,6 +414,7 @@ export default class Home extends Component {
            
              PostDataNew(url,path,param)
                  .then((result) => {
+                    config.log('blog',JSON.stringify(result));
                     this.setState({loading_blog: false });
                     this.setState({listdata_blog: result});
                  },
@@ -443,7 +464,7 @@ export default class Home extends Component {
             this.getProductTrip();
             this.getProductHotelPackage();
             this.getProductFlash();
-            // this.getBlog();
+            //this.getBlog();
         }, 500);
 
      }
@@ -496,7 +517,7 @@ export default class Home extends Component {
     render() {
 
         const { navigation } = this.props;
-        const { heightHeader} = this.state;
+        const { heightHeader,login} = this.state;
         //const heightImageBanner = Utils.scaleWithPixel(140);
         //const marginTopBanner = heightImageBanner - heightHeader-50;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
@@ -509,8 +530,8 @@ export default class Home extends Component {
    
         const example1 = this.mainExample(1, 'Default layout | Loop | Autoplay | Parallax | Scale | Opacity | Pagination with tappable dots');
         return (
+            login ? 
             <View style={{ flex: 1 }}>
-                
                 <Animated.View
                     style={[
                         styles.imgBanner,
@@ -537,9 +558,8 @@ export default class Home extends Component {
                     />
                    
                 </Animated.View>
-                
                 <SafeAreaView
-                    style={[BaseStyle.safeAreaView]}
+                    style={[BaseStyle.safeAreaView,{marginBottom:10}]}
                     forceInset={{ top: "always" }}
                 >
                 
@@ -701,83 +721,90 @@ export default class Home extends Component {
                                 </View>
                             </View> */}
                             
-                            
+                            {   
+                            this.state.listdata_product_trip.length != 0 ?
                             <View>
-                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
-                                    <Text body2 bold>
-                                        Trip
-                                    </Text>
-                                    <Text caption2 grayColor>
-                                    Jelajahi sekarang
-                                    </Text>
-                                </View>
-                                <View>
+                                <CardCustomTitle style={{marginLeft:20}} title={'Trip'} desc={''} />
                                 <FlatList
                                         contentContainerStyle={{
                                             paddingRight: 20
                                         }}
-                                        //untuk horizontal false
-                                        // columnWrapperStyle={{ marginBottom: 10 }}
-                                        // numColumns={2}
-                                        
-                                        //untuk horizontal false
                                         horizontal={true}
-                                        
                                         data={this.state.listdata_product_trip}
                                         showsHorizontalScrollIndicator={false}
                                         keyExtractor={(item, index) => item.id}
                                         renderItem={({ item, index }) => (
                                         
                                             <CardCustom
-                                                item={item}
-                                                style={
-                                                    //style untuk horizontal true
-                                                    { borderRadius: 5,width: Utils.scaleWithPixel(200),marginLeft:20}
-                                                    
-                                                    //style untuk horizontal false
-                                                    //index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
-                                                }
                                                 propImage={{height:200,url:item.img_featured_url}}
                                                 propInframe={{top:'top',bottom:'bottom'}}
                                                 propTitle={{text:item.product_name}}
                                                 propDesc={{text:'Temukan penerbangan nyaman dengan penawaran terbaik'}}
                                                 propPrice={{price:'2000',startFrom:true}}
+                                                propStar={{rating:10,enabled:true}}
                                                 propLeftRight={{left:'ss',right:'dsf'}}
                                                 onPress={() =>
-                                                    //console.log('TourDetailCustom',)
                                                     navigation.navigate("TourDetailCustom",{product:item})
                                                 }
                                                 loading={this.state.loading_product_trip}
-                                                propOther={{inFrame:true,horizontal:false,width:200}}
-                                                
-                                                // img={item.img_featured_url}
-                                                // imgHeight={150}
-                                                // titleIcon={{text:item.product_detail.duration+' hari',icon:"home"}}
-                                                // title={item.product_name}
-                                                // subtitle={''}
-                                                // subtitle2={'Rp '+priceSplitter(item.product_price)}
-                                                // subtitleLeftRight={{enable:false,textLeft:"",textRight:""}}
-                                                // property={{inFrame:true,innerText:false}}
-                                                // type={''}
+                                                propOther={{inFrame:false,horizontal:true,width:Utils.scaleWithPixel(200)}}
                                             />
                                         
                                         )}
                                     />
-                                    
-                                    
-                                </View>
                             </View>
+                            :
+                            <View></View>
+                            }
+                                    
+
+                            {   
+                            this.state.listdata_product_hotel_package.length != 0 ?
+                            <View>
+                                <CardCustomTitle style={{marginLeft:20}} title={'Hotel'} desc={''} />
+                                <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        horizontal={true}
+                                        data={this.state.listdata_product_hotel_package}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                propImage={{height:250,url:item.img_featured_url}}
+                                                propInframe={{top:'top',bottom:'bottom'}}
+                                                propTitle={{text:item.product_name}}
+                                                propDesc={{text:'Temukan penerbangan nyaman dengan penawaran terbaik'}}
+                                                propPrice={{price:'2000',startFrom:true}}
+                                                propStar={{rating:10,enabled:true}}
+                                                propLeftRight={{left:'ss',right:'dsf'}}
+                                                onPress={() =>
+                                                    navigation.navigate("HotelDetail",{product:item})
+                                                }
+                                                loading={this.state.loading_product_hotel_package}
+                                                propOther={{inFrame:true,horizontal:true,width:Utils.scaleWithPixel(200)}}
+                                            />
+                                        
+                                        )}
+                                    />
+                            </View>
+                            :
+                            <View></View>
+                            }
+                            
                             
                             
                             {/* <View>
-                                <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
-                                <Text title1 bold>
-                                    Hotel Deals
-                                    </Text>
-                                    <Text body1 style={{color:BaseColor.greyColor}}>
-                                    Jelajahi sekarang
-                                    </Text>
-                                </View>
+                                    <View style={{marginTop: 20,marginLeft: 20,marginBottom: 10}}>
+                                    <Text title1 bold>
+                                        Hotel Deals
+                                        </Text>
+                                        <Text body1 style={{color:BaseColor.greyColor}}>
+                                        Jelajahi sekarang
+                                        </Text>
+                                    </View>
                                 <View>
                                 <FlatList
                                         contentContainerStyle={{
@@ -1066,6 +1093,10 @@ export default class Home extends Component {
                     </ScrollView>
                 </SafeAreaView>
             </View>
+            :
+            <NotYetLogin redirect={'Home'} navigation={navigation} />
+        
+
         );
     }
 }
