@@ -577,9 +577,11 @@ export default class FlightSearch extends Component {
             } 
             <FormOption
                 style={{ marginTop: 20 }} 
-                listdata={this.state.listdata_kelas}
-                setKelasPesawat={this.setKelasPesawat}
-                selectedText={this.state.kelas}
+                label={'Seat Class'}
+                option={this.state.listdata_kelas}
+                optionSet={this.setKelasPesawat}
+                optionSelectText={this.state.kelas}
+                optionSelectValue={this.state.kelasId}
             />
             <View style={{ marginTop: 20, flexDirection: "row" }}>
                 <QuantityPicker

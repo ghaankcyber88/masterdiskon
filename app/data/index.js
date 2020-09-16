@@ -7,7 +7,7 @@ import { TourData } from "./tour";
 import { HotelData } from "./hotel";
 import { UserData } from "./user";
 import { MessagesData } from "./messages";
-import { NotificationData } from "./notification";
+// import { NotificationData } from "./notification";
 import { PostData } from "./post";
 import { PackageData } from "./package";
 import { WorkProgressData } from "./workprogress";
@@ -23,6 +23,7 @@ import { DataMasterDiskon } from "./dataMasterDiskon";
 import { DataConfig } from "./dataConfig";
 import { DataPayment } from "./dataPayment";
 import { DataBooking } from "./dataBooking";
+import { DataNotif } from "./dataNotif";
 import { DataLoading } from "./dataLoading";
 import { DataFlight } from "./dataFlight";
 import { DataTrip } from "./dataTrip";
@@ -41,7 +42,7 @@ export {
     HotelData,
     UserData,
     MessagesData,
-    NotificationData,
+    // NotificationData,
     PostData,
     PackageData,
     WorkProgressData,
@@ -53,6 +54,7 @@ export {
     DataMasterDiskon,
     DataPayment,
     DataBooking,
+    DataNotif,
     DataLoading,
     DataFlight,
     DataTrip,

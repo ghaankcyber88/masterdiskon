@@ -23,6 +23,8 @@ import moment from 'moment';
 import {PostDataNew} from '../../services/PostDataNew';
 import Barcode from "react-native-barcode-builder";
 import CardCustomProfile from "../../components/CardCustomProfile";
+import FormOptionPayment from "../../components/FormOptionPayment";
+
 
 const styles = StyleSheet.create({
     containField: {
@@ -129,8 +131,21 @@ export default class Pembayaran extends Component {
             dataBooking:DataBooking,
             payment: [
                 {
+                    payment_type:"credit_card",
+                    payment_type_label: "Kartu Kredit",
+                    option:false,
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
+                {
                     payment_type:"bank_transfer",
-                    payment_type_label: "Bank Transfer",
+                    payment_type_label: "ATM / Bank Transfer",
+                    option:true,
                     subPayment:[
                                     {
                                         payment_sub:"bca",
@@ -148,12 +163,12 @@ export default class Pembayaran extends Component {
                                         icon:"",
                                     },
                                    
-                                    
                                 ]
                 },
                 {
-                    payment_type:"credit_card",
-                    payment_type_label: "Kartu Kredit",
+                    payment_type:"pembayaran_qr",
+                    payment_type_label: "Pembayaran QR",
+                    option:false,
                     subPayment:[
                                     {
                                         payment_sub:"visa_mastercard",
@@ -162,6 +177,105 @@ export default class Pembayaran extends Component {
                                     }
                                 ]
                 },
+                {
+                    payment_type:"klik_bca",
+                    payment_type_label: "Klik BCA",
+                    option:false,
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
+                {
+                    payment_type:"bca_klik_pay",
+                    payment_type_label: "BCA KlikPay",
+                    option:false,
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
+                {
+                    payment_type:"cimb_clicks",
+                    payment_type_label: "CIMB Clicks",
+                    option:false,
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
+                {
+                    payment_type:"danamon_online_banking",
+                    payment_type_label: "Danamon Online Banking",
+                    option:false,
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
+                {
+                    payment_type:"telkomsel_cash",
+                    payment_type_label: "Telkomsel Cash",
+                    option:false,
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
+                {
+                    payment_type:"indomart",
+                    payment_type_label: "Indomart",
+                    option:false,
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
+                {
+                    payment_type:"alfamart",
+                    payment_type_label: "Alfamart",
+                    option:false,
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
+                {
+                    payment_type:"akulaku",
+                    payment_type_label: "Akulaku",
+                    option:false,
+                    subPayment:[
+                                    {
+                                        payment_sub:"visa_mastercard",
+                                        payment_sub_label:"Kartu Kredit",
+                                        icon:"",
+                                    }
+                                ]
+                },
+             
+                
+                
             ],
         };
 
@@ -583,6 +697,14 @@ export default class Pembayaran extends Component {
         var content=<View></View>
         var status_name='';
         var content=<View></View>
+        var content_modal=<FormOptionQty
+                                    title={'Quantity'}
+                                    titleSub={'Anda dapat mengambil 3 voucher dalam sekali transaksi'}
+                                    listdata={this.state.listdataPerson}
+                                    setMinPerson={this.setVoucher}
+                                    selectedText={this.state.minVoucher + ' Voucher'}
+                                    icon={'user'}
+                            />
 
 
         
@@ -590,17 +712,34 @@ export default class Pembayaran extends Component {
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
         var content_bank = [];
         this.state.payment.map((item, index) => (
-            content_bank.push(<View>
-                <Text title3 semibold>
-                    {item.payment_type_label}
-                </Text>
-                <Bank 
-                    id_order={this.state.id_order} 
-                    payment={item} 
-                    subPayment={item.subPayment} 
-                    navigation={navigation} 
-                    />
-            </View>
+            content_bank.push(
+            <TouchableOpacity
+                            style={styles.profileItem}
+                            onPress={() => {
+                                navigation.navigate("PembayaranDetail",{
+                                    param:param,
+                                });
+                            }}
+                        >
+                            <Text body2 bold>{item.payment_type_label}</Text>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center"
+                                }}
+                            >
+                                {/* <Text caption2 grayColor>
+                                    {item.icon}
+                                </Text> */}
+                                <Icon
+                                    name="angle-right"
+                                    //size={18}
+                                    color={BaseColor.primaryColor}
+                                    style={{ marginLeft: 5 }}
+                                />
+                            </View>
+
+            </TouchableOpacity>
             )
         ))
       
@@ -688,6 +827,7 @@ export default class Pembayaran extends Component {
         return(
             <View>
                     {content}
+                    
             </View>
         )
     }
@@ -978,19 +1118,19 @@ class Bank extends Component {
                                 });
                             }}
                         >
-                            <Text body1>{item.payment_sub_label}</Text>
+                            <Text caption2 grayColor>{item.payment_sub_label}</Text>
                             <View
                                 style={{
                                     flexDirection: "row",
                                     alignItems: "center"
                                 }}
                             >
-                                <Text body1 grayColor>
+                                <Text caption2 grayColor>
                                     {item.icon}
                                 </Text>
                                 <Icon
                                     name="angle-right"
-                                    size={18}
+                                    //size={18}
                                     color={BaseColor.primaryColor}
                                     style={{ marginLeft: 5 }}
                                 />

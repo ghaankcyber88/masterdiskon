@@ -294,58 +294,28 @@ class Profile extends Component {
                                     }}
                                 
                                 />
-                                {/* <TouchableOpacity
+                                <CardCustomProfile 
+                                    title={'Ubah Kata Sandi'}
+                                    subtitle={'Pesenan lebih cepat, isi data penumpang, dengan satu klik'}
+                                    icon={'home'}
                                     onPress={() => {
-                                        navigation.navigate("ProfileSmart",{sourcePage:'profile'});
+                                        this.props.navigation.navigate("ProfileSmart",{sourcePage:'profile'});
                                     }}
-                                >   
-    
-                                    <View style={styles.contain}>
-                                        <Icon
-                                                    name="user-check"
-                                                    size={18}
-                                                    color={BaseColor.primaryColor}
-                                                />
-                                        
-                                        <View style={styles.content}>
-                                            <View style={styles.left}>
-                                                <Text headline semibold>
-                                                   QuickPick
-                                                </Text>
-                                                <Text
-                                                    note
-                                                    numberOfLines={2}
-                                                    footnote
-                                                    grayColor
-                                                    style={{
-                                                        paddingTop: 5
-                                                    }}
-                                                >
-                                                   Pesenan lebih cepat, isi data penumpang, dengan satu klik
-                                                </Text>
-                                            </View>
-                                            <View style={styles.right}>
-                                                <Icon
-                                                name="angle-right"
-                                                size={18}
-                                                color={BaseColor.primaryColor}
-                                            />
-                                            </View>
-                                        </View>
-                                    </View>
-                                </TouchableOpacity> */}
+                                
+                                />
+
                             </View>
                         </View>
                     </View>
                     <View style={{ paddingLeft: 20,paddingRight:20 }}>
-                    <Button
-                        full
-                        loading={loading}
-                        onPress={() => this.onLogOut()}
-                    >
-                        Sign Out
-                    </Button>
-                </View>
+                        <Button
+                            full
+                            loading={loading}
+                            onPress={() => this.onLogOut()}
+                        >
+                            Sign Out
+                        </Button>
+                    </View>
                 </ScrollView>
           
                 </View>

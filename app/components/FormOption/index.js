@@ -11,40 +11,54 @@ export default class FormOption extends Component {
         super(props);
         this.state = {
             modalVisible: false,
-            option: props.option,
-            value: props.value,
-            text:props.text
+            // option: props.option,
+            // value: props.value,
+            // text:props.text,
+            // setKelasPesawat:props.setKelasPesawat,
+            
+            
+            style: props.style,
+            label:props.label,
+            option:props.option,
+            optionSet: props.optionSet,
+            optionSelectText:props.optionSelectText,
+            optionSelectValue:props.optionSelectValue,
         };
     }
 
     componentDidMount() {
-        const { option, value } = this.state;
+        console.log(optionSelectValue);
+        const { style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
         this.setState({
-            option: this.props.listdata.map(item => {
+            option: option.map(item => {
                 return {
                     ...item,
-                    checked: item.value == value
+                    checked: item.value == optionSelectValue
                 };
             })
         });
     }
 
     openModal() {
-        const { option, value } = this.state;
+    
+        const { style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
+        console.log(optionSelectValue);
+        
         this.setState({
             modalVisible: true,
             option: option.map(item => {
                 return {
                     ...item,
-                    checked: item.value == value
+                    checked: item.value == optionSelectValue
                 };
             })
         });
     }
 
     onSelect(select) {
+        const { option, value,setKelasPesawat } = this.state;
         this.setState({
-            option: this.state.option.map(item => {
+            option: option.map(item => {
                 return {
                     ...item,
                     checked: item.value == select.value
@@ -53,7 +67,7 @@ export default class FormOption extends Component {
         });
         
 
-        this.props.setKelasPesawat(select.text,select.value);
+        setKelasPesawat(select.text,select.value);
             this.setState(
                 {
                     value: select.value,
@@ -76,14 +90,14 @@ export default class FormOption extends Component {
                             modalVisible: false,
                             option: this.props.option
                         });
-                        onCancel();
+                        //onCancel();
                     }}
                     onSwipeComplete={() => {
                         this.setState({
                             modalVisible: false,
                             option: this.props.option
                         });
-                        onCancel();
+                        //onCancel();
                     }}
                     swipeDirection={["down"]}
                     style={styles.bottomModal}
@@ -136,36 +150,56 @@ export default class FormOption extends Component {
 
 
 FormOption.propTypes = {
+    // style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
+    // label: PropTypes.string,
+    // value: PropTypes.string,
+    // option: PropTypes.array,
+    // onCancel: PropTypes.func,
+    // onChange: PropTypes.func,
+    // selectedText:PropTypes.string,
+    // setKelasPesawat: PropTypes.func,
+    
+    
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-    label: PropTypes.string,
-    value: PropTypes.string,
+    label:PropTypes.string,
     option: PropTypes.array,
-    onCancel: PropTypes.func,
-    onChange: PropTypes.func
+    optionSet: PropTypes.func,
+    optionSelectText: PropTypes.string,
+    optionSelectValue: PropTypes.string,
 };
 
 FormOption.defaultProps = {
+    // style: {},
+    // label: "Seat Class",
+    // value: "E",
+    // selectedText:"",
+    // option: [
+    //     {
+    //         value: "E",
+    //         text: "Economy Class"
+    //     },
+    //     {
+    //         value: "S",
+    //         text: "Business Class"
+    //     },
+    //     {
+    //         value: "B",
+    //         text: "First Class"
+    //     },
+    //     {
+    //         value: "F",
+    //         text: "Normal Class"
+    //     }
+    // ],
+    // onCancel: () => {},
+    // onChange: () => {},
+    // setKelasPesawat: () => {}
+    
+    
     style: {},
-    label: "Seat Class",
-    value: "E",
-    option: [
-        {
-            value: "E",
-            text: "Economy Class"
-        },
-        {
-            value: "S",
-            text: "Business Class"
-        },
-        {
-            value: "B",
-            text: "First Class"
-        },
-        {
-            value: "F",
-            text: "Normal Class"
-        }
-    ],
-    onCancel: () => {},
-    onChange: () => {}
+    label:"",
+    option:[{}],
+    optionSet: () => {},
+    optionSelectText: "",
+    optionSelectValue: ""
 };

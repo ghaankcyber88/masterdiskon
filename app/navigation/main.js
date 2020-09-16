@@ -193,7 +193,7 @@ const routeConfigs = {
     },
     
     Profile: {
-        screen: Profile,
+        screen: Profile1,
         navigationOptions: ({ navigation }) => ({
             title: "Account",
             tabBarIcon: ({ focused, tintColor }) => {

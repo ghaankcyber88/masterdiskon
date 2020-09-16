@@ -128,7 +128,7 @@ export default StyleSheet.create({
     contain: {
         flexDirection: "row",
         borderBottomColor: BaseColor.textSecondaryColor,
-        borderBottomWidth: 1,
+        borderBottomWidth: 0,
         paddingTop: 5,
         paddingBottom: 5,
          alignItems: "center",

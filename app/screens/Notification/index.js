@@ -1,22 +1,15 @@
 import React, { Component } from "react";
 import { RefreshControl, FlatList,TouchableOpacity,AsyncStorage,ActivityIndicator,Image } from "react-native";
 import { BaseStyle, BaseColor,Images } from "@config";
-import { Header, SafeAreaView, Icon, ListThumbCircle, Text,Button} from "@components";
+import { Header, SafeAreaView, Icon, ListThumbCircle, Text,Button,Tag} from "@components";
 import styles from "./styles";
 import {PostData} from '../../services/PostData';
 // Load sample data
-import { NotificationData,DataLoading } from "@data";
+import { DataNotif } from "@data";
 import { View } from "react-native-animatable";
 import CardCustomNotif from "../../components/CardCustomNotif";
 
-import {
-  Placeholder,
-  PlaceholderMedia,
-  PlaceholderLine,
-  Fade
-} from "rn-placeholder";
 import NotYetLogin from "../../components/NotYetLogin";
-import PTRView from 'react-native-pull-to-refresh';
 import {PostDataNew} from '../../services/PostDataNew';
 export default class Notification extends Component {
     constructor(props) {
@@ -24,7 +17,13 @@ export default class Notification extends Component {
         this.state = {
             refreshing: false,
             login:false,
-            notification:DataLoading,
+            notification:DataNotif,
+            statuses: [
+                { id: "0", name: "Belum Dilihat", checked: true },
+                { id: "1", name: "Sudah Dilihat" },
+            ],
+            idParam:"0",
+            status:"belum_dilihat"
 
         };
         this.getConfig();
@@ -35,7 +34,6 @@ export default class Notification extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                //console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -47,7 +45,6 @@ export default class Notification extends Component {
             if (result) {    
                 let userSession = JSON.parse(result);
                 var id_user=userSession.id_user;
-                //console.log('getSession',userSession);
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
                 this.setState({login:true});
@@ -55,67 +52,82 @@ export default class Notification extends Component {
         });
     }
     
-
-    getNotif(){
-        const {config,login} =this.state;
-
-        if(login==true){
-            var url=config.baseUrl;
-            var path=config.user_notif.dir;
-            
-            var id_user=this.state.id_user;
-            var data={"id_user":id_user}
-            var param={"param":data}
-            //console.log("paramnotif",JSON.stringify(param));
-            var body=param;
-            this.setState({ loading_spinner: true }, () => {
-                var param={
-                    method: 'POST',
-                    headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    },
-                    body: body,
+    onSelectStatus(select) {
+        this.setState({
+            statuses: this.state.statuses.map(item => {
+                if (item.id == select.id) {
+                    return {
+                        ...item,
+                        checked: true
+                    };
+                } else {
+                    return {
+                        ...item,
+                        checked: false
+                    };
                 }
-                PostDataNew(url,path,param)
-                    .then((result) => {
-                        //console.log("getNotif",JSON.stringify(result));
-                        this.setState({loading_spinner: false });
-                        this.setState({notification:result});
-                    },
-                    (error) => {
-                        this.setState({ error });
-                    }
-                ); 
-            });
+            })
+        });
+        //alert(select.id);
+        this.setState({idParam:select.id});
+        if(select.id=="0"){
+            this.setState({status:"belum_dilihat"});
+        }else{
+            this.setState({status:"dilihat"});
         }
+        setTimeout(() => {
+            this.fetchs();
+        }, 200);
+        
+        
     }
     
+
     
+    fetchs(){
+        const {config,login,idParam,id_user,status} =this.state;
+        var url=config.baseUrl;
+        var path=config.user_notif.dir;
+        this.setState({ loading_spinner: true }, () => {
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            var raw = JSON.stringify({"param":{"id_user":id_user,"seen":idParam}});
+            console.log("paramnotif",raw);
+            var requestOptions = {
+              method: 'POST',
+              headers: myHeaders,
+              body: raw,
+              redirect: 'follow'
+            };
+            
+            fetch(url+path, requestOptions)
+                .then(response => response.json())
+              .then(result => {
+                console.log("getNotif",JSON.stringify(result));
+                this.setState({loading_spinner: false });
+                this.setState({notification:result});
+              })
+              .catch(error => console.log('error', error));
+        });
+    }
     
 
     componentDidMount() {
-        let { login} = this.state;
+        let {} = this.state;
         const {navigation} = this.props;
-
-        //if(login){
             navigation.addListener ('willFocus', () =>{
                 this.setState({ loading_spinner: true });
                 setTimeout(() => {
-                    this.getNotif();
+                    this.fetchs();
                 }, 200);
             });
         //}
     }
-    _refresh() {
-        return new Promise((resolve) => {
-          setTimeout(()=>{resolve()}, 2000)
-        });
-    }
+
         
     render() {
         const { navigation } = this.props;
-        let { notification,login,loading_spinner } = this.state;
+        let { notification,login,loading_spinner,statuses } = this.state;
 
         var content=<View></View>
         if (notification.length == 0) {
@@ -145,13 +157,13 @@ export default class Notification extends Component {
                             />
                         }
                         data={notification}
-                        keyExtractor={(item, index) => item.id}
+                        keyExtractor={(item, index) => item.id_notification}
                         renderItem={({ item, index }) => (
                             <CardCustomNotif
                                 image={item.image}
                                 txtLeftTitle={item.title}
                                 txtContent={item.content}
-                                txtRight={item.date_added}
+                                txtRight={item.id_user}
                                 loading={this.state.loading_spinner}
                                 onPress={() => {
                                     var param={
@@ -161,7 +173,6 @@ export default class Notification extends Component {
                                     }
                                     
                                     this.props.navigation.navigate("WebViewPage",{param:param});
-                                    //this.props.navigation.navigate("WebViewPage",{url:item.tautan+'?access=app',title:'Pembayaran'});
                                 }}
                             />
                         )}
@@ -190,7 +201,32 @@ export default class Notification extends Component {
                 />
                  {
                     login ? 
-                    content
+                    <View style={{}}>
+                        <View style={[styles.contentList]}>
+                            <View style={{marginLeft:20}}>
+                            <FlatList
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                data={statuses}
+                                keyExtractor={(item, index) => item.id}
+                                renderItem={({ item, index }) => (
+                                    <Tag
+                                        primary={item.checked}
+                                        style={{ marginRight: 10, width: 'auto' }}
+                                        outline={!item.checked}
+                                        onPress={() =>
+                                            this.onSelectStatus(item)
+                                        }
+                                    >
+                                        {item.name}
+                                    </Tag>
+                                )}
+                            />
+                            </View>
+                        </View>
+                        {content}
+                        
+                    </View>
                        
                          
                 :

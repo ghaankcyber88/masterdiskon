@@ -17,8 +17,7 @@ export default class Booking extends Component {
             login:false,
             dataBooking:DataBooking,
             loading_spinner:false,
-            
-            facilities: [
+            statuses: [
                 { id: "1", name: "New Order", checked: true },
                 { id: "3", name: "Processed" },
                 { id: "5", name: "Paid" },
@@ -54,7 +53,6 @@ export default class Booking extends Component {
             if (result) {    
                 let userSession = JSON.parse(result);
                 var id_user=userSession.id_user;
-                //console.log('getSession',userSession);
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
                 this.setState({login:true});
@@ -64,39 +62,31 @@ export default class Booking extends Component {
     
     
     fetch(){
-        const {config,login} =this.state;
+        const {config,login,id_user,idParam} =this.state;
         
-        if(login==true){
             var url=config.baseUrl;
             var path=config.user_order.dir;
             
-            var id_user=this.state.id_user;
-            var data={"id":id_user,"id_order":"","id_order_status":this.state.idParam,"product":""};
-            var parameter={"param":data}
-            var body=parameter;
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
             
-            console.log(JSON.stringify(body));
-
-            this.setState({ loading_spinner: true }, () => {
-                var param={
-                    method: 'POST',
-                    headers: {
-                      Accept: 'application/json',
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(body),
-                  }
-                 PostDataNew(url,path,param)
-                     .then((result) => {
-                        this.setState({loading_spinner: false });
-                        this.setState({dataBooking: result});
-                     },
-                     (error) => {
-                         this.setState({ error });
-                     }
-                ); 
-            });
-        }
+            var raw = JSON.stringify({"param":{"id":id_user,"id_order":"","id_order_status":idParam,"product":""}});
+            
+            var requestOptions = {
+              method: 'POST',
+              headers: myHeaders,
+              body: raw,
+              redirect: 'follow'
+            };
+            
+            fetch(url+path, requestOptions)
+              .then(response => response.json())
+              .then(result => {
+                this.setState({loading_spinner: false });
+                this.setState({dataBooking: result});
+              })
+              .catch(error => console.log('error', error));
+        
     }
    
 
@@ -114,7 +104,7 @@ export default class Booking extends Component {
     
     onSelectStatus(select) {
         this.setState({
-            facilities: this.state.facilities.map(item => {
+            statuses: this.state.statuses.map(item => {
                 if (item.id == select.id) {
                     return {
                         ...item,
@@ -139,7 +129,7 @@ export default class Booking extends Component {
 
     render() {
         const { navigation } = this.props;
-        let { login,dataBooking,facilities} = this.state;
+        let { login,dataBooking,statuses} = this.state;
 
         var content=<View></View>
         if (dataBooking.length == 0) {
@@ -233,7 +223,7 @@ export default class Booking extends Component {
                                 <FlatList
                                     horizontal={true}
                                     showsHorizontalScrollIndicator={false}
-                                    data={facilities}
+                                    data={statuses}
                                     keyExtractor={(item, index) => item.id}
                                     renderItem={({ item, index }) => (
                                         <Tag

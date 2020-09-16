@@ -165,10 +165,12 @@ export default class CardCustomNotif extends Component {
                         </View>
                         <View style={styles.right}>
                             <Text caption2 grayColor style={{fontSize:14,fontWeight: "bold"}}>
-                                {this.convertDay(txtRight)}
+                                {/* {this.convertDay(txtRight)} */}
+                                {txtRight}
                             </Text>
                             <Text caption2 grayColor>
-                                {this.convertDate(txtRight)}
+                            {txtRight}
+                                {/* {this.convertDate(txtRight)} */}
                             </Text>
                         </View>
                     </View>

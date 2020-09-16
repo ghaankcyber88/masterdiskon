@@ -10,9 +10,11 @@ import {
     HotelItem,
     Tag,
     ProfilePerformance,
-    Card
+    Card,
+    Button
 } from "@components";
 import styles from "./styles";
+import CardCustomProfile from "../../components/CardCustomProfile";
 
 // Load sample data
 import { UserData, HotelData, TourData } from "@data";
@@ -35,8 +37,8 @@ export default class Profile1 extends Component {
 
         return (
             <SafeAreaView
-                style={BaseStyle.safeAreaView}
-                forceInset={{ top: "always" }}
+            style={[BaseStyle.safeAreaView,{backgroundColor:BaseColor.bgColor}]}
+            forceInset={{ top: "always" }}
             >
                 <Header
                     title="Profile1"
@@ -83,103 +85,44 @@ export default class Profile1 extends Component {
                             </Text>
                         </View>
                     </View>
-                    <Text body2 grayColor style={styles.description}>
-                        {userData.about}
-                    </Text>
-                    <View style={styles.contentField}>
-                        <ProfilePerformance
-                            type="primary"
-                            data={userData.performance}
-                        />
-                    </View>
-                    {/* Tour Information */}
-                    <View>
-                        <Text
-                            title3
-                            semibold
-                            style={{
-                                marginLeft: 20,
-                                marginTop: 20,
-                                marginBottom: 10
-                            }}
-                        >
-                            Tours
-                        </Text>
-                        <FlatList
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            data={tours}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <Card
-                                        style={[
-                                            styles.tourItem,
-                                            index == 0
-                                                ? {
-                                                      marginLeft: 20,
-                                                      marginRight: 15
-                                                  }
-                                                : { marginRight: 15 }
-                                        ]}
-                                        image={item.image}
-                                        onPress={() =>
-                                            navigation.navigate("TourDetail")
-                                        }
-                                    >
-                                        <Text headline semibold whiteColor>
-                                            {item.name}
-                                        </Text>
-                                    </Card>
-                                );
-                            }}
-                        />
-                    </View>
-                    {/* Hotel Information */}
-                    <View>
-                        <Text
-                            title3
-                            semibold
-                            style={{
-                                marginLeft: 20,
-                                marginTop: 20,
-                                marginBottom: 10
-                            }}
-                        >
-                            Hotels
-                        </Text>
-                        <FlatList
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            data={hotels}
-                            keyExtractor={(item, index) => item.id}
-                            renderItem={({ item, index }) => (
-                                <HotelItem
-                                    grid
-                                    style={[
-                                        styles.hotelItem,
-                                        index == 0
-                                            ? {
-                                                  marginLeft: 20,
-                                                  marginRight: 15
-                                              }
-                                            : { marginRight: 15 }
-                                    ]}
-                                    image={item.image}
-                                    name={item.name}
-                                    location={item.location}
-                                    price={item.price}
-                                    available={item.available}
-                                    rate={item.rate}
-                                    rateStatus={item.rateStatus}
-                                    numReviews={item.numReviews}
+                    
+                    
+                    <View style={{ marginHorizontal: 20,marginTop:20}}>
+                        <View style={{ width: "100%" }}>
+                            <View style={{paddingBottom:50}}>
+                                <CardCustomProfile 
+                                    title={'QuickPick'}
+                                    subtitle={'Pesenan lebih cepat, isi data penumpang, dengan satu klik'}
+                                    icon={'home'}
                                     onPress={() => {
-                                        navigation.navigate("HotelDetail");
+                                        this.props.navigation.navigate("ProfileSmart",{sourcePage:'profile'});
                                     }}
+                                
                                 />
-                            )}
-                        />
+                                <CardCustomProfile 
+                                    title={'Ubah Kata Sandi'}
+                                    subtitle={'Pesenan lebih cepat, isi data penumpang, dengan satu klik'}
+                                    icon={'home'}
+                                    onPress={() => {
+                                        this.props.navigation.navigate("ProfileSmart",{sourcePage:'profile'});
+                                    }}
+                                
+                                />
+
+                            </View>
+                        </View>
                     </View>
+                    
+                    <View style={{ marginHorizontal: 20}}>
+                        <Button
+                            full
+                            onPress={() => this.onLogOut()}
+                        >
+                            Sign Out
+                        </Button>
+                    </View>
+                    
+                   
                 </ScrollView>
             </SafeAreaView>
         );
