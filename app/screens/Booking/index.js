@@ -3,21 +3,11 @@ import { RefreshControl, FlatList,TouchableOpacity,AsyncStorage,ActivityIndicato
 import { BaseStyle, BaseColor,Images } from "@config";
 import { Header, SafeAreaView, Icon, ListThumbCircle, Text,Button,CommentItem,Tag} from "@components";
 import styles from "./styles";
-import {PostData} from '../../services/PostData';
-// Load sample data
-// import { NotificationData,DataLoading,DataBooking } from "@data";
 import { View } from "react-native-animatable";
 import NotYetLogin from "../../components/NotYetLogin";
-import PTRView from 'react-native-pull-to-refresh';
-import {
-  Placeholder,
-  PlaceholderMedia,
-  PlaceholderLine,
-  Fade
-} from "rn-placeholder";
 import CardCustomBooking from "../../components/CardCustomBooking";
-import {DataLoading,DataConfig,DataBooking } from "@data";
 import {PostDataNew} from '../../services/PostDataNew';
+import {DataLoading,DataConfig,DataBooking } from "@data";
 
 export default class Booking extends Component {
     constructor(props) {
@@ -27,11 +17,6 @@ export default class Booking extends Component {
             login:false,
             dataBooking:DataBooking,
             loading_spinner:false,
-            
-            statusTagihan:false,
-            statusComplete:true,
-            statusArsip:true,
-            status:'tagihan',
             
             facilities: [
                 { id: "1", name: "New Order", checked: true },
@@ -116,21 +101,18 @@ export default class Booking extends Component {
    
 
     componentDidMount() {
-        let { login} = this.state;
+        let {} = this.state;
         const {navigation} = this.props;
-        
-        
             navigation.addListener ('didFocus', () =>{
                 this.setState({ loading_spinner: true });
                 setTimeout(() => {
-                    //console.log('idParam',this.state.idParam);
                     this.fetch();
                 }, 200);
             });
     }
   
     
-    onSelectFacilities(select) {
+    onSelectStatus(select) {
         this.setState({
             facilities: this.state.facilities.map(item => {
                 if (item.id == select.id) {
@@ -157,7 +139,7 @@ export default class Booking extends Component {
 
     render() {
         const { navigation } = this.props;
-        let { login,loading_spinner,dataBooking,facilities} = this.state;
+        let { login,dataBooking,facilities} = this.state;
 
         var content=<View></View>
         if (dataBooking.length == 0) {
@@ -259,7 +241,7 @@ export default class Booking extends Component {
                                             style={{ marginRight: 10, width: 80 }}
                                             outline={!item.checked}
                                             onPress={() =>
-                                                this.onSelectFacilities(item)
+                                                this.onSelectStatus(item)
                                             }
                                         >
                                             {item.name}
