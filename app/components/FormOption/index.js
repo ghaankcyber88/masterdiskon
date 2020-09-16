@@ -28,7 +28,7 @@ export default class FormOption extends Component {
 
     componentDidMount() {
         console.log(optionSelectValue);
-        const { style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
+        const { modalVisible,style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
         this.setState({
             option: option.map(item => {
                 return {
@@ -41,7 +41,7 @@ export default class FormOption extends Component {
 
     openModal() {
     
-        const { style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
+        const { modalVisible,style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
         console.log(optionSelectValue);
         
         this.setState({
@@ -56,7 +56,7 @@ export default class FormOption extends Component {
     }
 
     onSelect(select) {
-        const { option, value,setKelasPesawat } = this.state;
+        const { modalVisible,style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
         this.setState({
             option: option.map(item => {
                 return {
@@ -79,8 +79,8 @@ export default class FormOption extends Component {
 
 
     render() {
-        const { style, label, onCancel } = this.props;
-        const { modalVisible, option, value } = this.state;
+        // const { style, label, onCancel } = this.props;
+        const { modalVisible,style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
         return (
             <View>
                 <Modal
