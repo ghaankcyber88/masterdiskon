@@ -267,9 +267,6 @@ export default function PembayaranDetail(props) {
         }
         
         
-        
-        
-        
         if(payment_type=='bank_transfer'){
             var paramPay={
                 payment_type: payment_type,
@@ -292,11 +289,6 @@ export default function PembayaranDetail(props) {
             }
         }
         
-        
-        
-        
-        //console.log('paramPay',JSON.stringify(paramPay))
-        
         var param={
             method: 'POST',
             headers: {
@@ -313,8 +305,6 @@ export default function PembayaranDetail(props) {
          
          return PostDataNew(url,'v2/charge',param)
              .then((result) => {
-                //console.log("---------------result payment midtarns ------------");
-                //console.log(JSON.stringify(result));
                 
                 setLoading(false);
                 

@@ -703,6 +703,12 @@ export default class FlightResult extends Component {
                         
                             
                 {this.renderContent()}
+                {
+                    loading_spinner ?
+                    <ActivityIndicator size="large" color={BaseColor.primaryColor} />
+                    :
+                    <View></View>
+                }
                 
               
                 {/* <Modal

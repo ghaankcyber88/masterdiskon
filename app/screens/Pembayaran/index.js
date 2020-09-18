@@ -23,7 +23,8 @@ import moment from 'moment';
 import {PostDataNew} from '../../services/PostDataNew';
 import Barcode from "react-native-barcode-builder";
 import CardCustomProfile from "../../components/CardCustomProfile";
-import FormOptionPayment from "../../components/FormOptionPayment";
+import ModalOption from "../../components/ModalOption";
+import Modal from "react-native-modal";
 
 
 const styles = StyleSheet.create({
@@ -67,6 +68,47 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         paddingBottom: 20,
         paddingTop: 20
+    },
+    
+    
+    
+    
+    contentForm: {
+        padding: 10,
+        borderRadius: 8,
+        width: "100%",
+        //backgroundColor: BaseColor.fieldColor
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: BaseColor.fieldColor,
+    },
+    bottomModal: {
+        justifyContent: "flex-end",
+        margin: 0
+    },
+    contentFilterBottom: {
+        width: "100%",
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        paddingHorizontal: 20,
+        backgroundColor: BaseColor.whiteColor
+    },
+    contentSwipeDown: {
+        paddingTop: 10,
+        alignItems: "center"
+    },
+    lineSwipeDown: {
+        width: 30,
+        height: 2.5,
+        backgroundColor: BaseColor.dividerColor
+    },
+    contentActionModalBottom: {
+        flexDirection: "row",
+        paddingVertical: 10,
+        marginBottom: 10,
+        justifyContent: "space-between",
+        borderBottomColor: BaseColor.textSecondaryColor,
+        borderBottomWidth: 1
     }
 });
 
@@ -277,6 +319,26 @@ export default class Pembayaran extends Component {
                 
                 
             ],
+            modalVisible:false,
+            option:[
+                {
+                    payment_sub:"bca",
+                    payment_sub_label:"BCA",
+                    icon:"",
+                },
+                {
+                    payment_sub:"bni",
+                    payment_sub_label:"BNI",
+                    icon:"",
+                },
+                {
+                    payment_sub:"permata",
+                    payment_sub_label:"PERMATA",
+                    icon:"",
+                },
+               
+            ],
+            paymentChooseTemp:{}
         };
 
         this.getConfig();
@@ -688,37 +750,132 @@ export default class Pembayaran extends Component {
         )
     }
     
+    modalShow(status,item){
+    this.setState({modalVisible:status});
+    this.setState({option:item.subPayment});
+    this.setState({paymentChooseTemp:item});
+    }
     
+    gotoPaymentDetailSub(item){
+        this.setState({modalVisible:false});
+        const { navigation} = this.props;
+        const {id_order,paymentChooseTemp} =this.state;
+        
+        console.log('paymentChooseTemp',JSON.stringify(paymentChooseTemp));
+        console.log('paymentChooseSub',JSON.stringify(item));
+        var dataPayment={
+            payment_type:paymentChooseTemp.payment_type,
+            payment_type_label:paymentChooseTemp.payment_type_label,
+            payment_sub:item.payment_sub,
+            payment_sub_label:item.payment_sub_label,
+        }
+        
+        var param={
+            id_order:id_order,
+            dataPayment:dataPayment
+        }
+        navigation.navigate("PembayaranDetail",{
+            param:param,
+        });
+    
+    }
+    
+    
+    gotoPaymentDetail(item){
+        const { navigation} = this.props;
+        const {id_order} =this.state;
+        var dataPayment={
+            payment_type:item.payment_type,
+            payment_type_label:item.payment_type_label,
+            payment_sub:item.subPayment[0].payment_sub,
+            payment_sub_label:item.subPayment[0].payment_sub_label,
+        }
+        
+        var param={
+            id_order:id_order,
+            dataPayment:dataPayment
+        }
+        navigation.navigate("PembayaranDetail",{
+            param:param,
+        });
+    
+    }
+    
+ 
     content_bank(){
+        const {option} =this.state;
         var item=this.state.dataBooking[0];
         var order_payment_recent=item.order_payment_recent;
         var order_expired=item.order_expired;
         var expiredTime=this.duration(order_expired);
         var content=<View></View>
         var status_name='';
-        var content=<View></View>
-        var content_modal=<FormOptionQty
-                                    title={'Quantity'}
-                                    titleSub={'Anda dapat mengambil 3 voucher dalam sekali transaksi'}
-                                    listdata={this.state.listdataPerson}
-                                    setMinPerson={this.setVoucher}
-                                    selectedText={this.state.minVoucher + ' Voucher'}
-                                    icon={'user'}
-                            />
-
-
-        
         const { navigation} = this.props;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
         var content_bank = [];
+
+        var content=<View></View>
+        var content_modal=<Modal
+                                isVisible={this.state.modalVisible}
+                                onBackdropPress={() => {
+                                    this.setState({modalVisible:false});
+                                }}
+                                onSwipeComplete={() => {
+                                    this.setState({modalVisible:false});
+                                }}
+                                swipeDirection={["down"]}
+                                style={styles.bottomModal}
+                            >
+                                <View style={styles.contentFilterBottom}>
+                                    <View style={styles.contentSwipeDown}>
+                                        <View style={styles.lineSwipeDown} />
+                                    </View>
+                                    {option.map((item, index) => (
+                                        <TouchableOpacity
+                                            style={styles.contentActionModalBottom}
+                                            key={item.value}
+                                            onPress={() => {
+                                            //this.onSelect(item)
+                                            this.gotoPaymentDetailSub(item);
+                                            
+                                            }}
+                                        >
+                                            <Text
+                                                body2
+                                                semibold
+                                                primaryColor={item.checked}
+                                            >
+                                                {item.payment_sub_label}
+                                            </Text>
+                                            {/* {item.checked && (
+                                                <Icon
+                                                    name="check"
+                                                    size={14}
+                                                    color={BaseColor.primaryColor}
+                                                />
+                                            )} */}
+                                        </TouchableOpacity>
+                                    ))}
+                                  
+                                </View>
+                            </Modal>
+
+
+        
         this.state.payment.map((item, index) => (
             content_bank.push(
             <TouchableOpacity
                             style={styles.profileItem}
                             onPress={() => {
-                                navigation.navigate("PembayaranDetail",{
-                                    param:param,
-                                });
+                                if(item.option==true){
+                                    //alert('modal');
+                                    this.modalShow(true,item);
+                                }else{
+                                    
+                                    this.gotoPaymentDetail(item);
+                                    //alert('modal bukan');
+                                }
+                                
                             }}
                         >
                             <Text body2 bold>{item.payment_type_label}</Text>
@@ -827,6 +984,7 @@ export default class Pembayaran extends Component {
         return(
             <View>
                     {content}
+                    {content_modal}
                     
             </View>
         )

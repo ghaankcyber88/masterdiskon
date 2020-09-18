@@ -118,10 +118,9 @@ export default class SetDateLong extends Component {
 
       onDateChange(date, type) {
         const { navigation } = this.props;
-        const {round,modalVisible}=this.state;
         const {setBookingTime}=this.props;
         
-        if(round==true){
+        if(this.props.round==true){
           if (type === 'END_DATE') {
 
             this.setState({
@@ -133,7 +132,7 @@ export default class SetDateLong extends Component {
             });
             
             setTimeout(() => {
-                setBookingTime(this.state.selectedStartDateBooking,this.state.selectedEndDateBooking,round);
+                setBookingTime(this.state.selectedStartDateBooking,this.state.selectedEndDateBooking,this.props.round);
                 this.setState({modalVisible:false});
              }, 200);
                         
@@ -163,7 +162,7 @@ export default class SetDateLong extends Component {
    
 
            setTimeout(() => {
-            setBookingTime(this.state.selectedStartDateBooking,this.state.selectedEndDateBooking,round);
+            setBookingTime(this.state.selectedStartDateBooking,this.state.selectedEndDateBooking,this.props.round);
             this.setState({modalVisible:false});
          }, 200);
           
