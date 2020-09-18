@@ -5,17 +5,17 @@ import {
     Header,
     SafeAreaView,
     Icon,
-    BookingTime,
     Tag,
     FlightPlan,
     FormOption,
     QuantityPicker,
-    // QuantityPickerHorizontalHorizontal,
     Button
 } from "@components";
 import styles from "./styles";
-import { Image } from "@components";
 import NotYetLogin from "../../components/NotYetLogin";
+import SetDate from "../../components/SetDate";
+import SetDateLong from "../../components/SetDateLong";
+
 import QuantityPickerHorizontal from "../../components/QuantityPickerHorizontal";
 
 export default class FlightSearch extends Component {
@@ -146,8 +146,8 @@ export default class FlightSearch extends Component {
     
     
     
-    setBookingTime(tglAwal, tglAkhir) {
-        if (this.state.round ==true) {
+    setBookingTime(tglAwal, tglAkhir,round) {
+        if (round ==true) {
             this.setState({tglAwal:tglAwal});
             this.setState({tglAkhir:tglAkhir});
           
@@ -521,9 +521,21 @@ export default class FlightSearch extends Component {
                 onPressFrom={() => this.onSelectFlight("from")}
                 onPressTo={() => this.onSelectFlight("to")}
             />
-       
+
             
-            {
+
+            <View>
+                <SetDateLong
+                    labelTglAwal={'asd'}
+                    labelTglAkhir={'asdds'}
+                    setBookingTime={this.setBookingTime}
+                    tglAwal={this.state.tglAwal}
+                    tglAkhir={this.state.tglAkhir}
+                    round={this.state.round}
+                />
+            </View>
+            
+            {/* {
                     this.state.round ? 
                         <View  style={{ flexDirection: "row" }}>
                             <View style={styles.contentPickDate}>
@@ -574,7 +586,7 @@ export default class FlightSearch extends Component {
                                 </TouchableOpacity>
                             </View>
                         </View>
-            } 
+            }  */}
             <FormOption
                 style={{ marginTop: 20 }} 
                 label={'Seat Class'}

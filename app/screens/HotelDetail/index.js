@@ -288,6 +288,7 @@ export default class HotelDetail extends Component {
         this.setRoom = this.setRoom.bind(this);
         this.setTglAwal = this.setTglAwal.bind(this);
         this.setTglAkhir = this.setTglAkhir.bind(this);
+        this.setBookingTime = this.setBookingTime.bind(this);
         this.setListdataPerson=this.setListdataPerson.bind(this);
         // this.setKelasPesawat = this.setKelasPesawat.bind(this);
     }
@@ -319,12 +320,23 @@ export default class HotelDetail extends Component {
             )}
         />
     );
+
+    setBookingTime(tglAwal, tglAkhir,round) {
+        console.log(tglAwal);
+        console.log(tglAkhir);
+        if (round ==true) {
+            this.setState({tglAwal:tglAwal});
+            this.setState({tglAkhir:tglAkhir});
+          
+        } else {
+            this.setState({tglAwal:tglAwal});
+            this.setState({tglAkhir:null});
+        }
+    }
     
     setTglAwal(dateConversion,dateNumber){
         this.setState({tglAwal:dateConversion});
         this.setState({tglAwalNumber:dateNumber});
-        //console.log('setTglAwal',dateNumber);
-        //alert(dateNumber);
     }
 
     setTglAkhir(dateConversion,dateNumber){
@@ -627,15 +639,10 @@ export default class HotelDetail extends Component {
                             <SetDate
                                 labelTglAwal={this.state.tglAwal}
                                 labelTglAkhir={this.state.tglAwal}
-
-                                tglAwalNumber={this.state.tglAwalNumber}
+                                setBookingTime={this.setBookingTime}
                                 tglAwal={this.state.tglAwal}
-                                setTglAwal={this.setTglAwal}
-
-                                tglAkhirNumber={this.state.tglAkhirNumber}
                                 tglAkhir={this.state.tglAkhir}
-                                setTglAkhir={this.setTglAkhir}
-
+                                round={false}
                             />
                         </View>
                         

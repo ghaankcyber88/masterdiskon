@@ -58,12 +58,22 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         borderBottomColor: BaseColor.textSecondaryColor,
         borderBottomWidth: 1
-    }
+    },
+    contentPickDate: {
+        // flexDirection: "row",
+        // justifyContent: "space-between",
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: BaseColor.fieldColor,
+        // backgroundColor: BaseColor.fieldColor,
+        flex: 6,
+        padding: 10,
+    },
 });
 
 
 
-export default class SetDate extends Component {
+export default class SetDateLong extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -129,7 +139,6 @@ export default class SetDate extends Component {
                         
              
           } else {
-  
             this.setState({
               selectedStartDate: date,
               selectedEndDate: null,
@@ -173,20 +182,61 @@ export default class SetDate extends Component {
         minDate.setDate(minDate.getDate() + 7);
         var maxDate = new Date(2020, 10, 10);
         return (
+            <View>
+                {
+               round ? 
+                    <View  style={{ flexDirection: "row" }}>
+                        <View style={styles.contentPickDate}>
+                            <TouchableOpacity
+                                
+                                onPress={() => this.openModal()}
+                            >
+                                <Text caption2 light style={{ marginBottom: 5 }}>
+                                    Check In
+                                </Text>
+                                <Text body1 semibold>
+                                    {tglAwal}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.contentPickDate}>   
+                            <TouchableOpacity
+                               
+                               onPress={() => this.openModal()}
+                            >
+                                <Text caption2 light style={{ marginBottom: 5 }}>
+                                    Check Out
+                                </Text>
+                                <Text body1 semibold>
+                                    {tglAkhir}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                :
+                   <View tyle={{ marginTop: 20, flexDirection: "row" }}>
+                        <View style={styles.contentPickDate}>
+                            <TouchableOpacity
+                                onPress={() => this.openModal()}
+                            >
+                                <Text caption light style={{ marginBottom: 5 }}>
+                                    Check In
+                                </Text>
+                                <Text body1 semibold>
+                                {tglAwal}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+    
+                        <View>
+                            <TouchableOpacity
+                                style={{}} >
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+            }
 
-            
-                <View style={[styles.contentPicker, style]}>
-                    <TouchableOpacity onPress={() => this.openModal()}>
-                        <Icon
-                            name="calendar-alt"
-                            size={18}
-                            color={BaseColor.primaryColor}
-                        />
-                    </TouchableOpacity>
-                    <Text caption2 style={{}}>
-                        {tglAwal}
-                    </Text>
-                    <Modal
+                <Modal
                     isVisible={modalVisible}
                     onBackdropPress={() => {
                         this.setState({
@@ -213,7 +263,7 @@ export default class SetDate extends Component {
 
                             <CalendarPicker
                                             startFromMonday={true}
-                                            allowRangeSelection={this.state.round}
+                                            allowRangeSelection={round}
                                             minDate={minDate}
                                             maxDate={maxDate}
                                             todayBackgroundColor="#f2e6ff"
@@ -224,15 +274,12 @@ export default class SetDate extends Component {
                         </View>
                     </View>
                 </Modal>
-                </View>
-
-                
-           
+            </View>
         );
     }
 }
 
-SetDate.propTypes = {
+SetDateLong.propTypes = {
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     labelTglAwal: PropTypes.string,
     labelTglAkhir: PropTypes.string,
@@ -244,7 +291,7 @@ SetDate.propTypes = {
     round:PropTypes.bool,
 };
 
-SetDate.defaultProps = {
+SetDateLong.defaultProps = {
     style: {},
     labelTglAwal: "Adults",
     labelTglAkhir: "Adults",

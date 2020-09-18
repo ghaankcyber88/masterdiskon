@@ -11,12 +11,6 @@ export default class FormOption extends Component {
         super(props);
         this.state = {
             modalVisible: false,
-            // option: props.option,
-            // value: props.value,
-            // text:props.text,
-            // setKelasPesawat:props.setKelasPesawat,
-            
-            
             style: props.style,
             label:props.label,
             option:props.option,
@@ -67,10 +61,10 @@ export default class FormOption extends Component {
         });
         
 
-        setKelasPesawat(select.text,select.value);
+        optionSet(select.text,select.value);
             this.setState(
                 {
-                    value: select.value,
+                    optionSelectValue: select.value,
                     modalVisible: false
                 }
             );
@@ -79,7 +73,6 @@ export default class FormOption extends Component {
 
 
     render() {
-        // const { style, label, onCancel } = this.props;
         const { modalVisible,style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
         return (
             <View>
@@ -88,14 +81,14 @@ export default class FormOption extends Component {
                     onBackdropPress={() => {
                         this.setState({
                             modalVisible: false,
-                            option: this.props.option
+                            option: option
                         });
                         //onCancel();
                     }}
                     onSwipeComplete={() => {
                         this.setState({
                             modalVisible: false,
-                            option: this.props.option
+                            option: option
                         });
                         //onCancel();
                     }}
@@ -139,7 +132,7 @@ export default class FormOption extends Component {
                         {label}
                     </Text>
                     <Text body1 semibold>
-                        {this.props.selectedText}
+                        {optionSelectText}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -147,18 +140,8 @@ export default class FormOption extends Component {
     }
 }
 
-
-
 FormOption.propTypes = {
-    // style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-    // label: PropTypes.string,
-    // value: PropTypes.string,
-    // option: PropTypes.array,
-    // onCancel: PropTypes.func,
-    // onChange: PropTypes.func,
-    // selectedText:PropTypes.string,
-    // setKelasPesawat: PropTypes.func,
-    
+
     
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     label:PropTypes.string,
@@ -169,33 +152,6 @@ FormOption.propTypes = {
 };
 
 FormOption.defaultProps = {
-    // style: {},
-    // label: "Seat Class",
-    // value: "E",
-    // selectedText:"",
-    // option: [
-    //     {
-    //         value: "E",
-    //         text: "Economy Class"
-    //     },
-    //     {
-    //         value: "S",
-    //         text: "Business Class"
-    //     },
-    //     {
-    //         value: "B",
-    //         text: "First Class"
-    //     },
-    //     {
-    //         value: "F",
-    //         text: "Normal Class"
-    //     }
-    // ],
-    // onCancel: () => {},
-    // onChange: () => {},
-    // setKelasPesawat: () => {}
-    
-    
     style: {},
     label:"",
     option:[{}],

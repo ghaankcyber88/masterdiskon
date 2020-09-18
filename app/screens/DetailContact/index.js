@@ -4,7 +4,6 @@ import DatePicker from 'react-native-datepicker'
 import { BaseStyle, BaseColor, Images } from "@config";
 import { Image, Header, SafeAreaView, Icon, Text, Button } from "@components";
 import { Form, TextValidator } from 'react-native-validator-form';
-// import styles from "./styles";
 
 // Load sample data
 import { UserData } from "@data";
@@ -161,75 +160,40 @@ export default class DetailContact extends Component {
 
 
             let maxDate = new Date();
-            // maxDate = this.addDate(maxDate, -3, 'months');
-            // maxDate = this.formatDateToString(maxDate);
-
             let minDate = new Date();
-            // minDate = this.addDate(minDate, -80, 'years');
-            // minDate = this.formatDateToString(minDate);
             
 
             if(old==='adult'){
-                //maxDate=this.minmaxDate(157,'months');
-
-                // let maxDate = new Date();
                 maxDate = this.addDate(maxDate, -12, 'years');
                 maxDate = this.formatDateToString(maxDate);
 
-                // let minDate = new Date();
                 minDate = this.addDate(minDate, -80, 'years');
                 minDate = this.formatDateToString(minDate);
-                //alert('adult');
             }else if(old==='children'){
-                // maxDate=this.minmaxDate(25,'months');
-                // minDate=this.minmaxDate(156,'months');
-
-                // let maxDate = new Date();
                 maxDate = this.addDate(maxDate, -2, 'years');
                 maxDate = this.formatDateToString(maxDate);
 
-                // let minDate = new Date();
                 minDate = this.addDate(minDate, -11, 'years');
                 minDate = this.formatDateToString(minDate);
-               // alert('children');
                 
             }else if(old==='baby'){
-                // maxDate=this.minmaxDate(8,'days');
-                // minDate=this.minmaxDate(24,'months');
-
-                // let maxDate = new Date();
                 maxDate = this.addDate(maxDate, -3, 'months');
                 maxDate = this.formatDateToString(maxDate);
 
-                // let minDate = new Date();
                 minDate = this.addDate(minDate, -24, 'months');
                 minDate = this.formatDateToString(minDate);
-                //alert('baby');
             }else{
-
-                // let maxDate = new Date();
                 maxDate = this.addDate(maxDate, -3, 'months');
                 maxDate = this.formatDateToString(maxDate);
     
-                // let minDate = new Date();
                 minDate = this.addDate(minDate, -80, 'years');
                 minDate = this.formatDateToString(minDate);
-                
-    
             }
-
-
-
-            // let dtmaxDatePassport = new Date();
-            // dtmaxDatePassport = this.addDate(dtmaxDatePassport, +10, 'years');
-            // var datemaxDatePassport = dtmaxDatePassport.getFullYear()+'-'+(dtmaxDatePassport.getMonth()+1)+'-'+dtmaxDatePassport.getDate();
-            // maxDatePassport=datemaxDatePassport;
 
             let maxDatePassport = new Date();
             maxDatePassport = this.addDate(maxDatePassport, +10, 'years');
             maxDatePassport = this.formatDateToString(maxDatePassport);
             maxDatePassport=maxDatePassport;
-            
 
             let minDatePassport = new Date();
             minDatePassport = this.formatDateToString(minDatePassport);
@@ -250,7 +214,6 @@ export default class DetailContact extends Component {
                 nationality_id:nationality_id,
                 passport_country_id:passport_country_id,
                 nationality_phone_code:nationality_phone_code
-                // passport_country_phone_code:passport_country_phone_code,
             }
     
             console.log(JSON.stringify(dataForm));

@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import { RefreshControl, FlatList,TouchableOpacity,AsyncStorage,ActivityIndicator,Image } from "react-native";
+import { RefreshControl, FlatList,AsyncStorage,Image } from "react-native";
 import { BaseStyle, BaseColor,Images } from "@config";
-import { Header, SafeAreaView, Icon, ListThumbCircle, Text,Button,CommentItem,Tag} from "@components";
+import { Header, SafeAreaView, Icon, Text,Tag} from "@components";
 import styles from "./styles";
 import { View } from "react-native-animatable";
 import NotYetLogin from "../../components/NotYetLogin";
 import CardCustomBooking from "../../components/CardCustomBooking";
-import {PostDataNew} from '../../services/PostDataNew';
-import {DataLoading,DataConfig,DataBooking } from "@data";
+import {DataBooking } from "@data";
 
 export default class Booking extends Component {
     constructor(props) {
@@ -62,7 +61,7 @@ export default class Booking extends Component {
     
     
     fetch(){
-        const {config,login,id_user,idParam} =this.state;
+            const {config,login,id_user,idParam} =this.state;
         
             var url=config.baseUrl;
             var path=config.user_order.dir;

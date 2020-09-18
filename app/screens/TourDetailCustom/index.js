@@ -4,8 +4,6 @@ import {
     ScrollView,
     FlatList,
     Animated,
-    RefreshControl,
-    InteractionManager,
     TouchableOpacity,
     TextInput,
     StyleSheet,
@@ -20,192 +18,29 @@ import {
     Text,
     Button,
     Image,
-    RateDetail,
-    CommentItem,
-    PostListItem,
-    HelpBlock,
-    StarRating,
     Tag,
-    QuantityPicker
 } from "@components";
-import { TabView, TabBar } from "react-native-tab-view";
 import * as Utils from "@utils";
-import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import SetDate from "../../components/SetDate";
 import SetPenumpang from "../../components/SetPenumpang";
 import NotYetLogin from "../../components/NotYetLogin";
-import CardCustomTitle from "../../components/CardCustomTitle";
-
-// import styles from "./styles";
-
-// Load sample data
-import { HelpBlockData, ReviewData } from "@data";
 import HTML from "react-native-render-html";
-import Modal from "react-native-modal";
-import CalendarPicker from 'react-native-calendar-picker';
 
-const styles = StyleSheet.create({
-    imgBanner: {
-        width: "100%",
-        height: 250,
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    contentButtonBottom: {
-        borderTopColor: BaseColor.textSecondaryColor,
-        borderTopWidth: 1,
-        //paddingVertical: 10,
-        paddingHorizontal: 20,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center"
-    },
-    tabbar: {
-        backgroundColor: "white",
-        height: 40
-    },
-    tab: {
-        width: 130
-    },
-    indicator: {
-        backgroundColor: BaseColor.primaryColor,
-        height: 1
-    },
-    label: {
-        fontWeight: "400"
-    },
-    map: {
-        ...StyleSheet.absoluteFillObject
-    },
-    lineInfor: {
-        flexDirection: "row",
-        borderColor: BaseColor.textSecondaryColor,
-        borderBottomWidth: 1,
-        paddingVertical: 10
-    },
-    todoTitle: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginVertical: 15,
-        alignItems: "center"
-    },
-    itemReason: {
-        paddingLeft: 10,
-        marginTop: 10,
-        flexDirection: "row"
-    },
-
-    itemPrice: {
-        borderBottomWidth: 0,
-        borderColor: BaseColor.textSecondaryColor,
-        paddingVertical: 10,
-    },
-    linePrice: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingVertical: 5,
-    },
-    linePriceMinMax: {
-        backgroundColor: BaseColor.whiteColor,
-        borderRadius: 10
-    },
-    iconRight: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center"
-    },
-
-
-
-    contentForm: {
-        padding: 10,
-        borderRadius: 8,
-        width: "100%",
-        //backgroundColor: BaseColor.fieldColor
-        borderRadius: 8,
-        borderWidth: 3,
-        borderColor: BaseColor.fieldColor,
-    },
-    bottomModal: {
-        justifyContent: "flex-end",
-        margin: 0
-    },
-    contentFilterBottom: {
-        width: "100%",
-        borderTopLeftRadius: 8,
-        borderTopRightRadius: 8,
-        paddingHorizontal: 20,
-        backgroundColor: BaseColor.whiteColor
-    },
-    contentSwipeDown: {
-        paddingTop: 10,
-        alignItems: "center"
-    },
-    lineSwipeDown: {
-        width: 30,
-        height: 2.5,
-        backgroundColor: BaseColor.dividerColor
-    },
-    contentActionModalBottom: {
-        flexDirection: "row",
-        paddingVertical: 10,
-        marginBottom: 10,
-        justifyContent: "space-between",
-        borderBottomColor: BaseColor.textSecondaryColor,
-        borderBottomWidth: 1
-    }
-});
 
 
 export default class TourDetailCustom extends Component {
     constructor(props) {
         super(props);
         var product = this.props.navigation.state.params.product;
-        console.log('TourDetailCustom',JSON.stringify(product));
+        // console.log('TourDetailCustom',JSON.stringify(product));
 
         var minDate = new Date(); // Today
         minDate.setDate(minDate.getDate() + 7);
         var tglAwal=this.convertDate(minDate);
 
-
         // Temp data define
         this.state = {
             heightHeader: Utils.heightHeader(),
-            title: "Europe Cruises",
-            region: {
-                latitude: 1.9344,
-                longitude: 103.358727,
-                latitudeDelta: 0.05,
-                longitudeDelta: 0.004
-            },
-            service: [
-                { id: "1", name: "wifi" },
-                { id: "2", name: "coffee" },
-                { id: "3", name: "bath" },
-                { id: "4", name: "car" },
-                { id: "5", name: "paw" },
-                { id: "6", name: "futbol" },
-                { id: "7", name: "user-secret" },
-                { id: "8", name: "clock" },
-                { id: "9", name: "tv" },
-                { id: "10", name: "futbol" }
-            ],
-            index: 0,
-            routes: [
-                { key: "hotel", title: "Hotel" },
-                { key: "itinerary", title: "Itinerary" },
-                { key: "include", title: "Include" },
-                { key: "exclude", title: "Exclude" },
-                // { key: "information", title: "Information" },
-                // { key: "review", title: "Review" },
-                // { key: "feedback", title: "Feedback" }
-            ],
             product: product,
             minPersonDef:0,
             minPerson:0,
@@ -219,13 +54,9 @@ export default class TourDetailCustom extends Component {
             selectedStartDate: null,
             tglAwal:tglAwal,
             tglAkhir:'',
-
             tglAwalNumber:0,
             tglAkhirNumber:0,
             login:true,
-            
-
-
         };
         this._deltaY = new Animated.Value(0);
         this.setPrice = this.setPrice.bind(this);
@@ -235,15 +66,27 @@ export default class TourDetailCustom extends Component {
         this.setMinPerson = this.setMinPerson.bind(this);
         this.setTglAwal = this.setTglAwal.bind(this);
         this.setTglAkhir = this.setTglAkhir.bind(this);
+        this.setBookingTime = this.setBookingTime.bind(this);
+
     }
 
+    setBookingTime(tglAwal, tglAkhir,round) {
+        console.log(tglAwal);
+        console.log(tglAkhir);
+        if (round ==true) {
+            this.setState({tglAwal:tglAwal});
+            this.setState({tglAkhir:tglAkhir});
+          
+        } else {
+            this.setState({tglAwal:tglAwal});
+            this.setState({tglAkhir:null});
+        }
+    }
    
 
     setTglAwal(dateConversion,dateNumber){
         this.setState({tglAwal:dateConversion});
         this.setState({tglAwalNumber:dateNumber});
-        //console.log('setTglAwal',dateNumber);
-        //alert(dateNumber);
     }
 
     setTglAkhir(dateConversion,dateNumber){
@@ -294,23 +137,14 @@ export default class TourDetailCustom extends Component {
             this.setState({minPerson:minPerson});
             var totalPrice=parseInt(minPerson)*parseInt(this.state.minPrice);
             this.setState({totalPrice:totalPrice});
-            
         }, 200);
     }
 
     setMinPerson(jml){
-    
-        
-        var select=this.state.select;
-        var trip_minimum=select.trip_minimum;
         var product=this.state.product;
-        var select=this.state.select;
         var minPersonDef=this.state.minPersonDef;
         var minPrice=0;
         var totalPrice=0;
-        
-
-
         
         if(jml==minPersonDef){
             totalPrice=parseInt(this.state.minPrice)*parseInt(jml);
@@ -320,7 +154,6 @@ export default class TourDetailCustom extends Component {
             minPrice=product.product_price;
         }
         
-
         this.setState({totalPrice:totalPrice});
         this.setState({minPerson:jml});
         this.setState({minPrice:minPrice});
@@ -336,15 +169,12 @@ export default class TourDetailCustom extends Component {
 
              }
         });
-        
-        
         setTimeout(() => {
             this.setState({dewasa:this.state.minPerson});
         }, 500);
     }
     
     convertDate(date){
-
         var dd = String(date.getDate()).padStart(2, '0');
         var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = date.getFullYear();
@@ -367,7 +197,7 @@ export default class TourDetailCustom extends Component {
     
     onSubmit() {
     
-        const {type,product,select} =this.state;
+         const {type,product,select} =this.state;
       var tgl_akhir='';
 
  
@@ -379,7 +209,6 @@ export default class TourDetailCustom extends Component {
         Infants:this.state.bayi,
         }
         
-        var productPart={}
         var link='';
        
             link='Summary';
@@ -392,8 +221,7 @@ export default class TourDetailCustom extends Component {
             param.totalPrice=this.state.totalPrice;
             param.Qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
             param.participant=true;
-            
-            
+
             this.props.navigation.navigate(link,
                 {
                     param:param,
@@ -409,13 +237,11 @@ export default class TourDetailCustom extends Component {
 
     render() {
         const { navigation } = this.props;
-        const { title, heightHeader, service, product,minPerson,minPrice,totalPrice,login} = this.state;
+        const { heightHeader, product,minPerson,minPrice,totalPrice,login} = this.state;
         const heightImageBanner = Utils.scaleWithPixel(250, 1);
         const marginTopBanner = heightImageBanner - heightHeader;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
-        const { modalVisiblePerson,modalVisibleDate} = this.state;
-      
         var contentButton=<View></View>
         if(product.product_option[0].trip_minimum.length != 0){
             contentButton=<View style={styles.contentButtonBottom}>
@@ -430,19 +256,15 @@ export default class TourDetailCustom extends Component {
                     {minPerson} x Rp {priceSplitter(minPrice)}
                 </Text>
             </View>
+
             <View>
                 <SetDate
                     labelTglAwal={this.state.tglAwal}
                     labelTglAkhir={this.state.tglAwal}
-
-                    tglAwalNumber={this.state.tglAwalNumber}
+                    setBookingTime={this.setBookingTime}
                     tglAwal={this.state.tglAwal}
-                    setTglAwal={this.setTglAwal}
-
-                    tglAkhirNumber={this.state.tglAkhirNumber}
                     tglAkhir={this.state.tglAkhir}
-                    setTglAkhir={this.setTglAkhir}
-
+                    round={false}
                 />
             </View>
             
@@ -455,11 +277,11 @@ export default class TourDetailCustom extends Component {
                     setJumlahDewasa={this.setJumlahDewasa}
                     setJumlahAnak={this.setJumlahAnak}
                     setJumlahBayi={this.setJumlahBayi}
+                    setMinPerson={this.setMinPerson}
                     minPersonDef={this.state.minPersonDef}
                     minPerson={this.state.minPerson}
                     minPrice={this.state.minPrice}
                     totalPrice={this.state.totalPrice}
-                    setMinPerson={this.setMinPerson}
                 />
             </View>
             
@@ -504,17 +326,15 @@ export default class TourDetailCustom extends Component {
                 </Animated.View>
                 {
                     login ?
-                <SafeAreaView
-                    style={BaseStyle.safeAreaView}
-                    forceInset={{ top: "always" }}
-                >
-                    {/* Header */}
+                    <SafeAreaView
+                        style={BaseStyle.safeAreaView}
+                        forceInset={{ top: "always" }}
+                    >
                     <Header
                         title=""
                         transparent={true}
                         
                     />
-                   
                     <ScrollView
                         onScroll={Animated.event([
                             {
@@ -818,7 +638,6 @@ class Exclude extends Component {
     }
 
     componentDidMount() {
-        
     }
 
     render() {
@@ -858,7 +677,6 @@ class Itinerary extends Component {
     }
 
     componentDidMount() {
-        
     }
 
     render() {
@@ -902,3 +720,123 @@ class Itinerary extends Component {
         );
     }
 }
+
+
+
+const styles = StyleSheet.create({
+    imgBanner: {
+        width: "100%",
+        height: 250,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    contentButtonBottom: {
+        borderTopColor: BaseColor.textSecondaryColor,
+        borderTopWidth: 1,
+        //paddingVertical: 10,
+        paddingHorizontal: 20,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+    tabbar: {
+        backgroundColor: "white",
+        height: 40
+    },
+    tab: {
+        width: 130
+    },
+    indicator: {
+        backgroundColor: BaseColor.primaryColor,
+        height: 1
+    },
+    label: {
+        fontWeight: "400"
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject
+    },
+    lineInfor: {
+        flexDirection: "row",
+        borderColor: BaseColor.textSecondaryColor,
+        borderBottomWidth: 1,
+        paddingVertical: 10
+    },
+    todoTitle: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: 15,
+        alignItems: "center"
+    },
+    itemReason: {
+        paddingLeft: 10,
+        marginTop: 10,
+        flexDirection: "row"
+    },
+
+    itemPrice: {
+        borderBottomWidth: 0,
+        borderColor: BaseColor.textSecondaryColor,
+        paddingVertical: 10,
+    },
+    linePrice: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingVertical: 5,
+    },
+    linePriceMinMax: {
+        backgroundColor: BaseColor.whiteColor,
+        borderRadius: 10
+    },
+    iconRight: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+
+
+
+    contentForm: {
+        padding: 10,
+        borderRadius: 8,
+        width: "100%",
+        //backgroundColor: BaseColor.fieldColor
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: BaseColor.fieldColor,
+    },
+    bottomModal: {
+        justifyContent: "flex-end",
+        margin: 0
+    },
+    contentFilterBottom: {
+        width: "100%",
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        paddingHorizontal: 20,
+        backgroundColor: BaseColor.whiteColor
+    },
+    contentSwipeDown: {
+        paddingTop: 10,
+        alignItems: "center"
+    },
+    lineSwipeDown: {
+        width: 30,
+        height: 2.5,
+        backgroundColor: BaseColor.dividerColor
+    },
+    contentActionModalBottom: {
+        flexDirection: "row",
+        paddingVertical: 10,
+        marginBottom: 10,
+        justifyContent: "space-between",
+        borderBottomColor: BaseColor.textSecondaryColor,
+        borderBottomWidth: 1
+    }
+});

@@ -23,6 +23,7 @@ import { DataMasterDiskon } from "./dataMasterDiskon";
 import { DataConfig } from "./dataConfig";
 import { DataPayment } from "./dataPayment";
 import { DataBooking } from "./dataBooking";
+import { DataIcon } from "./dataIcon";
 import { DataNotif } from "./dataNotif";
 import { DataLoading } from "./dataLoading";
 import { DataFlight } from "./dataFlight";
@@ -54,6 +55,7 @@ export {
     DataMasterDiskon,
     DataPayment,
     DataBooking,
+    DataIcon,
     DataNotif,
     DataLoading,
     DataFlight,
