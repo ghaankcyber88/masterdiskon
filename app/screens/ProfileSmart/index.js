@@ -57,14 +57,10 @@ class ProfileSmart extends Component {
         this._deltaY = new Animated.Value(0);
         this.updateParticipant = this.updateParticipant.bind(this);
     }
-
     
-
     redirect(redirect='') {
-      
                 this.props.actions.authentication(true, response => {
                     if (response.success) {
-                        //alert(redirect);
                         this.props.navigation.navigate("Loading",{redirect:redirect});
                     } else {
                         this.setState({
@@ -72,7 +68,6 @@ class ProfileSmart extends Component {
                         });
                     }
                 });
-         
     }
 
     updateParticipant(
@@ -96,11 +91,7 @@ class ProfileSmart extends Component {
 
             if(key=='0'){
                   this.fetch();
-            
-
             }else{
-                
-            
             AsyncStorage.getItem('smartProfile', (error, result) => {
                 if (result) {
                     let resultParsed = JSON.parse(result);
@@ -122,9 +113,7 @@ class ProfileSmart extends Component {
                             email:email,
                             nationality_id:nationality_id,
                             nationality_phone_code:nationality_phone_code,
-                                                                            
                             passport_country_id:passport_country_id,
-                            // passport_country_phone_code:passport_country_phone_code,
                             }
                         : p
                     );
@@ -133,11 +122,8 @@ class ProfileSmart extends Component {
                     this.setState({participant:newProjects});
                      console.log("------DATA GUEST update----");
                      console.log(JSON.stringify(newProjects));
-        
                 }
                 });
-            
-            
             }
                 
             this.saveParticipant( key,fullname,
@@ -152,47 +138,8 @@ class ProfileSmart extends Component {
                 title,
                 email,
                 nationality_id,
-                  nationality_phone_code,
-                  passport_country_id);
-             
-                //     const data={  
-                //         "id": key,
-                //         "id_user": "137",
-                //         "fullname": fullname,
-                //         "firstname": firstname,
-                //         "lastname": lastname,
-                //         "birthday": birthday,
-                //         "nationality": nationality,
-                //         "passport_number": passport_number,
-                //         "passport_country": passport_country,
-                //         "passport_expire": passport_expire,
-                //         "phone": phone,
-                //         "title": title,
-                //         "email": email,
-                //         "nationality_id": nationality_id,
-                //         "nationality_phone_code": nationality_phone_code,
-                //         "passport_country_id": passport_country_id,
-                //     }
-                // const param={"param":data}
-                
-                
-        
-                // console.log("------------------data param submit participant--------------");
-                // console.log(JSON.stringify(param));
-
-                // PostData('update_participant',param)
-                //     .then((result) => {
-                //         console.log("------------------result update participant--------------");
-                //         console.log(JSON.stringify(result));
-                //         //this.redirect('ProfileSmart');
-                //     },
-                //     (error) => {
-                //         this.setState({ error });
-                //     }
-                //     );
-
-
-
+                nationality_phone_code,
+                passport_country_id);
   }
 
 
@@ -249,7 +196,6 @@ class ProfileSmart extends Component {
                     .then((result) => {
                         console.log("------------------result update participant--------------");
                         console.log(JSON.stringify(result));
-                        //this.redirect('ProfileSmart');
                     },
                     (error) => {
                         this.setState({ error });
@@ -262,12 +208,7 @@ class ProfileSmart extends Component {
     }
 
     componentDidMount() {
-
-        // var age = parseInt(moment().diff('1987-03-27','years',true));
-        // console.log("---------------age------------");
-        // console.log(age);
         this.fetch();
-
     }
 
     fetch(){
@@ -296,31 +237,13 @@ class ProfileSmart extends Component {
                             this.setState({ loading_spinner: false });
                             this.setState({participant:result});
                             AsyncStorage.setItem('smartProfile', JSON.stringify(result));
+                            
                         },
                         (error) => {
                             this.setState({ error });
                         }
                     ); 
 
-
-
-                    // var requestOptions = {
-                    //     method: 'GET',
-                    //     redirect: 'follow'
-                    //   };
-                      
-                    //   fetch("https://masterdiskon.co.id/front/api/api/get_participant?id_user="+id_user, requestOptions)
-                    //     .then(response => response.json())
-                    //     .then(result => {
-                    //         console.log('-------------------------data participant-----------------------')
-                    //         console.log(JSON.stringify(result));
-                    //         this.setState({ loading_spinner: false });
-                    //         this.setState({participant:result});
-                    //         AsyncStorage.setItem('smartProfile', JSON.stringify(result));
-    
-                    //     })
-                    //     .catch(error => console.log('error', error));
-    
                  }
                 
             });
@@ -339,8 +262,6 @@ class ProfileSmart extends Component {
                         ...item,
                         checked: true
                     };
-                    
-              
                 } else {
                     return {
                         ...item,
@@ -352,8 +273,6 @@ class ProfileSmart extends Component {
         });
 
         var sourcePage=this.state.sourcePage;
-        
-        //alert(sourcePage);
 
         if(sourcePage=='summary'){
             var key=this.state.item.key;
@@ -581,7 +500,7 @@ class ProfileSmart extends Component {
                 forceInset={{ top: "always" }}
             >
                 <Header
-                    title="ProfileSmart"
+                    title="Profile Smarts"
                     renderLeft={() => {
                         return (
                             <Icon

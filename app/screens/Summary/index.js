@@ -1317,8 +1317,6 @@ export default class Summary extends Component {
 
     }
 
-
-
     updateParticipant(
         key,
         fullname,
@@ -1342,6 +1340,28 @@ export default class Summary extends Component {
     if(type=='guest'){
         AsyncStorage.getItem('setDataParticipant', (error, result) => {
         if (result) {
+            //this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.errors));
+            
+            
+            var dataArray=JSON.parse(result);
+            var filter=fullname;
+            var records = dataArray,
+                empid = [filter],
+                object = {},
+                resultArray;
+            
+            records.forEach(function (a) {
+                object[a.empid] = a;
+            });
+            
+            resultArray = empid.map(function (a) {
+                return object[a];
+            });
+            console.log('asd',resultArray.length);
+            
+            
+            
+            
             let resultParsed = JSON.parse(result)
             const newProjects = resultParsed.map(p =>
                 p.key === key
@@ -1367,9 +1387,10 @@ export default class Summary extends Component {
 
             AsyncStorage.setItem('setDataParticipant',JSON.stringify(newProjects));
             this.setState({listdata_participant:newProjects});
-            //console.log("------DATA GUEST----");
-            //console.log(JSON.stringify(newProjects));
-
+            
+            setTimeout(() => {
+                console.log('listdata_participantss',JSON.stringify(this.state.listdata_participant));
+            }, 500);
         }
         });
     
@@ -1401,8 +1422,6 @@ export default class Summary extends Component {
     
                 AsyncStorage.setItem('setDataCustomer',JSON.stringify(newProjects));
                 this.setState({listdata_customer:newProjects});
-                //console.log("------DATA CUSTOMER----");
-                //console.log(JSON.stringify(newProjects));
             }
             });
 
