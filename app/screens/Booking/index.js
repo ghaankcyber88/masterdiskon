@@ -85,7 +85,6 @@ export default class Booking extends Component {
                 this.setState({dataBooking: result});
               })
               .catch(error => console.log('error', error));
-        
     }
    
 
