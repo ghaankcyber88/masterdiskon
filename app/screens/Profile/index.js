@@ -45,7 +45,185 @@ class Profile extends Component {
             loading: false,
         };
         this._deltaY = new Animated.Value(0);
+        this.updateParticipant = this.updateParticipant.bind(this);
     }
+
+    getConfig(){    
+        AsyncStorage.getItem('config', (error, result) => {
+            if (result) {    
+                let config = JSON.parse(result);
+                console.log('getConfig',config);
+                this.setState({config:config});
+            }
+        });
+    }
+    
+    
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                console.log('getSessions',userSession);
+                var id_user=userSession.id_user;
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+
+                setTimeout(() => {
+                    console.log("------DATA getSessions----");
+                    console.log(JSON.stringify(this.state.userSession));
+                }, 500);
+            }
+        });
+    }
+
+    
+    addDate(dt, amount, dateType) {
+        switch (dateType) {
+        case 'days':
+            return dt.setDate(dt.getDate() + amount) && dt;
+        case 'weeks':
+            return dt.setDate(dt.getDate() + (7 * amount)) && dt;
+        case 'months':
+            return dt.setMonth(dt.getMonth() + amount) && dt;
+        case 'years':
+            return dt.setFullYear( dt.getFullYear() + amount) && dt;
+        }
+    }
+
+    formatDateToString(date){
+        // 01, 02, 03, ... 29, 30, 31
+        var dd = (date.getDate() < 10 ? '0' : '') + date.getDate();
+        // 01, 02, 03, ... 10, 11, 12
+        var MM = ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1);
+        // 1970, 1971, ... 2015, 2016, ...
+        var yyyy = date.getFullYear();
+     
+        // create the format you want
+        return (yyyy + "-" + MM + "-" + dd);
+     }
+
+     setUser(){
+        let minDatePassport = new Date();
+        minDatePassport = this.formatDateToString(minDatePassport);
+        minDatePassport=minDatePassport;
+
+        let dtDefAdult = new Date();
+        dtDefAdult = this.addDate(dtDefAdult, -13, 'years');
+        var def_date_adult =this.formatDateToString(dtDefAdult);
+
+        var def_passport_number="12345678";
+        var def_passport_country="Indonesia";
+        var def_passport_expire=minDatePassport;
+        var def_passport_country_id="ID";
+        var def_phone="12345678";
+        var def_email="email@gmail.com";
+
+
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {  
+            let userSession = JSON.parse(result);
+            var customer = [];
+            for (var i=1; i<=1; i++) {
+            var obj = {};
+                obj['key'] = i;
+                obj['label'] = "Contact";
+                obj['old'] = 'adult';
+
+                obj['fullname'] = userSession.fullname;
+                obj['firstname'] = userSession.firstname;
+                obj['lastname'] = userSession.lastname;
+                obj['birthday'] = '';
+                obj['nationality'] = userSession.nationality;
+                obj['passport_number'] = '';
+                obj['passport_country'] = '';
+                obj['passport_expire'] = '';
+                obj['phone'] = userSession.phone;
+                obj['title'] = userSession.title;
+                obj['email'] = userSession.email;
+
+                obj['nationality_id'] = userSession.nationality_id;
+                obj['nationality_phone_code'] = userSession.nationality_phone_code;
+
+                obj['passport_country_id'] = '';
+
+
+                customer.push(obj)
+            }
+            AsyncStorage.setItem('setDataCustomer',JSON.stringify(customer));
+            this.setState({listdata_customer:customer});
+            setTimeout(() => {
+                console.log("------DATA CUSTOMER----");
+                console.log(JSON.stringify(this.state.listdata_customer));
+            }, 500);
+
+            
+            }
+        });
+
+
+     }
+
+
+     updateParticipant(
+        key,
+        fullname,
+        firstname,
+        lastname,
+        birthday,
+        nationality,
+        passport_number,
+        passport_country,
+        passport_expire,
+        phone,
+        title,
+        email,
+        nationality_id,
+          nationality_phone_code,
+          passport_country_id,
+        type
+        ){
+            const { navigation } = this.props;
+            var userSession={
+                address:null,
+                avatar:null,
+                birthday:"",
+                cart:"",
+                city_name:null,
+                email:"matadesaindotcom@gmail.com",
+                firstname:"arif",
+                fullname:"Mr arif pambudi",
+                gender:"",
+                id_city:null,
+                id_user:"258",
+                lastname:"pambudi",
+                loginVia:"google",
+                nationality:"Indonesia",
+                nationality_id:"ID",
+                nationality_phone_code:"62",
+                passport_country:"",
+                passport_country_id:"ID",
+                passport_expire:"",
+                passport_number:"",
+                phone:"79879879879",
+                postal_code:null,
+                status:"customer",
+                title:"Mr",
+                un_nationality:null,
+                username:"arifpambudi"
+            };
+            // this.setState({userSession:userSession});
+            AsyncStorage.setItem('userSession', JSON.stringify(userSession));
+
+            var redirect='Profile';
+            var param={}
+            navigation.navigate("Loading",{redirect:redirect,param:param});
+
+
+
+
+  }
+
 
 
     onLogOut() {
@@ -115,23 +293,9 @@ class Profile extends Component {
     };
 
     componentDidMount() {
-       
-        this.setState({ loading_spinner: true }, () => {
-
-            AsyncStorage.getItem('userSession', (error, result) => {
-                if (result) {
-                
-
-                    let userSession = JSON.parse(result);
-                    this.setState({ userSession: userSession });
-                    this.setState({ loading_spinner: false });
-                    this.setState({ login: true });
-
-                 }
-                
-            });
-
-        });
+        this.getConfig();
+        this.getSession();
+        this.setUser();
     }
 
     render() {
@@ -299,7 +463,35 @@ class Profile extends Component {
                                     subtitle={'Pesenan lebih cepat, isi data penumpang, dengan satu klik'}
                                     icon={'home'}
                                     onPress={() => {
-                                        this.props.navigation.navigate("ProfileSmart",{sourcePage:'profile'});
+                                        this.props.navigation.navigate("ProfileEdit",{
+                                            sourcePage:'profile',
+                                            key:1,
+                                            label:'',
+                                            fullname:userSession.fullname,
+                                            firstname:userSession.firstname,
+                                            lastname:userSession.lastname,
+                                            birthday:userSession.birthday,
+                                            nationality:userSession.nationality,
+                                            passport_number:userSession.passport_number,
+                                            passport_country:userSession.passport_country,
+                                            passport_expire:userSession.passport_expire,
+                                            phone:userSession.phone,
+                                            title:userSession.title,
+                                            email:userSession.email,
+
+                                            nationality_id:userSession.nationality_id,
+                                            nationality_phone_code:userSession.nationality_phone_code,
+                                            
+                                            passport_country_id:userSession.passport_country_id,
+
+                                            updateParticipant: this.updateParticipant,
+                                            type:'guest',
+                                            // old:userSession.old,
+                                            old:'',
+                                            typeProduct:''
+                                            
+                                        
+                                        });
                                     }}
                                 
                                 />

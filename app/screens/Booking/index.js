@@ -45,8 +45,6 @@ export default class Booking extends Component {
             }
         });
     }
-    
-    
     getSession(){    
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {    

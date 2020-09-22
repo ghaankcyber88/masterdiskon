@@ -52,6 +52,7 @@ import ResetPassword from "@screens/ResetPassword";
 import ChangePassword from "@screens/ChangePassword";
 import Static from "@screens/Static";
 import ProfileEdit from "@screens/ProfileEdit";
+import ProfileEditPassword from "@screens/ProfileEditPassword";
 import ProfileExample from "@screens/ProfileExample";
 import ChangeLanguage from "@screens/ChangeLanguage";
 import HotelInformation from "@screens/HotelInformation";
@@ -284,6 +285,9 @@ const StackNavigator = createStackNavigator(
         },
         ProfileEdit: {
             screen: ProfileEdit
+        },
+        ProfileEditPassword: {
+            screen: ProfileEditPassword
         },
         ChangeLanguage: {
             screen: ChangeLanguage

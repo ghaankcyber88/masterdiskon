@@ -23,8 +23,8 @@ import CountDown from 'react-native-countdown-component';
 import moment from 'moment';
 import {PostDataNew} from '../../services/PostDataNew';
 
-import {fcmService} from '../../src/FCMService';
-import {localNotificationService} from '../../src/LocalNotificationService';
+// import {fcmService} from '../../src/FCMService';
+// import {localNotificationService} from '../../src/LocalNotificationService';
 // import Clipboard from "@react-native-community/clipboard";
 import { Form, TextValidator } from 'react-native-validator-form';
 
@@ -103,7 +103,7 @@ export default function PembayaranDetail(props) {
       const [tokenFirebase, setTokenFirebase]= useState(0);
       const [loading, setLoading]=useState(true);
       const [dataBooking, setDataBooking]=useState(DataBooking);
-      const [statusMidtrans, setStatusMidtrans]=useState({"va_numbers":[{"bank":"bca","va_number":"81174157162"}],"payment_amounts":[],"transaction_time":"2020-07-06 16:33:07","gross_amount":"740800.00","currency":"IDR","order_id":"MD2007060026","payment_type":"bank_transfer","signature_key":"7eb271c8362f64dd96c7519a7067ccb5d8f563ee45e7c64e4606773332aad32841e522fcdfb30dae96c183d57a044db425f07a3772a3e4d848ccbb1d65765884","status_code":"201","transaction_id":"1df337f3-5dc2-4cc7-a445-ae8c46eabefa","transaction_status":"pending","fraud_status":"accept","status_message":"Success, transaction is found","merchant_id":"G042781174"});
+      const [statusMidtrans, setStatusMidtrans]=useState({"va_numbers":[{"bank":"bca","va_number":"81174157163"}],"payment_amounts":[],"transaction_time":"2020-07-06 16:33:07","gross_amount":"740800.00","currency":"IDR","order_id":"MD2007060026","payment_type":"bank_transfer","signature_key":"7eb271c8362f64dd96c7519a7067ccb5d8f563ee45e7c64e4606773332aad32841e522fcdfb30dae96c183d57a044db425f07a3772a3e4d848ccbb1d65765884","status_code":"201","transaction_id":"1df337f3-5dc2-4cc7-a445-ae8c46eabefa","transaction_status":"pending","fraud_status":"accept","status_message":"Success, transaction is found","merchant_id":"G042781174"});
       const [fee, setFee]= useState(0);
       const [totalPembayaran, setTotalPembayaran]= useState(0);
       
@@ -299,9 +299,7 @@ export default function PembayaranDetail(props) {
             body: JSON.stringify(paramPay),
           }
        
-         //var url='https://api.sandbox.midtrans.com/';
          var url=config.midtransUrl;
-         //console.log('baseUrl',url);
          
          return PostDataNew(url,'v2/charge',param)
              .then((result) => {
@@ -458,6 +456,7 @@ export default function PembayaranDetail(props) {
     
     
     
+    
     function fetch(){
 
         
@@ -517,7 +516,8 @@ export default function PembayaranDetail(props) {
                                         }else{
                                             var payment_type=order_payment_recent.payment_type;
                                             var payment_sub=order_payment_recent.payment_sub;
-                                            fetchMidtrans(id_invoice);
+                                            //console.log('configccx',JSON.stringify(config));
+                                            fetchMidtrans(id_invoice,config);
                                         }
                                         
                                         var fee='';
@@ -551,7 +551,7 @@ export default function PembayaranDetail(props) {
     }
 
 
-    function fetchMidtrans(id_invoice){
+    function fetchMidtrans(id_invoice,config){
           
           
           var param={
@@ -1150,7 +1150,7 @@ export default function PembayaranDetail(props) {
                 
                     
                 content=<View>
-                    {/* <View style={styles.contentButtonBottom}>
+                    <View style={styles.contentButtonBottom}>
                             <Button
                                 full
                                 loading={loading}
@@ -1162,7 +1162,7 @@ export default function PembayaranDetail(props) {
                             </Button>
                     </View>
                         <View style={styles.contentButtonBottom}>
-                                <Button
+                                {/* <Button
                                     full
                                     loading={loading}
                                     onPress={() => { 
@@ -1178,8 +1178,8 @@ export default function PembayaranDetail(props) {
                                     style={{backgroundColor:BaseColor.grayColor}}
                                 >
                                     <Text style={{color:BaseColor.whiteColor}}>Ganti Metode Pembayaran</Text>
-                                </Button>
-                        </View> */}
+                                </Button> */}
+                        </View>
                     </View>
             
             }
@@ -1196,61 +1196,11 @@ export default function PembayaranDetail(props) {
     
     
   useEffect(() => {
-    getConfig();
     fetch();  
+    getConfig();
     
-    fcmService.registerAppWithFCM()
-    fcmService.register(onRegister, onNotification, onOpenNotification)
-    localNotificationService.configure(onOpenNotification)
-    
-
-    function onRegister(token) {
-        //console.log("[App] onRegister: ", token);
-        AsyncStorage.setItem('tokenFirebase', token);
-      }
-  
-    function onNotification(notify) {
-        //console.log("[App] onNotification: ", notify)
-        var body_msg=notify.body;
-        var body_array = body_msg.split("|||");
-        var message=body_array[0];
-        var id_order=body_array[1];
-        var id_invoice=body_array[2];
-        
-        
-        //alert("Notification " + id_invoice);
-        
-        var redirect='PembayaranDetail';
-        var param={
-            id_order:idOrder,
-            dataPayment:dataPayment
-        }
-        navigation.navigate("Loading",{redirect:redirect,param:param});
-        
-        const options = {
-          soundName: 'default',
-          playSound: true //,
-          // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
-          // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
-        }
-        localNotificationService.showNotification(
-          0,
-          notify.title,
-          notify.body,
-          notify,
-          options
-        )
-      }
-  
-    function onOpenNotification(notify) {
-        //console.log("[App] onOpenNotification: ", notify)
-        //alert("Open Notification: " + notify.body)
-      }
-      
       return () => {
-        //console.log("[App] unRegister")
-        fcmService.unRegister()
-        localNotificationService.unregister()
+        
       }
   
     },[]);
@@ -1261,7 +1211,7 @@ export default function PembayaranDetail(props) {
     var title='';
     if(payment_type=='bank_transfer'){
         title=dataPayment.payment_type_label+' - '+dataPayment.payment_sub_label;
-    }else if(payment_type=='credit_card'){
+    }else{
         title=dataPayment.payment_type_label;
     }
     
