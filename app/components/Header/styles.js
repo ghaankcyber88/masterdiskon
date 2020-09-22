@@ -7,10 +7,16 @@ export default StyleSheet.create({
     contain2: { height: 45, flexDirection: "row",backgroundColor:BaseColor.primaryColor},
     textWhite: {color:BaseColor.primaryColor},
     contentLeft: {
-        flex: 1,
+        // flex: 1,
+        // justifyContent: "center",
+        // paddingLeft: 20,
+        // width: 60,
+
         justifyContent: "center",
+        alignItems: "flex-start",
         paddingLeft: 20,
-        width: 60
+        //paddingRight: 20,
+        height: "100%"
     },
     contentCenter: {
         // flex: 2,

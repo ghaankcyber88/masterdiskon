@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, FlatList,AsyncStorage} from "react-native";
+import { View, ScrollView, FlatList,AsyncStorage,TouchableOpacity} from "react-native";
 import { BaseStyle, BaseColor } from "@config";
 import {
     Image,
@@ -15,6 +15,8 @@ import {
 } from "@components";
 import styles from "./styles";
 import CardCustomProfile from "../../components/CardCustomProfile";
+import NotYetLogin from "../../components/NotYetLogin";
+
 
 // Load sample data
 import { UserData, HotelData, TourData } from "@data";
@@ -25,14 +27,17 @@ export default class Profile1 extends Component {
 
         // Temp data define
         this.state = {
+
             tours: TourData,
             hotels: HotelData,
             userData: UserData[0],
-            listdata_customer:[],
-
+            listdata_customer:[{"key":1,"label":"Contact","old":"adult","fullname":"Mr arif pambudi","firstname":"arif","lastname":"pambudi","birthday":"","nationality":"Indonesia","passport_number":"","passport_country":"","passport_expire":"","phone":"79879879879","title":"Mr","email":"matadesaindotcom@gmail.com","nationality_id":"ID","nationality_phone_code":"62","passport_country_id":""}],
+            login:false,
+            userSession:{}
         };
-        this.getConfig();
-          this.getSession();
+        this.updateParticipant = this.updateParticipant.bind(this);
+        this.updateParticipantPassword = this.updateParticipantPassword.bind(this);
+
     }
 
 
@@ -40,7 +45,7 @@ export default class Profile1 extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                //console.log('getConfig',config);
+                console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -51,7 +56,7 @@ export default class Profile1 extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {    
                 let userSession = JSON.parse(result);
-                console.log('userSession',userSession);
+                console.log('getSession',userSession);
                 var id_user=userSession.id_user;
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
@@ -143,7 +148,7 @@ export default class Profile1 extends Component {
         return (yyyy + "-" + MM + "-" + dd);
      }
 
-    componentDidMount(){
+     setUser(){
         let minDatePassport = new Date();
         minDatePassport = this.formatDateToString(minDatePassport);
         minDatePassport=minDatePassport;
@@ -191,12 +196,29 @@ export default class Profile1 extends Component {
                 customer.push(obj)
             }
             AsyncStorage.setItem('setDataCustomer',JSON.stringify(customer));
-            //this.setState({listdata_customer:customer});
-            console.log("------DATA CUSTOMER----");
-                console.log(JSON.stringify(customer));
+            this.setState({listdata_customer:customer});
+            setTimeout(() => {
+                console.log("------DATA CUSTOMER----");
+                console.log(JSON.stringify(this.state.listdata_customer));
+            }, 500);
+
+            
             }
         });
 
+
+     }
+    componentDidMount(){
+        // let {} = this.state;
+        // const {navigation} = this.props;
+        //     navigation.addListener ('didFocus', () =>{
+        //         setTimeout(() => {
+        //             this.setUser();
+        //         }, 200);
+        //     });
+        this.getConfig();
+        this.getSession();
+        this.setUser();
     }
 
     updateParticipant(
@@ -217,46 +239,63 @@ export default class Profile1 extends Component {
           passport_country_id,
         type
         ){
-        //alert('sa');
-        AsyncStorage.getItem('setDataCustomer', (error, result) => {
-            if (result) {
-                let resultParsed = JSON.parse(result)
-                //alert(JSON.stringify(resultParsed));
-                const newProjects = resultParsed.map(p =>
-                    p.key === key
-                    ? { ...p, 
-                        fullname: fullname, 
-                        firstname: firstname,
-                        lastname:lastname,
-                        birthday:birthday,
-                        nationality:nationality,
-                        passport_number:passport_number,
-                        passport_country:passport_country,
-                        passport_expire:passport_expire,
-                        phone:phone,
-                        title:title,
-                        email:email,
-                        nationality_id:nationality_id,
-                        nationality_phone_code:nationality_phone_code,
-                                                                    
-                        passport_country_id:passport_country_id,
-                        }
-                    : p
-                );
-    
-                AsyncStorage.setItem('setDataCustomer',JSON.stringify(newProjects));
-                //this.setState({listdata_customer:newProjects});
-                console.log("------DATA CUSTOMER NEW----");
-                console.log(JSON.stringify(newProjects));
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                console.log('getSession',userSession);
+                var id_user=userSession.id_user;
+
+                var userSessionUpdate={
+                    address: userSession.address,
+                    avatar: userSession.avatar,
+                    birthday: birthday,
+                    cart: userSession.cart,
+                    city_name: userSession.city_name,
+                    email: userSession.email,
+                    firstname: firstname,
+                    fullname: fullname,
+                    gender: userSession.gender,
+                    id_city: userSession.id_city,
+                    id_user: userSession.id_user,
+                    lastname: lastname,
+                    loginVia: userSession.loginVia,
+                    nationality: nationality,
+                    nationality_id: nationality_id,
+                    nationality_phone_code: nationality_phone_code,
+                    passport_country: passport_country,
+                    passport_country_id: passport_country_id,
+                    passport_expire: passport_expire,
+                    passport_number: passport_number,
+                    phone: phone,
+                    postal_code: userSession.postal_code,
+                    status: userSession.status,
+                    title: title,
+                    un_nationality: userSession.un_nationality,
+                    username: userSession.username,
+                }
+                AsyncStorage.setItem('userSession', JSON.stringify(userSessionUpdate));
+                this.getSession();
             }
         });
-
   }
+
+  updateParticipantPassword(
+   passwordOld,passwordNew,passwordConfirm
+    ){
+        var data={
+            passwordOld:passwordOld,
+            passwordNew:passwordNew,
+            passwordConfirm:passwordConfirm,
+
+        }
+        const param={"param":data}
+        console.log('updateParticipantPassword',JSON.stringify(param));
+    }
 
 
     render() {
         const { navigation } = this.props;
-        let { tours, hotels, userData,userSession } = this.state;
+        let { tours, hotels, userData,userSession,login } = this.state;
 
         return (
             <SafeAreaView
@@ -278,18 +317,20 @@ export default class Profile1 extends Component {
                         navigation.goBack();
                     }}
                 />
+                 {
+                    login ? 
                 <ScrollView style={{ marginBottom: 20 }}>
                     {/* Profile Information */}
                     <View style={{ alignItems: "center" }}>
                         <Image source={userData.image} style={styles.image} />
                         <Text title1 semibold>
-                            {userData.name}
+                            {userSession.fullname}
                         </Text>
                         <Text subhead grayColor>
-                            {userData.major}
+                            {userSession.email}
                         </Text>
                         
-                        <View style={styles.location}>
+                        {/* <View style={styles.location}>
                             <Icon
                                 name="map-marker-alt"
                                 size={10}
@@ -304,8 +345,39 @@ export default class Profile1 extends Component {
                             >
                                 {userData.address}
                             </Text>
-                        </View>
-                        <Tag primary style={styles.tagFollow}>
+                        </View> */}
+                        <Tag primary style={styles.tagFollow}
+                        onPress={() => {
+                            this.props.navigation.navigate("ProfileEdit",{
+                                sourcePage:'profile',
+                                key:1,
+                                label:'',
+                                fullname:userSession.fullname,
+                                firstname:userSession.firstname,
+                                lastname:userSession.lastname,
+                                birthday:userSession.birthday,
+                                nationality:userSession.nationality,
+                                passport_number:userSession.passport_number,
+                                passport_country:userSession.passport_country,
+                                passport_expire:userSession.passport_expire,
+                                phone:userSession.phone,
+                                title:userSession.title,
+                                email:userSession.email,
+
+                                nationality_id:userSession.nationality_id,
+                                nationality_phone_code:userSession.nationality_phone_code,
+                                
+                                passport_country_id:userSession.passport_country_id,
+
+                                updateParticipant: this.updateParticipant,
+                                type:'guest',
+                                old:'',
+                                typeProduct:''
+                                
+                            
+                            });
+                        }}
+                        >
                             Edit
                         </Tag>
                     </View>
@@ -328,34 +400,8 @@ export default class Profile1 extends Component {
                                     subtitle={'Pesenan lebih cepat, isi data penumpang, dengan satu klik'}
                                     icon={'lock'}
                                     onPress={() => {
-                                        this.props.navigation.navigate("ProfileEdit",{
-                                            sourcePage:'profile',
-                                            key:1,
-                                            label:'',
-                                            fullname:userSession.fullname,
-                                            firstname:userSession.firstname,
-                                            lastname:userSession.lastname,
-                                            birthday:userSession.birthday,
-                                            nationality:userSession.nationality,
-                                            passport_number:userSession.passport_number,
-                                            passport_country:userSession.passport_country,
-                                            passport_expire:userSession.passport_expire,
-                                            phone:userSession.phone,
-                                            title:userSession.title,
-                                            email:userSession.email,
-
-                                            nationality_id:userSession.nationality_id,
-                                            nationality_phone_code:userSession.nationality_phone_code,
-                                            
-                                            passport_country_id:userSession.passport_country_id,
-
-                                            updateParticipant: this.updateParticipant,
-                                            type:'guest',
-                                            // old:userSession.old,
-                                            old:'',
-                                            typeProduct:''
-                                            
-                                        
+                                        this.props.navigation.navigate("ProfileEditPassword",{
+                                            updateParticipantPassword: this.updateParticipantPassword,
                                         });
                                     }}
                                 
@@ -376,6 +422,9 @@ export default class Profile1 extends Component {
                     
                    
                 </ScrollView>
+                :
+                <NotYetLogin redirect={'Profile1'} navigation={navigation} />
+            }
             </SafeAreaView>
         );
     }

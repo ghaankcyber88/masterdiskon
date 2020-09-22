@@ -73,54 +73,40 @@ export default function index() {
     StatusBar.setBackgroundColor(BaseColor.whiteColor, true);
     StatusBar.setBackgroundColor("rgba(0,0,0,0)");
     
-    // StatusBar.setBackgroundColor("rgba(0,0,0,0)");
-    // StatusBar.setTranslucent(true);
+    StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+    StatusBar.setTranslucent(true);
 
-    // fcmService.registerAppWithFCM()
-    // fcmService.register(onRegister, onNotification, onOpenNotification)
-    // localNotificationService.configure(onOpenNotification)
+    fcmService.registerAppWithFCM()
+    fcmService.register(onRegister, onNotification, onOpenNotification)
+    localNotificationService.configure(onOpenNotification)
     
 
-    // function onRegister(token) {
-    //   console.log("[App] onRegister: ", token);
-    //   AsyncStorage.setItem('tokenFirebase', token);
-    // }
+    function onRegister(token) {
+      console.log("[App] onRegister: ", token);
+      AsyncStorage.setItem('tokenFirebase', token);
+    }
 
-  //   function onNotification(notify) {
-  //     console.log("[App] onNotificationx: ", JSON.stringify(notify));
-  //     var body_msg=notify.body;
-  //     var body_array = body_msg.split("#");
-  //     var body_notif={
-  //       transaction: body_array[0],
-  //       type: body_array[1],
-  //       order_id: body_array[2],
-  //       gross_amount: body_array[3],
-  //       transaction_id: body_array[4],
-  //       fraud: body_array[5],
-  //       bank: body_array[6]
-  //     }
-  
-  //     console.log('body_notif',JSON.stringify(body_notif));
-      
-      
-  //     const options = {
-  //       soundName: 'default',
-  //       playSound: true //,
-  //       // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
-  //       // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
-  //     }
-  //     localNotificationService.showNotification(
-  //       0,
-  //       notify.title,
-  //       notify.body,
-  //       notify,
-  //       options
-  //     )
-  //   }
+    function onNotification(notify) {
+      console.log("[App] onNotificationx: ", JSON.stringify(notify));
 
-  //   function onOpenNotification(notify) {
-  //     console.log("[App] onOpenNotification: ", notify)
-  //   }
+      const options = {
+        soundName: 'default',
+        playSound: true //,
+        // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
+        // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
+      }
+      localNotificationService.showNotification(
+        0,
+        notify.title,
+        notify.body,
+        notify,
+        options
+      )
+    }
+
+    function onOpenNotification(notify) {
+      console.log("[App] onOpenNotification: ", notify)
+    }
     
     
     
@@ -156,39 +142,12 @@ export default function index() {
   //       }
   //   });
   // }
-  
-    // function getConfig(){
-    
-    //     var param={
-    //         method: 'POST',
-    //         headers: {
-    //           Accept: 'application/json',
-    //           'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(),
-    //       }
-       
-    //      var url='https://masterdiskon.com/';
-    //      var dir='front/api/common/config';
-         
-    //      return PostDataNew(url,dir,param)
-    //        .then((result) => {
-    //         AsyncStorage.setItem('config', JSON.stringify(result)); 
-    //           },
-    //        (error) => {
-    //            this.setState({ error });
-    //        }
-    //     );  
-         
-    
-    // }
-  
-    // getConfig();
+ 
     
     return () => {
-      // console.log("[App] unRegister")
-      // fcmService.unRegister()
-      // localNotificationService.unregister()
+      console.log("[App] unRegister")
+      fcmService.unRegister()
+      localNotificationService.unregister()
     }
 
   }, [])

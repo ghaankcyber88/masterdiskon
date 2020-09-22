@@ -17,6 +17,7 @@ class Loading extends Component {
         this.state={
             DataMasterDiskon:DataMasterDiskon[0],
         }
+        //this.getSession();
     }
 
     // isProduction(){
@@ -89,6 +90,19 @@ class Loading extends Component {
     //              }
     //     ); 
     // }
+
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                var id_user=userSession.id_user;
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+            }
+        });
+    }
+
     
     getConfig(){
         let { navigation, auth } = this.props;
@@ -119,6 +133,20 @@ class Loading extends Component {
     
     }
 
+    //memanggil session
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                console.log("userSession",JSON.stringify(userSession));
+                var id_user=userSession.id_user;
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+            }
+        });
+    }
+
     onProcess() {
         
         if(this.props.navigation.state.params && this.props.navigation.state.params.redirect){
@@ -145,7 +173,15 @@ class Loading extends Component {
                 navigation.navigate(redirect,{param:param});
             }, 500);
         }else{
-            //navigation.navigate("Home");
+
+            // AsyncStorage.getItem('userSession', (error, result) => {
+            //     if (result) {    
+            //         this.getConfig();
+            //     }else{
+            //         navigation.navigate("SignIn");
+            //     }
+            // });
+
             this.getConfig();
         }
     }
