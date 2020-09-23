@@ -1343,23 +1343,21 @@ export default class Summary extends Component {
             //this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.errors));
             
             
-            var dataArray=JSON.parse(result);
-            var filter=fullname;
-            var records = dataArray,
-                empid = [filter],
-                object = {},
-                resultArray;
+            // var dataArray=JSON.parse(result);
+            // var filter=fullname;
+            // var records = dataArray,
+            //     empid = [filter],
+            //     object = {},
+            //     resultArray;
             
-            records.forEach(function (a) {
-                object[a.empid] = a;
-            });
+            // records.forEach(function (a) {
+            //     object[a.empid] = a;
+            // });
             
-            resultArray = empid.map(function (a) {
-                return object[a];
-            });
-            console.log('asd',resultArray.length);
-            
-            
+            // resultArray = empid.map(function (a) {
+            //     return object[a];
+            // });
+            // console.log('asd',resultArray.length);
             
             
             let resultParsed = JSON.parse(result)
