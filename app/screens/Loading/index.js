@@ -90,6 +90,45 @@ class Loading extends Component {
     //              }
     //     ); 
     // }
+    
+    getToken(config){
+        let { navigation, auth } = this.props;
+        const {DataMasterDiskon} =this.state;
+        var url=DataMasterDiskon.baseUrl;
+        var dir='front/api/common/tokenAgi';
+        
+        
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Cookie", "ci_session=4hrpjgkhf3efeulhfaq825kf0rb0kf2k");
+        
+        var raw = JSON.stringify({"param":{
+        "url":config.aeroUrl,
+        "clientIdAero":config.aeroClientId,
+        "clientSecretAero":config.aeroClientSecret,
+        "usernameAero":config.aeroUsername,
+        "passwordAero":config.aeroPassword,
+        }});
+        
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+        
+        fetch(url+dir, requestOptions)
+          .then(response => response.json())
+          .then(result => {
+          config.token=result.access_token;
+                            console.log('getConfigNew',JSON.stringify(config));
+                            AsyncStorage.setItem('config', JSON.stringify(config)); 
+                            navigation.navigate("Home");
+          })
+          .catch(error => console.log('error', error));
+        
+    
+    }
 
     getSession(){    
         AsyncStorage.getItem('userSession', (error, result) => {
@@ -107,29 +146,33 @@ class Loading extends Component {
     getConfig(){
         let { navigation, auth } = this.props;
         const {DataMasterDiskon} =this.state;
+        var url=DataMasterDiskon.baseUrl;
+        var dir='front/api/common/config';
+        var params={"param":{"username":DataMasterDiskon.username,"password":DataMasterDiskon.password}};
+        
+        console.log('params',JSON.stringify(params));
         var param={
             method: 'POST',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify(),
+            body: JSON.stringify(params),
           }
        
-         var url=DataMasterDiskon.baseUrl;
-         var dir='front/api/common/config';
+       
          
          PostDataNew(url,dir,param)
              .then((result) => {
                     var config=result;
-                    console.log('getConfig',JSON.stringify(config));
-                    AsyncStorage.setItem('config', JSON.stringify(config)); 
-                    navigation.navigate("Home");
+                  
+                    this.getToken(config);
              },
              (error) => {
                  this.setState({ error });
              }
         ); 
+
     
     }
 

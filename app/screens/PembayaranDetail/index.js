@@ -124,7 +124,6 @@ export default function PembayaranDetail(props) {
         
     AsyncStorage.getItem('tokenFirebase', (error, result) => {
         if (result) {
-            //console.log('Token Firebase',result);
             setTokenFirebase(result);
         }
     });
@@ -455,8 +454,6 @@ export default function PembayaranDetail(props) {
     }
     
     
-    
-    
     function fetch(){
 
         
@@ -550,7 +547,6 @@ export default function PembayaranDetail(props) {
     
     }
 
-
     function fetchMidtrans(id_invoice,config){
           
           
@@ -594,7 +590,6 @@ export default function PembayaranDetail(props) {
         return d;
     
     }
-    
     
     function content_countdown(){
         var item=dataBooking[0];
@@ -650,8 +645,6 @@ export default function PembayaranDetail(props) {
             </View>
         )
     }
-    
-    
     
     function content_payment(){
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
@@ -903,7 +896,6 @@ export default function PembayaranDetail(props) {
             </View>
         )
     }
-    
     
     function content_payment_form(){
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));

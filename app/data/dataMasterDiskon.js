@@ -7,6 +7,8 @@ const DataMasterDiskon = [
 
         //untuk development
         baseUrl: "https://sandbox.masterdiskon.com/",
+        username: "digidawdigidaw",
+        password: "123456",
         
         
         // aeroStag:{
