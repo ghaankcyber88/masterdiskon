@@ -58,9 +58,11 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import I18n from "react-native-i18n";
 import {PostDataNew} from './services/PostDataNew';
+import {DataMasterDiskon} from "@data";
 
 export default function index() {
   const [config, setConfig]= useState({});
+  const [dataMasterDiskon, setDataMasterDiskon]=useState(DataMasterDiskon[0]);
 
   useEffect(() => {
     console.disableYellowBox = true;
@@ -75,11 +77,12 @@ export default function index() {
     
     StatusBar.setBackgroundColor("rgba(0,0,0,0)");
     StatusBar.setTranslucent(true);
-
+    
+    
+    //notification START------------------------------------------------------//
     fcmService.registerAppWithFCM()
     fcmService.register(onRegister, onNotification, onOpenNotification)
     localNotificationService.configure(onOpenNotification)
-    
 
     function onRegister(token) {
       console.log("[App] onRegister: ", token);
@@ -88,6 +91,21 @@ export default function index() {
 
     function onNotification(notify) {
       console.log("[App] onNotificationx: ", JSON.stringify(notify));
+      
+      var body_msg=notify.body;
+      var body_array = body_msg.split("#");
+      var body_notif={
+        transaction: body_array[0],
+        type: body_array[1],
+        order_id: body_array[2],
+        gross_amount: body_array[3],
+        transaction_id: body_array[4],
+        fraud: body_array[5],
+        bank: body_array[6]
+      }
+  
+      console.log('body_notif',JSON.stringify(body_notif));
+      aeroPayment(body_notif);
 
       const options = {
         soundName: 'default',
@@ -108,42 +126,36 @@ export default function index() {
       console.log("[App] onOpenNotification: ", notify)
     }
     
-    
-    
-    
-  //   function aeroPayment(body_notif){
-  //     AsyncStorage.getItem('config', (error, result) => {
-  //       if (result) {    
-  //           let config = JSON.parse(result);
-  //           body_notif.config=config;
-  //           var paramPost={"param":body_notif}
-  //           console.log('aeroPaymentParam',JSON.stringify(paramPost));
+    function aeroPayment(body_notif){
+      
+            var url=dataMasterDiskon.baseUrl;
+            var dir='front/api/payment/notification';
+            var paramPost={"param":body_notif}
+            console.log('aeroPaymentParam',JSON.stringify(paramPost));
             
-  //           var param={
-  //               method: 'POST',
-  //               headers: {
-  //                 Accept: 'application/json',
-  //                 'Content-Type': 'application/json',
-  //               },
-  //               body: JSON.stringify(paramPost),
-  //             }
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paramPost),
+              }
            
-  //             var url='https://masterdiskon.com/';
-  //             var dir='front/api/payment/notification';
+
              
-  //             return PostDataNew(url,dir,param)
-  //                .then((result) => {
-  //                     console.log('aeroPaymentResult',JSON.stringify(result));
-  //                   },
-  //                (error) => {
-  //                    this.setState({ error });
-  //                }
-  //             );  
-  //       }
-  //   });
-  // }
+              return PostDataNew(url,dir,param)
+                 .then((result) => {
+                      console.log('aeroPaymentResult',JSON.stringify(result));
+                    },
+                 (error) => {
+                     this.setState({ error });
+                 }
+              );  
+       
+    }
+     //notification END------------------------------------------------------//
  
-    
     return () => {
       console.log("[App] unRegister")
       fcmService.unRegister()
