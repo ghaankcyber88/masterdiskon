@@ -399,6 +399,7 @@ export default class DetailContact extends Component {
         var passport_country_id=this.state.passport_country_id;
         // var passport_country_phone_code=this.state.passport_phone_code;
         var type=this.props.navigation.state.params.type;
+        var old=this.props.navigation.state.params.old;
         
     
     
@@ -419,8 +420,8 @@ export default class DetailContact extends Component {
           nationality_id,
           nationality_phone_code,
           passport_country_id,
-        //   passport_country_phone_code,
-          type
+          type,
+          old
           );
         this.props.navigation.goBack();
       }

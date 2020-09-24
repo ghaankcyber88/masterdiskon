@@ -263,8 +263,8 @@ export default class SetDateLong extends Component {
                             <CalendarPicker
                                             startFromMonday={true}
                                             allowRangeSelection={round}
-                                            minDate={minDate}
-                                            maxDate={maxDate}
+                                            minDate={tglAwal}
+                                            //maxDate={maxDate}
                                             todayBackgroundColor="#f2e6ff"
                                             selectedDayColor={BaseColor.primaryColor}
                                             selectedDayTextColor="#FFFFFF"

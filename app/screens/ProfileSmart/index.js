@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, TouchableOpacity, Switch,Animated,TextInput,AsyncStorage,ActivityIndicator,FlatList,RefreshControl} from "react-native";
+import { View, ScrollView, TouchableOpacity, Switch,Animated,TextInput,AsyncStorage,ActivityIndicator,FlatList,RefreshControl,Alert} from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AuthActions } from "@actions";
@@ -19,6 +19,7 @@ import * as Utils from "@utils";
 // Load sample data
 import { UserData } from "@data";
 import {PostData} from '../../services/PostData';
+import {PostDataNew} from '../../services/PostDataNew';
 import moment from "moment";
 
 class ProfileSmart extends Component {
@@ -43,6 +44,13 @@ class ProfileSmart extends Component {
             type=this.props.navigation.state.params.type;
         }
 
+        var old="";
+        if(this.props.navigation.state.params.old){
+            old=this.props.navigation.state.params.old;
+        }
+
+
+
 
         this.state = {
             reminders: false,
@@ -52,10 +60,34 @@ class ProfileSmart extends Component {
             heightHeader: Utils.heightHeader(),
             sourcePage:sourcePage,
             item:item,
-            type:type
+            type:type,
+            old:old
         };
         this._deltaY = new Animated.Value(0);
         this.updateParticipant = this.updateParticipant.bind(this);
+        this.getConfig();
+        this.getSession();
+    }
+
+    getConfig(){    
+        AsyncStorage.getItem('config', (error, result) => {
+            if (result) {    
+                let config = JSON.parse(result);
+                //console.log('getConfig',config);
+                this.setState({config:config});
+            }
+        });
+    }
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                var id_user=userSession.id_user;
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+            }
+        });
     }
     
     redirect(redirect='') {
@@ -92,38 +124,39 @@ class ProfileSmart extends Component {
             if(key=='0'){
                   this.fetch();
             }else{
-            AsyncStorage.getItem('smartProfile', (error, result) => {
-                if (result) {
-                    let resultParsed = JSON.parse(result);
-                    console.log("------DATA GUEST asli----");    
-                    console.log(JSON.stringify(resultParsed));
-                    const newProjects = resultParsed.map(p =>
-                        p.id === key
-                        ? { ...p, 
-                            fullname: fullname, 
-                            firstname: firstname,
-                            lastname:lastname,
-                            birthday:birthday,
-                            nationality:nationality,
-                            passport_number:passport_number,
-                            passport_country:passport_country,
-                            passport_expire:passport_expire,
-                            phone:phone,
-                            title:title,
-                            email:email,
-                            nationality_id:nationality_id,
-                            nationality_phone_code:nationality_phone_code,
-                            passport_country_id:passport_country_id,
-                            }
-                        : p
-                    );
+                //this.fetch();
+            // AsyncStorage.getItem('smartProfile', (error, result) => {
+            //     if (result) {
+            //         let resultParsed = JSON.parse(result);
+            //         console.log("------DATA GUEST asli----");    
+            //         console.log(JSON.stringify(resultParsed));
+            //         const newProjects = resultParsed.map(p =>
+            //             p.id === key
+            //             ? { ...p, 
+            //                 fullname: fullname, 
+            //                 firstname: firstname,
+            //                 lastname:lastname,
+            //                 birthday:birthday,
+            //                 nationality:nationality,
+            //                 passport_number:passport_number,
+            //                 passport_country:passport_country,
+            //                 passport_expire:passport_expire,
+            //                 phone:phone,
+            //                 title:title,
+            //                 email:email,
+            //                 nationality_id:nationality_id,
+            //                 nationality_phone_code:nationality_phone_code,
+            //                 passport_country_id:passport_country_id,
+            //                 }
+            //             : p
+            //         );
         
-                    AsyncStorage.setItem('smartProfile',JSON.stringify(newProjects));
-                    this.setState({participant:newProjects});
-                     console.log("------DATA GUEST update----");
-                     console.log(JSON.stringify(newProjects));
-                }
-                });
+            //         AsyncStorage.setItem('smartProfile',JSON.stringify(newProjects));
+            //         this.setState({participant:newProjects});
+            //          console.log("------DATA GUEST update----");
+            //          console.log(JSON.stringify(newProjects));
+            //     }
+            //     });
             }
                 
             this.saveParticipant( key,fullname,
@@ -159,16 +192,10 @@ class ProfileSmart extends Component {
         nationality_id,
         nationality_phone_code,
         passport_country_id){
-        AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
-                this.setState({userSession:userSession});
-                this.setState({login:true});
+        const {config,login,id_user,idParam} =this.state;
+                var url=config.baseUrl;
+                var path=config.user_participant_save.dir;
 
-
-                var id_user=userSession.id_user;
                 const data={  
                     "id": key,
                     "id_user": id_user,
@@ -192,62 +219,112 @@ class ProfileSmart extends Component {
                 console.log("------------------data param submit participant--------------");
                 console.log(JSON.stringify(param));
 
-                PostData('user/participant_update',param)
-                    .then((result) => {
-                        console.log("------------------result update participant--------------");
-                        console.log(JSON.stringify(result));
-                    },
-                    (error) => {
-                        this.setState({ error });
-                    }
-                );
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
 
+
+                var raw = JSON.stringify(param);
+                var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+                };
+                PostDataNew(url,path,requestOptions)
+                .then((result) => {
+                            console.log("------------------result update participant--------------");
+                            console.log(JSON.stringify(result));
+                           
+
+                });
+    }
+
+    deleteParticipant(id){
+                const {config,login,id_user,idParam} =this.state;
+                var url=config.baseUrl;
+                var path=config.user_participant_delete.dir;
+
+                const data={  
+                    "id": id,
                 }
-            });    
+                const param={"param":data}
+                console.log("param delete",JSON.stringify(param));
+                //console.log();
 
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/json");
+
+
+                var raw = JSON.stringify(param);
+                var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+                };
+                PostDataNew(url,path,requestOptions)
+                .then((result) => {
+                            console.log("------------------result update participant--------------");
+                            console.log(JSON.stringify(result));
+                            setTimeout(() => {
+                                this.fetch();
+                            }, 200);
+                           
+                });
     }
 
     componentDidMount() {
-        this.fetch();
+        // setTimeout(() => {
+        //     this.fetch();
+        // }, 200);
+
+        let {} = this.state;
+        const {navigation} = this.props;
+            navigation.addListener ('didFocus', () =>{
+                setTimeout(() => {
+                    this.fetch();
+                }, 200);
+            });
     }
 
     fetch(){
+        const {config,login,id_user,idParam} =this.state;
+        var url=config.baseUrl;
+        var path=config.user_participant.dir;
         
-        this.setState({ loading_spinner: true }, () => {
-            AsyncStorage.getItem('userSession', (error, result) => {
-                if (result) {
-                    let userSession = JSON.parse(result);
-                    console.log("---------------data session user  ------------");
-                    console.log(JSON.stringify(userSession));
-                    this.setState({userSession:userSession});
-                    this.setState({login:true});
+                    // let userSession = JSON.parse(result);
+                    // console.log("---------------data session user  ------------");
+                    // console.log(JSON.stringify(userSession));
+                    // this.setState({userSession:userSession});
+                    // this.setState({login:true});
     
     
-                    var id_user=userSession.id_user;
 
 
                     const data={"id":"","id_user":id_user}
                     const param={"param":data}
                     console.log('-------------param profile-------------');
                     console.log(JSON.stringify(param));
-                    PostData('user/participant',param)
-                        .then((result) => {
-                            console.log('-------------------------data participant-----------------------')
-                            console.log(JSON.stringify(result));
-                            this.setState({ loading_spinner: false });
-                            this.setState({participant:result});
-                            AsyncStorage.setItem('smartProfile', JSON.stringify(result));
-                            
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    ); 
+                   
 
-                 }
-                
-            });
-        });
+                    var myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+
+
+                    var raw = JSON.stringify(param);
+                    var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                    };
+                    PostDataNew(url,path,requestOptions)
+                    .then((result) => {
+                                console.log("result update participant",JSON.stringify(result));
+                                this.setState({participant: result});
+                    });
+
+             
     }
 
 
@@ -292,7 +369,9 @@ class ProfileSmart extends Component {
             var passport_country_id=select.passport_country_id;
 
             var type=this.state.type;
-
+            var old_select=this.convertOld2(select.old);
+            //console.log('conversi old',old_select);
+            var old=this.state.old;
             this.props.navigation.state.params.updateParticipant(
             key,
             fullname,
@@ -309,7 +388,9 @@ class ProfileSmart extends Component {
             nationality_id,
             nationality_phone_code,
             passport_country_id,
-            type
+            type,
+            old,
+            old_select
             );
           this.props.navigation.goBack();
         }else if(sourcePage=='profile'){
@@ -467,6 +548,20 @@ class ProfileSmart extends Component {
         }
         return old;
     }
+
+    convertOld2(old){
+
+        var oldNew='';
+        if(old==='INF'){
+            oldNew='baby';
+        }else if(old==='CHD'){
+            oldNew='children';
+        }else{
+            oldNew='adult';
+        }
+        //console.log('oldNew',oldNew);
+        return oldNew;
+    }
     
     
 
@@ -490,6 +585,15 @@ class ProfileSmart extends Component {
                 </View>
         }
 
+        var icon='';
+        var buttonDelete=false;
+        if(sourcePage=='summary'){
+            icon='hand-point-left';
+            buttonDelete=false
+        }else{
+            icon='pencil-alt';
+            buttonDelete=true;
+        }
 
         return (
             <View style={{ flex: 1 }}>
@@ -571,13 +675,7 @@ class ProfileSmart extends Component {
                     <View style={styles.contain}>
                         <View style={{ width: "100%" }}>
                     
-                        {
-                            loading_spinner ? 
-                            <ActivityIndicator
-                                    size="large"
-                                    color={BaseColor.primaryColor}
-                            /> 
-                            :
+                      
                             <FlatList
                                 contentContainerStyle={{
                                     marginHorizontal: 20
@@ -595,7 +693,7 @@ class ProfileSmart extends Component {
                                 renderItem={({ item, index }) => (
                                     <View style={styles.item}>
                                         <ProfileDetail
-                                        textFirst={this.convertOld(item.birthday)}
+                                        textFirst={this.convertOld2(this.convertOld(item.birthday))}
                                         //textFirst={this.convertOld(item.birthday)+" ("+this.getAge(item.birthday)+")"}
                                         textSecond={item.fullname}
                                         textThird={item.fullname}
@@ -603,11 +701,39 @@ class ProfileSmart extends Component {
                                             this.onChange(item)
                                         }}
                                         viewImage={false}
+                                        icon={icon}
+                                        style={{flex:11}}
                                         />
+                                        {
+                                            buttonDelete ?
+                                            <TouchableOpacity
+                                                style={{flex:1}}
+                                                onPress={() => {  
+                                                    Alert.alert(
+                                                    'Remove User',
+                                                    'Yakin ingin mau di hapus ?',
+                                                    [
+                                                    {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                                    {text: 'YES', onPress: () => this.deleteParticipant(item.id)},
+                                                    ]
+                                                );
+                                                }}
+                                            >
+                                                            <Icon
+                                                                name="trash-alt"
+                                                                size={18}
+                                                                color={BaseColor.thirdColor}
+                                                                style={{ textAlign: "center"}}
+                                                            />
+                                            </TouchableOpacity>
+                                            :
+                                            <View></View>
+                                        }
+                                        
                                     </View>
                                 )}
                             />
-                        }
+                      
                         </View>
                     </View>
                 </ScrollView>

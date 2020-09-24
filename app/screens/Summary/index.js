@@ -1333,64 +1333,67 @@ export default class Summary extends Component {
         nationality_id,
           nationality_phone_code,
           passport_country_id,
-        type
+        type,
+        old,
+        old_select
         ){
     
+            console.log('old',old);
+            console.log('old_select',old_select);
 
     if(type=='guest'){
-        AsyncStorage.getItem('setDataParticipant', (error, result) => {
-        if (result) {
-            //this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.errors));
-            
-            
-            // var dataArray=JSON.parse(result);
-            // var filter=fullname;
-            // var records = dataArray,
-            //     empid = [filter],
-            //     object = {},
-            //     resultArray;
-            
-            // records.forEach(function (a) {
-            //     object[a.empid] = a;
-            // });
-            
-            // resultArray = empid.map(function (a) {
-            //     return object[a];
-            // });
-            // console.log('asd',resultArray.length);
-            
-            
-            let resultParsed = JSON.parse(result)
-            const newProjects = resultParsed.map(p =>
-                p.key === key
-                ? { ...p, 
-                    fullname: fullname, 
-                    firstname: firstname,
-                    lastname:lastname,
-                    birthday:birthday,
-                    nationality:nationality,
-                    passport_number:passport_number,
-                    passport_country:passport_country,
-                    passport_expire:passport_expire,
-                    phone:phone,
-                    title:title,
-                    email:email,
-                    nationality_id:nationality_id,
-                    nationality_phone_code:nationality_phone_code,
-                                                                    
-                    passport_country_id:passport_country_id,
-                    }
-                : p
-            );
+        if(old != old_select){
+            this.dropdown.alertWithType('error', 'Error', 'Data tamu harus sesuai berdasarkan umur');
+        }else{
+            AsyncStorage.getItem('setDataParticipant', (error, result) => {
+            if (result) {
+                let resultParsed = JSON.parse(result);
+                let persons=resultParsed;
 
-            AsyncStorage.setItem('setDataParticipant',JSON.stringify(newProjects));
-            this.setState({listdata_participant:newProjects});
+                if(persons.some(person => person.fullname === fullname)){
+
+                    alert("Object found inside the array.");
             
-            setTimeout(() => {
-                console.log('listdata_participantss',JSON.stringify(this.state.listdata_participant));
-            }, 500);
+                } else{
+            
+                    // alert("Object not found.");
+                    const newProjects = resultParsed.map(p =>
+                        p.key === key
+                        ? { ...p, 
+                            fullname: fullname, 
+                            firstname: firstname,
+                            lastname:lastname,
+                            birthday:birthday,
+                            nationality:nationality,
+                            passport_number:passport_number,
+                            passport_country:passport_country,
+                            passport_expire:passport_expire,
+                            phone:phone,
+                            title:title,
+                            email:email,
+                            nationality_id:nationality_id,
+                            nationality_phone_code:nationality_phone_code,
+                                                                            
+                            passport_country_id:passport_country_id,
+                            }
+                        : p
+                    );
+    
+                    AsyncStorage.setItem('setDataParticipant',JSON.stringify(newProjects));
+                    this.setState({listdata_participant:newProjects});
+                    
+                    setTimeout(() => {
+                        console.log('listdata_participantss',JSON.stringify(this.state.listdata_participant));
+                    }, 500);
+            
+                }
+
+                
+                
+            }
+            });
+
         }
-        });
     
     }else if(type=='customer'){
         AsyncStorage.getItem('setDataCustomer', (error, result) => {
@@ -1776,6 +1779,7 @@ export default class Summary extends Component {
                 <ProfileDetail
                     textFirst={item.label}
                     textSecond={item.fullname}
+                    icon={'pencil-alt'}
                     onPress={() => this.props.navigation.navigate('DetailContact',{
                         key:item.key,
                         label:item.label,
@@ -1812,6 +1816,7 @@ export default class Summary extends Component {
                         {
                             sourcePage:'summary',
                             item:item,
+                            old:item.old,
                             type:'customer',
                             updateParticipant: this.updateParticipant,
                         }
@@ -1836,6 +1841,7 @@ export default class Summary extends Component {
                 <ProfileDetail
                     textFirst={item.label}
                     textSecond={item.fullname}
+                    icon={'pencil-alt'}
                     onPress={() => this.props.navigation.navigate('DetailContact',{
                         key:item.key,
                         label:item.label,
@@ -1874,6 +1880,7 @@ export default class Summary extends Component {
                          {
                             sourcePage:'summary',
                             item:item,
+                            old:item.old,
                             type:'guest',
                             updateParticipant: this.updateParticipant,
                          }

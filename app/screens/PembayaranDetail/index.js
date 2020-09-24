@@ -14,7 +14,7 @@ import {
 } from "@components";
 import * as Utils from "@utils";
 // import styles from "./styles";
-import { DataMasterDiskon,DataPayment,DataBooking} from "@data";
+import { DataPayment,DataBooking} from "@data";
 import HTML from 'react-native-render-html';
 import { WebView } from 'react-native-webview';
 import {PostData} from '../../services/PostData';
@@ -23,8 +23,9 @@ import CountDown from 'react-native-countdown-component';
 import moment from 'moment';
 import {PostDataNew} from '../../services/PostDataNew';
 
-// import {fcmService} from '../../src/FCMService';
-// import {localNotificationService} from '../../src/LocalNotificationService';
+import {fcmService} from '../../src/FCMService';
+import {localNotificationService} from '../../src/LocalNotificationService';
+import {DataMasterDiskon} from "@data";
 // import Clipboard from "@react-native-community/clipboard";
 import { Form, TextValidator } from 'react-native-validator-form';
 
@@ -117,6 +118,8 @@ export default function PembayaranDetail(props) {
       const [colorButton,setColorButton] =useState(BaseColor.greyColor);
       const [colorButtonText,setColorButtonText] =useState(BaseColor.whiteColor);
       const [disabledButton,setDisabledButton] =useState(true);
+      const [dataMasterDiskon, setDataMasterDiskon]=useState(DataMasterDiskon[0]);
+
 
       console.log('dataBookingBro',JSON.stringify(dataBooking));
       
@@ -146,7 +149,6 @@ export default function PembayaranDetail(props) {
             setDisabledButton(true);
         }
     }
-
     
     function getConfig(){
             AsyncStorage.getItem('config', (error, result) => {
@@ -157,8 +159,6 @@ export default function PembayaranDetail(props) {
             });
        
     }
-    
-    
     
     function submitPayment(){
         var payment_type=dataPayment.payment_type;
@@ -246,8 +246,6 @@ export default function PembayaranDetail(props) {
     
     }
     
-    
-    
     function payMidtrans(dataSendMidTrans){
         var payment_type=dataPayment.payment_type;
         var payment_sub=dataPayment.payment_sub;
@@ -319,7 +317,6 @@ export default function PembayaranDetail(props) {
 
     
     }
-    
     
     function changePayment(){
         var item=dataBooking[0];
@@ -452,7 +449,6 @@ export default function PembayaranDetail(props) {
         ); 
 
     }
-    
     
     function fetch(){
 
@@ -1154,7 +1150,7 @@ export default function PembayaranDetail(props) {
                             </Button>
                     </View>
                         <View style={styles.contentButtonBottom}>
-                                {/* <Button
+                                <Button
                                     full
                                     loading={loading}
                                     onPress={() => { 
@@ -1162,7 +1158,7 @@ export default function PembayaranDetail(props) {
                                               'Confirm',
                                               'Ingin mengganti metode pembayaran ?',
                                               [
-                                                {text: 'NO', onPress: () => //console.warn('NO Pressed'), style: 'cancel'},
+                                                {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
                                                 {text: 'YES', onPress: () => changePayment()},
                                               ]
                                             );
@@ -1170,7 +1166,7 @@ export default function PembayaranDetail(props) {
                                     style={{backgroundColor:BaseColor.grayColor}}
                                 >
                                     <Text style={{color:BaseColor.whiteColor}}>Ganti Metode Pembayaran</Text>
-                                </Button> */}
+                                </Button>
                         </View>
                     </View>
             
@@ -1187,11 +1183,97 @@ export default function PembayaranDetail(props) {
     }
     
     
+
+
+         
   useEffect(() => {
     fetch();  
     getConfig();
+
+
+            //notification START------------------------------------------------------//
+            fcmService.registerAppWithFCM()
+            fcmService.register(onRegister, onNotification, onOpenNotification)
+            localNotificationService.configure(onOpenNotification)
+        
+            function onRegister(token) {
+              console.log("[App] onRegister: ", token);
+              AsyncStorage.setItem('tokenFirebase', token);
+            }
+        
+            function onNotification(notify) {
+              console.log("[App] onNotificationx: ", JSON.stringify(notify));
+              
+            //   var body_msg=notify.body;
+            //   var body_array = body_msg.split("#");
+            //   var body_notif={
+            //     transaction: body_array[0],
+            //     type: body_array[1],
+            //     order_id: body_array[2],
+            //     gross_amount: body_array[3],
+            //     transaction_id: body_array[4],
+            //     fraud: body_array[5],
+            //     bank: body_array[6]
+            //   }
+          
+            //   console.log('body_notif',JSON.stringify(body_notif));
+            //   aeroPayment(body_notif);
+        
+              const options = {
+                soundName: 'default',
+                playSound: true //,
+                // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
+                // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
+              }
+              localNotificationService.showNotification(
+                0,
+                notify.title,
+                notify.body,
+                notify,
+                options
+              )
+            }
+        
+            function onOpenNotification(notify) {
+              console.log("[App] onOpenNotification: ", notify)
+            }
+            
+            function aeroPayment(body_notif){
+              
+                    var url=dataMasterDiskon.baseUrl;
+                    var dir='front/api/payment/notification';
+                    var paramPost={"param":body_notif}
+                    console.log('aeroPaymentParam',JSON.stringify(paramPost));
+                    
+                    var param={
+                        method: 'POST',
+                        headers: {
+                          Accept: 'application/json',
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(paramPost),
+                      }
+                   
+        
+                     
+                      return PostDataNew(url,dir,param)
+                         .then((result) => {
+                              console.log('aeroPaymentResult',JSON.stringify(result));
+                            },
+                         (error) => {
+                             this.setState({ error });
+                         }
+                      );  
+               
+            }
+             //notification END------------------------------------------------------//
+    
+    
     
       return () => {
+        console.log("[App] unRegister")
+        fcmService.unRegister()
+        localNotificationService.unregister()
         
       }
   

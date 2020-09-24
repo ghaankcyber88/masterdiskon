@@ -47,8 +47,8 @@ export default class FlightSearch extends Component {
       
         
         
-        var tglAwal=this.getDate(2);
-        var tglAkhir=this.getDate(3);
+        var tglAwal=this.getDate(0);
+        var tglAkhir=this.getDate(1);
         
         var round='';
         var title='';
@@ -238,7 +238,7 @@ export default class FlightSearch extends Component {
     
      
           var param = {
-            DepartureDate:this.setDate(this.state.tglAwal),
+            DepartureDate:this.state.tglAwal,
             ReturnDate:tgl_akhir,
             Adults:this.state.dewasa,
             Children:this.state.anak,
@@ -261,6 +261,8 @@ export default class FlightSearch extends Component {
                 param.bandaraTujuanLabel=this.state.bandaraTujuanLabel;
                 param.Qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
                 param.participant=true;
+
+                console.log('typeFlight',JSON.stringify(param));
                 
                 this.props.navigation.navigate(link,
                 {

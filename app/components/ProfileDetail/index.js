@@ -61,15 +61,13 @@ export default class ProfileDetail extends Component {
                         
                     </View>
                 </View>
-                {icon && (
                     <View style={[styles.contentRight, styleRight]}>
                         <Icon
-                            name="pencil-alt"
+                            name={icon}
                             size={18}
                             color={BaseColor.primaryColor}
                         />
                     </View>
-                )}
             </TouchableOpacity>
         );
     }
@@ -85,7 +83,7 @@ ProfileDetail.propTypes = {
     styleLeft: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     styleThumb: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     styleRight: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-    icon: PropTypes.bool,
+    icon: PropTypes.string,
     viewImage: PropTypes.bool,
     onPress: PropTypes.func
 };
@@ -94,7 +92,7 @@ ProfileDetail.defaultProps = {
     image: "",
     textFirst: "",
     textSecond: "",
-    icon: true,
+    icon: "pencil-alt",
     viewImage: true,
     point: "",
     style: {},
