@@ -45,7 +45,8 @@ export default StyleSheet.create({
     contain: {
         alignItems: "center",
         // padding: 20,
-        width: "100%"
+        width: "100%",
+        height:'100%'
     },
     textInput: {
         height: 56,

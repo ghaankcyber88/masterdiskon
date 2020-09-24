@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, TouchableOpacity, Switch,Animated,TextInput,AsyncStorage,ActivityIndicator,FlatList,RefreshControl,Alert} from "react-native";
+import { View, ScrollView, TouchableOpacity, Switch,Animated,TextInput,AsyncStorage,ActivityIndicator,FlatList,RefreshControl,Alert,Image} from "react-native";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { AuthActions } from "@actions";
@@ -585,14 +585,97 @@ class ProfileSmart extends Component {
                 </View>
         }
 
-        var icon='';
-        var buttonDelete=false;
-        if(sourcePage=='summary'){
-            icon='hand-point-left';
-            buttonDelete=false
+       
+
+
+
+        var content=<View></View>
+        if (participant.length == 0) {
+            content=<View></View>
+            // content=<View
+            //             style={{
+            //                     flexDirection: 'column',
+            //                     justifyContent: 'center',
+            //                     alignItems: 'center',
+            //                     height: '100%',padding: 20
+            //                 }}
+            //             >       
+            //             <Image
+            //                 source={Images.empty}
+            //                 style={{ width: "50%", height: "50%" }}
+            //                 resizeMode="cover"
+            //             />
+            //             <View><Text>Data Kosong</Text></View>
+            //             </View>
         }else{
-            icon='pencil-alt';
-            buttonDelete=true;
+            var icon='';
+            var buttonDelete=false;
+            if(sourcePage=='summary'){
+                icon='hand-point-left';
+                buttonDelete=false
+            }else{
+                icon='pencil-alt';
+                buttonDelete=true;
+            }
+
+
+            content=<FlatList
+            contentContainerStyle={{
+                marginHorizontal: 20
+            }}
+            refreshControl={
+                <RefreshControl
+                    colors={[BaseColor.primaryColor]}
+                    tintColor={BaseColor.primaryColor}
+                    refreshing={this.state.refreshing}
+                    onRefresh={() => {}}
+                />
+            }
+            data={participant}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+                <View style={styles.item}>
+                    <ProfileDetail
+                    textFirst={this.convertOld2(this.convertOld(item.birthday))}
+                    //textFirst={this.convertOld(item.birthday)+" ("+this.getAge(item.birthday)+")"}
+                    textSecond={item.fullname}
+                    textThird={item.fullname}
+                    onPress={() =>{
+                        this.onChange(item)
+                    }}
+                    viewImage={false}
+                    icon={icon}
+                    style={{flex:11}}
+                    />
+                    {
+                        buttonDelete ?
+                        <TouchableOpacity
+                            style={{flex:1}}
+                            onPress={() => {  
+                                Alert.alert(
+                                'Remove User',
+                                'Yakin ingin mau di hapus ?',
+                                [
+                                {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                {text: 'YES', onPress: () => this.deleteParticipant(item.id)},
+                                ]
+                            );
+                            }}
+                        >
+                                        <Icon
+                                            name="trash-alt"
+                                            size={18}
+                                            color={BaseColor.thirdColor}
+                                            style={{ textAlign: "center"}}
+                                        />
+                        </TouchableOpacity>
+                        :
+                        <View></View>
+                    }
+                    
+                </View>
+            )}
+        /> 
         }
 
         return (
@@ -673,67 +756,8 @@ class ProfileSmart extends Component {
                  
 
                     <View style={styles.contain}>
-                        <View style={{ width: "100%" }}>
-                    
-                      
-                            <FlatList
-                                contentContainerStyle={{
-                                    marginHorizontal: 20
-                                }}
-                                refreshControl={
-                                    <RefreshControl
-                                        colors={[BaseColor.primaryColor]}
-                                        tintColor={BaseColor.primaryColor}
-                                        refreshing={this.state.refreshing}
-                                        onRefresh={() => {}}
-                                    />
-                                }
-                                data={participant}
-                                keyExtractor={(item, index) => index.toString()}
-                                renderItem={({ item, index }) => (
-                                    <View style={styles.item}>
-                                        <ProfileDetail
-                                        textFirst={this.convertOld2(this.convertOld(item.birthday))}
-                                        //textFirst={this.convertOld(item.birthday)+" ("+this.getAge(item.birthday)+")"}
-                                        textSecond={item.fullname}
-                                        textThird={item.fullname}
-                                        onPress={() =>{
-                                            this.onChange(item)
-                                        }}
-                                        viewImage={false}
-                                        icon={icon}
-                                        style={{flex:11}}
-                                        />
-                                        {
-                                            buttonDelete ?
-                                            <TouchableOpacity
-                                                style={{flex:1}}
-                                                onPress={() => {  
-                                                    Alert.alert(
-                                                    'Remove User',
-                                                    'Yakin ingin mau di hapus ?',
-                                                    [
-                                                    {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
-                                                    {text: 'YES', onPress: () => this.deleteParticipant(item.id)},
-                                                    ]
-                                                );
-                                                }}
-                                            >
-                                                            <Icon
-                                                                name="trash-alt"
-                                                                size={18}
-                                                                color={BaseColor.thirdColor}
-                                                                style={{ textAlign: "center"}}
-                                                            />
-                                            </TouchableOpacity>
-                                            :
-                                            <View></View>
-                                        }
-                                        
-                                    </View>
-                                )}
-                            />
-                      
+                        <View style={{ width: "100%"}}>
+                        {content}
                         </View>
                     </View>
                 </ScrollView>

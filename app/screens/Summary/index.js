@@ -1343,7 +1343,8 @@ export default class Summary extends Component {
 
     if(type=='guest'){
         if(old != old_select){
-            this.dropdown.alertWithType('error', 'Error', 'Data tamu harus sesuai berdasarkan umur');
+            //this.dropdown.alertWithType('error', 'Error', 'Data tamu harus sesuai berdasarkan umur');
+            alert('Data tamu harus sesuai berdasarkan umur');
         }else{
             AsyncStorage.getItem('setDataParticipant', (error, result) => {
             if (result) {
@@ -1352,8 +1353,8 @@ export default class Summary extends Component {
 
                 if(persons.some(person => person.fullname === fullname)){
 
-                    alert("Object found inside the array.");
-            
+                    //this.dropdown.alertWithType('error', 'Error', 'Data penumpang tidak boleh double');
+                    alert('Data penumpang tidak boleh double');
                 } else{
             
                     // alert("Object not found.");
