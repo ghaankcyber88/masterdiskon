@@ -114,6 +114,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
+                    console.log('listdata_product_trip',JSON.stringify(result));
                     this.setState({loading_product_trip: false });
                     this.setState({listdata_product_trip: result});
                  },
@@ -166,6 +167,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
+                    console.log('listdata_product_hotel_package',JSON.stringify(result));
                     this.setState({loading_product_hotel_package: false });
                     this.setState({listdata_product_hotel_package: result});
                  },
@@ -449,41 +451,7 @@ export default class Home extends Component {
                                 </View>
                             </View>
                             
-                            {   
-                            this.state.listdata_product_trip.length != 0 ?
-                            <View>
-                                <CardCustomTitle style={{marginLeft:20}} title={'Trip'} desc={''} />
-                                <FlatList
-                                        contentContainerStyle={{
-                                            paddingRight: 20
-                                        }}
-                                        horizontal={true}
-                                        data={this.state.listdata_product_trip}
-                                        showsHorizontalScrollIndicator={false}
-                                        keyExtractor={(item, index) => item.id}
-                                        renderItem={({ item, index }) => (
-                                        
-                                            <CardCustom
-                                                propImage={{height:200,url:item.img_featured_url}}
-                                                propInframe={{top:'top',bottom:'bottom'}}
-                                                propTitle={{text:item.product_name}}
-                                                propDesc={{text:'Temukan penerbangan nyaman dengan penawaran terbaik'}}
-                                                propPrice={{price:'2000',startFrom:true}}
-                                                propStar={{rating:10,enabled:true}}
-                                                propLeftRight={{left:'ss',right:'dsf'}}
-                                                onPress={() =>
-                                                    navigation.navigate("TourDetailCustom",{product:item})
-                                                }
-                                                loading={this.state.loading_product_trip}
-                                                propOther={{inFrame:false,horizontal:true,width:Utils.scaleWithPixel(200)}}
-                                            />
-                                        
-                                        )}
-                                    />
-                            </View>
-                            :
-                            <View></View>
-                            }
+                           
                                     
 
                             {   
@@ -501,18 +469,56 @@ export default class Home extends Component {
                                         renderItem={({ item, index }) => (
                                         
                                             <CardCustom
-                                                propImage={{height:250,url:item.img_featured_url}}
-                                                propInframe={{top:'top',bottom:'bottom'}}
+                                                propImage={{height:200,url:item.img_featured_url}}
+                                                propInframe={{top:item.product_detail.area,bottom:item.product_detail.detail_category}}
                                                 propTitle={{text:item.product_name}}
-                                                propDesc={{text:'Temukan penerbangan nyaman dengan penawaran terbaik'}}
-                                                propPrice={{price:'2000',startFrom:true}}
-                                                propStar={{rating:10,enabled:true}}
-                                                propLeftRight={{left:'ss',right:'dsf'}}
+                                                propDesc={{text:item.product_detail.address}}
+                                                propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:true}}
+                                                propStar={{rating:item.product_detail.stars,enabled:true}}
+                                                propLeftRight={{left:'',right:''}}
                                                 onPress={() =>
                                                     navigation.navigate("HotelDetail",{product:item})
                                                 }
                                                 loading={this.state.loading_product_hotel_package}
                                                 propOther={{inFrame:true,horizontal:true,width:Utils.scaleWithPixel(200)}}
+                                            />
+                                        
+                                        )}
+                                    />
+                            </View>
+                            :
+                            <View></View>
+                            }
+                            
+                            
+                            
+                            {   
+                            this.state.listdata_product_trip.length != 0 ?
+                            <View>
+                                <CardCustomTitle style={{marginLeft:20}} title={'Trip'} desc={''} />
+                                <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        horizontal={true}
+                                        data={this.state.listdata_product_trip}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                propImage={{height:200,url:item.img_featured_url}}
+                                                propInframe={{top:item.product_place,bottom:item.product_duration}}
+                                                propTitle={{text:item.product_name}}
+                                                propDesc={{text:item.product_detail.description}}
+                                                propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:false}}
+                                                propStar={{rating:10,enabled:false}}
+                                                propLeftRight={{left:'',right:''}}
+                                                onPress={() =>
+                                                    navigation.navigate("TourDetailCustom",{product:item})
+                                                }
+                                                loading={this.state.loading_product_trip}
+                                                propOther={{inFrame:true,horizontal:true,width:Utils.scaleWithPixel(250)}}
                                             />
                                         
                                         )}

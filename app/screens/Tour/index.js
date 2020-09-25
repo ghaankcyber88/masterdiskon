@@ -108,18 +108,18 @@ export default class Tour extends Component {
                                                 renderItem={({ item, index }) => (
                                                 
                                                     <CardCustom
-                                                        propImage={{height:250,url:item.img_featured_url}}
-                                                        propInframe={{top:'top',bottom:'bottom'}}
+                                                        propImage={{height:200,url:item.img_featured_url}}
+                                                        propInframe={{top:item.product_place,bottom:item.product_duration}}
                                                         propTitle={{text:item.product_name}}
-                                                        propDesc={{text:'Temukan penerbangan nyaman dengan penawaran terbaik'}}
-                                                        propPrice={{price:'2000',startFrom:true}}
-                                                        propStar={{rating:10,enabled:true}}
-                                                        propLeftRight={{left:'ss',right:'dsf'}}
+                                                        propDesc={{text:item.product_detail.description}}
+                                                        propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:false}}
+                                                        propStar={{rating:10,enabled:false}}
+                                                        propLeftRight={{left:'',right:''}}
                                                         onPress={() =>
                                                             navigation.navigate("TourDetailCustom",{product:item})
                                                         }
                                                         loading={this.state.loading_product_trip}
-                                                        propOther={{inFrame:true,horizontal:false,width:Utils.scaleWithPixel(200)}}
+                                                        propOther={{inFrame:true,horizontal:false,width:Utils.scaleWithPixel(250)}}
                                                     />
                                                 
                                                 )}

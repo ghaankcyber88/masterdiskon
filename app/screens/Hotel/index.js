@@ -108,13 +108,13 @@ export default class Hotel extends Component {
                                                 renderItem={({ item, index }) => (
                                                 
                                                     <CardCustom
-                                                        propImage={{height:250,url:item.img_featured_url}}
-                                                        propInframe={{top:'top',bottom:'bottom'}}
+                                                        propImage={{height:200,url:item.img_featured_url}}
+                                                        propInframe={{top:item.product_detail.area,bottom:item.product_detail.detail_category}}
                                                         propTitle={{text:item.product_name}}
-                                                        propDesc={{text:'Temukan penerbangan nyaman dengan penawaran terbaik'}}
-                                                        propPrice={{price:'2000',startFrom:true}}
-                                                        propStar={{rating:10,enabled:true}}
-                                                        propLeftRight={{left:'ss',right:'dsf'}}
+                                                        propDesc={{text:item.product_detail.address}}
+                                                        propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:true}}
+                                                        propStar={{rating:item.product_detail.stars,enabled:true}}
+                                                        propLeftRight={{left:'',right:''}}
                                                         onPress={() =>
                                                             navigation.navigate("HotelDetail",{product:item})
                                                         }

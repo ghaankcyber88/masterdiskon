@@ -71,6 +71,7 @@ export default class CardCustom extends Component {
                                 <Text
                                     body2
                                     bold
+                                    style={{color:BaseColor.whiteColor}}
                                 >
                               {propInframe.top}
                           </Text>
@@ -179,10 +180,16 @@ export default class CardCustom extends Component {
           
           
           if(propPrice.price != ""){
+            var styles={}
+            if(propPrice.startFrom == true){
+              styles={marginLeft:10,color:BaseColor.thirdColor}
+            }else{
+              styles={marginLeft:0,color:BaseColor.thirdColor}
+            }
             contentPrice=<Text
                                 body1
                                 bold
-                                style={{marginLeft:10,color:BaseColor.thirdColor}}
+                                style={styles}
                             >
                                 {propPrice.price}
                             </Text>
@@ -251,6 +258,7 @@ export default class CardCustom extends Component {
           styleCustomText.borderWidth= 1;
           styleCustomText.borderColor= BaseColor.dividerColor;
           styleCustomText.borderStyle="solid";
+          styleCustomText.paddingBottom=20;
         } 
         contentText=<View style={styleCustomText}>
                     {contentTextTitle}

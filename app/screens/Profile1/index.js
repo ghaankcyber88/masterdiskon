@@ -16,7 +16,11 @@ import {
 import styles from "./styles";
 import CardCustomProfile from "../../components/CardCustomProfile";
 import NotYetLogin from "../../components/NotYetLogin";
-
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+  } from '@react-native-community/google-signin';
 
 // Load sample data
 import { UserData, HotelData, TourData } from "@data";
@@ -73,7 +77,8 @@ export default class Profile1 extends Component {
             this.setState({ loading: true }, () => {
                 this.setState({ loading: false });
                 setTimeout(() => {
-                    this.authentication('Profile');
+                    //this.authentication('Profile');
+                    this.props.navigation.navigate("Loading",{redirect:'Profile'});
                 }, 1000);
 
             });    
@@ -83,7 +88,8 @@ export default class Profile1 extends Component {
             this.setState({ loading: true }, () => {
                 this.setState({ loading: false });
                 setTimeout(() => {
-                    this.authentication('Profile');
+                    //this.authentication('Profile');
+                    this.props.navigation.navigate("Loading",{redirect:'Profile'});
                 }, 1000);
 
             });        
@@ -122,6 +128,7 @@ export default class Profile1 extends Component {
             }
         );
     }
+
 
     addDate(dt, amount, dateType) {
         switch (dateType) {
@@ -303,7 +310,7 @@ export default class Profile1 extends Component {
             forceInset={{ top: "always" }}
             >
                 <Header
-                    title="Profile1"
+                    title="Profile"
                     renderLeft={() => {
                         return (
                             <Icon

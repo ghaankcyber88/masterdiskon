@@ -991,6 +991,7 @@ export default class Summary extends Component {
                 if (result) {    
                     let config = JSON.parse(result);
                     var access_token=config.token;
+                    var midtransMethod=config.midtransMethod;
                     var path=config.user_order_submit.dir;
                     var url=config.baseUrl;
                     

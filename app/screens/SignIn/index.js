@@ -55,6 +55,29 @@ class SignIn extends ValidationComponent {
             param:param
         };
         //this.handleChange = this.handleChange.bind(this);
+        this.getConfig();
+        this.getSession();
+    }
+    
+    getConfig(){    
+        AsyncStorage.getItem('config', (error, result) => {
+            if (result) {    
+                let config = JSON.parse(result);
+                //console.log('getConfig',config);
+                this.setState({config:config});
+            }
+        });
+    }
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                var id_user=userSession.id_user;
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+            }
+        });
     }
 
     componentDidMount(){
@@ -121,13 +144,14 @@ class SignIn extends ValidationComponent {
 
 
     onLoginGoogle(userInfo) {
-        const { redirect } = this.state;
+        const { redirect,config } = this.state;
         const { navigation } = this.props;
         var email = userInfo.user.email;
         var sp = email.split('@');
         var username=sp[0];
-
-
+        var url=config.baseUrl+"front/api/AuthLogin/login_proses_app_google";
+        console.log('onLoginGoogle',url);
+        
         this.setState({ loading: true }, () => {
             var data={
                 "firstname":userInfo.user.givenName,
@@ -152,7 +176,7 @@ class SignIn extends ValidationComponent {
             redirect: 'follow'
             };
 
-            fetch("https://masterdiskon.com/front/auth/login/login_proses_app_google", requestOptions)
+            fetch(url, requestOptions)
             .then(response => response.json())
             .then(result => {
                 var userSession=result.userSession;
@@ -184,12 +208,17 @@ class SignIn extends ValidationComponent {
 
 
 onSubmit() {
-    const { email, password, success,redirect } = this.state;
+    const { email, password, success,redirect,config } = this.state;
     const { navigation } = this.props;
     errorMsg='';
     if(errorMsg==''){
 
         this.setState({ loading: true }, () => {
+            var url=config.baseUrl;
+            var url=config.baseUrl+"front/api/AuthLogin/login_proses_app";
+            console.log('onLoginAppUrl',url);
+            
+    
             var data={"email":email,"password":password}
             const param={"param":data}
 
@@ -206,7 +235,7 @@ onSubmit() {
             redirect: 'follow'
             };
 
-            fetch("https://masterdiskon.com/front/auth/login/login_proses_app", requestOptions)
+            fetch(url, requestOptions)
             .then(response => response.json())
             .then(result => {
                 this.setState({ loading: false });
@@ -232,93 +261,93 @@ onSubmit() {
 }
 
 
-getProfile(id_user) {
+// getProfile(id_user) {
  
-    var id_user=id_user;           
-    // alert(id_user);
-    PostData('api/user',{"id_user":id_user})
-        .then((result) => {
-            console.log("-------------GET profile--------------")
-            AsyncStorage.setItem('profile', JSON.stringify(result));
-            this.getSmartProfile(id_user);
-        },
-        (error) => {
-            this.setState({ error });
-        }
-    );
+//     var id_user=id_user;           
+//     // alert(id_user);
+//     PostData('api/user',{"id_user":id_user})
+//         .then((result) => {
+//             console.log("-------------GET profile--------------")
+//             AsyncStorage.setItem('profile', JSON.stringify(result));
+//             this.getSmartProfile(id_user);
+//         },
+//         (error) => {
+//             this.setState({ error });
+//         }
+//     );
 
-}
+// }
 
 
 
-getSmartProfile(id_user){
-    var id_user=id_user;
+// getSmartProfile(id_user){
+//     var id_user=id_user;
 
     
-        var myHeaders = new Headers();
+//         var myHeaders = new Headers();
 
-        var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-        };
+//         var requestOptions = {
+//         method: 'GET',
+//         headers: myHeaders,
+//         redirect: 'follow'
+//         };
 
-        fetch("https://masterdiskon.com/front/api/api/get_participant?id_user="+id_user, requestOptions)
-        .then(response => response.text())
-        .then(result => {
+//         fetch("https://masterdiskon.com/front/api/api/get_participant?id_user="+id_user, requestOptions)
+//         .then(response => response.text())
+//         .then(result => {
             
-            console.log(result)
-            this.getBookingHistory(id_user);
-        }
+//             console.log(result)
+//             this.getBookingHistory(id_user);
+//         }
             
-            )
-        .catch(error => console.log('error', error));
-}
+//             )
+//         .catch(error => console.log('error', error));
+// }
 
 
-getBookingHistory(id_user) {
+// getBookingHistory(id_user) {
  
             
-            var id_user=id_user;
-                var myHeaders = new Headers();
+//             var id_user=id_user;
+//                 var myHeaders = new Headers();
         
-                var requestOptions = {
-                method: 'GET',
-                headers: myHeaders,
-                redirect: 'follow'
-                };
+//                 var requestOptions = {
+//                 method: 'GET',
+//                 headers: myHeaders,
+//                 redirect: 'follow'
+//                 };
         
-                fetch("https://masterdiskon.com/front/api/api/get_booking_history?id="+id_user, requestOptions)
-                .then(response => response.text())
-                .then(result => {
+//                 fetch("https://masterdiskon.com/front/api/api/get_booking_history?id="+id_user, requestOptions)
+//                 .then(response => response.text())
+//                 .then(result => {
                     
-                    console.log(result)
-                    this.getNotification(id_user);
-                }
-                    )
-                .catch(error => console.log('error', error));
-}
+//                     console.log(result)
+//                     this.getNotification(id_user);
+//                 }
+//                     )
+//                 .catch(error => console.log('error', error));
+// }
 
-getNotification(id_user) {
-    var id_user=id_user;
-    var requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-      };
+// getNotification(id_user) {
+//     var id_user=id_user;
+//     var requestOptions = {
+//         method: 'GET',
+//         redirect: 'follow'
+//       };
       
-      fetch("https://masterdiskon.com/front/api/api/notif?id="+id_user, requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            console.log("-------------notif--------------")
-            AsyncStorage.setItem('notification', JSON.stringify(result));
-            setTimeout(() => {
-                this.authentication(redirect);
-                }, 500);
+//       fetch("https://masterdiskon.com/front/api/api/notif?id="+id_user, requestOptions)
+//         .then(response => response.json())
+//         .then(result => {
+//             console.log("-------------notif--------------")
+//             AsyncStorage.setItem('notification', JSON.stringify(result));
+//             setTimeout(() => {
+//                 this.authentication(redirect);
+//                 }, 500);
 
-        })
-        .catch(error => console.log('error', error));
+//         })
+//         .catch(error => console.log('error', error));
 
-}
+// }
 
 
    

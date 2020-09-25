@@ -331,9 +331,10 @@ export default function PembayaranDetail(props) {
                 "payment_type_label": "",
                 "payment_sub": "",
                 "payment_sub_label": ""
-            }
+            },
+            "token":""
         }
-        //console.log('paramPayMD',JSON.stringify(paramPayMD));
+        console.log('changePaymentParam',JSON.stringify(paramPayMD));
        
         setLoading(true);
             //console.log("---------------paramPayMD ------------");
@@ -352,19 +353,19 @@ export default function PembayaranDetail(props) {
              var url=config.baseUrl;
              //console.log('baseUrl',url);
              
-             return PostDataNew(url,'front/api/apiOrder/payment_update',param)
+             return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
                  .then((result) => {
-                        //     setLoading(false);
-                        //    //console.log("---------------result payment md ------------");
-                        //     //console.log(JSON.stringify(result));
-                        //     var redirect='Pembayaran';
-                        //     var param={
-                        //         id_order:idOrder,
-                        //         dataPayment:{}
-                        //     }
-                        //     navigation.navigate("Loading",{redirect:redirect,param:param});
+                        
+                        // setLoading(false);
+                        // var redirect='Pembayaran';
+                        // var param={
+                        //     id_order:idOrder,
+                        //     dataPayment:{}
+                        // }
+                        // navigation.navigate("Loading",{redirect:redirect,param:param});
+                        
+                        
                         var id_invoice=result.id_invoice;
-                        // payMidtrans(id_invoice);
                         cancelMidtrans(id_invoice);
                  },
                  (error) => {
@@ -419,7 +420,6 @@ export default function PembayaranDetail(props) {
               'Content-Type': 'application/json',
               'Authorization': 'Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6',
             },
-            //body: JSON.stringify(paramPay),
             redirect: 'follow'
           }
        
@@ -427,7 +427,7 @@ export default function PembayaranDetail(props) {
          var url=config.midtransUrl;
          //console.log('baseUrl',url);
          
-         return PostDataNew(url,"v2/"+order_code+"/deny",param)
+         return PostDataNew(url,"v2/"+order_code+"/cancel",param)
              .then((result) => {
              
                             setLoading(false);
@@ -562,7 +562,7 @@ export default function PembayaranDetail(props) {
          return PostDataNew(url,"v2/"+id_invoice+"/status",param)
              .then((result) => {
                             var statusMidtrans=result;
-                //console.log('status_midtransasd',JSON.stringify(result));
+                console.log('status_midtransasd',JSON.stringify(result));
                 setStatusMidtrans(statusMidtrans);
 
                 },
@@ -1143,7 +1143,15 @@ export default function PembayaranDetail(props) {
                                 full
                                 loading={loading}
                                 onPress={() => { 
-                                    onSubmit();
+                                    //onSubmit();
+                                    
+                                    // var redirect='PembayaranDetail';
+                                    // var param={
+                                    //     id_order:idOrder,
+                                    //     dataPayment:{}
+                                    // }
+                                    // navigation.navigate("Loading",{redirect:redirect,param:param});
+            
                                 }}
                             >
                                 Sudah Membayar

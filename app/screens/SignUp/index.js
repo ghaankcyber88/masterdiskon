@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, TextInput,TouchableOpacity} from "react-native";
+import { View, ScrollView, TextInput,TouchableOpacity,AsyncStorage} from "react-native";
 import { BaseStyle, BaseColor } from "@config";
 import { Header, SafeAreaView, Icon, Button,Text } from "@components";
 import styles from "./styles";
@@ -39,12 +39,35 @@ export default class SignUp extends ValidationComponent {
             colorButtonText:BaseColor.whiteColor,
             disabledButton:true
         };
+        this.getConfig();
+        this.getSession();
+    }
+    
+    getConfig(){    
+        AsyncStorage.getItem('config', (error, result) => {
+            if (result) {    
+                let config = JSON.parse(result);
+                //console.log('getConfig',config);
+                this.setState({config:config});
+            }
+        });
+    }
+    getSession(){    
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {    
+                let userSession = JSON.parse(result);
+                var id_user=userSession.id_user;
+                this.setState({id_user:id_user});
+                this.setState({userSession:userSession});
+                this.setState({login:true});
+            }
+        });
     }
 
     onSubmit() {
         const { navigation } = this.props;
-        let { name,firstname,lastname,username,password,passwordConfirm, email, address, success } = this.state;
-
+        let { config,name,firstname,lastname,username,password,passwordConfirm, email, address, success } = this.state;
+        
         if (firstname == "" || lastname == "" || username == "" || password == "" || passwordConfirm == "" || email == "") {
             this.setState({
                 success: {
@@ -59,6 +82,8 @@ export default class SignUp extends ValidationComponent {
             });
         } else {
             this.setState({ loading: true }, () => {
+                var url=config.baseUrl+"front/api/AuthRegister/registrasi_proses_app";
+                console.log('onSubmitSignUP',url);
                 var data={"firstname":firstname,"lastname":lastname,"username":username,"password":password,"passwordConfirm":passwordConfirm,"email":email}
                 const param={"param":data}
 
@@ -75,7 +100,7 @@ export default class SignUp extends ValidationComponent {
                 redirect: 'follow'
                 };
 
-                fetch("https://masterdiskon.com/front/auth/register/registrasi_proses_app", requestOptions)
+                fetch(url, requestOptions)
                 .then(response => response.json())
                 .then(result => {
                     this.setState({ loading: false });

@@ -59,6 +59,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import I18n from "react-native-i18n";
 import {PostDataNew} from './services/PostDataNew';
 import {DataMasterDiskon} from "@data";
+import NetInfo from '@react-native-community/netinfo';
 
 export default function index() {
   const [config, setConfig]= useState({});
