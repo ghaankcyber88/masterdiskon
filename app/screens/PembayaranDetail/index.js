@@ -291,10 +291,11 @@ export default function PembayaranDetail(props) {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': 'Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6',
+              'Authorization': 'Basic '+config.midtransKey.authBasicHeader,
             },
             body: JSON.stringify(paramPay),
           }
+          console.log('param',JSON.stringify(param));
        
          var url=config.midtransUrl;
          
@@ -418,7 +419,7 @@ export default function PembayaranDetail(props) {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': 'Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6',
+              'Authorization': 'Basic '+config.midtransKey.authBasicHeader,
             },
             redirect: 'follow'
           }
@@ -551,7 +552,7 @@ export default function PembayaranDetail(props) {
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': 'Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6',
+              'Authorization': 'Basic '+config.midtransKey.authBasicHeader,
             },
             redirect: 'follow'
           }
