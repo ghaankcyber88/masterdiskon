@@ -81,7 +81,7 @@ export default class SignUp extends ValidationComponent {
                 }
             });
         } else {
-            this.setState({ loading: true }, () => {
+            // this.setState({ loading: true }, () => {
                 var url=config.baseUrl+"front/api/AuthRegister/registrasi_proses_app";
                 console.log('onSubmitSignUP',url);
                 var data={"firstname":firstname,"lastname":lastname,"username":username,"password":password,"passwordConfirm":passwordConfirm,"email":email}
@@ -117,7 +117,7 @@ export default class SignUp extends ValidationComponent {
                     }
 
                 })
-            });
+            //});
               
         }
     }

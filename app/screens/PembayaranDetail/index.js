@@ -14,7 +14,7 @@ import {
 } from "@components";
 import * as Utils from "@utils";
 // import styles from "./styles";
-import { DataPayment,DataBooking} from "@data";
+import { DataPayment,DataBooking,DataConfig} from "@data";
 import HTML from 'react-native-render-html';
 import { WebView } from 'react-native-webview';
 import {PostData} from '../../services/PostData';
@@ -28,6 +28,7 @@ import {localNotificationService} from '../../src/LocalNotificationService';
 import {DataMasterDiskon} from "@data";
 // import Clipboard from "@react-native-community/clipboard";
 import { Form, TextValidator } from 'react-native-validator-form';
+
 
 
 const styles = StyleSheet.create({
@@ -98,6 +99,7 @@ export default function PembayaranDetail(props) {
     // var dataPayment=param.dataPayment;
  
       const { navigation} = props;
+      const [params, setParam]=useState(param);
       const [dataPayment, setDataPayment]=useState(param.dataPayment);
       const [idOrder, setIdOrder]=useState(param.id_order);
       const [count, setCount] = useState(0);
@@ -123,7 +125,7 @@ export default function PembayaranDetail(props) {
 
       console.log('dataBookingBro',JSON.stringify(dataBooking));
       
-      const [config, setConfig]=useState();
+      const [config, setConfig]=useState(DataConfig);
         
     AsyncStorage.getItem('tokenFirebase', (error, result) => {
         if (result) {
@@ -154,6 +156,7 @@ export default function PembayaranDetail(props) {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
                     let config = JSON.parse(result);
+                    console.log('getConfigDetailPayment',JSON.stringify(config));
                     setConfig(config);
                 }
             });
@@ -211,9 +214,6 @@ export default function PembayaranDetail(props) {
     
     function payMasterDiskon(paramPayMD){
             setLoading(true);
-            //console.log("---------------paramPayMD ------------");
-            //console.log(JSON.stringify(paramPayMD));
-
             
             var param={
                 method: 'POST',
@@ -296,25 +296,26 @@ export default function PembayaranDetail(props) {
             body: JSON.stringify(paramPay),
           }
           console.log('param',JSON.stringify(param));
+          console.log('paramPay',JSON.stringify(paramPay));
        
          var url=config.midtransUrl;
          
-         return PostDataNew(url,'v2/charge',param)
-             .then((result) => {
+        //  return PostDataNew(url,'v2/charge',param)
+        //      .then((result) => {
                 
-                setLoading(false);
+        //         setLoading(false);
                 
-                var redirect='PembayaranDetail';
-                    var param={
-                        id_order:idOrder,
-                        dataPayment:dataPayment
-                    }
-                navigation.navigate("Loading",{redirect:redirect,param:param});
-                },
-             (error) => {
-                 this.setState({ error });
-             }
-        ); 
+        //         var redirect='PembayaranDetail';
+        //             var param={
+        //                 id_order:idOrder,
+        //                 dataPayment:dataPayment
+        //             }
+        //         navigation.navigate("Loading",{redirect:redirect,param:param});
+        //         },
+        //      (error) => {
+        //          this.setState({ error });
+        //      }
+        // ); 
 
     
     }
@@ -338,10 +339,6 @@ export default function PembayaranDetail(props) {
         console.log('changePaymentParam',JSON.stringify(paramPayMD));
        
         setLoading(true);
-            //console.log("---------------paramPayMD ------------");
-            //console.log(JSON.stringify(paramPayMD));
-
-            
             var param={
                 method: 'POST',
                 headers: {
@@ -352,20 +349,9 @@ export default function PembayaranDetail(props) {
               }
            
              var url=config.baseUrl;
-             //console.log('baseUrl',url);
              
              return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
                  .then((result) => {
-                        
-                        // setLoading(false);
-                        // var redirect='Pembayaran';
-                        // var param={
-                        //     id_order:idOrder,
-                        //     dataPayment:{}
-                        // }
-                        // navigation.navigate("Loading",{redirect:redirect,param:param});
-                        
-                        
                         var id_invoice=result.id_invoice;
                         cancelMidtrans(id_invoice);
                  },
@@ -378,40 +364,6 @@ export default function PembayaranDetail(props) {
     }
     
     function cancelMidtrans(id_invoice){
-        //var dataBooking=dataBooking;
-        
-        // var myHeaders = new Headers();
-        // myHeaders.append("Accept", "application/json");
-        // myHeaders.append("Content-Type", "application/json");
-        // myHeaders.append("Authorization", "Basic U0ItTWlkLXNlcnZlci1rYUg3VlctakNpVjAyOGtWcmJmbjZITGY6");
-        
-        // var raw = "";
-        
-        // var requestOptions = {
-        //   method: 'POST',
-        //   headers: myHeaders,
-        //   body: raw,
-        //   redirect: 'follow'
-        // };
-        
-        // return fetch("https://api.sandbox.midtrans.com/v2/"+order_code+"/cancel", requestOptions)
-        //   .then(response => response.json())
-        //   .then(result => {
-        //                     setLoading(false);
-        //                     //this.setState({ loading_spinner: false });
-        //                     //console.log("---------------cancel midtrans ------------");
-        //                     //console.log(JSON.stringify(result));
-        //                     var redirect='Pembayaran';
-        //                     var param={
-        //                         id_order:this.state.id_order,
-        //                         dataPayment:{}
-        //                     }
-        //                     navigation.navigate("Loading",{redirect:redirect,param:param});
-        //   })
-        //   .catch(error => //console.log('error', error)); 
-          
-          
-          
         var order_code=id_invoice;
            
           var param={
@@ -424,25 +376,18 @@ export default function PembayaranDetail(props) {
             redirect: 'follow'
           }
        
-         //var url='https://api.sandbox.midtrans.com/';
          var url=config.midtransUrl;
-         //console.log('baseUrl',url);
          
          return PostDataNew(url,"v2/"+order_code+"/cancel",param)
              .then((result) => {
              
                             setLoading(false);
-                            //this.setState({ loading_spinner: false });
-                            //console.log("---------------cancel midtrans ------------");
-                            //console.log(JSON.stringify(result));
                             var redirect='Pembayaran';
                             var param={
                                 id_order:idOrder,
                                 dataPayment:{}
                             }
                             navigation.navigate("Loading",{redirect:redirect,param:param});
-
-                         
                 },
              (error) => {
                  this.setState({ error });
@@ -452,8 +397,6 @@ export default function PembayaranDetail(props) {
     }
     
     function fetch(){
-
-        
             AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 AsyncStorage.getItem('config', (error, resultx) => {
@@ -489,17 +432,44 @@ export default function PembayaranDetail(props) {
                                 setLoading(false);
                                 setDataBooking(dataBooking);
                                 
-                                //jika refresh setelah pembayaran lunas
-                                var statusOrder=dataBooking[0].order_status.order_status_slug;
-                                if(statusOrder=='complete'){
-                                    var redirect='Pembayaran';
-                                    var param={
-                                        id_order:idOrder,
-                                        dataPayment:{}
-                                    }
-                                    navigation.navigate("Loading",{redirect:redirect,param:param});
-                                }else{
-                                    //-------------------------------
+                                // //jika refresh setelah pembayaran lunas
+                                // var statusOrder=dataBooking[0].order_status.order_status_slug;
+                                // if(statusOrder=='complete'){
+                                //     var redirect='Pembayaran';
+                                //     var param={
+                                //         id_order:idOrder,
+                                //         dataPayment:{}
+                                //     }
+                                //     navigation.navigate("Loading",{redirect:redirect,param:param});
+                                // }else{
+                                //     var order_payment_recent=dataBooking[0].order_payment_recent;
+                                //     var order_payment_num=dataBooking[0].order_payment_num;
+                                //     if(order_payment_recent != null){
+                                //         var id_invoice=order_payment_recent.id_invoice;
+                                //         if(order_payment_recent.payment_type==""){
+                                //             var payment_type=dataPayment.payment_type;
+                                //             var payment_sub=dataPayment.payment_sub;
+                                //         }else{
+                                //             var payment_type=order_payment_recent.payment_type;
+                                //             var payment_sub=order_payment_recent.payment_sub;
+                                //             //console.log('configccx',JSON.stringify(config));
+                                //             fetchMidtrans(id_invoice,config);
+                                //         }
+                                        
+                                //         var fee='';
+                                //         if(order_payment_num == 1){
+                                //             fee=config.transaction_fee;
+                                //         }else{
+                                //             fee=0;
+                                //         }
+                                        
+                                //         var totalPembayaran=parseInt(order_payment_recent.iv_amount)+parseInt(fee);
+                                //         setFee(fee);
+                                //         setTotalPembayaran(totalPembayaran);
+                                //     }
+                                // }
+                                
+                                
                                     var order_payment_recent=dataBooking[0].order_payment_recent;
                                     var order_payment_num=dataBooking[0].order_payment_num;
                                     if(order_payment_recent != null){
@@ -516,9 +486,6 @@ export default function PembayaranDetail(props) {
                                         
                                         var fee='';
                                         if(order_payment_num == 1){
-                                            // if(payment_type=='bank_transfer'){
-                                            //     fee=config.transaction_fee;
-                                            // }
                                             fee=config.transaction_fee;
                                         }else{
                                             fee=0;
@@ -528,7 +495,6 @@ export default function PembayaranDetail(props) {
                                         setFee(fee);
                                         setTotalPembayaran(totalPembayaran);
                                     }
-                                }
                                 
                                 
                             },
@@ -558,7 +524,6 @@ export default function PembayaranDetail(props) {
           }
        
          var url=config.midtransUrl;
-         //console.log('baseUrl',url);
          
          return PostDataNew(url,"v2/"+id_invoice+"/status",param)
              .then((result) => {
@@ -645,7 +610,6 @@ export default function PembayaranDetail(props) {
     
     function content_payment(){
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-
         var order_payment_num=dataBooking[0].order_payment_num;
         var order_payment_recent=dataBooking[0].order_payment_recent;
         var content=<View></View>;
@@ -1198,84 +1162,98 @@ export default function PembayaranDetail(props) {
   useEffect(() => {
     fetch();  
     getConfig();
+    
+    //notification START------------------------------------------------------//
+    fcmService.registerAppWithFCM()
+    fcmService.register(onRegister, onNotification, onOpenNotification)
+    localNotificationService.configure(onOpenNotification)
 
+    function onRegister(token) {
+      console.log("[App] onRegister: ", token);
+      AsyncStorage.setItem('tokenFirebase', token);
+    }
 
-            //notification START------------------------------------------------------//
-            fcmService.registerAppWithFCM()
-            fcmService.register(onRegister, onNotification, onOpenNotification)
-            localNotificationService.configure(onOpenNotification)
-        
-            function onRegister(token) {
-              console.log("[App] onRegister: ", token);
-              AsyncStorage.setItem('tokenFirebase', token);
-            }
-        
-            function onNotification(notify) {
-              console.log("[App] onNotificationx: ", JSON.stringify(notify));
-              
-            //   var body_msg=notify.body;
-            //   var body_array = body_msg.split("#");
-            //   var body_notif={
-            //     transaction: body_array[0],
-            //     type: body_array[1],
-            //     order_id: body_array[2],
-            //     gross_amount: body_array[3],
-            //     transaction_id: body_array[4],
-            //     fraud: body_array[5],
-            //     bank: body_array[6]
-            //   }
-          
-            //   console.log('body_notif',JSON.stringify(body_notif));
-            //   aeroPayment(body_notif);
-        
-              const options = {
-                soundName: 'default',
-                playSound: true //,
-                // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
-                // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
-              }
-              localNotificationService.showNotification(
-                0,
-                notify.title,
-                notify.body,
-                notify,
-                options
-              )
-            }
-        
-            function onOpenNotification(notify) {
-              console.log("[App] onOpenNotification: ", notify)
-            }
+    function onNotification(notify) {
+      console.log("[App] onNotificationx: ", JSON.stringify(notify));
+      
+      var body_msg=notify.body;
+      var body_array = body_msg.split("#");
+      var body_notif={
+        transaction: body_array[0],
+        type: body_array[1],
+        order_id: body_array[2],
+        gross_amount: body_array[3],
+        transaction_id: body_array[4],
+        fraud: body_array[5],
+        bank: body_array[6]
+      }
+  
+      console.log('body_notifonNotification',JSON.stringify(body_notif));
+      aeroPayment(body_notif);
+
+      const options = {
+        soundName: 'default',
+        playSound: true //,
+        // largeIcon: 'ic_launcher', // add icon large for Android (Link: app/src/main/mipmap)
+        // smallIcon: 'ic_launcher' // add icon small for Android (Link: app/src/main/mipmap)
+      }
+      localNotificationService.showNotification(
+        0,
+        notify.title,
+        notify.body,
+        notify,
+        options
+      )
+    }
+
+    function onOpenNotification(notify) {
+      console.log("[App] onOpenNotification: ", notify)
+    }
+    
+    function aeroPayment(body_notif){
+            console.log('body_notifaeroPayment',JSON.stringify(body_notif))
+            var url=dataMasterDiskon.baseUrl;
+            var dir='front/api/payment/notification';
+            var paramPost={"param":body_notif}
+            console.log('aeroPaymentParam',JSON.stringify(paramPost));
             
-            function aeroPayment(body_notif){
-              
-                    var url=dataMasterDiskon.baseUrl;
-                    var dir='front/api/payment/notification';
-                    var paramPost={"param":body_notif}
-                    console.log('aeroPaymentParam',JSON.stringify(paramPost));
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paramPost),
+              }
+           
+
+             
+              return PostDataNew(url,dir,param)
+                 .then((result) => {
+                    console.log('aeroPaymentResultsssss',JSON.stringify(result));
+                    
+                    var redirect='Pembayaran';
+                    var id_order=idOrder;
                     
                     var param={
-                        method: 'POST',
-                        headers: {
-                          Accept: 'application/json',
-                          'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(paramPost),
-                      }
-                   
-        
-                     
-                      return PostDataNew(url,dir,param)
-                         .then((result) => {
-                              console.log('aeroPaymentResult',JSON.stringify(result));
-                            },
-                         (error) => {
-                             this.setState({ error });
-                         }
-                      );  
-               
-            }
-             //notification END------------------------------------------------------//
+                        id_order:id_order,
+                        dataPayment:{},
+                    }
+                    
+                    if(result.status=='settlement')
+                    {
+                    navigation.navigate("Loading",{redirect:redirect,param:param});
+                    }
+
+                    
+                    },
+                 (error) => {
+                     this.setState({ error });
+                 }
+              );  
+       
+    }
+     //notification END------------------------------------------------------//
     
     
     
@@ -1294,14 +1272,31 @@ export default function PembayaranDetail(props) {
     var title='';
     if(payment_type=='bank_transfer'){
         title=dataPayment.payment_type_label+' - '+dataPayment.payment_sub_label;
+    }else if(payment_type=='snap'){
+        title='Snap Payment';
     }else{
         title=dataPayment.payment_type_label;
     }
     
+    var content=<View></View>
+    if(payment_type=='coreapi'){
+    content=<ScrollView>
+            <View  style={{ padding: 20 }}>
+                {content_countdown()}
+                {content_payment()}
+                {content_payment_form()}
+                {content_button()}
+            </View>
+            </ScrollView>
+    }else{
+        var urlSnap=config.midtransUrlSnap+params.snaptoken;
+        console.log('urlSnap',urlSnap);
+        content=<View style={{flex:1,marginTop:20}}>
+        <WebView style={{}} source={{ uri: urlSnap }} />
+        </View>
+    }
 
   return (
-      
-        
     <SafeAreaView
         style={BaseStyle.safeAreaView}
         forceInset={{ top: "always" }}
@@ -1352,20 +1347,9 @@ export default function PembayaranDetail(props) {
                             </View>
                         </View>
                         :
-        <ScrollView>
-            <View  style={{ padding: 20 }}>
-                {/* {content_countdown()}
-                {content_payment()}
-                {content_button()} */}
-                
-                
-                
-                {content_countdown()}
-                {content_payment()}
-                {content_payment_form()}
-                {content_button()}
-            </View>
-        </ScrollView>
+        
+            content
+        
         }
         
     </SafeAreaView>

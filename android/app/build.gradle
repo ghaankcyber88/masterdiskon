@@ -29,7 +29,7 @@ android {
         applicationId "com.masterdiskoncustomer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 29
-        versionCode 8
+        versionCode 9
         versionName "1.0.4"
         multiDexEnabled true
     }

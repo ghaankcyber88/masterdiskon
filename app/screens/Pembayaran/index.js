@@ -9,11 +9,12 @@ import {
     ProfileAuthor,
     ProfileGroup,
     Card,
-    PostListItem
+    PostListItem,
+    Button
 } from "@components";
 import * as Utils from "@utils";
 // import styles from "./styles";
-import { DataMasterDiskon,DataBooking } from "@data";
+import { DataMasterDiskon,DataBooking,DataConfig } from "@data";
 import HTML from 'react-native-render-html';
 import { WebView } from 'react-native-webview';
 import {PostData} from '../../services/PostData';
@@ -338,7 +339,8 @@ export default class Pembayaran extends Component {
                 },
                
             ],
-            paymentChooseTemp:{}
+            paymentChooseTemp:{},
+            config:DataConfig,
         };
 
         this.getConfig();
@@ -798,12 +800,13 @@ export default class Pembayaran extends Component {
         navigation.navigate("PembayaranDetail",{
             param:param,
         });
-    
     }
+    
+    
     
  
     content_bank(){
-        const {option} =this.state;
+        const {option,config,id_order} =this.state;
         var item=this.state.dataBooking[0];
         var order_payment_recent=item.order_payment_recent;
         var order_expired=item.order_expired;
@@ -899,86 +902,207 @@ export default class Pembayaran extends Component {
             </TouchableOpacity>
             )
         ))
-      
-      
-        if(order_payment_recent != null){
-            var expiredTime=this.duration(order_payment_recent.expired);
-
-            if(expiredTime > 0){
-                status_name=item.order_status.order_status_name;
-                content=content_bank;
-            }else{
-                if(item.order_status.order_status_slug=='new'){
-                    status_name='Expired';
-                    content=<View
-                        style={{
-                            borderWidth: 1, 
-                            borderColor: BaseColor.textSecondaryColor,
-                            borderRadius: 10,
-                            marginBottom:10,
-                            padding:10,
-                            justifyContent: 'center', alignItems: 'center'
-                            }}
-                        >
-                            <Icon
-                                name="times-circle"
-                                size={50}
-                                color={BaseColor.thirdColor}
-                                solid
-                            />
-                            <Text style={{fontSize:50}}>
-                                {status_name}
-                            </Text>
-                        </View>
-                }else{
+        
+        if(config.midtransMethod=='coreapi'){
+            if(order_payment_recent != null){
+                var expiredTime=this.duration(order_payment_recent.expired);
+    
+                if(expiredTime > 0){
                     status_name=item.order_status.order_status_name;
-                    content=<View
-                        style={{
-                            borderWidth: 1, 
-                            borderColor: BaseColor.textSecondaryColor,
-                            borderRadius: 10,
-                            marginBottom:10,
-                            padding:10,
-                            justifyContent: 'center', alignItems: 'center'
-                            }}
-                        >
-                            <Icon
-                                name="times-circle"
-                                size={50}
-                                color={BaseColor.thirdColor}
-                                solid
-                            />
-                            <Text style={{fontSize:50}}>
-                                {status_name}
-                            </Text>
-                        </View>
+                    content=content_bank;
+                }else{
+                    if(item.order_status.order_status_slug=='new'){
+                        status_name='Expired';
+                        content=<View
+                            style={{
+                                borderWidth: 1, 
+                                borderColor: BaseColor.textSecondaryColor,
+                                borderRadius: 10,
+                                marginBottom:10,
+                                padding:10,
+                                justifyContent: 'center', alignItems: 'center'
+                                }}
+                            >
+                                <Icon
+                                    name="times-circle"
+                                    size={50}
+                                    color={BaseColor.thirdColor}
+                                    solid
+                                />
+                                <Text style={{fontSize:50}}>
+                                    {status_name}
+                                </Text>
+                            </View>
+                    }else{
+                        status_name=item.order_status.order_status_name;
+                        content=<View
+                            style={{
+                                borderWidth: 1, 
+                                borderColor: BaseColor.textSecondaryColor,
+                                borderRadius: 10,
+                                marginBottom:10,
+                                padding:10,
+                                justifyContent: 'center', alignItems: 'center'
+                                }}
+                            >
+                                <Icon
+                                    name="times-circle"
+                                    size={50}
+                                    color={BaseColor.thirdColor}
+                                    solid
+                                />
+                                <Text style={{fontSize:50}}>
+                                    {status_name}
+                                </Text>
+                            </View>
+                    }
+                
                 }
-            
+            }else{
+                status_name=item.order_status.order_status_name;
+                content=<View
+                            style={{
+                                borderWidth: 1, 
+                                borderColor: BaseColor.textSecondaryColor,
+                                borderRadius: 10,
+                                marginBottom:10,
+                                padding:10,
+                                justifyContent: 'center', alignItems: 'center'
+                                }}
+                            >
+                                <Icon
+                                    name="check-circle"
+                                    size={50}
+                                    color={'green'}
+                                    solid
+                                />
+                                <Text style={{fontSize:50}}>
+                                    {status_name}
+                                </Text>
+                            </View>
+               
             }
         }else{
-            status_name=item.order_status.order_status_name;
-            content=<View
-                        style={{
-                            borderWidth: 1, 
-                            borderColor: BaseColor.textSecondaryColor,
-                            borderRadius: 10,
-                            marginBottom:10,
-                            padding:10,
-                            justifyContent: 'center', alignItems: 'center'
-                            }}
-                        >
-                            <Icon
-                                name="check-circle"
-                                size={50}
-                                color={'green'}
-                                solid
-                            />
-                            <Text style={{fontSize:50}}>
-                                {status_name}
-                            </Text>
-                        </View>
+        
+            if(order_payment_recent != null){
+                var expiredTime=this.duration(order_payment_recent.expired);
+    
+                if(expiredTime > 0){
+                    status_name=item.order_status.order_status_name;
+                    content=content=<Button
+                                        full
+                                        style={{ 
+                                             marginTop: 20,
+                                            borderRadius: 18,
+                                        // backgroundColor: BaseColor.fieldColor,
+                                        shadowColor: "#000",
+                                        shadowOffset: {
+                                            width: 0,
+                                            height: 2,
+                                        },
+                                        shadowOpacity: 0.25,
+                                        shadowRadius: 3.84,
+                                        elevation: 5 }}
+                                        onPress={() => {
+                                            var dataPayment={
+                                                payment_type:'snap',
+                                                payment_type_label:'snap',
+                                                payment_sub:'snap',
+                                                payment_sub_label:'snap',
+                                            }
+                                            
+                                            var param={
+                                                id_order:id_order,
+                                                snaptoken:order_payment_recent.snaptoken,
+                                                dataPayment:dataPayment
+                                            }
+                                            navigation.navigate("PembayaranDetail",{
+                                                param:param,
+                                            });
+                                        
+                                        
+                                        }}
+                                    >
+                                        Bayar Sekarang
+                                    </Button>
+                }else{
+                    if(item.order_status.order_status_slug=='new'){
+                        status_name='Expired';
+                        content=<View
+                            style={{
+                                borderWidth: 1, 
+                                borderColor: BaseColor.textSecondaryColor,
+                                borderRadius: 10,
+                                marginBottom:10,
+                                padding:10,
+                                justifyContent: 'center', alignItems: 'center'
+                                }}
+                            >
+                                <Icon
+                                    name="times-circle"
+                                    size={50}
+                                    color={BaseColor.thirdColor}
+                                    solid
+                                />
+                                <Text style={{fontSize:50}}>
+                                    {status_name}
+                                </Text>
+                            </View>
+                    }else{
+                        status_name=item.order_status.order_status_name;
+                        content=<View
+                            style={{
+                                borderWidth: 1, 
+                                borderColor: BaseColor.textSecondaryColor,
+                                borderRadius: 10,
+                                marginBottom:10,
+                                padding:10,
+                                justifyContent: 'center', alignItems: 'center'
+                                }}
+                            >
+                                <Icon
+                                    name="times-circle"
+                                    size={50}
+                                    color={BaseColor.thirdColor}
+                                    solid
+                                />
+                                <Text style={{fontSize:50}}>
+                                    {status_name}
+                                </Text>
+                            </View>
+                    }
+                
+                }
+            }else{
+                status_name=item.order_status.order_status_name;
+                content=<View
+                            style={{
+                                borderWidth: 1, 
+                                borderColor: BaseColor.textSecondaryColor,
+                                borderRadius: 10,
+                                marginBottom:10,
+                                padding:10,
+                                justifyContent: 'center', alignItems: 'center'
+                                }}
+                            >
+                                <Icon
+                                    name="check-circle"
+                                    size={50}
+                                    color={'green'}
+                                    solid
+                                />
+                                <Text style={{fontSize:50}}>
+                                    {status_name}
+                                </Text>
+                            </View>
+               
+            }
            
+            
+            
         }
+      
+        
         
         
         return(
@@ -1084,8 +1208,8 @@ export default class Pembayaran extends Component {
              PostDataNew(url,path,param)
                  .then((result) => {
                     var dataBooking=result;
-                            // console.log("---------------get_booking_historys ------------");
-                            // console.log(JSON.stringify(result));
+                            console.log("---------------get_booking_historys ------------");
+                            console.log(JSON.stringify(result));
                             
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:dataBooking});

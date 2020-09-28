@@ -93,19 +93,19 @@ export default function index() {
     function onNotification(notify) {
       console.log("[App] onNotificationx: ", JSON.stringify(notify));
       
-      // var body_msg=notify.body;
-      // var body_array = body_msg.split("#");
-      // var body_notif={
-      //   transaction: body_array[0],
-      //   type: body_array[1],
-      //   order_id: body_array[2],
-      //   gross_amount: body_array[3],
-      //   transaction_id: body_array[4],
-      //   fraud: body_array[5],
-      //   bank: body_array[6]
-      // }
+      var body_msg=notify.body;
+      var body_array = body_msg.split("#");
+      var body_notif={
+        transaction: body_array[0],
+        type: body_array[1],
+        order_id: body_array[2],
+        gross_amount: body_array[3],
+        transaction_id: body_array[4],
+        fraud: body_array[5],
+        bank: body_array[6]
+      }
   
-      // console.log('body_notif',JSON.stringify(body_notif));
+      console.log('body_notifonNotification',JSON.stringify(body_notif));
       //aeroPayment(body_notif);
 
       const options = {
@@ -128,7 +128,7 @@ export default function index() {
     }
     
     // function aeroPayment(body_notif){
-      
+    //         console.log('body_notifaeroPayment',JSON.stringify(body_notif))
     //         var url=dataMasterDiskon.baseUrl;
     //         var dir='front/api/payment/notification';
     //         var paramPost={"param":body_notif}

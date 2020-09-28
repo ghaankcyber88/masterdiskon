@@ -1035,19 +1035,20 @@ export default class Summary extends Component {
                                 var redirect='Pembayaran';
                                 var id_order=dataOrderSubmit.id_order;
                                 
-                                // var param={
+                                var param={
+                                    id_order:id_order,
+                                    dataPayment:{},
+                                }
+                                this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
+                                
+                                                                // var param={
                                 //     url:'https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app',
                                 //     title:'Order Detail',
                                 //     subTitle:id_order
                                 // }
                                 
                                 // this.props.navigation.navigate("WebViewPage",{param:param});
-    
-                                var param={
-                                    id_order:id_order,
-                                    dataPayment:{},
-                                }
-                                this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
+
                                
                                
                     });

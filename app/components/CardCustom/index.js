@@ -85,7 +85,7 @@ export default class CardCustom extends Component {
                                       body2
                                       bold
                                   >
-                                {propInframe.bottom}
+                                {propInframe.bottom.replace(/_/gi, ' ')}
                             </Text>
                           </View>
           }
