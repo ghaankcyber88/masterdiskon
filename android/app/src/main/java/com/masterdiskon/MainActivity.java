@@ -1,4 +1,4 @@
-package com.masterdiskoncustomer;
+package com.masterdiskon;
 import org.devio.rn.splashscreen.SplashScreen;
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;

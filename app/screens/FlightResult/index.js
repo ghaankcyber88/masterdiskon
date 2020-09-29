@@ -100,6 +100,7 @@ export default class FlightResult extends Component {
             
             
             modalVisible: false,
+            loading_load_more:true
         };
         this.onChangeView = this.onChangeView.bind(this);
         this.onFilter = this.onFilter.bind(this);
@@ -221,6 +222,7 @@ export default class FlightResult extends Component {
   
         
         this.setState({ loading_spinner: true }, () => {
+            this.setState({loading_load_more:true});
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
 
@@ -247,7 +249,7 @@ export default class FlightResult extends Component {
                               .then(response => response.json())
                               .then(result => {
                                                             var length=result.data.departure.length;
-                                                            console.log('getProduct',JSON.stringify(result.data.departure));
+                                                            //console.log('getProduct',JSON.stringify(result.data.departure));
                                                             console.log('flight_result',length);   
 
                                                             if(length != 0){
@@ -272,7 +274,10 @@ export default class FlightResult extends Component {
                                                             var datacontinue=result.data.continue;
                                                             
                                                             if(datacontinue==true){
+                                                                this.setState({loading_load_more:true});
                                                                 this.getProductNext(dataKey);
+                                                            }else{
+                                                                this.setState({loading_load_more:false});
                                                             }
                                                             
                               })
@@ -307,7 +312,7 @@ export default class FlightResult extends Component {
                             fetch(url+"flight/search/"+dataKey, requestOptions)
                               .then(response => response.json())
                               .then(result => {
-                                console.log('getProductNext',JSON.stringify(result.data.departure));
+                                //console.log('getProductNext',JSON.stringify(result.data.departure));
                                     
                                     var length=result.data.departure.length;
                                     console.log('flight_result_next',length);   
@@ -360,7 +365,10 @@ export default class FlightResult extends Component {
                                     var datacontinue=result.data.continue;
                                     
                                     if(datacontinue==true){
+                                        this.setState({loading_load_more:true});
                                         this.getProductNext(dataKey);
+                                    }else{
+                                        this.setState({loading_load_more:false});
                                     }
                                 
                               
@@ -655,7 +663,7 @@ export default class FlightResult extends Component {
 
     render() {
         const { navigation} = this.props;
-        let { loading_spinner } = this.state;
+        let { loading_spinner,loading_load_more } = this.state;
         var param=this.state.param;
         var title=param.Origin+" to "+param.Destination;
         var qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
@@ -704,7 +712,7 @@ export default class FlightResult extends Component {
                             
                 {this.renderContent()}
                 {
-                    loading_spinner ?
+                    loading_load_more ?
                     <ActivityIndicator size="large" color={BaseColor.primaryColor} />
                     :
                     <View></View>

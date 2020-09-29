@@ -1257,6 +1257,8 @@ export default function PembayaranDetail(props) {
     
     
     
+     
+    
       return () => {
         console.log("[App] unRegister")
         fcmService.unRegister()
@@ -1265,6 +1267,55 @@ export default function PembayaranDetail(props) {
       }
   
     },[]);
+    
+    
+    
+    
+    function paymentConfirm(id_invoice){
+        var url=dataMasterDiskon.baseUrl;
+        var dir='front/order/payment/notification/'+id_invoice;
+        
+        
+        var param={
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+          }
+       
+
+         
+          return PostDataNew(url,dir,param)
+             .then((result) => {
+                console.log('paymentConfirm',JSON.stringify(result));
+                
+                var redirect='Pembayaran';
+                var id_order=idOrder;
+                
+                var param={
+                    id_order:id_order,
+                    dataPayment:{},
+                }
+                
+                if(result.status=='settlement')
+                {
+                    navigation.navigate("Loading",{redirect:redirect,param:param});
+                }else{
+                    alert('Pembayaran Belum Dilakukan, Silahkan Selesaikan Pembayaran Anda');
+                }
+
+                
+                },
+             (error) => {
+                 this.setState({ error });
+             }
+          );  
+   
+    }
+    
+    
     
     
     
@@ -1277,6 +1328,10 @@ export default function PembayaranDetail(props) {
     }else{
         title=dataPayment.payment_type_label;
     }
+    
+    
+    var item=dataBooking[0];
+    var order_payment_recent=item.order_payment_recent;
     
     var content=<View></View>
     if(payment_type=='coreapi'){
@@ -1293,6 +1348,25 @@ export default function PembayaranDetail(props) {
         console.log('urlSnap',urlSnap);
         content=<View style={{flex:1,marginTop:20}}>
         <WebView style={{}} source={{ uri: urlSnap }} />
+                            <Button
+                                style={{borderRadius: 0,marginVertical:0}}
+                                full
+                                loading={loading}
+                                onPress={() => { 
+                                    paymentConfirm(order_payment_recent.id_invoice);
+                                //alert(order_payment_recent.id_invoice);
+                                    // Alert.alert(
+                                    //   'Confirm',
+                                    //   'Yakin ingin membayar tagihan ini ?',
+                                    //   [
+                                    //     {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                    //     {text: 'YES', onPress: () => submitPayment()},
+                                    //   ]
+                                    // );
+                            }}    
+                            >
+                                Klik disini untuk cek pembayaran Anda
+                            </Button>
         </View>
     }
 

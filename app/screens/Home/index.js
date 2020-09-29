@@ -25,6 +25,10 @@ import NotYetLogin from "../../components/NotYetLogin";
 
 
 import {DataLoading,DataConfig,DataTrip,DataHotelPackage,DataIcon} from "@data";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp
+  } from "react-native-responsive-screen";
 
 export default class Home extends Component {
     
@@ -469,7 +473,7 @@ export default class Home extends Component {
                                         renderItem={({ item, index }) => (
                                         
                                             <CardCustom
-                                                propImage={{height:200,url:item.img_featured_url}}
+                                                propImage={{height:wp("50%"),url:item.img_featured_url}}
                                                 propInframe={{top:item.product_detail.area,bottom:item.product_detail.detail_category}}
                                                 propTitle={{text:item.product_name}}
                                                 propDesc={{text:item.product_detail.address}}
@@ -480,7 +484,7 @@ export default class Home extends Component {
                                                     navigation.navigate("HotelDetail",{product:item})
                                                 }
                                                 loading={this.state.loading_product_hotel_package}
-                                                propOther={{inFrame:true,horizontal:true,width:Utils.scaleWithPixel(200)}}
+                                                propOther={{inFrame:true,horizontal:true,width:wp("50%")}}
                                             />
                                         
                                         )}
@@ -507,7 +511,7 @@ export default class Home extends Component {
                                         renderItem={({ item, index }) => (
                                         
                                             <CardCustom
-                                                propImage={{height:200,url:item.img_featured_url}}
+                                                propImage={{height:hp("20%"),url:item.img_featured_url}}
                                                 propInframe={{top:item.product_place,bottom:item.product_duration}}
                                                 propTitle={{text:item.product_name}}
                                                 propDesc={{text:item.product_detail.description}}
@@ -518,7 +522,7 @@ export default class Home extends Component {
                                                     navigation.navigate("TourDetailCustom",{product:item})
                                                 }
                                                 loading={this.state.loading_product_trip}
-                                                propOther={{inFrame:true,horizontal:true,width:Utils.scaleWithPixel(250)}}
+                                                propOther={{inFrame:true,horizontal:true,width:wp("60%")}}
                                             />
                                         
                                         )}

@@ -172,7 +172,29 @@ export default class Notification extends Component {
                                         subTitle:''
                                     }
                                     
-                                    this.props.navigation.navigate("WebViewPage",{param:param});
+                                    // var string = item.tautan;
+                                    // var array = string.split("/");
+                                    // alert(array[0]);
+                                    
+                                    // var txt = item.tautan;
+                                    // var numb = txt.match(/\d/gi);
+                                    // numb = numb.join("");
+                                    // alert (numb);​
+                                    
+                                    //alert(item.tautan.match(/\d+$/)[0]);
+                                    
+                                    var redirect='Pembayaran';
+                                    var id_order=item.tautan.match(/\d+$/)[0];
+                                    
+                                    var param={
+                                        id_order:id_order,
+                                        dataPayment:{},
+                                    }
+                                    this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
+                                    
+    
+                                    
+                                    //this.props.navigation.navigate("WebViewPage",{param:param});
                                 }}
                             />
                         )}

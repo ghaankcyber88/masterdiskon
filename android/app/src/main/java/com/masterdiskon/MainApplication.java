@@ -1,4 +1,4 @@
-package com.masterdiskoncustomer;
+package com.masterdiskon;
 
 import android.app.Application;
 import android.content.Context;

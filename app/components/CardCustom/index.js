@@ -5,6 +5,10 @@ import { BaseColor } from "@config";
 import PropTypes from "prop-types";
 // import styles from "./styles";
 import * as Utils from "@utils";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp
+} from "react-native-responsive-screen";
 
 import {
   Placeholder,
