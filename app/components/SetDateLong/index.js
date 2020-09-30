@@ -23,13 +23,20 @@ const styles = StyleSheet.create({
     },
 
     contentForm: {
-        padding: 10,
-        borderRadius: 8,
+        // paddingHorizontal: 10,
+        // paddingVertical: 5,
+        // borderRadius: 8,
+        // width: "100%",
+        // //backgroundColor: BaseColor.fieldColor
+        // borderRadius: 8,
+        // borderWidth: 3,
+        // borderColor: BaseColor.fieldColor,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
         width: "100%",
-        //backgroundColor: BaseColor.fieldColor
-        borderRadius: 8,
-        borderWidth: 3,
-        borderColor: BaseColor.fieldColor,
+        borderBottomColor: BaseColor.fieldColor,
+        borderBottomWidth: 2,
+
     },
     bottomModal: {
         justifyContent: "flex-end",
@@ -67,7 +74,8 @@ const styles = StyleSheet.create({
         borderColor: BaseColor.fieldColor,
         // backgroundColor: BaseColor.fieldColor,
         flex: 6,
-        padding: 10,
+        paddingHorizontal:10,
+        paddingVertical:5
     },
 });
 
@@ -134,7 +142,7 @@ export default class SetDateLong extends Component {
             setTimeout(() => {
                 setBookingTime(this.state.selectedStartDateBooking,this.state.selectedEndDateBooking,this.props.round);
                 this.setState({modalVisible:false});
-             }, 200);
+             }, 100);
                         
              
           } else {
@@ -175,65 +183,52 @@ export default class SetDateLong extends Component {
      
   
     render() {
-        const { style, label,onPress,round,tglAwal,tglAkhir} = this.props;
+        const { style, label,onPress,round,tglAwal,tglAkhir,icon} = this.props;
         const { value,modalVisible } = this.state;
         var minDate = new Date(); // Today
-        minDate.setDate(minDate.getDate() + 7);
+        minDate.setDate(minDate.getDate() + 0);
         var maxDate = new Date(2020, 10, 10);
         return (
             <View>
-                {
-               round ? 
-                    <View  style={{ flexDirection: "row" }}>
-                        <View style={styles.contentPickDate}>
-                            <TouchableOpacity
-                                
-                                onPress={() => this.openModal()}
-                            >
-                                <Text caption2 light style={{ marginBottom: 5 }}>
-                                    Check In
-                                </Text>
-                                <Text body1 semibold>
-                                    {tglAwal}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.contentPickDate}>   
-                            <TouchableOpacity
-                               
-                               onPress={() => this.openModal()}
-                            >
-                                <Text caption2 light style={{ marginBottom: 5 }}>
-                                    Check Out
-                                </Text>
-                                <Text body1 semibold>
-                                    {tglAkhir}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+               
+                    <TouchableOpacity
+                    style={[styles.contentForm, style]}
+                    onPress={() => this.openModal()}
+                >
+                    <View style={{flex: 1,flexDirection: "row"}}>
+                            <View style={{flex: 1,
+                                            alignItems: "flex-start",
+                                            justifyContent: "center",}}
+                                            
+                                      >
+                                <Icon
+                                            name={icon}
+                                            size={14}
+                                            color={BaseColor.primaryColor}
+                                />
+                            </View>
+                            <View style={{flex: 11,
+                                            //alignItems: "flex-end",
+                                            justifyContent: "center",
+                                        }}
+                                            
+                                      >
+                            <Text caption2 light style={{ marginBottom: 0 }}>
+                                Atur Tanggal
+                            </Text>
+                            <Text body2 semibold>
+                            {
+                            round ?
+                            tglAwal+' s/d '+tglAkhir
+                            :
+                            tglAwal
+                            }
+                            </Text>
+                            </View>
                     </View>
-                :
-                   <View tyle={{ marginTop: 20, flexDirection: "row" }}>
-                        <View style={styles.contentPickDate}>
-                            <TouchableOpacity
-                                onPress={() => this.openModal()}
-                            >
-                                <Text caption light style={{ marginBottom: 5 }}>
-                                    Check In
-                                </Text>
-                                <Text body1 semibold>
-                                {tglAwal}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-    
-                        <View>
-                            <TouchableOpacity
-                                style={{}} >
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-            }
+                    
+                </TouchableOpacity>
+            
 
                 <Modal
                     isVisible={modalVisible}
@@ -288,6 +283,8 @@ SetDateLong.propTypes = {
 
     setBookingTime:PropTypes.func,
     round:PropTypes.bool,
+    icon:PropTypes.string,
+
 };
 
 SetDateLong.defaultProps = {
@@ -298,5 +295,6 @@ SetDateLong.defaultProps = {
     tglAwal:'',
     tglAkhir:'',
     setBookingTime: () => {},
-    round:false
+    round:false,
+    icon:"check",
 };

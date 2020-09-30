@@ -263,6 +263,13 @@ export default class CardCustom extends Component {
           styleCustomText.borderColor= BaseColor.dividerColor;
           styleCustomText.borderStyle="solid";
           styleCustomText.paddingBottom=20;
+          styleCustomText.backgroundColor=BaseColor.whiteColor;
+          //styleCustomText.elevation=5;
+          styleCustomText.shadowColor="#000";
+          styleCustomText.shadowOpacity=0.25;
+          styleCustomText.shadowRadius=3.84;
+                                
+                                
         } 
         contentText=<View style={styleCustomText}>
                     {contentTextTitle}

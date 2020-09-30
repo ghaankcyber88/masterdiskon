@@ -38,14 +38,15 @@ export default class FlightSearch extends Component {
         }
         
         
+        
+        
+        //Start Set Variabel Search
         var type='';
         if(this.props.navigation.state.params && this.props.navigation.state.params.type){
             var type=this.props.navigation.state.params.type;
         }else{
             var type='';
         }
-      
-        
         
         var tglAwal=this.getDate(0);
         var tglAkhir=this.getDate(1);
@@ -62,18 +63,22 @@ export default class FlightSearch extends Component {
             round=true;
             title='Set Tour';
         }
+        //End Set Variabel Search
 
         this.state = {
             //item:item,
             title:title,
             product:product,
             productPart:productPart,
-            type:type,
+            
             login:true,
             loading: false,
             
+            
+            //Start Parameter Search-----------------------//
             //parameter flight//
-            round: round,
+            type:type,
+            
             bandaraAsalCode:'CGK',
             bandaraAsalLabel:'Soekarno Hatta',
             bandaraTujuanCode:'DPS',
@@ -106,15 +111,18 @@ export default class FlightSearch extends Component {
             cityProvince:'Bali',
             qty:1,
             
-            
+            round: round,
             dewasa:"1",
             anak:"0",
             bayi:"0",
             tglAwal:tglAwal,
             tglAkhir:tglAkhir,
+            //End Parameter Search-----------------------//
          
         };
-
+        
+        
+        //Start Function Bind Search-----------------------//
         this.setBandaraAsal = this.setBandaraAsal.bind(this);
         this.setBandaraTujuan = this.setBandaraTujuan.bind(this);
         this.setKelasPesawat = this.setKelasPesawat.bind(this);
@@ -124,13 +132,12 @@ export default class FlightSearch extends Component {
         this.setJumlahAnak = this.setJumlahAnak.bind(this);
         this.setJumlahBayi = this.setJumlahBayi.bind(this);
         this.setBookingTime = this.setBookingTime.bind(this);
-        
         this.setCity = this.setCity.bind(this);
         this.setqty=this.setqty.bind(this);
-        
+        //End Function Bind Search-----------------------//
     }
     
-    
+    //Start Function  Search-----------------------//
     //-----function untuk hotel-----//
     setCity(id,city,province) {
         this.setState({cityId:id});
@@ -143,7 +150,6 @@ export default class FlightSearch extends Component {
         this.setState({qty:jml});
     }
     //-----function untuk hotel-----//
-    
     
     
     setBookingTime(tglAwal, tglAkhir,round) {
@@ -206,7 +212,6 @@ export default class FlightSearch extends Component {
     }
 
     setDate(date) {
-    
         var date = new Date(date);
         var tempoMonth = (date.getMonth()+1);
         var tempoDate = (date.getDate());
@@ -304,26 +309,6 @@ export default class FlightSearch extends Component {
                                         param:param,product:product
                     });
             }
-            //console.log('param',JSON.stringify(param));
-            
-
-
-    }
-
-
-    
-    
-    componentDidMount() {
-
-        AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                this.setState({login:true});
-             }else{
-                this.setState({login:false});
-
-             }
-        });
-
     }
     
     setBandaraAsal(code='',label='',id_country=''){
@@ -365,16 +350,15 @@ export default class FlightSearch extends Component {
        this.setState({tglAkhir:tgl});
     }
     
-    renderContent() {
+    renderContentSearch() {
         var type=this.state.type;
-        
         var content=<View></View>
         if(type=="flight"){
-            content=this.renderContentFlight();
+            content=this.renderContentSearchFlight();
         }else if(type=="hotelpackage"){
-            content=this.renderContentHotel();
+            content=this.renderContentSearchHotel();
         }else if(type=="trip"){
-            content=this.renderContentTour();
+            content=this.renderContentSearchTour();
         }
         return (
             <View style={{ flex: 1 }}>
@@ -383,13 +367,100 @@ export default class FlightSearch extends Component {
         );
     }
     
-    
-    renderContentHotel(){
+    renderContentSearchFlight(){
         const { round, from, to, loading,login  } = this.state;
         const { navigation } = this.props;
         var content=<View>
-                                
-                                
+            <View style={styles.flightType}>
+                <Tag
+                    outline={!round}
+                    primary={round}
+                    round
+                    onPress={() => this.onSetFlightType(true)}
+                    style={{ marginRight: 20 }}
+                >
+                    Round Trip
+                </Tag>
+                <Tag
+                    outline={round}
+                    primary={!round}
+                    round
+                    onPress={() => this.onSetFlightType(false)}
+                >
+                    One Way
+                </Tag>
+            </View>
+            <FlightPlan
+                round={round}
+                fromCode={this.state.bandaraAsalCode}
+                toCode={this.state.bandaraTujuanCode}
+                from={this.state.bandaraAsalLabel}
+                to={this.state.bandaraTujuanLabel}
+                style={{ marginTop: 20 }}
+                onPressFrom={() => this.onSelectFlight("from")}
+                onPressTo={() => this.onSelectFlight("to")}
+            />
+
+            <View>
+                <SetDateLong
+                    labelTglAwal={'asd'}
+                    labelTglAkhir={'asdds'}
+                    setBookingTime={this.setBookingTime}
+                    tglAwal={this.state.tglAwal}
+                    tglAkhir={this.state.tglAkhir}
+                    round={this.state.round}
+                />
+            </View>
+
+            <FormOption
+                style={{ marginTop: 20 }} 
+                label={'Seat Class'}
+                option={this.state.listdata_kelas}
+                optionSet={this.setKelasPesawat}
+                optionSelectText={this.state.kelas}
+                optionSelectValue={this.state.kelasId}
+            />
+            <View style={{ marginTop: 20, flexDirection: "row" }}>
+                <QuantityPicker
+                    label="Adults"
+                    detail=">= 12 years"
+                    value={this.state.dewasa}
+                    setJumlahDewasa={this.setJumlahDewasa}
+                    typeOld="1"
+                />
+        
+        
+                <QuantityPicker
+                    label="Children"
+                    detail="2 - 12 years"
+                    value={this.state.anak}
+                    style={{ marginHorizontal: 15 }}
+                    setJumlahAnak={this.setJumlahAnak}
+                    typeOld="2"
+                />
+                <QuantityPicker
+                    label="Infants"
+                    detail="<= 2 years"
+                    value={this.state.bayi}
+                    setJumlahBayi={this.setJumlahBayi}
+                    typeOld="3"
+                />
+            </View>
+        </View>
+        
+        return (
+            <View style={{ flex: 1 }}>
+                {content}
+            </View>
+        );
+        
+    }
+    
+    
+    renderContentSearchHotel(){
+        const { round, from, to, loading,login  } = this.state;
+        const { navigation } = this.props;
+        var content=<View>
                                 
                                 {
                                         this.state.round ? 
@@ -490,152 +561,10 @@ export default class FlightSearch extends Component {
     }
     
     
-    renderContentFlight(){
-        const { round, from, to, loading,login  } = this.state;
-        const { navigation } = this.props;
-        var content=<View>
-            <View style={styles.flightType}>
-                <Tag
-                    outline={!round}
-                    primary={round}
-                    round
-                    onPress={() => this.onSetFlightType(true)}
-                    style={{ marginRight: 20 }}
-                >
-                    Round Trip
-                </Tag>
-                <Tag
-                    outline={round}
-                    primary={!round}
-                    round
-                    onPress={() => this.onSetFlightType(false)}
-                >
-                    One Way
-                </Tag>
-            </View>
-            <FlightPlan
-                round={round}
-                fromCode={this.state.bandaraAsalCode}
-                toCode={this.state.bandaraTujuanCode}
-                from={this.state.bandaraAsalLabel}
-                to={this.state.bandaraTujuanLabel}
-                style={{ marginTop: 20 }}
-                onPressFrom={() => this.onSelectFlight("from")}
-                onPressTo={() => this.onSelectFlight("to")}
-            />
-
-            
-
-            <View>
-                <SetDateLong
-                    labelTglAwal={'asd'}
-                    labelTglAkhir={'asdds'}
-                    setBookingTime={this.setBookingTime}
-                    tglAwal={this.state.tglAwal}
-                    tglAkhir={this.state.tglAkhir}
-                    round={this.state.round}
-                />
-            </View>
-            
-            {/* {
-                    this.state.round ? 
-                        <View  style={{ flexDirection: "row" }}>
-                            <View style={styles.contentPickDate}>
-                                <TouchableOpacity
-                                    
-                                    onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
-                                >
-                                    <Text caption2 light style={{ marginBottom: 5 }}>
-                                        Check In
-                                    </Text>
-                                    <Text body1 semibold>
-                                        {this.convertDate(this.state.tglAwal)}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.contentPickDate}>   
-                                <TouchableOpacity
-                                   
-                                    onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
-                                >
-                                    <Text caption2 light style={{ marginBottom: 5 }}>
-                                        Check Out
-                                    </Text>
-                                    <Text body1 semibold>
-                                    {this.convertDate(this.state.tglAkhir)}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    :
-                       <View tyle={{ marginTop: 20, flexDirection: "row" }}>
-                            <View style={styles.contentPickDate}>
-                                <TouchableOpacity
-                                    onPress={() => this.props.navigation.navigate('DatePickerRange',{setBookingTime:this.setBookingTime,round:this.state.round})}
-                                >
-                                    <Text caption light style={{ marginBottom: 5 }}>
-                                        Check In
-                                    </Text>
-                                    <Text body1 semibold>
-                                        {this.convertDate(this.state.tglAwal)}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-        
-                            <View>
-                                <TouchableOpacity
-                                    style={{}} >
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-            }  */}
-            <FormOption
-                style={{ marginTop: 20 }} 
-                label={'Seat Class'}
-                option={this.state.listdata_kelas}
-                optionSet={this.setKelasPesawat}
-                optionSelectText={this.state.kelas}
-                optionSelectValue={this.state.kelasId}
-            />
-            <View style={{ marginTop: 20, flexDirection: "row" }}>
-                <QuantityPicker
-                    label="Adults"
-                    detail=">= 12 years"
-                    value={this.state.dewasa}
-                    setJumlahDewasa={this.setJumlahDewasa}
-                    typeOld="1"
-                />
-        
-        
-                <QuantityPicker
-                    label="Children"
-                    detail="2 - 12 years"
-                    value={this.state.anak}
-                    style={{ marginHorizontal: 15 }}
-                    setJumlahAnak={this.setJumlahAnak}
-                    typeOld="2"
-                />
-                <QuantityPicker
-                    label="Infants"
-                    detail="<= 2 years"
-                    value={this.state.bayi}
-                    setJumlahBayi={this.setJumlahBayi}
-                    typeOld="3"
-                />
-            </View>
-        </View>
-        
-        return (
-            <View style={{ flex: 1 }}>
-                {content}
-            </View>
-        );
-        
-    }
     
     
     
-    renderContentTour(){
+    renderContentSearchTour(){
         const { round, from, to, loading,login  } = this.state;
         const { navigation } = this.props;
         var content=<View>
@@ -730,6 +659,27 @@ export default class FlightSearch extends Component {
         );
         
     }
+    
+    //End Function Search-----------------------//
+    
+    
+    
+    
+    
+    
+    
+    
+    componentDidMount() {
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {
+                this.setState({login:true});
+             }else{
+                this.setState({login:false});
+
+             }
+        });
+
+    }
 
     render() {
         const { round, from, to, loading,login,type  } = this.state;
@@ -760,7 +710,7 @@ export default class FlightSearch extends Component {
                     login ?
                 <ScrollView style={styles.contain}>
                     
-                    {this.renderContent()}
+                    {this.renderContentSearch()}
                     <Button
                         full
                         loading={loading}

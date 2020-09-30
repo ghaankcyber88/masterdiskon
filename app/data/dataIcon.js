@@ -42,6 +42,15 @@ const DataIcon =[
     //     route: "More"
     // },
     {
+        icon: "plane",
+        name: "Flight",
+        route: "FlightSearch",
+        iconAnimation:"flight.json",
+        type:'flight',
+        image: Images.flight,
+        checked: true
+    },
+    {
         icon: "calendar-alt",
         name: "Hotel",
         route: "Hotel",
@@ -57,14 +66,7 @@ const DataIcon =[
         type:'trip',
         image: Images.trip
     },
-    {
-        icon: "plane",
-        name: "Flight",
-        route: "FlightSearch",
-        iconAnimation:"flight.json",
-        type:'flight',
-        image: Images.flight
-    },
+    
     // {
     //     icon: "tag",
     //     name: "Voucher",

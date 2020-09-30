@@ -67,8 +67,25 @@ export default StyleSheet.create({
   iconContent: {
     justifyContent: "center",
     alignItems: "center",
-    width: 70,
-    height: 70,
+    width: 50,
+    height: 50,
+    borderRadius: 18,
+    backgroundColor: BaseColor.whiteColor,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    marginBottom: 5
+  },
+  iconContentColor: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 50,
+    height: 50,
     borderRadius: 18,
     backgroundColor: BaseColor.secondColor,
     shadowColor: "#000",
@@ -78,7 +95,7 @@ export default StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    //elevation: 5,
+    elevation: 5,
     marginBottom: 5
   },
   itemService: {
@@ -188,8 +205,8 @@ export default StyleSheet.create({
   },
 
   imgProfile: {
-    width: 35,
-    height: 35,
+    width: 25,
+    height: 25,
     //borderRadius: 60,
     //marginBottom: 10
   },
@@ -213,4 +230,12 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  flightType: {
+    flexDirection: "row",
+    // alignItems: "left",
+    // justifyContent: 'center',
+    // alignItems: "center",
+    // textAlignVertical: "center",
+    // textAlign: "left"
+},
 });

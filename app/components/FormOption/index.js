@@ -17,6 +17,7 @@ export default class FormOption extends Component {
             optionSet: props.optionSet,
             optionSelectText:props.optionSelectText,
             optionSelectValue:props.optionSelectValue,
+            icon:props.icon
         };
     }
 
@@ -73,7 +74,7 @@ export default class FormOption extends Component {
 
 
     render() {
-        const { modalVisible,style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
+        const { modalVisible,style, label,option,optionSet,optionSelectText,optionSelectValue,icon} = this.state;
         return (
             <View>
                 <Modal
@@ -128,12 +129,33 @@ export default class FormOption extends Component {
                     style={[styles.contentForm, style]}
                     onPress={() => this.openModal()}
                 >
-                    <Text caption2 light style={{ marginBottom: 5 }}>
-                        {label}
-                    </Text>
-                    <Text body1 semibold>
-                        {this.props.optionSelectText}
-                    </Text>
+                    <View style={{flex: 1,flexDirection: "row"}}>
+                            <View style={{flex: 1,
+                                            alignItems: "flex-start",
+                                            justifyContent: "center",}}
+                                            
+                                      >
+                                <Icon
+                                            name={icon}
+                                            size={14}
+                                            color={BaseColor.primaryColor}
+                                />
+                            </View>
+                            <View style={{flex: 11,
+                                            //alignItems: "flex-end",
+                                            justifyContent: "center",
+                                        }}
+                                            
+                                      >
+                            <Text caption2 light style={{ marginBottom: 0 }}>
+                                {label}
+                            </Text>
+                            <Text body2 semibold>
+                                {this.props.optionSelectText}
+                            </Text>
+                            </View>
+                    </View>
+                    
                 </TouchableOpacity>
             </View>
         );
@@ -149,6 +171,7 @@ FormOption.propTypes = {
     optionSet: PropTypes.func,
     optionSelectText: PropTypes.string,
     optionSelectValue: PropTypes.string,
+    icon:PropTypes.string,
 };
 
 FormOption.defaultProps = {
@@ -157,5 +180,6 @@ FormOption.defaultProps = {
     option:[{}],
     optionSet: () => {},
     optionSelectText: "",
-    optionSelectValue: ""
+    optionSelectValue: "",
+    icon:"check",
 };

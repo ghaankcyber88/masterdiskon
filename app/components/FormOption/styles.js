@@ -3,13 +3,21 @@ import { BaseColor } from "@config";
 
 export default StyleSheet.create({
     contentForm: {
-        padding: 10,
-        borderRadius: 8,
+        // paddingHorizontal: 10,
+        // paddingVertical: 5,
+        // borderRadius: 8,
+        // width: "100%",
+        // //backgroundColor: BaseColor.fieldColor
+        // borderRadius: 8,
+        // borderWidth: 3,
+        // borderColor: BaseColor.fieldColor,
+        
+        paddingHorizontal: 10,
+        paddingVertical: 5,
         width: "100%",
-        //backgroundColor: BaseColor.fieldColor
-        borderRadius: 8,
-        borderWidth: 3,
-        borderColor: BaseColor.fieldColor,
+        borderBottomColor: BaseColor.fieldColor,
+        borderBottomWidth: 2,
+
     },
     bottomModal: {
         justifyContent: "flex-end",

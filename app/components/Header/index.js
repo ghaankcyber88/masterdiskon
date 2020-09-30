@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity, StatusBar } from "react-native";
-import { Text } from "@components";
+import { Text, Image} from "@components";
 import styles from "./styles";
 import PropTypes from "prop-types";
 import { BaseStyle,BaseColor } from "@config";
+import { Images } from "@config";
+import * as Utils from "@utils";
 
 export default class Header extends Component {
   componentDidMount() {
@@ -33,8 +35,21 @@ export default class Header extends Component {
     if(transparent==true){
       bgColor='transparent';
     }
+    
+    var contentTitle=<View></View>
+    if(title != ''){
+      contentTitle=<Text title2 style={{color:BaseColor.primaryColor}}>{title}</Text>
+    }else{
+      contentTitle=<Image
+      source={Images.logo_masdis}
+      style={{
+        height: 255/7,
+        width: 600/7
+        }}
+      />
+    }
     return (
-      <View style={[{ height: 45, flexDirection: "row",backgroundColor:bgColor,marginTop:20}, style]}>
+      <View style={[{ height: 45, flexDirection: "row",backgroundColor:bgColor,marginTop:30}, style]}>
         {/* <View style={{ flex: 1 }}>
           <TouchableOpacity
             style={[styles.contentLeft, styleLeft]}
@@ -44,7 +59,9 @@ export default class Header extends Component {
           </TouchableOpacity>
         </View> */}
         <View style={[styles.contentLeft, styleCenter]}>
-        <Text title2 style={{color:BaseColor.primaryColor}}>{title}</Text>
+            
+            {contentTitle}                       
+        {/* <Text title2 style={{color:BaseColor.primaryColor}}>{title}</Text> */}
           {subTitle != "" && (
             <Text caption2 light style={{color:BaseColor.greyColor}}>
               {subTitle}

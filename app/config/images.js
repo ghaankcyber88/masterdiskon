@@ -89,5 +89,7 @@ export const Images = {
     trip: require("@assets/images/icon/trip.png"),
     hotel: require("@assets/images/icon/hotel.png"),
     voucher: require("@assets/images/icon/voucher.png"),
+    logo_masdis: require("@assets/images/logo_masdis.png"),
+    
 
 };

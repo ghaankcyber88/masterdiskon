@@ -5,19 +5,13 @@ import {
     Animated,
     TouchableOpacity,
     FlatList,
-    StatusBar,
-    StyleSheet
+    StatusBar
 } from "react-native";
 import {
     Text,
     SafeAreaView,
     Header,
-    Image,
-    Icon,
-    Tag,
-    FormOption,
-    QuantityPicker,
-    Button
+    Image
 } from "@components";
 import { BaseStyle, BaseColor, Images } from "@config";
 import * as Utils from "@utils";
@@ -26,12 +20,8 @@ import {AsyncStorage} from 'react-native';
 
 import {PostDataNew} from '../../services/PostDataNew';
 import CardCustom from "../../components/CardCustom";
-import FlightPlanCustom from "../../components/FlightPlanCustom";
 import CardCustomTitle from "../../components/CardCustomTitle";
 import NotYetLogin from "../../components/NotYetLogin";
-import SetDateLong from "../../components/SetDateLong";
-import SetPenumpangLong from "../../components/SetPenumpangLong";
-
 
 
 import {DataLoading,DataConfig,DataTrip,DataHotelPackage,DataIcon} from "@data";
@@ -44,29 +34,6 @@ export default class Home extends Component {
     
     constructor(props) {
         super(props);
-        
-        
-        //Start Set Variabel Search
-        var type='flight';
-        
-        var tglAwal=this.getDate(0);
-        var tglAkhir=this.getDate(1);
-        
-        var round='';
-        var title='';
-        if(type=='flight'){
-            round=false;
-            title='Search Flight';
-        }else if(type=='hotelpackage'){
-            round=true;
-            title='Search Hotel Package';
-        }else if(type=='trip'){
-            round=true;
-            title='Set Tour';
-        }
-        //End Set Variabel Search
-        
-        
         this.state = {
             login:false,
             icons: DataIcon,
@@ -79,76 +46,10 @@ export default class Home extends Component {
             listdata_product_hotel_package:DataHotelPackage,
             listdata_product_flash:DataLoading,
             config:DataConfig,
-            
-            
-            
-            //Start Parameter Search-----------------------//
-            //parameter flight//
-            type:type,
-            
-            bandaraAsalCode:'CGK',
-            bandaraAsalLabel:'Soekarno Hatta',
-            bandaraTujuanCode:'DPS',
-            bandaraTujuanLabel:'Denpasar',
-            bandaraAsalIdCountry:'193',
-            
-            kelas:'Economy Class',
-            kelasId:'E',
-
-            listdata_kelas:[{
-                value: "E",
-                text: "Economy Class"
-            },
-            {
-                value: "S",
-                text: "Premium Economy"
-            },
-            {
-                value: "B",
-                text: "Business Class"
-            },
-            {
-                value: "F",
-                text: "First Class"
-            }],
-            
-            //parameter hotel
-            cityId:'5171',
-            cityText:'Denpasar',
-            cityProvince:'Bali',
-            qty:1,
-            
-            round: round,
-            dewasa:"1",
-            anak:"0",
-            bayi:"0",
-            tglAwal:tglAwal,
-            tglAkhir:tglAkhir,
-            jumlahPerson:1
-            //End Parameter Search-----------------------//
-            
         };
         this._deltaY = new Animated.Value(0);
         this.getConfig();
         this.getSession();
-        
-        
-        
-        
-        //Start Function Bind Search-----------------------//
-        this.setBandaraAsal = this.setBandaraAsal.bind(this);
-        this.setBandaraTujuan = this.setBandaraTujuan.bind(this);
-        this.setKelasPesawat = this.setKelasPesawat.bind(this);
-        this.setTglAwal = this.setTglAwal.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-        this.setJumlahDewasa = this.setJumlahDewasa.bind(this);
-        this.setJumlahAnak = this.setJumlahAnak.bind(this);
-        this.setJumlahBayi = this.setJumlahBayi.bind(this);
-        this.setJumlahPerson = this.setJumlahPerson.bind(this);
-        this.setBookingTime = this.setBookingTime.bind(this);
-        this.setCity = this.setCity.bind(this);
-        this.setqty=this.setqty.bind(this);
-        //End Function Bind Search-----------------------//
 
     }
     
@@ -174,370 +75,6 @@ export default class Home extends Component {
             }
         });
     }
-    
-    //Start Function  Search-----------------------//
-    //-----function untuk hotel-----//
-    setCity(id,city,province) {
-        this.setState({cityId:id});
-        this.setState({cityText:city});
-        this.setState({cityProvince:province});
-    }
-
-    setqty(jml){
-        console.log(jml);
-        this.setState({qty:jml});
-    }
-    //-----function untuk hotel-----//
-    
-    
-    setBookingTime(tglAwal, tglAkhir,round) {
-        if (round ==true) {
-            this.setState({tglAwal:tglAwal});
-            this.setState({tglAkhir:tglAkhir});
-          
-        } else {
-            this.setState({tglAwal:tglAwal});
-            this.setState({tglAkhir:null});
-        }
-    }
-  
-    getDate(num){
-        var MyDate = new Date();
-        var MyDateString = '';
-        MyDate.setDate(MyDate.getDate());
-        var tempoMonth = (MyDate.getMonth()+1);
-        var tempoDate = (MyDate.getDate()+num);
-        if (tempoMonth < 10) tempoMonth = '0' + tempoMonth;
-        if (tempoDate < 10) tempoDate = '0' + tempoDate;
-
-        return MyDate.getFullYear()  + '-' +  tempoMonth  + '-' +  tempoDate;
-
-    }
-    onSetFlightType(round) {
-        this.setState({
-            round: round
-        });
-    }
-
-    convertDate(date){
-        var d = new Date(date);
-        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-        return days[d.getDay()]+", "+d.getDate()+" "+months[d.getMonth()]+" "+d.getFullYear();
-    }
-
-    onSelectFlight(type) {
-        const { navigation } = this.props;
-        const { from, to } = this.state;
-        switch (type) {
-            case "to":
-                navigation.navigate("SelectFlight", {
-                    selected: this.state.bandaraTujuanCode,
-                    setBandaraTujuan: this.setBandaraTujuan,
-                    type:type
-                });
-                break;
-            case "from":
-                navigation.navigate("SelectFlight", {
-                    selected: this.state.bandaraAsalCode,
-                    setBandaraAsal: this.setBandaraAsal,
-                    type:type
-                });
-                break;
-            default:
-                break;
-        }
-    }
-
-    setDate(date) {
-        var date = new Date(date);
-        var tempoMonth = (date.getMonth()+1);
-        var tempoDate = (date.getDate());
-        var finaldate="";
-        if (tempoMonth < 10) tempoMonth = '0' + tempoMonth;
-        if (tempoDate < 10) tempoDate = '0' + tempoDate;
-    
-        return finaldate = date.getFullYear()  + '-' +  tempoMonth  + '-' +  tempoDate;
-    };
-    
-    setDateLocal(date) {
-        if(date!=""){
-            var date = new Date(date);
-            var tempoMonth = (date.getMonth()+1);
-            var tempoDate = (date.getDate());
-            return finaldate = tempoDate+'/'+tempoMonth+'/'+date.getFullYear();
-        }else{
-            return "Set Tanggal"
-        }
-    };
-    
-    
-    onSubmit() {
-            const {type,product,productPart} =this.state;
-          var tgl_akhir='';
-          if(this.state.round==true){
-            tgl_akhir=this.state.tglAkhir;
-          }
-    
-     
-          var param = {
-            DepartureDate:this.state.tglAwal,
-            ReturnDate:tgl_akhir,
-            Adults:this.state.dewasa,
-            Children:this.state.anak,
-            Infants:this.state.bayi,
-            }
-            
-            var link='';
-            
-            if(type=='flight'){
-                link='FlightResult';
-                param.Origin=this.state.bandaraAsalCode;
-                param.Destination=this.state.bandaraTujuanCode;
-                param.IsReturn=this.state.round;
-                param.CabinClass=[this.state.kelasId];
-                param.CorporateCode="";
-                param.Subclasses=false;
-                param.Airlines= [];
-                param.type='flight';
-                param.bandaraAsalLabel=this.state.bandaraAsalLabel;
-                param.bandaraTujuanLabel=this.state.bandaraTujuanLabel;
-                param.Qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
-                param.participant=true;
-
-                console.log('typeFlight',JSON.stringify(param));
-                
-                this.props.navigation.navigate(link,
-                {
-                    param:param,
-                });
-                
-            }else if(type=='hotelpackage'){
-                link='Summary';
-                param.type='hotelpackage';
-                param.cityId=this.state.cityId;
-                param.cityText=this.state.cityText;
-                param.cityProvince=this.state.cityProvince;
-                param.Qty=this.state.qty;
-                param.totalPrice=parseInt(this.state.qty)*parseInt(productPart.price);
-                param.participant=true;
-                
-                console.log('paramHotel',JSON.stringify(param));
-                console.log('productHotel',JSON.stringify(product));
-                console.log('productPartHotel',JSON.stringify(productPart));
-            
-            
-                this.props.navigation.navigate(link,
-                    {
-                        param:param,
-                        product:product,
-                        productPart:productPart
-                    });
-            }else if(type=='trip'){
-                link='Summary';
-                param.type='trip';
-                param.cityId=this.state.cityId;
-                param.cityText=this.state.cityText;
-                param.cityProvince=this.state.cityProvince;
-                param.Qty=this.state.qty;
-                param.participant=true;
-                
-                this.props.navigation.navigate(link,
-                    {
-                                        param:param,product:product
-                    });
-            }
-    }
-    
-    setBandaraAsal(code='',label='',id_country=''){
-        this.setState({bandaraAsalCode: code});
-        this.setState({bandaraAsalLabel: label});
-        this.setState({bandaraAsalIdCountry:id_country});
-    
-    }
-    
-    setBandaraTujuan(code='',label=''){
-        this.setState({bandaraTujuanCode: code});
-        this.setState({bandaraTujuanLabel: label});
-    }
-    
-
-    setJumlahDewasa(jml){
-          this.setState({dewasa:jml});
-            setTimeout(() => {
-                    this.setJumlahPerson();
-            }, 200);
-    }
-
-    setJumlahAnak(jml){
-        this.setState({anak:jml});
-        setTimeout(() => {
-            this.setJumlahPerson();
-    }, 200);
-    }
-
-    setJumlahBayi(jml){
-        this.setState({bayi:jml});
-        setTimeout(() => {
-            this.setJumlahPerson();
-    }, 200);
-    }
-    
-    setJumlahPerson(){
-        var jumlahPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-        this.setState({jumlahPerson:jumlahPerson});
-    }
-  
-    
-    setKelasPesawat(kelas,kelasId){
-        this.setState({kelas:kelas});
-        this.setState({kelasId:kelasId});
-    }
-    
-    setTglAwal(tgl){
-        this.setState({tglAwal:tgl});
-    }
-    
-    setTglAkhir(tgl){
-       this.setState({tglAkhir:tgl});
-    }
-    
-    renderContentSearch() {
-        var type=this.state.type;
-        var content=<View></View>
-        if(type=="flight"){
-            content=this.renderContentSearchFlight();
-        }else if(type=="hotelpackage"){
-            content=this.renderContentSearchHotel();
-        }else if(type=="trip"){
-            content=this.renderContentSearchTour();
-        }
-        return (
-            <View style={{ flex: 1 }}>
-                {content}
-                <Button
-                        full
-                        style={{height:40}}
-                        onPress={() => {  
-                            this.onSubmit();
-                           
-                        }}
-                    >
-                        Search
-                    </Button>
-            </View>
-        );
-    }
-    
-    renderContentSearchFlight(){
-        const { round, from, to, loading,login  } = this.state;
-        const { navigation } = this.props;
-        var content=<View>
-            <View style={styles.flightType}>
-                <Tag
-                    outline={!round}
-                    primary={round}
-                    round
-                    onPress={() => this.onSetFlightType(true)}
-                    style={{ marginRight: 20 }}
-                >
-                    Round Trip
-                </Tag>
-                <Tag
-                    outline={round}
-                    primary={!round}
-                    round
-                    onPress={() => this.onSetFlightType(false)}
-                >
-                    One Way
-                </Tag>
-            </View>
-            <FlightPlanCustom
-                round={round}
-                fromCode={this.state.bandaraAsalCode}
-                toCode={this.state.bandaraTujuanCode}
-                from={this.state.bandaraAsalLabel}
-                to={this.state.bandaraTujuanLabel}
-                style={{}}
-                onPressFrom={() => this.onSelectFlight("from")}
-                onPressTo={() => this.onSelectFlight("to")}
-            />
-
-            <SetDateLong
-                    labelTglAwal={'asd'}
-                    labelTglAkhir={'asdds'}
-                    setBookingTime={this.setBookingTime}
-                    tglAwal={this.state.tglAwal}
-                    tglAkhir={this.state.tglAkhir}
-                    round={this.state.round}
-                    icon={'calendar'}
-            />
-
-            <FormOption
-                style={{}} 
-                label={'Seat Class'}
-                option={this.state.listdata_kelas}
-                optionSet={this.setKelasPesawat}
-                optionSelectText={this.state.kelas}
-                optionSelectValue={this.state.kelasId}
-                icon={'crown'}
-            />
-            
-            <SetPenumpangLong
-                    label={this.state.jumlahPerson}
-                    dewasa={this.state.dewasa}
-                    anak={this.state.anak}
-                    bayi={this.state.bayi}
-                    setJumlahDewasa={this.setJumlahDewasa}
-                    setJumlahAnak={this.setJumlahAnak}
-                    setJumlahBayi={this.setJumlahBayi}
-                    // setMinPerson={}
-                    minPersonDef={1}
-                    minPerson={1}
-                    // minPrice={this.state.minPrice}
-                    // totalPrice={this.state.totalPrice}
-                />
-            
-            {/* <View style={{ marginTop: 20, flexDirection: "row" }}>
-                <QuantityPicker
-                    label="Adults"
-                    detail=">= 12 years"
-                    value={this.state.dewasa}
-                    setJumlahDewasa={this.setJumlahDewasa}
-                    typeOld="1"
-                />
-        
-        
-                <QuantityPicker
-                    label="Children"
-                    detail="2 - 12 years"
-                    value={this.state.anak}
-                    style={{ marginHorizontal: 15 }}
-                    setJumlahAnak={this.setJumlahAnak}
-                    typeOld="2"
-                />
-                <QuantityPicker
-                    label="Infants"
-                    detail="<= 2 years"
-                    value={this.state.bayi}
-                    setJumlahBayi={this.setJumlahBayi}
-                    typeOld="3"
-                />
-            </View> */}
-        </View>
-        
-        return (
-            <View style={{ flex: 1 }}>
-                {content}
-            </View>
-        );
-        
-    }
-    
-    
-    
-   
-    //End Function Search-----------------------//
 
 
     
@@ -753,8 +290,8 @@ export default class Home extends Component {
 
     componentDidMount() {
         //membuat bar transparant
-        // StatusBar.setBackgroundColor("rgba(0,0,0,0)");
-        // StatusBar.setTranslucent(true);
+        StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+        StatusBar.setTranslucent(true);
         
         // let {} = this.state;
         // const {navigation} = this.props;
@@ -802,51 +339,24 @@ export default class Home extends Component {
                             style={styles.itemService}
                             activeOpacity={0.9}
                             onPress={() => {
-                            
-                                if(!item.checked){
-                                    navigation.navigate(item.route,{type:item.type});
-                                }
-                                
+                                navigation.navigate(item.route,{type:item.type});
                             }}
-                        >   
-                            { item.checked ? 
-                            
-                            <View>
-                                <View style={styles.iconContentColor}>
-                                    {/* <Icon
-                                        name={item.icon}
-                                        size={40}
-                                        color={BaseColor.blackColor}
-                                        solid
-                                    /> */}
-                                    <Image
-                                        source={item.image}
-                                        style={styles.imgProfile}
-                                    />
-                                </View>
-                                <Text overline style={{textAlign:"center"}}>
-                                    {item.name}
-                                </Text>
+                        >
+                            <View style={styles.iconContent}>
+                                {/* <Icon
+                                    name={item.icon}
+                                    size={25}
+                                    color={BaseColor.primaryColor}
+                                    solid
+                                /> */}
+                                <Image
+                                    source={item.image}
+                                    style={styles.imgProfile}
+                                />
                             </View>
-                            :
-                            <View>
-                                <View style={styles.iconContent}>
-                                    {/* <Icon
-                                        name={item.icon}
-                                        size={40}
-                                        color={BaseColor.blackColor}
-                                        solid
-                                    /> */}
-                                    <Image
-                                        source={item.image}
-                                        style={styles.imgProfile}
-                                    />
-                                </View>
-                                <Text overline style={{textAlign:"center"}}>
-                                    {item.name}
-                                </Text>
-                            </View>
-                            }
+                            <Text overline>
+                                {item.name}
+                            </Text>
                         </TouchableOpacity>
                     );
                 }}
@@ -869,7 +379,7 @@ export default class Home extends Component {
         return (
             login ? 
             <View style={{ flex: 1 }}>
-                {/* <Animated.View
+                <Animated.View
                     style={[
                         styles.imgBanner,
                         {
@@ -893,27 +403,18 @@ export default class Home extends Component {
                         style={{ width: "100%", height: "100%" }}
                         resizeMode="cover"
                     />
-                </Animated.View> */}
+                </Animated.View>
 
                 
                 <SafeAreaView
-                style={[BaseStyle.safeAreaView,{backgroundColor:BaseColor.bgColor}]}
-                forceInset={{ top: "always" }}
+                    style={[BaseStyle.safeAreaView,{marginBottom:10}]}
+                    forceInset={{ top: "always" }}
                 >
                 
                 
                 <Header
                         title=""
-                        renderRight={() => {
-                            return (
-                                <Icon
-                                    name="ellipsis-v"
-                                    size={20}
-                                    color={BaseColor.primaryColor}
-                                />
-                                
-                            );
-                        }}
+                        transparent={true}
                     />
                     <ScrollView
                         onScroll={Animated.event([
@@ -931,8 +432,8 @@ export default class Home extends Component {
                         scrollEventThrottle={8}
                         style={{marginBottom:0}}
                     >
-                        <View style={{marginTop:0}}>
-                                {/* <View style={{marginHorizontal:20}}>
+                        <View style={{marginTop:100}}>
+                                <View style={{marginHorizontal:20}}>
                                     <Text header bold style={{color:BaseColor.whiteColor}}>
                                     VIVRE ET AIMER
                                     </Text>
@@ -940,40 +441,9 @@ export default class Home extends Component {
                                     <Text headline style={{color:BaseColor.whiteColor}}>
                                     Temukan dan pesanlah destinasi paket tur dan travel dengan harga yang kompetitif
                                     </Text>
-                                </View> */}
-                                
-                            <View 
-                                style={{ 
-                                marginTop:0,
-                                //backgroundColor:'#fff',
-                                width:'90%',
-                                alignSelf: 'center',
-                                // borderRadius: 18,
-                                // shadowColor: "#000",
-                                // shadowOffset: {
-                                //     width: 0,
-                                //     height: 2,
-                                // },
-                                // shadowOpacity: 0.25,
-                                // shadowRadius: 3.84,
-                                // elevation: 5,
-                                // padding:10
-                                }}
-                                >
-                                <View>
-                                    <Text body2 bold>
-                                    Hey Kamu Mau Kemana ?
-                                    </Text>
                                 </View>
-                                <View>
                                 
-                                    {this.renderIconService()}
-                                </View>
-                            </View>
-                            
-                            
-                             <View 
-                                style={{ 
+                            <View style={{ 
                                 marginTop:20,
                                 backgroundColor:'#fff',
                                 width:'90%',
@@ -986,13 +456,18 @@ export default class Home extends Component {
                                 },
                                 shadowOpacity: 0.25,
                                 shadowRadius: 3.84,
-                                elevation: 3,
+                                elevation: 5,
                                 padding:10
-                                }}
-                                >
-                                {this.renderContentSearch()}
-                                
-                            </View> 
+                                }}>
+                                <View>
+                                    <Text body2 bold style={{alignSelf: 'center'}}>
+                                    Hey Kamu Mau Kemana ?
+                                    </Text>
+                                </View>
+                                <View>
+                                    {this.renderIconService()}
+                                </View>
+                            </View>
                             
                            
                                     

@@ -11,5 +11,15 @@ export default StyleSheet.create({
         borderRadius: 8,
         borderWidth: 3,
         borderColor: BaseColor.fieldColor,
-    }
+    },
+    contentForm: {
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 8,
+        width: "100%",
+        //backgroundColor: BaseColor.fieldColor
+        borderRadius: 8,
+        borderWidth: 3,
+        borderColor: BaseColor.fieldColor,
+    },
 });
