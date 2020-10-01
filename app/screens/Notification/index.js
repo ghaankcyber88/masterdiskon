@@ -92,7 +92,7 @@ export default class Notification extends Component {
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             var raw = JSON.stringify({"param":{"id_user":id_user,"seen":idParam}});
-            console.log("paramnotif",raw);
+            //console.log("paramnotif",raw);
             var requestOptions = {
               method: 'POST',
               headers: myHeaders,
@@ -103,7 +103,7 @@ export default class Notification extends Component {
             fetch(url+path, requestOptions)
                 .then(response => response.json())
               .then(result => {
-                console.log("getNotif",JSON.stringify(result));
+                //console.log("getNotif",JSON.stringify(result));
                 this.setState({loading_spinner: false });
                 this.setState({notification:result});
               })

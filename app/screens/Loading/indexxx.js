@@ -108,7 +108,7 @@ class Loading extends Component {
          PostDataNew(url,dir,param)
              .then((result) => {
                     var config=result;
-                    console.log('getConfig',JSON.stringify(config));
+                    //console.log('getConfig',JSON.stringify(config));
                     AsyncStorage.setItem('config', JSON.stringify(config)); 
                     navigation.navigate("Home");
              },

@@ -78,8 +78,8 @@ export default class TourSet extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
+                //console.log("---------------data session user  ------------");
+                //console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
              }
@@ -185,8 +185,8 @@ export default class TourSet extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
+                //console.log("---------------data session user  ------------");
+                //console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
                 alert('asd');
@@ -323,8 +323,8 @@ export default class TourSet extends Component {
     }
 
     getProduct(param,paramOther,product) {
-        console.log("-------param------");
-        console.log(JSON.stringify(param));
+        //console.log("-------param------");
+        //console.log(JSON.stringify(param));
         this.setState({ loading: true }, () => {
             this.setState({ loading: false });
             this.props.navigation.navigate('Summary',
@@ -366,7 +366,7 @@ export default class TourSet extends Component {
             //                     listdata_return:listdata_return,
             //                     });
             //                 })
-            //                 .catch(error => console.log('error', error));
+            //                 .catch(error => //console.log('error', error));
             //             }
             //     });
 
@@ -375,10 +375,10 @@ export default class TourSet extends Component {
     
     
     componentDidMount() {
-        console.log("-------token------");
+        //console.log("-------token------");
         AsyncStorage.getItem('tokenAgi', (error, result) => {
             if (result) {    
-                console.log(result);
+                //console.log(result);
             }
         });
     }
@@ -387,7 +387,7 @@ export default class TourSet extends Component {
         this.setState({bandaraAsalCode: code});
         this.setState({bandaraAsalLabel: label});
         this.setState({bandaraAsalIdCountry:id_country});
-        console.log(id_country);
+        //console.log(id_country);
     
     }
     
@@ -405,17 +405,17 @@ export default class TourSet extends Component {
     }
 
     setJumlahDewasa(jml){
-        console.log(jml);
+        //console.log(jml);
           this.setState({dewasa:jml});
     }
 
     setJumlahAnak(jml){
-        console.log(jml);
+        //console.log(jml);
         this.setState({anak:jml});
     }
 
     setJumlahBayi(jml){
-        console.log(jml);
+        //console.log(jml);
         this.setState({bayi:jml});
     }
   

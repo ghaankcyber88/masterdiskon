@@ -43,7 +43,7 @@ export default class CarouselItem extends Component {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
                     let config = JSON.parse(result);
-                    console.log('getConfig',config);
+                    //console.log('getConfig',config);
                     this.setState({config:config});
                 }
             });

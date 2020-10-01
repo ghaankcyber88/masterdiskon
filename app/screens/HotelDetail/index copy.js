@@ -34,7 +34,7 @@ export default class HotelDetail extends Component {
         //var paramOther=this.props.navigation.state.params.paramOther;
         //var slug=this.props.navigation.state.params.slug;
         var product=this.props.navigation.state.params.product;
-        //console.log('product',JSON.stringify(product));
+        ////console.log('product',JSON.stringify(product));
         // Temp data define
         this.state = {
             heightHeader: Utils.heightHeader(),
@@ -163,8 +163,8 @@ export default class HotelDetail extends Component {
                     var hotelRoom=result.room;
                     var hotelReview=result.review;
                     var hotelReviewCustomer=result.review_teks;
-                    console.log('hotel',JSON.stringify(hotelDetail));
-                    console.log('room',JSON.stringify(hotelRoom));
+                    //console.log('hotel',JSON.stringify(hotelDetail));
+                    //console.log('room',JSON.stringify(hotelRoom));
                     this.setState({hotelData:hotelData});
                     this.setState({hotelDetail:hotelDetail});
                     this.setState({hotelRoom:hotelRoom});

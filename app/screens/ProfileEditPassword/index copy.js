@@ -34,8 +34,8 @@ export default class ProfileEdit extends Component {
             const param={"param":data}
     
 
-            console.log("------------------data param update account--------------");
-            console.log(JSON.stringify(param));
+            //console.log("------------------data param update account--------------");
+            //console.log(JSON.stringify(param));
     
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
@@ -52,7 +52,7 @@ export default class ProfileEdit extends Component {
             .then(result => {
                 var userSession=result.userSession;
                 this.setState({ loading: false });
-                console.log(JSON.stringify(result));
+                //console.log(JSON.stringify(result));
                 if(result.success==false){
                     this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
                     //this.setState({ loading: false });

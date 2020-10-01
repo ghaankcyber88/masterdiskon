@@ -63,7 +63,7 @@ class SignIn extends ValidationComponent {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                //console.log('getConfig',config);
+                ////console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -124,7 +124,7 @@ class SignIn extends ValidationComponent {
             this.onLoginGoogle(userInfo);
             //alert(JSON.stringify(userInfo));
             //alert(userInfo.user);
-            console.log(JSON.stringify(userInfo));
+            //console.log(JSON.stringify(userInfo));
             //this.setState({ userInfo });
             //this.authenticationCustom();
           } catch (error) {
@@ -150,7 +150,7 @@ class SignIn extends ValidationComponent {
         var sp = email.split('@');
         var username=sp[0];
         var url=config.baseUrl+"front/api/AuthLogin/login_proses_app_google";
-        console.log('onLoginGoogle',url);
+        //console.log('onLoginGoogle',url);
         
         this.setState({ loading: true }, () => {
             var data={
@@ -163,8 +163,8 @@ class SignIn extends ValidationComponent {
 
             const param={"param":data}
 
-            console.log("------------------data param submit login--------------");
-            console.log(JSON.stringify(param));
+            //console.log("------------------data param submit login--------------");
+            //console.log(JSON.stringify(param));
     
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
@@ -216,14 +216,14 @@ onSubmit() {
         this.setState({ loading: true }, () => {
             var url=config.baseUrl;
             var url=config.baseUrl+"front/api/AuthLogin/login_proses_app";
-            console.log('onLoginAppUrl',url);
+            //console.log('onLoginAppUrl',url);
             
     
             var data={"email":email,"password":password}
             const param={"param":data}
 
-            console.log("------------------data param submit login--------------");
-            console.log(JSON.stringify(param));
+            //console.log("------------------data param submit login--------------");
+            //console.log(JSON.stringify(param));
     
             var myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
@@ -239,7 +239,7 @@ onSubmit() {
             .then(response => response.json())
             .then(result => {
                 this.setState({ loading: false });
-                console.log(JSON.stringify(result));
+                //console.log(JSON.stringify(result));
                 if(result.success==false){
                     this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
                     //this.setState({ loading: false });
@@ -267,7 +267,7 @@ onSubmit() {
 //     // alert(id_user);
 //     PostData('api/user',{"id_user":id_user})
 //         .then((result) => {
-//             console.log("-------------GET profile--------------")
+//             //console.log("-------------GET profile--------------")
 //             AsyncStorage.setItem('profile', JSON.stringify(result));
 //             this.getSmartProfile(id_user);
 //         },
@@ -296,12 +296,12 @@ onSubmit() {
 //         .then(response => response.text())
 //         .then(result => {
             
-//             console.log(result)
+//             //console.log(result)
 //             this.getBookingHistory(id_user);
 //         }
             
 //             )
-//         .catch(error => console.log('error', error));
+//         .catch(error => //console.log('error', error));
 // }
 
 
@@ -321,11 +321,11 @@ onSubmit() {
 //                 .then(response => response.text())
 //                 .then(result => {
                     
-//                     console.log(result)
+//                     //console.log(result)
 //                     this.getNotification(id_user);
 //                 }
 //                     )
-//                 .catch(error => console.log('error', error));
+//                 .catch(error => //console.log('error', error));
 // }
 
 // getNotification(id_user) {
@@ -338,14 +338,14 @@ onSubmit() {
 //       fetch("https://masterdiskon.com/front/api/api/notif?id="+id_user, requestOptions)
 //         .then(response => response.json())
 //         .then(result => {
-//             console.log("-------------notif--------------")
+//             //console.log("-------------notif--------------")
 //             AsyncStorage.setItem('notification', JSON.stringify(result));
 //             setTimeout(() => {
 //                 this.authentication(redirect);
 //                 }, 500);
 
 //         })
-//         .catch(error => console.log('error', error));
+//         .catch(error => //console.log('error', error));
 
 // }
 
@@ -402,18 +402,18 @@ onSubmit() {
 
         if(email != '' && password !='' ){
                 // if(errorMsg !=''){
-                //     console.log('not yet');
+                //     //console.log('not yet');
                 //     this.setState({colorButton:BaseColor.greyColor});
                 //     this.setState({colorButtonText:BaseColor.whiteColor});
                 //     this.setState({disabledButton:true});
                 // }else{
-                    console.log('perfect');
+                    //console.log('perfect');
                     this.setState({colorButton:BaseColor.secondColor});
                     this.setState({colorButtonText:BaseColor.primaryColor});
                     this.setState({disabledButton:false});
                 //}
         }else{
-                console.log('not yet');
+                //console.log('not yet');
                 this.setState({colorButton:BaseColor.greyColor});
                 this.setState({colorButtonText:BaseColor.whiteColor});
                 this.setState({disabledButton:true});
@@ -562,19 +562,19 @@ onSubmit() {
                               onLoginFinished={
                                 (error, result) => {
                                   if (error) {
-                                    console.log("login has error: " + result.error);
+                                    //console.log("login has error: " + result.error);
                                   } else if (result.isCancelled) {
-                                    console.log("login is cancelled.");
+                                    //console.log("login is cancelled.");
                                   } else {
                                     AccessToken.getCurrentAccessToken().then(
                                       (data) => {
-                                        console.log(data.accessToken.toString())
+                                        //console.log(data.accessToken.toString())
                                       }
                                     )
                                   }
                                 }
                               }
-                              onLogoutFinished={() => console.log("logout.")}
+                              onLogoutFinished={() => //console.log("logout.")}
                               /> 
                           
                              */}

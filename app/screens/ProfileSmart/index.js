@@ -73,7 +73,7 @@ class ProfileSmart extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                //console.log('getConfig',config);
+                ////console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -128,8 +128,8 @@ class ProfileSmart extends Component {
             // AsyncStorage.getItem('smartProfile', (error, result) => {
             //     if (result) {
             //         let resultParsed = JSON.parse(result);
-            //         console.log("------DATA GUEST asli----");    
-            //         console.log(JSON.stringify(resultParsed));
+            //         //console.log("------DATA GUEST asli----");    
+            //         //console.log(JSON.stringify(resultParsed));
             //         const newProjects = resultParsed.map(p =>
             //             p.id === key
             //             ? { ...p, 
@@ -153,8 +153,8 @@ class ProfileSmart extends Component {
         
             //         AsyncStorage.setItem('smartProfile',JSON.stringify(newProjects));
             //         this.setState({participant:newProjects});
-            //          console.log("------DATA GUEST update----");
-            //          console.log(JSON.stringify(newProjects));
+            //          //console.log("------DATA GUEST update----");
+            //          //console.log(JSON.stringify(newProjects));
             //     }
             //     });
             }
@@ -216,8 +216,8 @@ class ProfileSmart extends Component {
                     "type":this.convertOld(birthday)
                 }
                 const param={"param":data}
-                console.log("------------------data param submit participant--------------");
-                console.log(JSON.stringify(param));
+                //console.log("------------------data param submit participant--------------");
+                //console.log(JSON.stringify(param));
 
                 var myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/json");
@@ -232,8 +232,8 @@ class ProfileSmart extends Component {
                 };
                 PostDataNew(url,path,requestOptions)
                 .then((result) => {
-                            console.log("------------------result update participant--------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("------------------result update participant--------------");
+                            //console.log(JSON.stringify(result));
                            
 
                 });
@@ -248,8 +248,8 @@ class ProfileSmart extends Component {
                     "id": id,
                 }
                 const param={"param":data}
-                console.log("param delete",JSON.stringify(param));
-                //console.log();
+                //console.log("param delete",JSON.stringify(param));
+                ////console.log();
 
                 var myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/json");
@@ -264,8 +264,8 @@ class ProfileSmart extends Component {
                 };
                 PostDataNew(url,path,requestOptions)
                 .then((result) => {
-                            console.log("------------------result update participant--------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("------------------result update participant--------------");
+                            //console.log(JSON.stringify(result));
                             setTimeout(() => {
                                 this.fetch();
                             }, 200);
@@ -293,8 +293,8 @@ class ProfileSmart extends Component {
         var path=config.user_participant.dir;
         
                     // let userSession = JSON.parse(result);
-                    // console.log("---------------data session user  ------------");
-                    // console.log(JSON.stringify(userSession));
+                    // //console.log("---------------data session user  ------------");
+                    // //console.log(JSON.stringify(userSession));
                     // this.setState({userSession:userSession});
                     // this.setState({login:true});
     
@@ -303,8 +303,8 @@ class ProfileSmart extends Component {
 
                     const data={"id":"","id_user":id_user}
                     const param={"param":data}
-                    console.log('-------------param profile-------------');
-                    console.log(JSON.stringify(param));
+                    //console.log('-------------param profile-------------');
+                    //console.log(JSON.stringify(param));
                    
 
                     var myHeaders = new Headers();
@@ -320,7 +320,7 @@ class ProfileSmart extends Component {
                     };
                     PostDataNew(url,path,requestOptions)
                     .then((result) => {
-                                console.log("result update participant",JSON.stringify(result));
+                                //console.log("result update participant",JSON.stringify(result));
                                 this.setState({participant: result});
                     });
 
@@ -370,7 +370,7 @@ class ProfileSmart extends Component {
 
             var type=this.state.type;
             var old_select=this.convertOld2(select.old);
-            //console.log('conversi old',old_select);
+            ////console.log('conversi old',old_select);
             var old=this.state.old;
             this.props.navigation.state.params.updateParticipant(
             key,
@@ -559,7 +559,7 @@ class ProfileSmart extends Component {
         }else{
             oldNew='adult';
         }
-        //console.log('oldNew',oldNew);
+        ////console.log('oldNew',oldNew);
         return oldNew;
     }
     

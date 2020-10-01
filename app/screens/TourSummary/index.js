@@ -216,8 +216,8 @@ export default class TourSummary extends Component {
             if (result) {    
                     
                     var access_token=result;
-                    console.log("---------------token ------------");
-                    console.log(access_token);
+                    //console.log("---------------token ------------");
+                    //console.log(access_token);
                     //get payment
                     var myHeaders = new Headers();
                     myHeaders.append("Content-Type", "application/json");
@@ -235,9 +235,9 @@ export default class TourSummary extends Component {
                     fetch("https://dev-api.megaelectra.co.id/crm/MyOrder/v2/22020200000072", requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        console.log("---------------Data Order------------");
+                        //console.log("---------------Data Order------------");
                         var dataOrder=result;
-                        console.log(JSON.stringify(dataOrder));
+                        //console.log(JSON.stringify(dataOrder));
                         
 
 
@@ -254,8 +254,8 @@ export default class TourSummary extends Component {
             if (result) {    
                     
                     var access_token=result;
-                    console.log("---------------token ------------");
-                    console.log(access_token);
+                    //console.log("---------------token ------------");
+                    //console.log(access_token);
                     //get payment
                     var myHeaders = new Headers();
                     myHeaders.append("Content-Type", "application/json");
@@ -269,8 +269,8 @@ export default class TourSummary extends Component {
                         "fee":0,"currency":"IDR",
                         "back_url":"http://dev.megaelectra.co.id/paymentconfirmation?token="+access_token,
                         "cart_id":[cart_id]});
-                    console.log("---------------param payment ------------");
-                    console.log(raw);
+                    //console.log("---------------param payment ------------");
+                    //console.log(raw);
                     var requestOptions = {
                     method: 'POST',
                     headers: myHeaders,
@@ -283,10 +283,10 @@ export default class TourSummary extends Component {
                     .then(result => {
                         var dataPayment=result;
                         var paymentFlight=this.state.dataPayment.data.flight[0].data;
-                        console.log(JSON.stringify(paymentFlight));
+                        //console.log(JSON.stringify(paymentFlight));
                         var orderId=paymentFlight.orderid;
-                        console.log("---------------order id------------");
-                        console.log(orderId);
+                        //console.log("---------------order id------------");
+                        //console.log(orderId);
                         //this.toPayment(orderId);
                         setTimeout(() => {
                             this.toPayment(orderId);
@@ -386,8 +386,8 @@ export default class TourSummary extends Component {
                             }
                         const param={"param":data}
                         
-                        console.log("------------------data param submit order trip--------------");
-                        console.log(JSON.stringify(param));
+                        //console.log("------------------data param submit order trip--------------");
+                        //console.log(JSON.stringify(param));
 
                         PostData('api/submitbook_order_new',param)
                             .then((result) => {
@@ -437,8 +437,8 @@ export default class TourSummary extends Component {
 
         const  filtered = this.filterArray(products, filters);
         var jml=filtered.length;
-        console.log("----------------validation participant------------------------------------");
-        console.log(JSON.stringify(filtered));
+        //console.log("----------------validation participant------------------------------------");
+        //console.log(JSON.stringify(filtered));
         return jml;
     }
     
@@ -456,8 +456,8 @@ export default class TourSummary extends Component {
 
         const  filtered = this.filterArray(products, filters);
         var jml=filtered.length;
-        console.log("----------------validation participant------------------------------------");
-        console.log(JSON.stringify(filtered));
+        //console.log("----------------validation participant------------------------------------");
+        //console.log(JSON.stringify(filtered));
         return jml;
     }
 
@@ -465,18 +465,18 @@ export default class TourSummary extends Component {
         var jml_empty_participant=this.validaton_participant();
         var jml_empty_customer=this.validaton_customer();
 
-        console.log("----------------jml kosong participant------------------------------------");
-        console.log(jml_empty_participant);
+        //console.log("----------------jml kosong participant------------------------------------");
+        //console.log(jml_empty_participant);
 
-        console.log("----------------jml kosong customer------------------------------------");
-        console.log(jml_empty_customer);
+        //console.log("----------------jml kosong customer------------------------------------");
+        //console.log(jml_empty_customer);
 
         if(jml_empty_participant == 0 && jml_empty_customer == 0 ){
-            console.log('perfect');
+            //console.log('perfect');
             this.setState({colorButton:'red'});
             this.setState({handlerButton:false});
         }else{
-            console.log('not yet');
+            //console.log('not yet');
             this.setState({colorButton:'grey'});
             this.setState({handlerButton:true});
         }
@@ -630,8 +630,8 @@ export default class TourSummary extends Component {
                     fetch("https://dev-api.megaelectra.co.id/flight/Price/v3", requestOptions)
                     .then((response) => response.json())
                     .then((result) => {
-                        console.log("---------------data price------------");
-                        console.log(JSON.stringify(result));
+                        //console.log("---------------data price------------");
+                        //console.log(JSON.stringify(result));
                         this.setState({dataPrice:result});
                     })
                     .catch(error => console.log('error', error));
@@ -658,7 +658,7 @@ export default class TourSummary extends Component {
     componentDidMount() {
         let dt = new Date();
         dt = this.addDate(dt, -13, 'years');
-        console.log(dt);
+        //console.log(dt);
         var date = dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate();
 
 
@@ -742,7 +742,7 @@ export default class TourSummary extends Component {
     toggleSwitch = value => {
         this.setState({ reminders: value });
         var customer=this.state.listdata_customer[0];
-        console.log(JSON.stringify(customer));
+        //console.log(JSON.stringify(customer));
 
         if(value==true){
         var key=1;

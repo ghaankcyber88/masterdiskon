@@ -17,8 +17,8 @@ export default class FlightFilter extends Component {
     constructor(props) {
         super(props);
         var listdata=this.props.navigation.state.params.listdata;
-        console.log("----------------listdata asli ------------------------------------");
-        console.log(JSON.stringify(listdata));
+        //console.log("----------------listdata asli ------------------------------------");
+        //console.log(JSON.stringify(listdata));
 
 
         var listdata_new = [];
@@ -60,8 +60,8 @@ export default class FlightFilter extends Component {
         });
 
 
-        console.log("----------------departure new ------------------------------------");
-        console.log(listdata_new);
+        //console.log("----------------departure new ------------------------------------");
+        //console.log(listdata_new);
 
 
         
@@ -240,8 +240,8 @@ export default class FlightFilter extends Component {
         const filtered = this.filterArray(products, filters);
 
 
-        console.log("----------------hasil filter airline------------------------------------");
-        console.log(filtered);
+        //console.log("----------------hasil filter airline------------------------------------");
+        //console.log(filtered);
 
         
         this.filterByTransit(filtered);
@@ -258,8 +258,8 @@ export default class FlightFilter extends Component {
             }
 
         })
-        console.log("---------------filter transits------------------------------------");
-        console.log(JSON.stringify(transits));
+        //console.log("---------------filter transits------------------------------------");
+        //console.log(JSON.stringify(transits));
 
          var filter=transits;
          const products =filtered;
@@ -274,8 +274,8 @@ export default class FlightFilter extends Component {
          filtered = this.filterArray(products, filters);
  
  
-         console.log("----------------hasil filter transit------------------------------------");
-         console.log(filtered);
+         //console.log("----------------hasil filter transit------------------------------------");
+         //console.log(filtered);
          this.filterByFasilites(filtered);
         
     }
@@ -289,8 +289,8 @@ export default class FlightFilter extends Component {
             }
 
         })
-        console.log("----------------filter fasilitas-----------------------------------");
-        console.log(JSON.stringify(facilitiess));
+        //console.log("----------------filter fasilitas-----------------------------------");
+        //console.log(JSON.stringify(facilitiess));
 
 
          var filter=facilitiess;
@@ -306,8 +306,8 @@ export default class FlightFilter extends Component {
          filtered = this.filterArray(products, filters);
  
  
-         console.log("----------------hasil filter fasilities------------------------------------");
-         console.log(filtered);
+         //console.log("----------------hasil filter fasilities------------------------------------");
+         //console.log(filtered);
          this.filterByBudget(filtered);
         
     }
@@ -317,11 +317,11 @@ export default class FlightFilter extends Component {
         var priceBegin=this.state.priceBegin;
         var priceEnd=this.state.priceEnd;       
 
-        console.log("----------------harga terendah ------------------------------------");
-        console.log(priceBegin);
+        //console.log("----------------harga terendah ------------------------------------");
+        //console.log(priceBegin);
 
-        console.log("----------------harga tertinggi ------------------------------------");
-        console.log(priceEnd);
+        //console.log("----------------harga tertinggi ------------------------------------");
+        //console.log(priceEnd);
         
         const products =filtered;
         
@@ -331,8 +331,8 @@ export default class FlightFilter extends Component {
         });
 
 
-       console.log("----------------hasil filter harga------------------------------------");
-       console.log(filtered);
+       //console.log("----------------hasil filter harga------------------------------------");
+       //console.log(filtered);
        this.filterFinal(filtered);
     }
     
@@ -372,9 +372,9 @@ export default class FlightFilter extends Component {
         // };
 
         //     const filtered = this.filterArray(products, filters);
-        //  console.log("----------------hasil filter asli------------------------------------");
-        //  console.log(filtered);
-        //  console.log(filters);
+        //  //console.log("----------------hasil filter asli------------------------------------");
+        //  //console.log(filtered);
+        //  //console.log(filters);
 
 
 

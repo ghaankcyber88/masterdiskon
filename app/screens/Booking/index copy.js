@@ -24,8 +24,8 @@ export default class Booking extends Component {
         // AsyncStorage.getItem('userSession', (error, result) => {
         //     if (result) {
         //         let userSession = JSON.parse(result);
-        //         console.log("---------------data session user  ------------");
-        //         console.log(JSON.stringify(userSession));
+        //         //console.log("---------------data session user  ------------");
+        //         //console.log(JSON.stringify(userSession));
         //         this.setState({userSession:userSession});
         //         this.setState({login:true});
         //      }
@@ -189,8 +189,8 @@ export default class Booking extends Component {
                 AsyncStorage.getItem('userSession', (error, result) => {
                 if (result) {
                     let userSession = JSON.parse(result);
-                    console.log("---------------data session user  ------------");
-                    console.log(JSON.stringify(userSession));
+                    //console.log("---------------data session user  ------------");
+                    //console.log(JSON.stringify(userSession));
                     this.setState({userSession:userSession});
                     this.setState({login:true});
                     this.setState({ loading_spinner: false });
@@ -402,22 +402,22 @@ class OrderTab extends Component {
             AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
+                //console.log("---------------data session user  ------------");
+                //console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
                 
                 var id_user=userSession.id_user;
                     const data={"id":id_user,"id_order":"","order_status":this.state.status,"product":this.state.product}
                     const param={"param":data}
-                    console.log('-------------param booking-------------');
-                    console.log(JSON.stringify(param));
+                    //console.log('-------------param booking-------------');
+                    //console.log(JSON.stringify(param));
 
 
                     PostData('get_booking_history',param)
                         .then((result) => {
-                            console.log("---------------get_booking_history ------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("---------------get_booking_history ------------");
+                            //console.log(JSON.stringify(result));
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:result});
                         },

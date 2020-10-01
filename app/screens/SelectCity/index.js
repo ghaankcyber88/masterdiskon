@@ -69,7 +69,7 @@ export default class SelectCity extends Component {
             .then((result) => {
                     this.setState({ loading_spinner: false });
                     this.setState({city:result});
-                    console.log('city',JSON.stringify(result));
+                    //console.log('city',JSON.stringify(result));
                     const { navigation } = this.props;
                     const selected = navigation.getParam("selected");
         

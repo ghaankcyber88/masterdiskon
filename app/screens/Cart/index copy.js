@@ -41,8 +41,8 @@ export default class Cart extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
+                //console.log("---------------data session user  ------------");
+                //console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
 
@@ -160,8 +160,8 @@ export default class Cart extends Component {
         AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
             if (result) {
                 let dataCartArrayReal = JSON.parse(result);
-                console.log("---------------dataCartArrayReal page  ------------");
-                console.log(JSON.stringify(dataCartArrayReal));
+                //console.log("---------------dataCartArrayReal page  ------------");
+                //console.log(JSON.stringify(dataCartArrayReal));
 
                 var totalCartPriceReal=0;
                 dataCartArrayReal.map(item => {
@@ -178,8 +178,8 @@ export default class Cart extends Component {
         AsyncStorage.getItem('dataCartArray', (error, result) => {
             if (result) {
                 let dataCartArray = JSON.parse(result);
-                console.log("---------------dataCartArray page  ------------");
-                console.log(JSON.stringify(dataCartArray));
+                //console.log("---------------dataCartArray page  ------------");
+                //console.log(JSON.stringify(dataCartArray));
         
                 var totalCartPrice=0;
                 dataCartArray.map(item => {
@@ -331,8 +331,8 @@ export default class Cart extends Component {
     //     AsyncStorage.getItem('userSession', (error, result) => {
     //         if (result) {
     //             let userSession = JSON.parse(result);
-    //             console.log("---------------data session user  ------------");
-    //             console.log(JSON.stringify(userSession));
+    //             //console.log("---------------data session user  ------------");
+    //             //console.log(JSON.stringify(userSession));
     //             var id_user=userSession.id_user;
 
     //             var participant = [];
@@ -391,13 +391,13 @@ export default class Cart extends Component {
     //             const param={"param":data}
 
     //             this.setState({dataPersonSave:data});
-    //             console.log("------------------data param update person--------------");
-    //             console.log(JSON.stringify(param));
+    //             //console.log("------------------data param update person--------------");
+    //             //console.log(JSON.stringify(param));
 
     //             // PostData('update_participant_order',param)
     //             //     .then((result) => {
-    //             //         console.log("------------------result update participant--------------");
-    //             //         console.log(JSON.stringify(result));
+    //             //         //console.log("------------------result update participant--------------");
+    //             //         //console.log(JSON.stringify(result));
     //             //         //this.redirect('ProfileSmart');
     //             //     },
     //             //     (error) => {
@@ -419,8 +419,8 @@ export default class Cart extends Component {
         // AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
         //     if (result) {
         //         let dataCartArrayReal = JSON.parse(result);
-        //         console.log("---------------data cart array cart page  ------------");
-        //         console.log(JSON.stringify(dataCartArrayReal));
+        //         //console.log("---------------data cart array cart page  ------------");
+        //         //console.log(JSON.stringify(dataCartArrayReal));
 
         //         var totalCartPriceReal=0;
         //         dataCartArrayReal.map(item => {
@@ -478,8 +478,8 @@ export default class Cart extends Component {
                     "paramOther":this.state.paramOther,
                     }
                     
-                    console.log("---------------data cart array cart kirim  ------------");
-                    console.log(JSON.stringify(dataCartArrayRealSend));
+                    //console.log("---------------data cart array cart kirim  ------------");
+                    //console.log(JSON.stringify(dataCartArrayRealSend));
 
                     //this.updateUserSession();
              
@@ -500,8 +500,8 @@ export default class Cart extends Component {
                     // .then(response => response.json())
                     // .then((result) => {
                     //     var dataOrderSubmit=result;
-                    //     console.log("---------------status carts-------------");
-                    //     console.log(JSON.stringify(dataOrderSubmit));
+                    //     //console.log("---------------status carts-------------");
+                    //     //console.log(JSON.stringify(dataOrderSubmit));
                     //         this.setState({ loading: false });
                             
 
@@ -531,11 +531,11 @@ export default class Cart extends Component {
     //         AsyncStorage.getItem('userSession', (error, result) => {
     //             if (result) {  
     //                 let userSession = JSON.parse(result);
-    //                 console.log('userSession',JSON.stringify(userSession));
+    //                 //console.log('userSession',JSON.stringify(userSession));
                     
                     
     //                 var customer=this.state.listdata_customer[0];
-    //                 console.log('data contact',JSON.stringify(customer));
+    //                 //console.log('data contact',JSON.stringify(customer));
 
     //                 var otherUser=this.state.otherUser;
     //                 if(otherUser){
@@ -604,7 +604,7 @@ export default class Cart extends Component {
     //                 }
                 
                     
-    //                 console.log('newUserSession',JSON.stringify(newUserSession))
+    //                 //console.log('newUserSession',JSON.stringify(newUserSession))
     //                 AsyncStorage.setItem('userSession', JSON.stringify(newUserSession));
 
     //             }
@@ -625,15 +625,15 @@ export default class Cart extends Component {
             redirect: 'follow'
           };
           
-          //console.log("---------------URL GET VA------------");
-          //console.log("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay+"&payment_method="+this.state.payment_method);
+          ////console.log("---------------URL GET VA------------");
+          ////console.log("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay+"&payment_method="+this.state.payment_method);
           
           fetch("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay, requestOptions)
             .then(response => response.json())
             .then((result) => {
                 this.setState({ loading: false });
                 var id_order_payment=result.key;
-                console.log('statusss',JSON.stringify(result));
+                //console.log('statusss',JSON.stringify(result));
                                 var redirect='Pembayaran';
                                 setTimeout(() => {
                                     var id_order=dataOrderSubmit.id_order;
@@ -662,8 +662,8 @@ export default class Cart extends Component {
             .then(response => response.json())
             .then((result) => {
                 this.setState({ loading: false });
-                console.log("---------------Virtual Account------------");
-                console.log(JSON.stringify(result));
+                //console.log("---------------Virtual Account------------");
+                //console.log(JSON.stringify(result));
                 var expirydate=result.va.expired;
                 var expirydateNum=this.duration(expirydate);
                 var countDown=0;
@@ -675,7 +675,7 @@ export default class Cart extends Component {
                 }else if (expirydateNum == minTimeLimit){
                     countDown=expirydateNum;
                 }
-                console.log(expirydate);
+                //console.log(expirydate);
                 // this.setState({dataVa:result.va});
                
                 setTimeout(() => {

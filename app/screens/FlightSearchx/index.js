@@ -227,8 +227,8 @@ export default class FlightSearch extends Component {
 
 
     getProduct(param,paramOther) {
-        console.log("-------param------");
-        console.log(JSON.stringify(param));
+        //console.log("-------param------");
+        //console.log(JSON.stringify(param));
         this.setState({ loading: true }, () => {
             AsyncStorage.getItem('tokenAgi', (error, result) => {
                 if (result) {    
@@ -261,7 +261,7 @@ export default class FlightSearch extends Component {
                                 listdata_return:listdata_return,
                                 });
                             })
-                            .catch(error => console.log('error', error));
+                            .catch(error => //console.log('error', error));
                         }
                 });
 
@@ -322,10 +322,10 @@ export default class FlightSearch extends Component {
     
     
     componentDidMount() {
-        console.log("-------token------");
+        //console.log("-------token------");
         AsyncStorage.getItem('tokenAgi', (error, result) => {
             if (result) {    
-                console.log(result);
+                //console.log(result);
             }
         });
     }
@@ -334,7 +334,7 @@ export default class FlightSearch extends Component {
         this.setState({bandaraAsalCode: code});
         this.setState({bandaraAsalLabel: label});
         this.setState({bandaraAsalIdCountry:id_country});
-        console.log(id_country);
+        //console.log(id_country);
     
     }
     
@@ -352,17 +352,17 @@ export default class FlightSearch extends Component {
     }
 
     setJumlahDewasa(jml){
-        console.log(jml);
+        //console.log(jml);
           this.setState({dewasa:jml});
     }
 
     setJumlahAnak(jml){
-        console.log(jml);
+        //console.log(jml);
         this.setState({anak:jml});
     }
 
     setJumlahBayi(jml){
-        console.log(jml);
+        //console.log(jml);
         this.setState({bayi:jml});
     }
   

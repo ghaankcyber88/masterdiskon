@@ -79,8 +79,8 @@ export default class FlightResultArrival extends Component {
     }
     
     onClear() {
-        console.log("---------------original------------------------------------");
-        console.log(JSON.stringify(this.state.listdata_return_original));
+        //console.log("---------------original------------------------------------");
+        //console.log(JSON.stringify(this.state.listdata_return_original));
         this.setState({listdata_return:this.state.listdata_return_original});
     }
     
@@ -98,8 +98,8 @@ export default class FlightResultArrival extends Component {
     
     filterProcess(filter)
     {
-        console.log("----------------filter------------------------------------");
-        console.log(filter);
+        //console.log("----------------filter------------------------------------");
+        //console.log(filter);
     
         var filter=filter;
         const products =this.state.listdata_return_original;
@@ -116,12 +116,12 @@ export default class FlightResultArrival extends Component {
         this.setState({listdata_return:filtered});
     
        
-        console.log("----------------hasil filter------------------------------------");
-        console.log(filtered);
+        //console.log("----------------hasil filter------------------------------------");
+        //console.log(filtered);
     
         }else{
-            console.log("----------------hasil filter------------------------------------");
-            console.log("null");
+            //console.log("----------------hasil filter------------------------------------");
+            //console.log("null");
             this.setState({listdata_return:[]});
         }
     }
@@ -129,7 +129,7 @@ export default class FlightResultArrival extends Component {
     sortProcess(listdata)
     {   
     
-       console.log('hasil sort',JSON.stringify(listdata));
+       //console.log('hasil sort',JSON.stringify(listdata));
        this.setState({listdata_return:listdata});
      
     }

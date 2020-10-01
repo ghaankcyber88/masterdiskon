@@ -43,7 +43,7 @@ export default class Hotel extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                //console.log('getConfig',config);
+                ////console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -65,7 +65,7 @@ export default class Hotel extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getProductHotelPackage",JSON.stringify(result));
+                    //console.log("getProductHotelPackage",JSON.stringify(result));
                     this.setState({loading_product_hotel_package: false });
                     this.setState({listdata_product_hotel_package: result});
                  },

@@ -78,8 +78,8 @@ export default class CheckOut extends Component {
     componentDidMount(){
        
                             // var timeLimit="2020-02-04T16:09:52";
-                            // console.log("---------------Time Limit------------");
-                            // console.log(this.convertTime(timeLimit));
+                            // //console.log("---------------Time Limit------------");
+                            // //console.log(this.convertTime(timeLimit));
                             // var numTimeLimit=this.convertTime(timeLimit);
                             // this.setState({numTimeLimit:numTimeLimit});
 
@@ -103,8 +103,8 @@ export default class CheckOut extends Component {
         var orderId=paymentFlight.orderid;
         
         var url="https://dev-api.megaelectra.co.id/crm/MyOrder/v2/"+orderId;
-        console.log("---------------url ------------");
-        console.log(url);
+        //console.log("---------------url ------------");
+        //console.log(url);
         
 
         this.setState({ loading_spinner: true }, () => {
@@ -112,8 +112,8 @@ export default class CheckOut extends Component {
                 if (result) {    
                         
                         var access_token=result;
-                        console.log("---------------token ------------");
-                        console.log(access_token);
+                        //console.log("---------------token ------------");
+                        //console.log(access_token);
                         //get payment
                         var myHeaders = new Headers();
                         myHeaders.append("Content-Type", "application/json");
@@ -130,16 +130,16 @@ export default class CheckOut extends Component {
                         .then(response => response.json())
                         .then(result => {
                             this.setState({ loading_spinner: false });
-                            console.log("---------------Data Order------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("---------------Data Order------------");
+                            //console.log(JSON.stringify(result));
                             var dataOrder=result;
                             var timeLimit=dataOrder.data.timeLimitPayment;
-                            console.log("---------------Time Limit------------");
-                            console.log(this.convertTime(timeLimit));
+                            //console.log("---------------Time Limit------------");
+                            //console.log(this.convertTime(timeLimit));
                             var numTimeLimit=this.convertTime(timeLimit);
                             this.setState({numTimeLimit:numTimeLimit});
                         })
-                        .catch(error => console.log('error', error));
+                        .catch(error => //console.log('error', error));
                         //get payment
                         
                 }

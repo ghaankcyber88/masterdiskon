@@ -47,7 +47,7 @@ export default class SignUp extends ValidationComponent {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                //console.log('getConfig',config);
+                ////console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -83,12 +83,12 @@ export default class SignUp extends ValidationComponent {
         } else {
             // this.setState({ loading: true }, () => {
                 var url=config.baseUrl+"front/api/AuthRegister/registrasi_proses_app";
-                console.log('onSubmitSignUP',url);
+                //console.log('onSubmitSignUP',url);
                 var data={"firstname":firstname,"lastname":lastname,"username":username,"password":password,"passwordConfirm":passwordConfirm,"email":email}
                 const param={"param":data}
 
-                console.log("------------------data param submit register--------------");
-                console.log(JSON.stringify(param));
+                //console.log("------------------data param submit register--------------");
+                //console.log(JSON.stringify(param));
         
                 var myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/json");
@@ -104,7 +104,7 @@ export default class SignUp extends ValidationComponent {
                 .then(response => response.json())
                 .then(result => {
                     this.setState({ loading: false });
-                    console.log(JSON.stringify(result));
+                    //console.log(JSON.stringify(result));
                     if(result.success==false){
                         this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.message));
                         //this.setState({ loading: false });
@@ -151,18 +151,18 @@ export default class SignUp extends ValidationComponent {
 
     //     if(passwordConfirm != '' && password !='' && email !='' && username !='' && firstname !='' && lastname !='' ){
     //             if(errorMsg !=''){
-    //                 console.log('not yet');
+    //                 //console.log('not yet');
     //                 this.setState({colorButton:BaseColor.greyColor});
     //                 this.setState({colorButtonText:BaseColor.whiteColor});
     //                 this.setState({disabledButton:true});
     //             }else{
-    //                 console.log('perfect');
+    //                 //console.log('perfect');
     //                 this.setState({colorButton:BaseColor.secondColor});
     //                 this.setState({colorButtonText:BaseColor.primaryColor});
     //                 this.setState({disabledButton:false});
     //             }
     //     }else{
-    //             console.log('not yet');
+    //             //console.log('not yet');
     //             this.setState({colorButton:BaseColor.greyColor});
     //             this.setState({colorButtonText:BaseColor.whiteColor});
     //             this.setState({disabledButton:true});
@@ -183,22 +183,22 @@ export default class SignUp extends ValidationComponent {
             email:email,
         }
 
-        console.log(JSON.stringify(dataForm));
+        //console.log(JSON.stringify(dataForm));
     
         if (firstname != "" && lastname != "" && username != "" && password != "" && passwordConfirm != "" && email != "") {
             // if(errorMsg !=''){
-            //             console.log('not yet');
+            //             //console.log('not yet');
             //             this.setState({colorButton:BaseColor.greyColor});
             //             this.setState({colorButtonText:BaseColor.whiteColor});
             //             this.setState({disabledButton:true});
             //         }else{
-                        console.log('perfect');
+                        //console.log('perfect');
                         this.setState({colorButton:BaseColor.secondColor});
                         this.setState({colorButtonText:BaseColor.primaryColor});
                         this.setState({disabledButton:false});
                    //}
             }else{
-                    console.log('not yet');
+                    //console.log('not yet');
                     this.setState({colorButton:BaseColor.greyColor});
                     this.setState({colorButtonText:BaseColor.whiteColor});
                     this.setState({disabledButton:true});

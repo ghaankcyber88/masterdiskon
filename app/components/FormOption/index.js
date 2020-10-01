@@ -22,7 +22,7 @@ export default class FormOption extends Component {
     }
 
     componentDidMount() {
-        console.log(optionSelectValue);
+        //console.log(optionSelectValue);
         const { modalVisible,style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
         this.setState({
             option: option.map(item => {
@@ -37,7 +37,7 @@ export default class FormOption extends Component {
     openModal() {
     
         const { modalVisible,style, label,option,optionSet,optionSelectText,optionSelectValue } = this.state;
-        console.log(optionSelectValue);
+        //console.log(optionSelectValue);
         
         this.setState({
             modalVisible: true,

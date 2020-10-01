@@ -32,7 +32,7 @@ export default class TourDetailCustom extends Component {
     constructor(props) {
         super(props);
         var product = this.props.navigation.state.params.product;
-        // console.log('TourDetailCustom',JSON.stringify(product));
+        // //console.log('TourDetailCustom',JSON.stringify(product));
 
         var minDate = new Date(); // Today
         minDate.setDate(minDate.getDate() + 7);
@@ -71,8 +71,8 @@ export default class TourDetailCustom extends Component {
     }
 
     setBookingTime(tglAwal, tglAkhir,round) {
-        console.log(tglAwal);
-        console.log(tglAkhir);
+        //console.log(tglAwal);
+        //console.log(tglAkhir);
         if (round ==true) {
             this.setState({tglAwal:tglAwal});
             this.setState({tglAkhir:tglAkhir});
@@ -228,9 +228,9 @@ export default class TourDetailCustom extends Component {
                     product:product,
                     productPart:select
                 });
-                // console.log('paramHotel',JSON.stringify(param));
-                // console.log('productHotel',JSON.stringify(product));
-                // console.log('productPartHotel',JSON.stringify(select));
+                // //console.log('paramHotel',JSON.stringify(param));
+                // //console.log('productHotel',JSON.stringify(product));
+                // //console.log('productPartHotel',JSON.stringify(select));
     }
 
 

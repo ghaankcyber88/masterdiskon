@@ -216,7 +216,7 @@ export default class DetailContact extends Component {
                 nationality_phone_code:nationality_phone_code
             }
     
-            console.log(JSON.stringify(dataForm));
+            //console.log(JSON.stringify(dataForm));
             
             
         this.state = {
@@ -300,11 +300,11 @@ export default class DetailContact extends Component {
       handleSelectItem(item, index) {
         const {onDropdownClose} = this.props;
         onDropdownClose();
-        console.log(item);
+        //console.log(item);
       }
     
       setCountry(id_country,country_name,phone_code){
-        console.log('passport_country_ids',id_country);
+        //console.log('passport_country_ids',id_country);
         this.setState({passport_country_id:id_country});
         // this.setState({passport_country_phone_code:phone_code});
         this.setState({passport_country:country_name});
@@ -314,7 +314,7 @@ export default class DetailContact extends Component {
       }
 
       setNationality(id_country,country_name,phone_code){
-        //console.log('nationality_ids',id_country);
+        ////console.log('nationality_ids',id_country);
         this.setState({nationality_id:id_country});
         //this.setState({nationality_phone_code:phone_code});
         this.setState({nationality:country_name});
@@ -325,7 +325,7 @@ export default class DetailContact extends Component {
     
 
       setPhoneCode(phone_code){
-        console.log('phonecodes',phone_code);
+        //console.log('phonecodes',phone_code);
         this.setState({nationality_phone_code:phone_code});
         setTimeout(() => {
             this.validation();
@@ -496,7 +496,7 @@ export default class DetailContact extends Component {
             nationality_phone_code:nationality_phone_code
         }
 
-        console.log(JSON.stringify(dataForm));
+        //console.log(JSON.stringify(dataForm));
 
 
         if(type=='customer'){
@@ -510,12 +510,12 @@ export default class DetailContact extends Component {
                 nationality !='' &&
                 nationality_phone_code !=''
             ){
-                    console.log('perfect');
+                    //console.log('perfect');
                     this.setState({colorButton:BaseColor.secondColor});
                     this.setState({colorButtonText:BaseColor.primaryColor});
                     this.setState({disabledButton:false});
             }else{
-                console.log('not yet');
+                //console.log('not yet');
                 this.setState({colorButton:BaseColor.greyColor});
                 this.setState({colorButtonText:BaseColor.whiteColor});
                 this.setState({disabledButton:true});
@@ -530,12 +530,12 @@ export default class DetailContact extends Component {
                     nationality !=''
 
                 ){
-                    console.log('perfect');
+                    //console.log('perfect');
                     this.setState({colorButton:BaseColor.secondColor});
                     this.setState({colorButtonText:BaseColor.primaryColor});
                     this.setState({disabledButton:false});
                 }else{
-                    console.log('not yet');
+                    //console.log('not yet');
                 this.setState({colorButton:BaseColor.greyColor});
                 this.setState({colorButtonText:BaseColor.whiteColor});
                 this.setState({disabledButton:true});
@@ -553,12 +553,12 @@ export default class DetailContact extends Component {
                     passport_expire !='' &&
                     passport_country !=''
                 ){
-                    console.log('perfect');
+                    //console.log('perfect');
                     this.setState({colorButton:BaseColor.secondColor});
                     this.setState({colorButtonText:BaseColor.primaryColor});
                     this.setState({disabledButton:false});
                 }else{
-                    console.log('not yet');
+                    //console.log('not yet');
                 this.setState({colorButton:BaseColor.greyColor});
                 this.setState({colorButtonText:BaseColor.whiteColor});
                 this.setState({disabledButton:true});
@@ -578,12 +578,12 @@ export default class DetailContact extends Component {
                 passport_expire !='' &&
                 passport_country !=''
             ){
-                console.log('perfect');
+                //console.log('perfect');
                     this.setState({colorButton:BaseColor.secondColor});
                     this.setState({colorButtonText:BaseColor.primaryColor});
                     this.setState({disabledButton:false});
             }else{
-                console.log('not yet');
+                //console.log('not yet');
                 this.setState({colorButton:BaseColor.greyColor});
                 this.setState({colorButtonText:BaseColor.whiteColor});
                 this.setState({disabledButton:true});

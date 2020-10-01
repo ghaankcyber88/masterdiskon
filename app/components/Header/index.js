@@ -49,7 +49,7 @@ export default class Header extends Component {
       />
     }
     return (
-      <View style={[{ height: 45, flexDirection: "row",backgroundColor:bgColor,marginTop:30}, style]}>
+      <View style={[{ height: 45, flexDirection: "row",backgroundColor:bgColor}, style]}>
         {/* <View style={{ flex: 1 }}>
           <TouchableOpacity
             style={[styles.contentLeft, styleLeft]}

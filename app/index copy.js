@@ -83,12 +83,12 @@ export default function index() {
     
 
     function onRegister(token) {
-      console.log("[App] onRegister: ", token);
+      //console.log("[App] onRegister: ", token);
       AsyncStorage.setItem('tokenFirebase', token);
     }
 
     function onNotification(notify) {
-      console.log("[App] onNotificationx: ", JSON.stringify(notify));
+      //console.log("[App] onNotificationx: ", JSON.stringify(notify));
       //alert("Open Notification: " + notify.body);
       var body_msg=notify.body;
       var body_array = body_msg.split("#");
@@ -102,7 +102,7 @@ export default function index() {
         bank: body_array[6]
       }
   
-      console.log('body_notif',JSON.stringify(body_notif));
+      //console.log('body_notif',JSON.stringify(body_notif));
       aeroPayment(body_notif);
       
       
@@ -122,7 +122,7 @@ export default function index() {
     }
 
     function onOpenNotification(notify) {
-      console.log("[App] onOpenNotification: ", notify)
+      //console.log("[App] onOpenNotification: ", notify)
       //alert("Open Notification: " + notify.body)
     }
     
@@ -138,7 +138,7 @@ export default function index() {
             let config = JSON.parse(result);
             body_notif.config=config;
             var paramPost={"param":body_notif}
-            console.log('aeroPaymentParam',JSON.stringify(paramPost));
+            //console.log('aeroPaymentParam',JSON.stringify(paramPost));
             
             var param={
                 method: 'POST',
@@ -154,7 +154,7 @@ export default function index() {
              
               return PostDataNew(url,dir,param)
                  .then((result) => {
-                      console.log('aeroPaymentResult',JSON.stringify(result));
+                      //console.log('aeroPaymentResult',JSON.stringify(result));
                     },
                  (error) => {
                      this.setState({ error });
@@ -184,7 +184,7 @@ export default function index() {
          
          return PostDataNew(url,dir,param)
            .then((result) => {
-            //console.log('getConfigIndex',JSON.stringify(result));
+            ////console.log('getConfigIndex',JSON.stringify(result));
             AsyncStorage.setItem('config', JSON.stringify(result)); 
             //setConfig(result);
               },
@@ -198,7 +198,7 @@ export default function index() {
   
     getConfig();
     return () => {
-      console.log("[App] unRegister")
+      //console.log("[App] unRegister")
       fcmService.unRegister()
       localNotificationService.unregister()
     }

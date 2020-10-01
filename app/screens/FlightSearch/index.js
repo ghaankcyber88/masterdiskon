@@ -146,7 +146,7 @@ export default class FlightSearch extends Component {
     }
 
     setqty(jml){
-        console.log(jml);
+        //console.log(jml);
         this.setState({qty:jml});
     }
     //-----function untuk hotel-----//
@@ -267,7 +267,7 @@ export default class FlightSearch extends Component {
                 param.Qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
                 param.participant=true;
 
-                console.log('typeFlight',JSON.stringify(param));
+                //console.log('typeFlight',JSON.stringify(param));
                 
                 this.props.navigation.navigate(link,
                 {
@@ -284,9 +284,9 @@ export default class FlightSearch extends Component {
                 param.totalPrice=parseInt(this.state.qty)*parseInt(productPart.price);
                 param.participant=true;
                 
-                console.log('paramHotel',JSON.stringify(param));
-                console.log('productHotel',JSON.stringify(product));
-                console.log('productPartHotel',JSON.stringify(productPart));
+                //console.log('paramHotel',JSON.stringify(param));
+                //console.log('productHotel',JSON.stringify(product));
+                //console.log('productPartHotel',JSON.stringify(productPart));
             
             
                 this.props.navigation.navigate(link,

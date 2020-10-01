@@ -64,7 +64,7 @@ export default class Tour extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                console.log('getConfig',config);
+                //console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -85,7 +85,7 @@ export default class Tour extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log("getProductTripTour",JSON.stringify(result));
+                    //console.log("getProductTripTour",JSON.stringify(result));
                     this.setState({loading_product_trip: false });
                     this.setState({listdata_product_trip: result});
                  },
@@ -101,14 +101,14 @@ export default class Tour extends Component {
     //     this.setState({ loading_spinner: true }, () => {
     //         const data={'id_trip':'','id_country':this.state.id_country,'harga_min':'','harga_max':''}
     //         const param={"param":data}
-    //         console.log('-------------param trip-------------');
-    //         console.log(JSON.stringify(param));
+    //         //console.log('-------------param trip-------------');
+    //         //console.log(JSON.stringify(param));
     //         PostData('trip',param)
     //             .then((result) => {
     //                 this.setState({ loading_spinner: false });
     //                 this.setState({listdata_trip: result});
-    //                 console.log("-------------GET TOUR--------------")
-    //                 console.log(JSON.stringify(result));
+    //                 //console.log("-------------GET TOUR--------------")
+    //                 //console.log(JSON.stringify(result));
     //             },
     //             (error) => {
     //                 this.setState({ error });

@@ -83,11 +83,11 @@ export default class PembayaranDetail extends Component {
         var id_order=param.id_order;
         var dataPayment=param.dataPayment;
         
-        console.log('dataPayments',JSON.stringify(dataPayment));
+        //console.log('dataPayments',JSON.stringify(dataPayment));
         
         AsyncStorage.getItem('tokenFirebase', (error, result) => {
             if (result) {
-                console.log('Token Firebase',result);
+                //console.log('Token Firebase',result);
                 this.setState({
                     tokenFirebase: result
                 });
@@ -119,16 +119,16 @@ export default class PembayaranDetail extends Component {
             "dataPayment":this.state.dataPayment,
             "tokenFirebase":this.state.tokenFirebase,
             }
-        console.log('paramPayMD',JSON.stringify(paramPayMD));
-        //console.log('paramPayMidtrans',JSON.stringify(paramPayMidtrans));
+        //console.log('paramPayMD',JSON.stringify(paramPayMD));
+        ////console.log('paramPayMidtrans',JSON.stringify(paramPayMidtrans));
         this.payMasterDiskon(paramPayMD);
         
     }
     
     payMasterDiskon(paramPayMD){
         this.setState({ loading_spinner: true }, () => {
-            console.log("---------------paramPayMD ------------");
-            console.log(JSON.stringify(paramPayMD));
+            //console.log("---------------paramPayMD ------------");
+            //console.log(JSON.stringify(paramPayMD));
 
             
             var myHeaders = new Headers();
@@ -146,8 +146,8 @@ export default class PembayaranDetail extends Component {
             fetch("https://masterdiskon.com/front/api/apiOrder/payment", requestOptions)
             .then(response => response.json())
             .then((result) => {
-                console.log("---------------result payment md ------------");
-                console.log(JSON.stringify(result));
+                //console.log("---------------result payment md ------------");
+                //console.log(JSON.stringify(result));
                 var id_invoice=result.id_invoice;
                 this.payMidtrans(id_invoice);
                 
@@ -189,7 +189,7 @@ export default class PembayaranDetail extends Component {
         
         
         
-        console.log('paramPay',JSON.stringify(paramPay))
+        //console.log('paramPay',JSON.stringify(paramPay))
         
         
         var myHeaders = new Headers();
@@ -210,8 +210,8 @@ export default class PembayaranDetail extends Component {
         fetch("https://api.sandbox.midtrans.com/v2/charge", requestOptions)
           .then(response => response.json())
           .then(result => {
-            console.log("---------------result payment midtarns ------------");
-            console.log(JSON.stringify(result));
+            //console.log("---------------result payment midtarns ------------");
+            //console.log(JSON.stringify(result));
             
             this.setState({ loading_spinner: false });
             
@@ -222,7 +222,7 @@ export default class PembayaranDetail extends Component {
                 }
             this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
           })
-          .catch(error => console.log('error', error));
+          .catch(error => //console.log('error', error));
     
     }
     
@@ -542,13 +542,13 @@ export default class PembayaranDetail extends Component {
            
     //     const data={"id_order":this.state.id_order}
     //     const param={"param":data}
-    //     console.log('-------------param change payment-------------');
-    //     console.log(JSON.stringify(param));
+    //     //console.log('-------------param change payment-------------');
+    //     //console.log(JSON.stringify(param));
 
     //     PostData('order_payment_delete',param)
     //         .then((result) => {
-    //             console.log("---------------get_booking_historys ------------");
-    //             console.log(JSON.stringify(result));
+    //             //console.log("---------------get_booking_historys ------------");
+    //             //console.log(JSON.stringify(result));
     //             //this.setState({dataBooking:result});
     //         },
     //         (error) => {
@@ -564,8 +564,8 @@ export default class PembayaranDetail extends Component {
         this.setState({ loading_spinner: true }, () => {
                     const data={"id_order":this.state.id_order}
                     const param={"param":data}
-                    console.log('-------------param change payment-------------');
-                    console.log(JSON.stringify(param));
+                    //console.log('-------------param change payment-------------');
+                    //console.log(JSON.stringify(param));
 
                     PostData('order_payment_delete',param)
                         .then((result) => {
@@ -601,8 +601,8 @@ export default class PembayaranDetail extends Component {
           .then(response => response.json())
           .then(result => {
                             this.setState({ loading_spinner: false });
-                            console.log("---------------cancel midtrans ------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("---------------cancel midtrans ------------");
+                            //console.log(JSON.stringify(result));
                             var redirect='Pembayaran';
                             var param={
                                 id_order:this.state.id_order,
@@ -610,7 +610,7 @@ export default class PembayaranDetail extends Component {
                             }
                             this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
           })
-          .catch(error => console.log('error', error)); 
+          .catch(error => //console.log('error', error)); 
     }
     
     fetch(){
@@ -619,23 +619,23 @@ export default class PembayaranDetail extends Component {
             AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
+                //console.log("---------------data session user  ------------");
+                //console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
                 
                 var id_user=userSession.id_user;
                     const data={"id":id_user,"id_order":this.state.id_order,"order_status":"","product":""}
                     const param={"param":data}
-                    console.log('-------------param booking-------------');
-                    console.log(JSON.stringify(param));
+                    //console.log('-------------param booking-------------');
+                    //console.log(JSON.stringify(param));
 
 
                     PostData('get_booking_history',param)
                         .then((result) => {
                             var dataBooking=result;
-                            console.log("---------------get_booking_historys ------------");
-                            console.log(JSON.stringify(result));
+                            //console.log("---------------get_booking_historys ------------");
+                            //console.log(JSON.stringify(result));
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:dataBooking});
                             
@@ -667,7 +667,7 @@ export default class PembayaranDetail extends Component {
     }
     
     fetchMidtrans(id_invoice){
-        console.log('id_invoice',id_invoice);
+        //console.log('id_invoice',id_invoice);
         var myHeaders = new Headers();
         myHeaders.append("Accept", "application/json");
         myHeaders.append("Content-Type", "application/json");
@@ -683,10 +683,10 @@ export default class PembayaranDetail extends Component {
           .then(response => response.json())
           .then(result => {
             var statusMidtrans=result;
-            console.log('status_midtrans',JSON.stringify(result));
+            //console.log('status_midtrans',JSON.stringify(result));
             this.setState({statusMidtrans:statusMidtrans});
           })
-          .catch(error => console.log('error', error));
+          .catch(error => //console.log('error', error));
 
     }
     

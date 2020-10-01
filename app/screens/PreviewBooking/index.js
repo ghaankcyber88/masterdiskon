@@ -36,7 +36,7 @@ export default class CheckOut extends Component {
     constructor(props) {
         super(props);
         item=this.props.navigation.state.params.item;
-        console.log("dataOrder",JSON.stringify(item));
+        //console.log("dataOrder",JSON.stringify(item));
       
 
         this.state = {

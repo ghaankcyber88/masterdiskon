@@ -64,13 +64,13 @@ export default class FilterSort extends Component {
         const { navigation } = this.props;
         var typeSort=selected.value;
         var listdata=this.props.listdata;
-        console.log('listdatasort',JSON.stringify(listdata));
+        //console.log('listdatasort',JSON.stringify(listdata));
         
         
         if(typeSort=='low_price'){
-            console.log('low_price',listdata.sort((a,b) =>  a.price_custom-b.price_custom ))
+            //console.log('low_price',listdata.sort((a,b) =>  a.price_custom-b.price_custom ))
         }else if(typeSort=='hight_price'){
-            console.log('hight_price',listdata.sort((a,b) =>  b.price_custom-a.price_custom ))
+            //console.log('hight_price',listdata.sort((a,b) =>  b.price_custom-a.price_custom ))
         }
         
         

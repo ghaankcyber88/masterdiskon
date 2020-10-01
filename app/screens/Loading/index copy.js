@@ -26,7 +26,7 @@ class Loading extends Component {
             if (result) {    
                 let userSession = JSON.parse(result);
                 var id_user=userSession.id_user;
-                console.log('getSessionLoading',userSession);
+                //console.log('getSessionLoading',userSession);
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
                 this.setState({login:true});
@@ -123,7 +123,7 @@ class Loading extends Component {
          PostDataNew(url,dir,param)
              .then((result) => {
                     var config=result;
-                    console.log('getConfig',JSON.stringify(config));
+                    //console.log('getConfig',JSON.stringify(config));
                     AsyncStorage.setItem('config', JSON.stringify(config)); 
                     navigation.navigate("Home");
              },
@@ -183,7 +183,7 @@ class Loading extends Component {
 
     componentDidMount() {
         setTimeout(() => {
-            console.log('statusLogin',this.state.login);
+            //console.log('statusLogin',this.state.login);
             this.onProcess();
         }, 500);
         

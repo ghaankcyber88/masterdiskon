@@ -42,8 +42,8 @@ export default class Cart extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
+                //console.log("---------------data session user  ------------");
+                //console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
 
@@ -98,8 +98,8 @@ export default class Cart extends Component {
         AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
             if (result) {
                 let dataCartArrayReal = JSON.parse(result);
-                console.log("---------------dataCartArrayReal pagez  ------------");
-                console.log(JSON.stringify(dataCartArrayReal));
+                //console.log("---------------dataCartArrayReal pagez  ------------");
+                //console.log(JSON.stringify(dataCartArrayReal));
 
                 var totalCartPriceReal=0;
                 dataCartArrayReal.map(item => {
@@ -116,8 +116,8 @@ export default class Cart extends Component {
         AsyncStorage.getItem('dataCartArray', (error, result) => {
             if (result) {
                 let dataCartArray = JSON.parse(result);
-                console.log("---------------dataCartArray page  ------------");
-                console.log(JSON.stringify(dataCartArray));
+                //console.log("---------------dataCartArray page  ------------");
+                //console.log(JSON.stringify(dataCartArray));
         
                 var totalCartPrice=0;
                 dataCartArray.map(item => {
@@ -146,7 +146,7 @@ export default class Cart extends Component {
     
     checkout(item){
         const { navigation } = this.props;
-        console.log('checkout',JSON.stringify(item));
+        //console.log('checkout',JSON.stringify(item));
         navigation.navigate("CheckOut",{item:item}); 
     }
 
@@ -260,8 +260,8 @@ export default class Cart extends Component {
                     "paramOther":this.state.paramOther,
                     }
                     
-                    console.log("---------------data cart array cart kirim  ------------");
-                    console.log(JSON.stringify(dataCartArrayRealSend));
+                    //console.log("---------------data cart array cart kirim  ------------");
+                    //console.log(JSON.stringify(dataCartArrayRealSend));
 
              
                     
@@ -281,8 +281,8 @@ export default class Cart extends Component {
                     // .then(response => response.json())
                     // .then((result) => {
                     //     var dataOrderSubmit=result;
-                    //     console.log("---------------status carts-------------");
-                    //     console.log(JSON.stringify(dataOrderSubmit));
+                    //     //console.log("---------------status carts-------------");
+                    //     //console.log(JSON.stringify(dataOrderSubmit));
                     //         this.setState({ loading: false });
                             
 

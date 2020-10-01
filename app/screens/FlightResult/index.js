@@ -67,7 +67,7 @@ export default class FlightResult extends Component {
         
         
         var paramUrl=Origin+Destination+DepartureDate+ReturnDate+Adults+Children+Infants+CorporateCode+Subclasses+CabinClass+Airlines;
-        console.log('paramUrl',JSON.stringify(paramUrl));
+        //console.log('paramUrl',JSON.stringify(paramUrl));
         
         this.state = {
             refreshing: false,
@@ -244,17 +244,17 @@ export default class FlightResult extends Component {
                             };
                             
                             var urlReq=url+"flight/search?"+paramUrl;
-                            console.log('urlReq',urlReq);
+                            //console.log('urlReq',urlReq);
                             fetch(urlReq, requestOptions)
                               .then(response => response.json())
                               .then(result => {
                                                             var length=result.data.departure.length;
-                                                            //console.log('getProduct',JSON.stringify(result.data.departure));
-                                                            console.log('flight_result',length);   
+                                                            ////console.log('getProduct',JSON.stringify(result.data.departure));
+                                                            //console.log('flight_result',length);   
 
                                                             if(length != 0){
                                                                 this.setState({ loading_spinner: false });
-                                                                //console.log('flight_result',JSON.stringify(result.data.departure));                            
+                                                                ////console.log('flight_result',JSON.stringify(result.data.departure));                            
                                                                 var listdata_departure=this.rebuild(result.data.departure);
                                                                 var listdata_return=this.rebuild(result.data.return);  
                                                                 
@@ -312,15 +312,15 @@ export default class FlightResult extends Component {
                             fetch(url+"flight/search/"+dataKey, requestOptions)
                               .then(response => response.json())
                               .then(result => {
-                                //console.log('getProductNext',JSON.stringify(result.data.departure));
+                                ////console.log('getProductNext',JSON.stringify(result.data.departure));
                                     
                                     var length=result.data.departure.length;
-                                    console.log('flight_result_next',length);   
+                                    //console.log('flight_result_next',length);   
 
                                     
                                     if(length != 0){
                                         this.setState({ loading_spinner: false });
-                                        //console.log('flight_result',JSON.stringify(result.data.departure));                            
+                                        ////console.log('flight_result',JSON.stringify(result.data.departure));                            
                                         var dataDeparture=result.data.departure;
                                         var dataReturn=result.data.return;
                                         
@@ -344,7 +344,7 @@ export default class FlightResult extends Component {
                                             listdata_return_state.push(rebuidReturn);
                                                                     
                                         })
-                                        //console.log('listdata_departure_state',JSON.stringify(listdata_departure_state));
+                                        ////console.log('listdata_departure_state',JSON.stringify(listdata_departure_state));
                                         
                                         const index = listdata_departure_state.findIndex(x => x.data_type === "sample");
                                         if (index !== undefined) listdata_departure_state.splice(index, 1);
@@ -434,8 +434,8 @@ export default class FlightResult extends Component {
     }
 
     onClear() {
-        console.log("---------------original------------------------------------");
-        console.log(JSON.stringify(this.state.listdata_departure_original));
+        //console.log("---------------original------------------------------------");
+        //console.log(JSON.stringify(this.state.listdata_departure_original));
         this.setState({listdata_departure:this.state.listdata_departure_original});
     }
 
@@ -453,8 +453,8 @@ export default class FlightResult extends Component {
 
     filterProcess(filter)
     {
-        console.log("----------------filter------------------------------------");
-        console.log(filter);
+        //console.log("----------------filter------------------------------------");
+        //console.log(filter);
 
         var filter=filter;
         const products =this.state.listdata_departure_original;
@@ -471,12 +471,12 @@ export default class FlightResult extends Component {
             this.setState({listdata_departure:filtered});
     
            
-            console.log("----------------hasil filter------------------------------------");
-            console.log(filtered);
+            //console.log("----------------hasil filter------------------------------------");
+            //console.log(filtered);
 
         }else{
-            console.log("----------------hasil filter------------------------------------");
-            console.log("null");
+            //console.log("----------------hasil filter------------------------------------");
+            //console.log("null");
             this.setState({listdata_departure:[]});
         }
     }
@@ -485,7 +485,7 @@ export default class FlightResult extends Component {
     sortProcess(listdata)
     {   
     
-       console.log('hasil sort',JSON.stringify(listdata));
+       //console.log('hasil sort',JSON.stringify(listdata));
        this.setState({listdata_departure:listdata});
      
     }

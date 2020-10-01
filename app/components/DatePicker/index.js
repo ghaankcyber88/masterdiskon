@@ -48,14 +48,14 @@ export default class DatePicker extends Component {
                                 minDate={"2019-05-10"}
                                 maxDate={"2019-05-30"}
                                 onDayPress={day => {
-                                    console.log("selected day", day);
+                                    //console.log("selected day", day);
                                 }}
                                 onDayLongPress={day => {
-                                    console.log("selected day", day);
+                                    //console.log("selected day", day);
                                 }}
                                 monthFormat={"dd-MM-yyyy"}
                                 onMonthChange={month => {
-                                    console.log("month changed", month);
+                                    //console.log("month changed", month);
                                 }}
                                 theme={{
                                     textSectionTitleColor:

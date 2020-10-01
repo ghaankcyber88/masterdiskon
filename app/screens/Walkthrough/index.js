@@ -119,7 +119,7 @@ class Walkthrough extends Component {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
             //alert(JSON.stringify(userInfo));
-            console.log(userInfo);
+            //console.log(userInfo);
             this.setState({ userInfo });
             this.authenticationCustom();
           } catch (error) {

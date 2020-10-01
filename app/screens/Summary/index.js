@@ -84,8 +84,8 @@ export default class Summary extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                //console.log("---------------data session user  ------------");
-                //console.log(JSON.stringify(userSession));
+                ////console.log("---------------data session user  ------------");
+                ////console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
 
@@ -97,7 +97,7 @@ export default class Summary extends Component {
         
         AsyncStorage.getItem('tokenFirebase', (error, result) => {
             if (result) {
-                //console.log('Token Firebase',result);
+                ////console.log('Token Firebase',result);
                 this.setState({
                     tokenFirebase: result
                 });
@@ -112,14 +112,14 @@ export default class Summary extends Component {
         var selectDataDeparture=[];
         if(this.props.navigation.state.params.selectDataDeparture){
             selectDataDeparture=this.props.navigation.state.params.selectDataDeparture;
-            //console.log('selectDataDeparture',JSON.stringify(selectDataDeparture));
+            ////console.log('selectDataDeparture',JSON.stringify(selectDataDeparture));
 
         }
 
         var selectDataReturn=[];
         if(this.props.navigation.state.params.selectDataReturn){
             selectDataReturn=this.props.navigation.state.params.selectDataReturn;
-            //console.log('selectDataReturn',JSON.stringify(selectDataReturn));
+            ////console.log('selectDataReturn',JSON.stringify(selectDataReturn));
         }
 
         var departurePost=[];
@@ -139,13 +139,13 @@ export default class Summary extends Component {
         var product=[];
         if(this.props.navigation.state.params.product){
             product=this.props.navigation.state.params.product;
-            //console.log('dataProduct',JSON.stringify(product));
+            ////console.log('dataProduct',JSON.stringify(product));
         }
         
         var productPart=[];
         if(this.props.navigation.state.params.productPart){
             productPart=this.props.navigation.state.params.productPart;
-            //console.log('dataProductPart',JSON.stringify(productPart));
+            ////console.log('dataProductPart',JSON.stringify(productPart));
         }
         //------------------------parameter untuk non flight-------------------//
         
@@ -161,7 +161,7 @@ export default class Summary extends Component {
             param=this.props.navigation.state.params.param;
         }
         
-        //console.log('params',JSON.stringify(param));
+        ////console.log('params',JSON.stringify(param));
    
         //------------------------parameter inti------------------------//
         
@@ -433,8 +433,8 @@ export default class Summary extends Component {
         }
         const param={"param":data}
         
-        //console.log("------------------data param typeFlight--------------");
-        //console.log(JSON.stringify(param));
+        ////console.log("------------------data param typeFlight--------------");
+        ////console.log(JSON.stringify(param));
 
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {   
@@ -448,7 +448,7 @@ export default class Summary extends Component {
 
                 //PostData('get_type_flight',param)
                                 .then((result) => {
-                                    //console.log(JSON.stringify(result));
+                                    ////console.log(JSON.stringify(result));
                                     this.setState({typeFlight:result.typeFlight})
     
                                 },
@@ -514,7 +514,7 @@ export default class Summary extends Component {
         }
  
         const callback = (res) => {
-            //console.log(res)
+            ////console.log(res)
         };
         
         var paramMidtrans={
@@ -526,7 +526,7 @@ export default class Summary extends Component {
             optionColorTheme,
             optionFont
         }
-        //console.log('paramMidtrans',JSON.stringify(paramMidtrans));
+        ////console.log('paramMidtrans',JSON.stringify(paramMidtrans));
         // PaymentGateway.checkOut(
         //     optionConnect,
         //     transRequest,
@@ -746,7 +746,7 @@ export default class Summary extends Component {
                     "typeProduct": "hotelpackage"
                 }
                 var cartToBeSaved=dataCart;
-                console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
+                //console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
                 this.onSubmitOrder(cartToBeSaved);
         
         }else{
@@ -897,9 +897,9 @@ export default class Summary extends Component {
 
             };
 
-            //console.log('--parameter cartSSSSSS--');
-            //console.log(JSON.stringify(paramGetCart));
-            //console.log('------------------');
+            ////console.log('--parameter cartSSSSSS--');
+            ////console.log(JSON.stringify(paramGetCart));
+            ////console.log('------------------');
 
             
                 this.setState({ loading_spinner: true }, () => {
@@ -928,12 +928,12 @@ export default class Summary extends Component {
                         redirect: 'follow'
                         };
                         
-                        //console.log('paramcart',raw);
+                        ////console.log('paramcart',raw);
                         
                         PostDataNew(url,'flight/Cart',requestOptions)
                                      .then((result) => {
-                                        // //console.log("---------------cart  ------------");
-                                        // //console.log(JSON.stringify(result));
+                                        // ////console.log("---------------cart  ------------");
+                                        // ////console.log(JSON.stringify(result));
                                         //this.setState({ loading_spinner: false });
 
                                         if(result.errors){
@@ -1007,8 +1007,8 @@ export default class Summary extends Component {
                     "otherUser":this.state.otherUser
                     }
                     
-                    console.log("---------------data cart array cart kirim  ------------");
-                    console.log(JSON.stringify(dataCartArrayRealSend));
+                    //console.log("---------------data cart array cart kirim  ------------");
+                    //console.log(JSON.stringify(dataCartArrayRealSend));
 
              
                     
@@ -1070,11 +1070,11 @@ export default class Summary extends Component {
             AsyncStorage.getItem('userSession', (error, result) => {
                 if (result) {  
                     let userSession = JSON.parse(result);
-                    //console.log('userSession',JSON.stringify(userSession));
+                    ////console.log('userSession',JSON.stringify(userSession));
                     
                     
                     var customer=this.state.listdata_customer[0];
-                    //console.log('data contact',JSON.stringify(customer));
+                    ////console.log('data contact',JSON.stringify(customer));
 
                     var otherUser=this.state.otherUser;
                     if(otherUser){
@@ -1143,7 +1143,7 @@ export default class Summary extends Component {
                     }
                 
                     
-                    //console.log('newUserSession',JSON.stringify(newUserSession))
+                    ////console.log('newUserSession',JSON.stringify(newUserSession))
                     AsyncStorage.setItem('userSession', JSON.stringify(newUserSession));
 
                 }
@@ -1157,8 +1157,8 @@ export default class Summary extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                //console.log("---------------data session user  ------------");
-                //console.log(JSON.stringify(userSession));
+                ////console.log("---------------data session user  ------------");
+                ////console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
     
@@ -1230,9 +1230,9 @@ export default class Summary extends Component {
              
                         PostData('user/participant_save',param)
                             .then((result) => {
-                                //console.log("------------------result save profle-------------");
+                                ////console.log("------------------result save profle-------------");
 
-                            //console.log(JSON.stringify(result));
+                            ////console.log(JSON.stringify(result));
 
                             },
                             (error) => {
@@ -1271,8 +1271,8 @@ export default class Summary extends Component {
 
         const  filtered = this.filterArray(products, filters);
         var jml=filtered.length;
-        //console.log("----------------validation participant------------------------------------");
-        //console.log(JSON.stringify(filtered));
+        ////console.log("----------------validation participant------------------------------------");
+        ////console.log(JSON.stringify(filtered));
         return jml;
     }
     
@@ -1290,8 +1290,8 @@ export default class Summary extends Component {
 
         const  filtered = this.filterArray(products, filters);
         var jml=filtered.length;
-        //console.log("----------------validation participant------------------------------------");
-        //console.log(JSON.stringify(filtered));
+        ////console.log("----------------validation participant------------------------------------");
+        ////console.log(JSON.stringify(filtered));
         return jml;
     }
 
@@ -1299,19 +1299,19 @@ export default class Summary extends Component {
         var jml_empty_participant=this.validaton_participant();
         var jml_empty_customer=this.validaton_customer();
 
-        //console.log("----------------jml kosong participant------------------------------------");
-        //console.log(jml_empty_participant);
+        ////console.log("----------------jml kosong participant------------------------------------");
+        ////console.log(jml_empty_participant);
 
-        //console.log("----------------jml kosong customer------------------------------------");
-        //console.log(jml_empty_customer);
+        ////console.log("----------------jml kosong customer------------------------------------");
+        ////console.log(jml_empty_customer);
 
         if(jml_empty_participant == 0 && jml_empty_customer == 0 ){
-                    //console.log('perfect');
+                    ////console.log('perfect');
                     this.setState({colorButton:BaseColor.secondColor});
                     this.setState({colorButtonText:BaseColor.primaryColor});
                     this.setState({disabledButton:false});
         }else{
-            //console.log('not yet');
+            ////console.log('not yet');
                 this.setState({colorButton:BaseColor.greyColor});
                 this.setState({colorButtonText:BaseColor.whiteColor});
                 this.setState({disabledButton:true});
@@ -1340,8 +1340,8 @@ export default class Summary extends Component {
         old_select
         ){
     
-            console.log('old',old);
-            console.log('old_select',old_select);
+            //console.log('old',old);
+            //console.log('old_select',old_select);
 
     if(type=='guest'){
         if(old != old_select){
@@ -1386,7 +1386,7 @@ export default class Summary extends Component {
                     this.setState({listdata_participant:newProjects});
                     
                     setTimeout(() => {
-                        console.log('listdata_participantss',JSON.stringify(this.state.listdata_participant));
+                        //console.log('listdata_participantss',JSON.stringify(this.state.listdata_participant));
                     }, 500);
             
                 }
@@ -1485,7 +1485,7 @@ export default class Summary extends Component {
     //             if (result) {    
     //                 this.setState({loading_config: false });
     //                 let config = JSON.parse(result);
-    //                 //console.log('dataConfig',JSON.stringify(config));
+    //                 ////console.log('dataConfig',JSON.stringify(config));
     //                 this.setState({config:config});
     //             }
     //         });
@@ -1525,7 +1525,7 @@ export default class Summary extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {  
             let userSession = JSON.parse(result);
-            //console.log('dataCustomer',JSON.stringify(userSession));
+            ////console.log('dataCustomer',JSON.stringify(userSession));
             var customer = [];
             for (var i=1; i<=1; i++) {
             var obj = {};
@@ -1627,7 +1627,7 @@ export default class Summary extends Component {
         
         this.setState({ reminders: value });
         var customer=this.state.listdata_customer[0];
-        //console.log('datacustomerswtich',JSON.stringify(customer));
+        ////console.log('datacustomerswtich',JSON.stringify(customer));
 
         if(value==true){
         var key=1;
@@ -1659,7 +1659,7 @@ export default class Summary extends Component {
             
             
         }
-        //console.log('paraVal',JSON.stringify(paraVal));
+        ////console.log('paraVal',JSON.stringify(paraVal));
         
         if( 
             firstname == "" || 
@@ -1760,7 +1760,7 @@ export default class Summary extends Component {
 
     toggleSwitchOtherUser = value => {
         this.setState({ remindersOtherUser: value });
-        //console.log('status pengguna lain',value);
+        ////console.log('status pengguna lain',value);
         if(value==true){
             this.setState({otherUser:true});
         }else{

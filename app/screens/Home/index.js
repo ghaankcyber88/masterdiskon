@@ -184,7 +184,7 @@ export default class Home extends Component {
     }
 
     setqty(jml){
-        console.log(jml);
+        //console.log(jml);
         this.setState({qty:jml});
     }
     //-----function untuk hotel-----//
@@ -305,7 +305,7 @@ export default class Home extends Component {
                 param.Qty=parseInt(param.Adults)+parseInt(param.Children)+parseInt(param.Infants);
                 param.participant=true;
 
-                console.log('typeFlight',JSON.stringify(param));
+                //console.log('typeFlight',JSON.stringify(param));
                 
                 this.props.navigation.navigate(link,
                 {
@@ -322,9 +322,9 @@ export default class Home extends Component {
                 param.totalPrice=parseInt(this.state.qty)*parseInt(productPart.price);
                 param.participant=true;
                 
-                console.log('paramHotel',JSON.stringify(param));
-                console.log('productHotel',JSON.stringify(product));
-                console.log('productPartHotel',JSON.stringify(productPart));
+                //console.log('paramHotel',JSON.stringify(param));
+                //console.log('productHotel',JSON.stringify(product));
+                //console.log('productPartHotel',JSON.stringify(productPart));
             
             
                 this.props.navigation.navigate(link,
@@ -581,7 +581,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log('listdata_product_trip',JSON.stringify(result));
+                    //console.log('listdata_product_trip',JSON.stringify(result));
                     this.setState({loading_product_trip: false });
                     this.setState({listdata_product_trip: result});
                  },
@@ -634,7 +634,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log('listdata_product_hotel_package',JSON.stringify(result));
+                    //console.log('listdata_product_hotel_package',JSON.stringify(result));
                     this.setState({loading_product_hotel_package: false });
                     this.setState({listdata_product_hotel_package: result});
                  },
@@ -660,7 +660,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log('getProductFlash',JSON.stringify(result));
+                    ////console.log('getProductFlash',JSON.stringify(result));
                     this.setState({loading_product_flash: false });
                     this.setState({listdata_product_flash: result.daftar});
                  },

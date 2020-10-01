@@ -21,7 +21,7 @@ import { WebView } from 'react-native-webview';
 export default class Musium extends Component {
     constructor(props) {
         var url=props.navigation.state.params.url;
-        console.log('https://artsandculture.google.com'+url);
+        //console.log('https://artsandculture.google.com'+url);
         super(props);
         this.state = {
             url:url,

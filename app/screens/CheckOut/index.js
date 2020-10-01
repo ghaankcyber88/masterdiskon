@@ -41,8 +41,8 @@ export default class CheckOut extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {
                 let userSession = JSON.parse(result);
-                console.log("---------------data session user  ------------");
-                console.log(JSON.stringify(userSession));
+                //console.log("---------------data session user  ------------");
+                //console.log(JSON.stringify(userSession));
                 this.setState({userSession:userSession});
                 this.setState({login:true});
 
@@ -106,8 +106,8 @@ export default class CheckOut extends Component {
                         },
                     }
                     
-                    console.log("---------------data cart array cart kirim  ------------");
-                    console.log(JSON.stringify(dataCartArrayRealSend));
+                    //console.log("---------------data cart array cart kirim  ------------");
+                    //console.log(JSON.stringify(dataCartArrayRealSend));
 
              
                     
@@ -127,8 +127,8 @@ export default class CheckOut extends Component {
                     // .then(response => response.json())
                     // .then((result) => {
                     //     var dataOrderSubmit=result;
-                    //     console.log("---------------status carts-------------");
-                    //     console.log(JSON.stringify(dataOrderSubmit));
+                    //     //console.log("---------------status carts-------------");
+                    //     //console.log(JSON.stringify(dataOrderSubmit));
                     //         this.setState({ loading: false });
                             
                                 

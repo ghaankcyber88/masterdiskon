@@ -213,7 +213,7 @@ export default class HotelSearch extends Component {
             "Airlines": [],
             "Qty":this.state.qty
             }
-            console.log('param',JSON.stringify(param));
+            //console.log('param',JSON.stringify(param));
     
             var paramOther={
             "bandaraAsalLabel":'',
@@ -221,13 +221,13 @@ export default class HotelSearch extends Component {
             "type":'hotel'
             }
             
-            console.log('paramOther',JSON.stringify(paramOther));
+            //console.log('paramOther',JSON.stringify(paramOther));
     
     
     
         
         var paramUrl='checkin='+checkin+'&checkout='+checkout+'&adults='+adults+'&children='+children+'&room='+qty;
-        console.log('paramHotale',param);
+        //console.log('paramHotale',param);
         this.props.navigation.navigate('Hotel',
         {
             city:cityId,
@@ -246,7 +246,7 @@ export default class HotelSearch extends Component {
     //              .then((result) => {
     //                 this.setState({loading_hotels: false });
     //                  //this.setState({listdata_trip_dunia: result});
-    //                  console.log('loading_hotels',JSON.stringify(result));
+    //                  //console.log('loading_hotels',JSON.stringify(result));
     //                  var destination=result.destination;
     //                  var top=result.top;
     //                  //var package=result.package;
@@ -275,7 +275,7 @@ export default class HotelSearch extends Component {
                  .then((result) => {
                     this.setState({loading_hotels: false });
                      //this.setState({listdata_trip_dunia: result});
-                     console.log('loading_hotels',JSON.stringify(result));
+                     //console.log('loading_hotels',JSON.stringify(result));
                      var destination=result.destination;
                      var top=result.top;
                      //var package=result.package;
@@ -316,22 +316,22 @@ export default class HotelSearch extends Component {
 
 
     setJumlahDewasa(jml){
-        console.log(jml);
+        //console.log(jml);
           this.setState({dewasa:jml});
     }
 
     setJumlahAnak(jml){
-        console.log(jml);
+        //console.log(jml);
         this.setState({anak:jml});
     }
 
     setJumlahBayi(jml){
-        console.log(jml);
+        //console.log(jml);
         this.setState({bayi:jml});
     }
     
     setqty(jml){
-        console.log(jml);
+        //console.log(jml);
         this.setState({qty:jml});
     }
     

@@ -79,7 +79,7 @@ export default class CartCard extends Component {
                         + currentdate.getHours() + ":"  
                         + currentdate.getMinutes() + ":" 
                         + currentdate.getSeconds();        
-        console.log('dates',datetime);
+        //console.log('dates',datetime);
         //time_limit: "2020-06-17T13:37:00",
         var timeLimit=this.props.timeLimit;
         if(timeLimit===0){
@@ -170,7 +170,7 @@ export default class CartCard extends Component {
         //     kelas="First Class";
         // }
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-        console.log(timeLimit);
+        //console.log(timeLimit);
         let { loading } = this.state;
         //var numTimeLimit=this.duration(timeLimit);
 

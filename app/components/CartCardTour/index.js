@@ -156,7 +156,7 @@ export default class CartCardTour extends Component {
         //     kelas="First Class";
         // }
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-        console.log(timeLimit);
+        //console.log(timeLimit);
         let { loading } = this.state;
         //var numTimeLimit=this.duration(timeLimit);
 

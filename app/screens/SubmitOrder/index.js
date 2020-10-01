@@ -232,8 +232,8 @@ export default class SubmitOrder extends Component {
                     .then(result => {
                         this.setState({ loading_spinner: false });
                         // var cart_id=result.data.id;
-                        console.log("---------------cart  ------------");
-                        console.log(JSON.stringify(result));
+                        //console.log("---------------cart  ------------");
+                        //console.log(JSON.stringify(result));
                         
                         var dataCart=result.data;
                         this.setState({dataCart:dataCart});
@@ -291,7 +291,7 @@ export default class SubmitOrder extends Component {
 
         //     PostData('submitbook_order',data)
         //         .then((result) => {
-        //         console.log(JSON.stringify(result));
+        //         //console.log(JSON.stringify(result));
         //         id_order=result.id_order;
         //         total_price=result.total_price;
         //         this.setState({id_order:id_order});
@@ -316,8 +316,8 @@ export default class SubmitOrder extends Component {
             //this.setState({listdata});
         var id_order_payment=result.key;
         //alert(result.key);
-        console.log("---------------ID ORDER PAYMENT------------");
-        console.log(id_order_payment);
+        //console.log("---------------ID ORDER PAYMENT------------");
+        //console.log(id_order_payment);
         this.confirm_wa(id_order_payment);
         
         // this.props.navigation.navigate('PageConfirmationVA',
@@ -335,8 +335,8 @@ export default class SubmitOrder extends Component {
         //alert(id_order_payment);
         PostData('api/confirmation_va_app/'+id_order_payment)
             .then((result) => {
-                console.log("---------------Virtual Account------------");
-            console.log(JSON.stringify(result));
+                //console.log("---------------Virtual Account------------");
+            //console.log(JSON.stringify(result));
             this.setState({dataVa:result.va});
          
 

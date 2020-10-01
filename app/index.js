@@ -73,11 +73,11 @@ export default function index() {
             ko: require("./lang/ko.json"),
             vi: require("./lang/vi.json")
     };
-    StatusBar.setBackgroundColor(BaseColor.whiteColor, true);
+    StatusBar.setBackgroundColor(BaseColor.whiteColor, false);
     StatusBar.setBackgroundColor("rgba(0,0,0,0)");
     
     StatusBar.setBackgroundColor("rgba(0,0,0,0)");
-    StatusBar.setTranslucent(true);
+    StatusBar.setTranslucent(false);
     
     
     //notification START------------------------------------------------------//
@@ -86,12 +86,12 @@ export default function index() {
     localNotificationService.configure(onOpenNotification)
 
     function onRegister(token) {
-      console.log("[App] onRegister: ", token);
+      //console.log("[App] onRegister: ", token);
       AsyncStorage.setItem('tokenFirebase', token);
     }
 
     function onNotification(notify) {
-      console.log("[App] onNotificationx: ", JSON.stringify(notify));
+      //console.log("[App] onNotificationx: ", JSON.stringify(notify));
       
       var body_msg=notify.body;
       var body_array = body_msg.split("#");
@@ -105,7 +105,7 @@ export default function index() {
         bank: body_array[6]
       }
   
-      console.log('body_notifonNotification',JSON.stringify(body_notif));
+      //console.log('body_notifonNotification',JSON.stringify(body_notif));
       //aeroPayment(body_notif);
 
       const options = {
@@ -124,15 +124,15 @@ export default function index() {
     }
 
     function onOpenNotification(notify) {
-      console.log("[App] onOpenNotification: ", notify)
+      //console.log("[App] onOpenNotification: ", notify)
     }
     
     // function aeroPayment(body_notif){
-    //         console.log('body_notifaeroPayment',JSON.stringify(body_notif))
+    //         //console.log('body_notifaeroPayment',JSON.stringify(body_notif))
     //         var url=dataMasterDiskon.baseUrl;
     //         var dir='front/api/payment/notification';
     //         var paramPost={"param":body_notif}
-    //         console.log('aeroPaymentParam',JSON.stringify(paramPost));
+    //         //console.log('aeroPaymentParam',JSON.stringify(paramPost));
             
     //         var param={
     //             method: 'POST',
@@ -147,7 +147,7 @@ export default function index() {
              
     //           return PostDataNew(url,dir,param)
     //              .then((result) => {
-    //                   console.log('aeroPaymentResult',JSON.stringify(result));
+    //                   //console.log('aeroPaymentResult',JSON.stringify(result));
     //                 },
     //              (error) => {
     //                  this.setState({ error });
@@ -158,7 +158,7 @@ export default function index() {
      //notification END------------------------------------------------------//
  
     return () => {
-      console.log("[App] unRegister")
+      //console.log("[App] unRegister")
       fcmService.unRegister()
       localNotificationService.unregister()
     }

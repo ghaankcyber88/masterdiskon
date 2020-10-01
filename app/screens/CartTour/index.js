@@ -95,8 +95,8 @@ export default class CartTour extends Component {
         const offsetAnim = new Animated.Value(0);
         var dataOrder=this.props.navigation.state.params.dataOrder;
         var dataOrderSubmit=this.props.navigation.state.params.dataOrderSubmit;
-        console.log("-----------DATA ORDER TRIP");
-        console.log(JSON.stringify(dataOrder));
+        //console.log("-----------DATA ORDER TRIP");
+        //console.log(JSON.stringify(dataOrder));
         //alert(dataOrder.contact.first_name);
       
         this.state = {
@@ -182,8 +182,8 @@ export default class CartTour extends Component {
         AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
             if (result) {
                 let dataCartArrayReal = JSON.parse(result);
-                console.log("---------------data cart array cart page  ------------");
-                console.log(JSON.stringify(dataCartArrayReal));
+                //console.log("---------------data cart array cart page  ------------");
+                //console.log(JSON.stringify(dataCartArrayReal));
 
                 var totalCartPriceReal=0;
                 dataCartArrayReal.map(item => {
@@ -200,8 +200,8 @@ export default class CartTour extends Component {
         AsyncStorage.getItem('dataCartArray', (error, result) => {
             if (result) {
                 let dataCartArray = JSON.parse(result);
-                console.log("---------------data cart array cart page  ------------");
-                console.log(JSON.stringify(dataCartArray));
+                //console.log("---------------data cart array cart page  ------------");
+                //console.log(JSON.stringify(dataCartArray));
         
                 var totalCartPrice=0;
                 dataCartArray.map(item => {
@@ -372,8 +372,8 @@ export default class CartTour extends Component {
         // AsyncStorage.getItem('dataCartArrayReal', (error, result) => {
         //     if (result) {
         //         let dataCartArrayReal = JSON.parse(result);
-        //         console.log("---------------data cart array cart page  ------------");
-        //         console.log(JSON.stringify(dataCartArrayReal));
+        //         //console.log("---------------data cart array cart page  ------------");
+        //         //console.log(JSON.stringify(dataCartArrayReal));
 
         //         var totalCartPriceReal=0;
         //         dataCartArrayReal.map(item => {
@@ -438,8 +438,8 @@ export default class CartTour extends Component {
         //             "dataCart":this.state.dataCart
         //             }
                     
-        //             console.log("---------------data cart array cart kirim  ------------");
-        //             console.log(JSON.stringify(dataCartArrayRealSend));
+        //             //console.log("---------------data cart array cart kirim  ------------");
+        //             //console.log(JSON.stringify(dataCartArrayRealSend));
 
              
 
@@ -458,8 +458,8 @@ export default class CartTour extends Component {
         //             fetch("https://masterdiskon.com/front/product/flightapp/fu_submit_flight", requestOptions)
         //             .then(response => response.json())
         //             .then((result) => {
-        //                 console.log("---------------status cart ------------");
-        //                 console.log(JSON.stringify(result));
+        //                 //console.log("---------------status cart ------------");
+        //                 //console.log(JSON.stringify(result));
         //                     this.setState({ loading: false });
         //                         id_order=result.id_order;
         //                         pay=result.pay;
@@ -501,9 +501,9 @@ export default class CartTour extends Component {
             pay=dataOrderSubmit.pay;
         }
 
-        console.log("---------------PARAM Virtual Payment------------");
-        console.log(pay);    
-        console.log(id_order); 
+        //console.log("---------------PARAM Virtual Payment------------");
+        //console.log(pay);    
+        //console.log(id_order); 
 
         
 
@@ -516,16 +516,16 @@ export default class CartTour extends Component {
             redirect: 'follow'
           };
           
-          console.log("---------------URL GET VA------------");
-          console.log("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay+"&payment_method="+this.state.payment_method);
+          //console.log("---------------URL GET VA------------");
+          //console.log("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay+"&payment_method="+this.state.payment_method);
           
           fetch("https://masterdiskon.com/front/order/bayar/fu_get_virtualaccount_app?id_order="+id_order+"&pay="+pay+"&payment_method="+this.state.payment_method, requestOptions)
             .then(response => response.json())
             .then((result) => {
                 this.setState({ loading: false });
             var id_order_payment=result.key;
-            console.log("---------------ID ORDER PAYMENT------------");
-            console.log(id_order_payment);
+            //console.log("---------------ID ORDER PAYMENT------------");
+            //console.log(id_order_payment);
             this.confirm_wa(id_order_payment,dataOrderSubmit);
             },
             (error) => {
@@ -549,8 +549,8 @@ export default class CartTour extends Component {
             .then(response => response.json())
             .then((result) => {
                 this.setState({ loading: false });
-                console.log("---------------Virtual Account------------");
-                console.log(JSON.stringify(result));
+                //console.log("---------------Virtual Account------------");
+                //console.log(JSON.stringify(result));
                 var expirydate=result.va.expired;
                 var expirydateNum=this.duration(expirydate);
                 var countDown=expirydateNum;
@@ -562,7 +562,7 @@ export default class CartTour extends Component {
                 // }else if (expirydateNum == minTimeLimit){
                 //     countDown=expirydateNum;
                 // }
-                console.log(expirydate);
+                //console.log(expirydate);
                 // this.setState({dataVa:result.va});
                
                 setTimeout(() => {

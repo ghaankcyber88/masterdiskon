@@ -2,7 +2,7 @@
 
 export function PostDataNew(BaseUrl,type,param){
 	//let BaseUrl='https://masterdiskon.co.id/front/api/api/';
-	console.log('urlTujuan',BaseUrl+type);
+	//console.log('urlTujuan',BaseUrl+type);
 	return new Promise((resolve,reject)=>{ 
 	    fetch(BaseUrl+type,param)
 		    .then((response) => response.json())

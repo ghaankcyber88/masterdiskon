@@ -210,7 +210,7 @@ export default class ProfileEdit extends Component {
                 nationality_phone_code:nationality_phone_code
             }
     
-            console.log(JSON.stringify(dataForm));
+            //console.log(JSON.stringify(dataForm));
             
             
         this.state = {
@@ -258,7 +258,7 @@ export default class ProfileEdit extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                //console.log('getConfig',config);
+                ////console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -269,7 +269,7 @@ export default class ProfileEdit extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {    
                 let userSession = JSON.parse(result);
-                console.log('userSession',userSession);
+                //console.log('userSession',userSession);
                 var id_user=userSession.id_user;
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
@@ -313,7 +313,7 @@ export default class ProfileEdit extends Component {
     
 
       setCountry(id_country,country_name,phone_code){
-        console.log('passport_country_ids',id_country);
+        //console.log('passport_country_ids',id_country);
         this.setState({passport_country_id:id_country});
         this.setState({passport_country:country_name});
         setTimeout(() => {
@@ -331,7 +331,7 @@ export default class ProfileEdit extends Component {
     
 
       setPhoneCode(phone_code){
-        console.log('phonecodes',phone_code);
+        //console.log('phonecodes',phone_code);
         this.setState({nationality_phone_code:phone_code});
         setTimeout(() => {
             //this.validation();
@@ -455,7 +455,7 @@ export default class ProfileEdit extends Component {
         //         this.setState({loading_spinner: false });
         //         this.setState({dataBooking: result});
         //       })
-        //       .catch(error => console.log('error', error));
+        //       .catch(error => //console.log('error', error));
       }
 
       renderPicker() {

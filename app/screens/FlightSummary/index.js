@@ -82,7 +82,7 @@ export default class FlightSummary extends Component {
             });
 
             // for (a=1; a < arrOldGuest.length ; a++) {
-            //     console.log(arrOldGuest[a]);
+            //     //console.log(arrOldGuest[a]);
             // }
         //---------------------------------------------//
 
@@ -155,8 +155,8 @@ export default class FlightSummary extends Component {
             if (result) {    
                     
                     var access_token=result;
-                    console.log("---------------token ------------");
-                    console.log(access_token);
+                    //console.log("---------------token ------------");
+                    //console.log(access_token);
                     //get payment
                     var myHeaders = new Headers();
                     myHeaders.append("Content-Type", "application/json");
@@ -174,9 +174,9 @@ export default class FlightSummary extends Component {
                     fetch("https://dev-api.megaelectra.co.id/crm/MyOrder/v2/22020200000072", requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        console.log("---------------Data Order------------");
+                        //console.log("---------------Data Order------------");
                         var dataOrder=result;
-                        console.log(JSON.stringify(dataOrder));
+                        //console.log(JSON.stringify(dataOrder));
                     })
                     .catch(error => console.log('error', error));
             }
@@ -189,8 +189,8 @@ export default class FlightSummary extends Component {
     //         if (result) {    
                     
     //                 var access_token=result;
-    //                 console.log("---------------token ------------");
-    //                 console.log(access_token);
+    //                 //console.log("---------------token ------------");
+    //                 //console.log(access_token);
     //                 //get payment
     //                 var myHeaders = new Headers();
     //                 myHeaders.append("Content-Type", "application/json");
@@ -204,8 +204,8 @@ export default class FlightSummary extends Component {
     //                     "fee":0,"currency":"IDR",
     //                     "back_url":"http://dev.megaelectra.co.id/paymentconfirmation?token="+access_token,
     //                     "cart_id":[cart_id]});
-    //                 console.log("---------------param payment ------------");
-    //                 console.log(raw);
+    //                 //console.log("---------------param payment ------------");
+    //                 //console.log(raw);
     //                 var requestOptions = {
     //                 method: 'POST',
     //                 headers: myHeaders,
@@ -218,10 +218,10 @@ export default class FlightSummary extends Component {
     //                 .then(result => {
     //                     var dataPayment=result;
     //                     var paymentFlight=this.state.dataPayment.data.flight[0].data;
-    //                     console.log(JSON.stringify(paymentFlight));
+    //                     //console.log(JSON.stringify(paymentFlight));
     //                     var orderId=paymentFlight.orderid;
-    //                     console.log("---------------order id------------");
-    //                     console.log(orderId);
+    //                     //console.log("---------------order id------------");
+    //                     //console.log(orderId);
     //                     //this.toPayment(orderId);
     //                     setTimeout(() => {
     //                         this.toPayment(orderId);
@@ -255,9 +255,9 @@ export default class FlightSummary extends Component {
         var dataPrice=this.state.dataPrice;
         var departurePrice=dataPrice.data.detail_price[0];
         var returnPrice=dataPrice.data.detail_price[1];
-        console.log('--param------------');
-        console.log(JSON.stringify(param));
-        console.log('------------------');
+        //console.log('--param------------');
+        //console.log(JSON.stringify(param));
+        //console.log('------------------');
         
         var departureCart={
             "international": departurePost.international,
@@ -395,9 +395,9 @@ export default class FlightSummary extends Component {
 
         };
 
-        console.log('--parameter cartSSSSSS--');
-        console.log(JSON.stringify(paramGetCart));
-        console.log('------------------');
+        //console.log('--parameter cartSSSSSS--');
+        //console.log(JSON.stringify(paramGetCart));
+        //console.log('------------------');
 
         
         this.setState({ loading: true }, () => {
@@ -421,8 +421,8 @@ export default class FlightSummary extends Component {
                     fetch("https://dev-api.megaelectra.co.id/flight/Cart", requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        console.log("---------------cart  ------------");
-                        console.log(JSON.stringify(result));
+                        //console.log("---------------cart  ------------");
+                        //console.log(JSON.stringify(result));
                         if(result.errors){
                             this.dropdown.alertWithType('error', 'Error', JSON.stringify(result.errors));
                             this.setState({ loading: false });
@@ -604,11 +604,11 @@ export default class FlightSummary extends Component {
 //                     fetch("https://dev-api.megaelectra.co.id/flight/Price/v3", requestOptions)
 //                     .then((response) => response.json())
 //                     .then((result) => {
-//                         console.log("---------------data price------------");
-//                         console.log(JSON.stringify(result));
+//                         //console.log("---------------data price------------");
+//                         //console.log(JSON.stringify(result));
 //                         this.setState({dataPrice:result});
 //                     })
-//                     .catch(error => console.log('error', error));
+//                     .catch(error => //console.log('error', error));
 //         }
 //     });
 
@@ -632,8 +632,8 @@ export default class FlightSummary extends Component {
         "departure":departurePost,
         "return":returnPost
     };
-    console.log("---------------param price------------");
-    console.log(JSON.stringify(paramGetPrice));
+    //console.log("---------------param price------------");
+    //console.log(JSON.stringify(paramGetPrice));
     this.setState({ loading_spinner: true }, () => {
             AsyncStorage.getItem('tokenAgi', (error, result) => {
                 if (result) {    
@@ -656,8 +656,8 @@ export default class FlightSummary extends Component {
                             .then((response) => response.json())
                             .then((result) => {
                                 this.setState({ loading_spinner: false });
-                                console.log("---------------data price------------");
-                                console.log(JSON.stringify(result));
+                                //console.log("---------------data price------------");
+                                //console.log(JSON.stringify(result));
                                 // alert();
                                 this.setState({dataPrice:result});
                                 this.setState({total_price:result.data.total_price});

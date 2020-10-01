@@ -118,7 +118,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log('listdata_product_trip',JSON.stringify(result));
+                    //console.log('listdata_product_trip',JSON.stringify(result));
                     this.setState({loading_product_trip: false });
                     this.setState({listdata_product_trip: result});
                  },
@@ -171,7 +171,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log('listdata_product_hotel_package',JSON.stringify(result));
+                    //console.log('listdata_product_hotel_package',JSON.stringify(result));
                     this.setState({loading_product_hotel_package: false });
                     this.setState({listdata_product_hotel_package: result});
                  },
@@ -197,7 +197,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log('getProductFlash',JSON.stringify(result));
+                    ////console.log('getProductFlash',JSON.stringify(result));
                     this.setState({loading_product_flash: false });
                     this.setState({listdata_product_flash: result.daftar});
                  },

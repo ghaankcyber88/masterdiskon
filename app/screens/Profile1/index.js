@@ -49,7 +49,7 @@ export default class Profile1 extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                console.log('getConfig',config);
+                //console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -60,7 +60,7 @@ export default class Profile1 extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {    
                 let userSession = JSON.parse(result);
-                console.log('getSession',userSession);
+                //console.log('getSession',userSession);
                 var id_user=userSession.id_user;
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
@@ -205,8 +205,8 @@ export default class Profile1 extends Component {
             AsyncStorage.setItem('setDataCustomer',JSON.stringify(customer));
             this.setState({listdata_customer:customer});
             setTimeout(() => {
-                console.log("------DATA CUSTOMER----");
-                console.log(JSON.stringify(this.state.listdata_customer));
+                //console.log("------DATA CUSTOMER----");
+                //console.log(JSON.stringify(this.state.listdata_customer));
             }, 500);
 
             
@@ -249,7 +249,7 @@ export default class Profile1 extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {    
                 let userSession = JSON.parse(result);
-                console.log('getSession',userSession);
+                //console.log('getSession',userSession);
                 var id_user=userSession.id_user;
 
                 var userSessionUpdate={
@@ -296,7 +296,7 @@ export default class Profile1 extends Component {
 
         }
         const param={"param":data}
-        console.log('updateParticipantPassword',JSON.stringify(param));
+        //console.log('updateParticipantPassword',JSON.stringify(param));
     }
 
 

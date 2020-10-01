@@ -177,7 +177,7 @@ export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
         var product = this.props.navigation.state.params.product;
-        console.log('HotelDetail',JSON.stringify(product));
+        //console.log('HotelDetail',JSON.stringify(product));
 
         var minDate = new Date(); // Today
         minDate.setDate(minDate.getDate() + 7);
@@ -322,8 +322,8 @@ export default class HotelDetail extends Component {
     );
 
     setBookingTime(tglAwal, tglAkhir,round) {
-        console.log(tglAwal);
-        console.log(tglAkhir);
+        //console.log(tglAwal);
+        //console.log(tglAkhir);
         if (round ==true) {
             this.setState({tglAwal:tglAwal});
             this.setState({tglAkhir:tglAkhir});
@@ -370,9 +370,9 @@ export default class HotelDetail extends Component {
             var jmlPerson=parseInt(jml)+parseInt(this.state.anak)+parseInt(this.state.bayi);
             var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
     
-            console.log('maksPersonRoom',maksPersonRoom);
-            console.log('jmlPerson',jmlPerson);
-            console.log('sisaPersonRoom',sisaPersonRoom);
+            //console.log('maksPersonRoom',maksPersonRoom);
+            //console.log('jmlPerson',jmlPerson);
+            //console.log('sisaPersonRoom',sisaPersonRoom);
 
             this.setState({maksPersonRoom:maksPersonRoom});
             this.setState({jmlPerson:jmlPerson});
@@ -387,9 +387,9 @@ export default class HotelDetail extends Component {
             var jmlPerson=parseInt(this.state.dewasa)+parseInt(jml)+parseInt(this.state.bayi);
             var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
     
-            console.log('maksPersonRoom',maksPersonRoom);
-            console.log('jmlPerson',jmlPerson);
-            console.log('sisaPersonRoom',sisaPersonRoom);
+            //console.log('maksPersonRoom',maksPersonRoom);
+            //console.log('jmlPerson',jmlPerson);
+            //console.log('sisaPersonRoom',sisaPersonRoom);
 
             this.setState({maksPersonRoom:maksPersonRoom});
             this.setState({jmlPerson:jmlPerson});
@@ -402,9 +402,9 @@ export default class HotelDetail extends Component {
             var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(jml);
             var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
     
-            console.log('maksPersonRoom',maksPersonRoom);
-            console.log('jmlPerson',jmlPerson);
-            console.log('sisaPersonRoom',sisaPersonRoom);
+            //console.log('maksPersonRoom',maksPersonRoom);
+            //console.log('jmlPerson',jmlPerson);
+            //console.log('sisaPersonRoom',sisaPersonRoom);
 
             this.setState({maksPersonRoom:maksPersonRoom});
             this.setState({jmlPerson:jmlPerson});
@@ -433,9 +433,9 @@ export default class HotelDetail extends Component {
             this.setState({maksPersonRoom:maksPersonRoom});
             this.setState({sisaPersonRoom:sisaPersonRoom});
 
-            console.log('maksPersonRoom',maksPersonRoom);
-            console.log('jmlPerson',jmlPerson);
-            console.log('sisaPersonRoom',sisaPersonRoom);
+            //console.log('maksPersonRoom',maksPersonRoom);
+            //console.log('jmlPerson',jmlPerson);
+            //console.log('sisaPersonRoom',sisaPersonRoom);
             this.setState({minRoom:jml});
             this.setListdataPerson();
         }, 500);
@@ -600,9 +600,9 @@ export default class HotelDetail extends Component {
                     productPart:select
                 });
                 
-            console.log('paramHotel',JSON.stringify(param));
-            // console.log('productHotel',JSON.stringify(product));
-            // console.log('productPartHotel',JSON.stringify(select));
+            //console.log('paramHotel',JSON.stringify(param));
+            // //console.log('productHotel',JSON.stringify(product));
+            // //console.log('productPartHotel',JSON.stringify(select));
 
     }
     

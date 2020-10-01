@@ -80,7 +80,7 @@ export default class ProfileEditPassword extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                //console.log('getConfig',config);
+                ////console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -91,7 +91,7 @@ export default class ProfileEditPassword extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {    
                 let userSession = JSON.parse(result);
-                console.log('userSession',userSession);
+                //console.log('userSession',userSession);
                 var id_user=userSession.id_user;
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});

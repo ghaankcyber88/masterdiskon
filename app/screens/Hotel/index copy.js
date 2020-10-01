@@ -18,7 +18,7 @@ export default class Hotel extends Component {
         //var paramUrl=this.props.navigation.state.params.paramUrl;
         //var paramOther=this.props.navigation.state.params.paramOther;
         var param=this.props.navigation.state.params.param;
-        console.log('PARAM hotel',JSON.stringify(param));
+        //console.log('PARAM hotel',JSON.stringify(param));
         //var city=this.props.navigation.state.params.city;
         // Temp data define
         this.state = {
@@ -67,7 +67,7 @@ export default class Hotel extends Component {
                   
                     var hotels=result.result;
                    
-                    console.log('hotellsx',JSON.stringify(hotels));
+                    //console.log('hotellsx',JSON.stringify(hotels));
                     this.setState({hotels:hotels});
                    
         

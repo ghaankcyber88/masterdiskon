@@ -210,7 +210,7 @@ export default class Home extends Component {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
                     let config = JSON.parse(result);
-                    ////console.log('getConfig',config);
+                    //////console.log('getConfig',config);
                     this.setState({config:config});
                 }
             });
@@ -263,7 +263,7 @@ export default class Home extends Component {
                  .then((result) => {
                     this.setState({loading_product_trip: false });
                     this.setState({listdata_product_trip: result});
-                    console.log('listdatatrip',JSON.stringify(result));
+                    //console.log('listdatatrip',JSON.stringify(result));
                  },
                  (error) => {
                      this.setState({ error });
@@ -339,7 +339,7 @@ export default class Home extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    console.log('getProductFlash',JSON.stringify(result));
+                    //console.log('getProductFlash',JSON.stringify(result));
                     this.setState({loading_product_flash: false });
                     this.setState({listdata_product_flash: result.daftar});
                  },
@@ -368,7 +368,7 @@ export default class Home extends Component {
                  .then((result) => {
                     this.setState({loading_musium: false });
                     this.setState({listdata_musium: result});
-                    console.log(JSON.stringify(result));
+                    //console.log(JSON.stringify(result));
                  },
                  (error) => {
                      this.setState({ error });
@@ -842,7 +842,7 @@ export default class Home extends Component {
                                                     // index % 2 ? { marginLeft: 20 } : {marginLeft:20,marginBottom:20}
                                                 }
                                                 onPress={() =>
-                                                    //console.log('TourDetailCustom',)
+                                                    ////console.log('TourDetailCustom',)
                                                     navigation.navigate("TourDetailCustom",{product:item})
                                                 }
                                                 loading={this.state.loading_product_trip}

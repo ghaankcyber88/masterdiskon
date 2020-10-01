@@ -123,7 +123,7 @@ export default function PembayaranDetail(props) {
       const [dataMasterDiskon, setDataMasterDiskon]=useState(DataMasterDiskon[0]);
 
 
-      console.log('dataBookingBro',JSON.stringify(dataBooking));
+      //console.log('dataBookingBro',JSON.stringify(dataBooking));
       
       const [config, setConfig]=useState(DataConfig);
         
@@ -140,12 +140,12 @@ export default function PembayaranDetail(props) {
             cardExpYear !='' &&
             cardCVV !=''
         ){
-                //console.log('perfect');
+                ////console.log('perfect');
                 setColorButton(BaseColor.secondColor);
                 setColorButtonText(BaseColor.primaryColor);
                 setDisabledButton(false);
         }else{
-            //console.log('not yet');
+            ////console.log('not yet');
             setColorButton(BaseColor.greyColor);
             setColorButtonText(BaseColor.whiteColor);
             setDisabledButton(true);
@@ -156,7 +156,7 @@ export default function PembayaranDetail(props) {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {    
                     let config = JSON.parse(result);
-                    console.log('getConfigDetailPayment',JSON.stringify(config));
+                    //console.log('getConfigDetailPayment',JSON.stringify(config));
                     setConfig(config);
                 }
             });
@@ -165,7 +165,7 @@ export default function PembayaranDetail(props) {
     
     function submitPayment(){
         var payment_type=dataPayment.payment_type;
-        ////console.log(payment_type);
+        //////console.log(payment_type);
         
         
         var paramPayMD={
@@ -175,7 +175,7 @@ export default function PembayaranDetail(props) {
             "dataPayment":dataPayment,
             "token":""
             }
-        //console.log('paramPayMD',JSON.stringify(paramPayMD));
+        ////console.log('paramPayMD',JSON.stringify(paramPayMD));
         
         
         if(payment_type=='bank_transfer'){
@@ -197,7 +197,7 @@ export default function PembayaranDetail(props) {
        
          //var url='https://api.sandbox.midtrans.com/';
          var url=config.midtransUrl;
-         //console.log('baseUrl',url);
+         ////console.log('baseUrl',url);
          
          return PostDataNew(url,'v2/token?client_key='+config.midtransKey.client+'&card_number='+cardNumber+'&card_exp_month='+cardExpMonth+'&card_exp_year='+cardExpYear+'&card_cvv='+cardCVV,param)
              .then((result) => {
@@ -225,12 +225,12 @@ export default function PembayaranDetail(props) {
               }
            
              var url=config.baseUrl;
-             //console.log('baseUrl',url);
+             ////console.log('baseUrl',url);
              
              return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
                  .then((result) => {
-                            //console.log("---------------result payment md ------------");
-                            //console.log(JSON.stringify(result));
+                            ////console.log("---------------result payment md ------------");
+                            ////console.log(JSON.stringify(result));
                             var id_invoice=result.id_invoice;
                             var token=result.token;
                             var dataSendMidTrans={
@@ -295,8 +295,8 @@ export default function PembayaranDetail(props) {
             },
             body: JSON.stringify(paramPay),
           }
-          console.log('param',JSON.stringify(param));
-          console.log('paramPay',JSON.stringify(paramPay));
+          //console.log('param',JSON.stringify(param));
+          //console.log('paramPay',JSON.stringify(paramPay));
        
          var url=config.midtransUrl;
          
@@ -336,7 +336,7 @@ export default function PembayaranDetail(props) {
             },
             "token":""
         }
-        console.log('changePaymentParam',JSON.stringify(paramPayMD));
+        //console.log('changePaymentParam',JSON.stringify(paramPayMD));
        
         setLoading(true);
             var param={
@@ -412,7 +412,7 @@ export default function PembayaranDetail(props) {
                         var parameter={"param":data}
                 
                         var body=parameter;
-                        console.log('bodyparamter',JSON.stringify(body));
+                        //console.log('bodyparamter',JSON.stringify(body));
                         
                         var param={
                             method: 'POST',
@@ -427,8 +427,8 @@ export default function PembayaranDetail(props) {
                         return PostDataNew(url,path,param)
                             .then((result) => {
                                 var dataBooking=result;
-                                console.log("---------------get_booking_historyssss ------------");
-                                console.log(JSON.stringify(result));
+                                //console.log("---------------get_booking_historyssss ------------");
+                                //console.log(JSON.stringify(result));
                                 setLoading(false);
                                 setDataBooking(dataBooking);
                                 
@@ -452,7 +452,7 @@ export default function PembayaranDetail(props) {
                                 //         }else{
                                 //             var payment_type=order_payment_recent.payment_type;
                                 //             var payment_sub=order_payment_recent.payment_sub;
-                                //             //console.log('configccx',JSON.stringify(config));
+                                //             ////console.log('configccx',JSON.stringify(config));
                                 //             fetchMidtrans(id_invoice,config);
                                 //         }
                                         
@@ -480,7 +480,7 @@ export default function PembayaranDetail(props) {
                                         }else{
                                             var payment_type=order_payment_recent.payment_type;
                                             var payment_sub=order_payment_recent.payment_sub;
-                                            //console.log('configccx',JSON.stringify(config));
+                                            ////console.log('configccx',JSON.stringify(config));
                                             fetchMidtrans(id_invoice,config);
                                         }
                                         
@@ -528,7 +528,7 @@ export default function PembayaranDetail(props) {
          return PostDataNew(url,"v2/"+id_invoice+"/status",param)
              .then((result) => {
                             var statusMidtrans=result;
-                console.log('status_midtransasd',JSON.stringify(result));
+                //console.log('status_midtransasd',JSON.stringify(result));
                 setStatusMidtrans(statusMidtrans);
 
                 },
@@ -1169,12 +1169,12 @@ export default function PembayaranDetail(props) {
     localNotificationService.configure(onOpenNotification)
 
     function onRegister(token) {
-      console.log("[App] onRegister: ", token);
+      //console.log("[App] onRegister: ", token);
       AsyncStorage.setItem('tokenFirebase', token);
     }
 
     function onNotification(notify) {
-      console.log("[App] onNotificationx: ", JSON.stringify(notify));
+      //console.log("[App] onNotificationx: ", JSON.stringify(notify));
       
       var body_msg=notify.body;
       var body_array = body_msg.split("#");
@@ -1188,7 +1188,7 @@ export default function PembayaranDetail(props) {
         bank: body_array[6]
       }
   
-      console.log('body_notifonNotification',JSON.stringify(body_notif));
+      //console.log('body_notifonNotification',JSON.stringify(body_notif));
       aeroPayment(body_notif);
 
       const options = {
@@ -1207,15 +1207,15 @@ export default function PembayaranDetail(props) {
     }
 
     function onOpenNotification(notify) {
-      console.log("[App] onOpenNotification: ", notify)
+      //console.log("[App] onOpenNotification: ", notify)
     }
     
     function aeroPayment(body_notif){
-            console.log('body_notifaeroPayment',JSON.stringify(body_notif))
+            //console.log('body_notifaeroPayment',JSON.stringify(body_notif))
             var url=dataMasterDiskon.baseUrl;
             var dir='front/api/payment/notification';
             var paramPost={"param":body_notif}
-            console.log('aeroPaymentParam',JSON.stringify(paramPost));
+            //console.log('aeroPaymentParam',JSON.stringify(paramPost));
             
             var param={
                 method: 'POST',
@@ -1230,7 +1230,7 @@ export default function PembayaranDetail(props) {
              
               return PostDataNew(url,dir,param)
                  .then((result) => {
-                    console.log('aeroPaymentResultsssss',JSON.stringify(result));
+                    //console.log('aeroPaymentResultsssss',JSON.stringify(result));
                     
                     var redirect='Pembayaran';
                     var id_order=idOrder;
@@ -1260,7 +1260,7 @@ export default function PembayaranDetail(props) {
      
     
       return () => {
-        console.log("[App] unRegister")
+        //console.log("[App] unRegister")
         fcmService.unRegister()
         localNotificationService.unregister()
         
@@ -1289,7 +1289,7 @@ export default function PembayaranDetail(props) {
          
           return PostDataNew(url,dir,param)
              .then((result) => {
-                console.log('paymentConfirm',JSON.stringify(result));
+                //console.log('paymentConfirm',JSON.stringify(result));
                 
                 var redirect='Pembayaran';
                 var id_order=idOrder;
@@ -1345,7 +1345,7 @@ export default function PembayaranDetail(props) {
             </ScrollView>
     }else{
         var urlSnap=config.midtransUrlSnap+params.snaptoken;
-        console.log('urlSnap',urlSnap);
+        //console.log('urlSnap',urlSnap);
         content=<View style={{flex:1,marginTop:20}}>
         <WebView style={{}} source={{ uri: urlSnap }} />
                             <Button

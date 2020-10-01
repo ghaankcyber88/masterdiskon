@@ -121,7 +121,7 @@ class Loading extends Component {
           .then(response => response.json())
           .then(result => {
           config.token=result.access_token;
-                            console.log('getConfigNew',JSON.stringify(config));
+                            //console.log('getConfigNew',JSON.stringify(config));
                             AsyncStorage.setItem('config', JSON.stringify(config)); 
                             navigation.navigate("Home");
           })
@@ -150,7 +150,7 @@ class Loading extends Component {
         var dir='front/api/common/config';
         var params={"param":{"username":DataMasterDiskon.username,"password":DataMasterDiskon.password}};
         
-        console.log('params',JSON.stringify(params));
+        //console.log('params',JSON.stringify(params));
         var param={
             method: 'POST',
             headers: {
@@ -181,7 +181,7 @@ class Loading extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {    
                 let userSession = JSON.parse(result);
-                console.log("userSession",JSON.stringify(userSession));
+                //console.log("userSession",JSON.stringify(userSession));
                 var id_user=userSession.id_user;
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
@@ -212,7 +212,7 @@ class Loading extends Component {
 
         if(redirect != ''){
             setTimeout(() => {
-            console.log(JSON.stringify(param));
+            //console.log(JSON.stringify(param));
                 navigation.navigate(redirect,{param:param});
             }, 500);
         }else{

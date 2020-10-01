@@ -52,7 +52,7 @@ class Profile extends Component {
         AsyncStorage.getItem('config', (error, result) => {
             if (result) {    
                 let config = JSON.parse(result);
-                console.log('getConfig',config);
+                //console.log('getConfig',config);
                 this.setState({config:config});
             }
         });
@@ -63,15 +63,15 @@ class Profile extends Component {
         AsyncStorage.getItem('userSession', (error, result) => {
             if (result) {    
                 let userSession = JSON.parse(result);
-                console.log('getSessions',userSession);
+                //console.log('getSessions',userSession);
                 var id_user=userSession.id_user;
                 this.setState({id_user:id_user});
                 this.setState({userSession:userSession});
                 this.setState({login:true});
 
                 setTimeout(() => {
-                    console.log("------DATA getSessions----");
-                    console.log(JSON.stringify(this.state.userSession));
+                    //console.log("------DATA getSessions----");
+                    //console.log(JSON.stringify(this.state.userSession));
                 }, 500);
             }
         });
@@ -153,8 +153,8 @@ class Profile extends Component {
             AsyncStorage.setItem('setDataCustomer',JSON.stringify(customer));
             this.setState({listdata_customer:customer});
             setTimeout(() => {
-                console.log("------DATA CUSTOMER----");
-                console.log(JSON.stringify(this.state.listdata_customer));
+                //console.log("------DATA CUSTOMER----");
+                //console.log(JSON.stringify(this.state.listdata_customer));
             }, 500);
 
             
