@@ -30,6 +30,8 @@ export default class Hotel extends Component {
             id_country='';
         }
 
+        
+
         this.state = {
             id_country:id_country,
             listdata_product_hotel_package:DataHotelPackage,

@@ -31,53 +31,15 @@ const styles = StyleSheet.create({
 });
 
 
-export default class FlightPlanCustom extends Component {
+export default class HotelPlanCustom extends Component {
     render() {
         const {
             style,
-            from,
-            fromCode,
             to,
-            toCode,
-            round,
-            onPressFrom,
             onPressTo,
-            icon,
-            label
         } = this.props;
         return (
             <View>
-                <TouchableOpacity
-                    style={[styles.contentForm, style]}
-                    onPress={onPressFrom}
-                >
-                    <View style={{flex: 1,flexDirection: "row"}}>
-                            <View style={{flex: 1,
-                                            alignItems: "flex-start",
-                                            justifyContent: "center",}}
-                                            
-                                      >
-                                <Icon
-                                            name={'plane-departure'}
-                                            size={14}
-                                            color={BaseColor.primaryColor}
-                                />
-                            </View>
-                            <View style={{flex: 11,
-                                            justifyContent: "center",
-                                        }}
-                                            
-                                      >
-                            <Text caption2 light style={{ marginBottom: 0 }}>
-                                From
-                            </Text>
-                            <Text body2 semibold numberOfLines={1}>
-                                {fromCode} ({from})
-                            </Text>
-                            </View>
-                    </View>
-                </TouchableOpacity>
-                
                 <TouchableOpacity
                     style={[styles.contentForm, style]}
                     onPress={onPressTo}
@@ -89,7 +51,7 @@ export default class FlightPlanCustom extends Component {
                                             
                                       >
                                 <Icon
-                                            name={'plane-arrival'}
+                                            name={'hotel'}
                                             size={14}
                                             color={BaseColor.primaryColor}
                                 />
@@ -100,10 +62,10 @@ export default class FlightPlanCustom extends Component {
                                             
                                       >
                             <Text caption2 light style={{ marginBottom: 0 }}>
-                            To
+                                Cari nama hotel
                             </Text>
                             <Text body2 semibold numberOfLines={1}>
-                                {toCode} ({to})
+                               {to}
                             </Text>
                             </View>
                     </View>
@@ -113,27 +75,17 @@ export default class FlightPlanCustom extends Component {
     }
 }
 
-FlightPlanCustom.propTypes = {
+HotelPlanCustom.propTypes = {
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-    round: PropTypes.bool,
-    fromCode: PropTypes.string,
-    toCode: PropTypes.string,
-    from: PropTypes.string,
     to: PropTypes.string,
-    onPressFrom: PropTypes.func,
     onPressTo: PropTypes.func,
     icon:PropTypes.string,
     label:PropTypes.string,
 };
 
-FlightPlanCustom.defaultProps = {
+HotelPlanCustom.defaultProps = {
     style: {},
-    round: true,
-    fromCode: "SIN",
-    toCode: "SYD",
-    from: "Singapore",
     to: "Sydney",
-    onPressFrom: () => {},
     onPressTo: () => {},
     icon:"check",
     label: "SYD",

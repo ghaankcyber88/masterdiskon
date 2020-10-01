@@ -120,7 +120,6 @@ export default class Booking extends Component {
             this.fetch();
         }, 200);
         
-        
     }
 
     render() {

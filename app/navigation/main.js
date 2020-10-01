@@ -81,6 +81,7 @@ import OurService from "@screens/OurService";
 import FlightSearch from "@screens/FlightSearch";
 import TourSet from "@screens/TourSet";
 import SelectFlight from "@screens/SelectFlight";
+import SelectHotel from "@screens/SelectHotel";
 import SelectCity from "@screens/SelectCity";
 import SelectTitle from "@screens/SelectTitle";
 import SelectCountry from "@screens/SelectCountry";
@@ -381,6 +382,9 @@ const StackNavigator = createStackNavigator(
         },
         SelectFlight: {
             screen: SelectFlight
+        },
+        SelectHotel: {
+            screen: SelectHotel
         },
         SelectCity: {
             screen: SelectCity

@@ -3,11 +3,12 @@ import {
     View,
     FlatList,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    StyleSheet
 } from "react-native";
 import { BaseStyle, BaseColor } from "@config";
 import { Header, SafeAreaView, Icon, Text, Image } from "@components";
-import styles from "./styles";
+// import styles from "./styles";
 
 // Load sample flight data list
 import {PostDataNew} from '../../services/PostDataNew';
@@ -18,7 +19,40 @@ import {
     PlaceholderLine,
     Fade
   } from "rn-placeholder";
-export default class SelectFlight extends Component {
+
+
+
+  const styles = StyleSheet.create({
+    textInput: {
+        height: 46,
+        backgroundColor: BaseColor.fieldColor,
+        borderRadius: 5,
+        padding: 10,
+        width: "100%"
+    },
+    contain: {
+        alignItems: "center",
+        padding: 20,
+        width: "100%"
+    },
+    item: {
+        paddingTop: 15,
+        paddingBottom: 15,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderBottomColor: BaseColor.fieldColor
+    },
+    imageBrand: {
+        width: 32,
+        height: 32,
+        marginRight: 10
+    }
+  });
+
+
+export default class SelectHotel extends Component {
     constructor(props) {
         super(props);
         // Temp data define
@@ -31,166 +65,118 @@ export default class SelectFlight extends Component {
 
     componentDidMount() {
 
-        this.setState({ loading_spinner: true }, () => {
-            AsyncStorage.getItem('config', (error, result) => {
-                if (result) {   
-                    let config = JSON.parse(result);
-                    var access_token=config.token;
-                    var path=config.common_airport_default.dir;
-                    var url=config.baseUrl;
+        // this.setState({ loading_spinner: true }, () => {
+        //     AsyncStorage.getItem('config', (error, result) => {
+        //         if (result) {   
+        //             let config = JSON.parse(result);
+        //             var access_token=config.token;
+        //             var path=config.common_airport_default.dir;
+        //             var url=config.baseUrl;
 
-                    PostDataNew(url,path,{"param":""})
-                    .then((result) => {
-                            this.setState({ loading_spinner: false });
-                            this.setState({flight:result});
-                            const { navigation } = this.props;
-                            const selected = navigation.getParam("selected");
+        //             PostDataNew(url,path,{"param":""})
+        //             .then((result) => {
+        //                     this.setState({ loading_spinner: false });
+        //                     this.setState({flight:result});
+        //                     const { navigation } = this.props;
+        //                     const selected = navigation.getParam("selected");
                 
-                            if (selected) {
-                                this.setState({
-                                    flight: this.state.flight.map(item => {
-                                        return {
-                                            ...item,
-                                            checked: item.code == selected
-                                        };
-                                    })
-                                });
-                            }
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    );
+        //                     if (selected) {
+        //                         this.setState({
+        //                             flight: this.state.flight.map(item => {
+        //                                 return {
+        //                                     ...item,
+        //                                     checked: item.code == selected
+        //                                 };
+        //                             })
+        //                         });
+        //                     }
+        //                 },
+        //                 (error) => {
+        //                     this.setState({ error });
+        //                 }
+        //             );
             
-                }
-            });             
+        //         }
+        //     });             
 
-        });
+        // });
     }
 
     onChange(select) {
-        this.setState({
-            flight: this.state.flight.map(item => {
-                if (item.code == select.code) {
-                    return {
-                        ...item,
-                        checked: true
-                    };
-                } else {
-                    return {
-                        ...item,
-                        checked: false
-                    };
-                }
-               
-            })
-        });
-
         const { navigation } = this.props;
-        var type = navigation.getParam("type");
-            if(type=='from'){
-                            this.props.navigation.state.params.setBandaraAsal(
-                                select.code,select.label
-                                )
-                            navigation.goBack();
-            }else if(type=='to'){
+        navigation.navigate("Hotel",{product:item})
+        // this.setState({
+        //     flight: this.state.flight.map(item => {
+        //         if (item.code == select.code) {
+        //             return {
+        //                 ...item,
+        //                 checked: true
+        //             };
+        //         } else {
+        //             return {
+        //                 ...item,
+        //                 checked: false
+        //             };
+        //         }
+               
+        //     })
+        // });
+
+        // const { navigation } = this.props;
+        // var type = navigation.getParam("type");
+        //     if(type=='from'){
+        //                     this.props.navigation.state.params.setBandaraAsal(
+        //                         select.code,select.label
+        //                         )
+        //                     navigation.goBack();
+        //     }else if(type=='to'){
            
-                            this.props.navigation.state.params.setBandaraTujuan(
-                                select.code,select.label
-                                )
-                            navigation.goBack();
-            }
+        //                     this.props.navigation.state.params.setBandaraTujuan(
+        //                         select.code,select.label
+        //                         )
+        //                     navigation.goBack();
+        //     }
     }
 
     search(value){
-        this.setState({ loading_spinner: true }, () => {
+        if(value.length >= 3){
 
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {   
                     let config = JSON.parse(result);
-                    var access_token=config.token;
-                    var path=config.common_airport.dir;
-                    var url=config.baseUrl;
+                    // var access_token=config.token;
+                    // var path=config.common_airport.dir;
+                    var url=config.product_hotel_package_by_name.url;
 
-                    PostDataNew(url,path,{"param":value})
-                    .then((result) => {
-                            this.setState({ loading_spinner: false });
-                            this.setState({flight:result});
-                            const { navigation } = this.props;
-                            const selected = navigation.getParam("selected");
-                
-                            if (selected) {
-                                this.setState({
-                                    flight: this.state.flight.map(item => {
-                                        return {
-                                            ...item,
-                                            checked: item.code == selected
-                                        };
-                                    })
-                                });
-                            }
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    );
-                }
-            }); 
-        });
+                    var myHeaders = new Headers();
+                    var raw = "";
 
+                    var requestOptions = {
+                    method: 'GET',
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: 'follow'
+                    };
+
+                    fetch(url+value, requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+
+                        //console.log('search',JSON.stringify(result));
+                        this.setState({flight:result});
+                    })
+                    .catch(error => console.log('error', error));
+                                    }
+                }); 
+        }else{
+
+            this.setState({flight:[]});
+        }
      }
 
-    onSave() {
-        const { navigation } = this.props;
-        var selectParent = navigation.getParam("selected");
-        var type = navigation.getParam("type");
-        const selected = this.state.flight.filter(item => item.checked);
-
-        if (selected.length > 0) {
-            if(type=='from'){
-                this.setState(
-                    {
-                        loading: true
-                    },
-                    () => {
-                        setTimeout(() => {
-                            this.props.navigation.state.params.setBandaraAsal(
-                                selected[0].code,selected[0].label
-                                )
-                            navigation.goBack();
-                        }, 500);
-                    }
-                );
-
-            }else if(type=='to'){
-              
-                this.setState(
-                    {
-                        loading: true
-                    },
-                    () => {
-                        setTimeout(() => {
-                            this.props.navigation.state.params.setBandaraTujuan(
-                                selected[0].code,selected[0].label
-                                )
-                            navigation.goBack();
-                        }, 500);
-                    }
-                );
-            }
-        }
-    }
-
     
-    onClick(code,label) {
-        var type=this.props.navigation.state.params.type;
-        if(type=='asal'){
-            this.props.navigation.state.params.setBandaraAsal(code,label);
-        }else if(type=='tujuan'){
-            this.props.navigation.state.params.setBandaraTujuan(code,label);
-        }
-        this.props.navigation.navigate('PageSearchFlight');
-    }
+    
+    
 
     render() {
         const { navigation } = this.props;
@@ -237,9 +223,10 @@ export default class SelectFlight extends Component {
                         style={BaseStyle.textInput}
                         onChangeText={text => this.search(text)}
                         autoCorrect={false}
-                        placeholder="Search Airplane"
+                        placeholder="Search Hotel"
                         placeholderTextColor={BaseColor.grayColor}
                         selectionColor={BaseColor.primaryColor}
+                        autoFocus
                     />
                     <View style={{ width: "100%", height: "100%" }}>
                         {
@@ -301,7 +288,7 @@ export default class SelectFlight extends Component {
                                     >
                                         <View style={styles.left}>
                                             <Text headline semibold>
-                                            {item.label}
+                                            {item.text}
                                             </Text>
                                             <Text
                                                 note
@@ -312,7 +299,7 @@ export default class SelectFlight extends Component {
                                                     paddingTop: 5
                                                 }}
                                             >
-                                                {item.country_name}
+                                                {item.detail_category.replace(/_/gi, ' ')} - {item.city}
                                             </Text>
                                         </View>
                                     </View>

@@ -7,7 +7,7 @@ const DataConfig = {
     "aeroClientSecret": "Djlb5JDp",
     "aeroUsername": "vasubagent@gmail.com",
     "aeroPassword": "PU8FDHK0",
-    "token": "_9IoRJmVAWrR0V0Zirs0gsdmANv9-lcDHNzPcnkBKMw",
+    "token": "6Z9Wy71nPoa8LBms7oAdG9VmEp23HsMjFAR3rta1y5E",
     "midtransStatus": false,
     "midtransUrl": "https://api.sandbox.midtrans.com/",
     "midtransUrlSnap": "https://app.sandbox.midtrans.com/snap/v2/vtweb/",
@@ -18,6 +18,7 @@ const DataConfig = {
     },
     "midtransMethod": "snap",
     "baseUrl": "https://sandbox.masterdiskon.com/",
+    "baseUrlProduction": "https://masterdiskon.com/",
     "banner": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80",
     "transaction_fee": "5000",
     "transaction_fee_cc": "",
@@ -74,6 +75,16 @@ const DataConfig = {
         "dir": "front/api/product/trip_province",
         "param": "{'param':{'id_country':'','id_province':''}}"
     },
+    "common_city_hotel_package": {
+        "url": "https://sandbox.masterdiskon.com/front/api/product/hotel_package_city",
+        "dir": "front/api/product/hotel_package_city",
+        "param": "{}"
+    },
+    "common_category_hotel_package": {
+        "url": "https://sandbox.masterdiskon.com/front/api/product/hotel_package_category",
+        "dir": "front/api/product/hotel_package_category",
+        "param": "{}"
+    },
     "common_airport_default": {
         "url": "https://sandbox.masterdiskon.com/front/api/api/airport_default",
         "dir": "front/api/api/airport_default",
@@ -93,6 +104,11 @@ const DataConfig = {
         "url": "https://sandbox.masterdiskon.com/front/api/product/product_trip",
         "dir": "front/api/product/product_trip",
         "param": "{'param':{'id_trip':'','id_country':'','harga_min':'','harga_max':''}}"
+    },
+    "product_hotel_package_by_name": {
+        "url": "https://masterdiskon.com/front/product/hotelpackage/dealsopsi?search=",
+        "dir": "front/product/hotelpackage/dealsopsi?search=",
+        "param": "{'param':{'id_city':''}}"
     },
     "product_hotel_package": {
         "url": "https://sandbox.masterdiskon.com/front/api/product/product_hotel_package",

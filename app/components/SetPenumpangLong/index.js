@@ -57,14 +57,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     },
     contentForm: {
-        // paddingHorizontal: 10,
-        // paddingVertical: 5,
-        // borderRadius: 8,
-        // width: "100%",
-        // //backgroundColor: BaseColor.fieldColor
-        // borderRadius: 8,
-        // borderWidth: 3,
-        // borderColor: BaseColor.fieldColor,
         paddingHorizontal: 10,
         paddingVertical: 5,
         width: "100%",
@@ -219,17 +211,6 @@ export default class SetPenumpangLong extends Component {
                     </Modal>
 
 
-                        {/* <TouchableOpacity onPress={() => this.openModal()}>
-                            <Icon
-                                name="user"
-                                size={18}
-                                color={BaseColor.primaryColor}
-                            />
-                        </TouchableOpacity>
-                        <Text caption2 style={{}}>
-                            {label} Orang
-                        </Text> */}
-                        
                         
                         <TouchableOpacity
                             style={[styles.contentForm, style]}
@@ -269,16 +250,7 @@ export default class SetPenumpangLong extends Component {
 }
 
 SetPenumpangLong.propTypes = {
-    // style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
-    // label: PropTypes.string,
-    // minPriceDef: PropTypes.number,
-    // minPrice: PropTypes.number,
-    // minPerson: PropTypes.number,
-    // totalPrice:PropTypes.number,
-    // maksPersonRoom:PropTypes.number,
-    // sisaPersonRoom:PropTypes.number,
-    // exclude:PropTypes.string,
-    // onPress: PropTypes.func
+
     style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     label: PropTypes.string,
     dewasa: PropTypes.string,

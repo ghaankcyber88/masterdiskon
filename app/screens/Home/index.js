@@ -27,6 +27,7 @@ import {AsyncStorage} from 'react-native';
 import {PostDataNew} from '../../services/PostDataNew';
 import CardCustom from "../../components/CardCustom";
 import FlightPlanCustom from "../../components/FlightPlanCustom";
+import HotelPlanCustom from "../../components/HotelPlanCustom";
 import CardCustomTitle from "../../components/CardCustomTitle";
 import NotYetLogin from "../../components/NotYetLogin";
 import SetDateLong from "../../components/SetDateLong";
@@ -34,7 +35,7 @@ import SetPenumpangLong from "../../components/SetPenumpangLong";
 
 
 
-import {DataLoading,DataConfig,DataTrip,DataHotelPackage,DataIcon} from "@data";
+import {DataLoading,DataConfig,DataTrip,DataHotelPackage,DataIcon,DataHotelPackageCity} from "@data";
 import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp
@@ -57,7 +58,7 @@ export default class Home extends Component {
         if(type=='flight'){
             round=false;
             title='Search Flight';
-        }else if(type=='hotelpackage'){
+        }else if(type=='hotel'){
             round=true;
             title='Search Hotel Package';
         }else if(type=='trip'){
@@ -69,7 +70,31 @@ export default class Home extends Component {
         
         this.state = {
             login:false,
-            icons: DataIcon,
+            icons: [{
+                icon: "plane",
+                name: "Flight",
+                route: "FlightSearch",
+                iconAnimation:"flight.json",
+                type:'flight',
+                image: Images.flight,
+                checked: true
+            },
+            {
+                icon: "calendar-alt",
+                name: "Hotel",
+                route: "Hotel",
+                iconAnimation:"hotel.json",
+                type:'hotel',
+                image: Images.hotel
+            },
+            {
+                icon: "map-marker-alt",
+                name: "Trip",
+                route: "Tour",
+                iconAnimation:"tour.json",
+                type:'trip',
+                image: Images.trip
+            }],
             heightHeader: Utils.heightHeader(),
             listdata_promo:DataLoading,
             listdata_musium:DataLoading,
@@ -77,6 +102,7 @@ export default class Home extends Component {
             listdata_product_trip_country:DataLoading,
             listdata_product_trip:DataTrip,
             listdata_product_hotel_package:DataHotelPackage,
+            listdata_product_hotel_package_city:DataHotelPackageCity,
             listdata_product_flash:DataLoading,
             config:DataConfig,
             
@@ -132,9 +158,6 @@ export default class Home extends Component {
         this.getConfig();
         this.getSession();
         
-        
-        
-        
         //Start Function Bind Search-----------------------//
         this.setBandaraAsal = this.setBandaraAsal.bind(this);
         this.setBandaraTujuan = this.setBandaraTujuan.bind(this);
@@ -148,6 +171,8 @@ export default class Home extends Component {
         this.setBookingTime = this.setBookingTime.bind(this);
         this.setCity = this.setCity.bind(this);
         this.setqty=this.setqty.bind(this);
+        this.setCatHotel = this.setCatHotel.bind(this);
+        this.setCityHotel = this.setCityHotel.bind(this);
         //End Function Bind Search-----------------------//
 
     }
@@ -189,7 +214,6 @@ export default class Home extends Component {
     }
     //-----function untuk hotel-----//
     
-    
     setBookingTime(tglAwal, tglAkhir,round) {
         if (round ==true) {
             this.setState({tglAwal:tglAwal});
@@ -213,6 +237,7 @@ export default class Home extends Component {
         return MyDate.getFullYear()  + '-' +  tempoMonth  + '-' +  tempoDate;
 
     }
+
     onSetFlightType(round) {
         this.setState({
             round: round
@@ -247,6 +272,14 @@ export default class Home extends Component {
             default:
                 break;
         }
+    }
+
+    onSelectHotel(type) {
+        const { navigation } = this.props;
+        const { from, to } = this.state;
+
+        navigation.navigate("SelectHotel", {});
+        
     }
 
     setDate(date) {
@@ -393,6 +426,16 @@ export default class Home extends Component {
         this.setState({kelas:kelas});
         this.setState({kelasId:kelasId});
     }
+
+    setCatHotel(text,value){
+        this.setState({catHotel:text });
+        this.setState({catHotelId:value});
+    }
+
+    setCityHotel(text,value){
+        this.setState({hotel_package_city:text });
+        this.setState({hotel_package_city_id:value});
+    }
     
     setTglAwal(tgl){
         this.setState({tglAwal:tgl});
@@ -404,27 +447,38 @@ export default class Home extends Component {
     
     renderContentSearch() {
         var type=this.state.type;
+        var title='';
         var content=<View></View>
+        var contentTitle=<View></View>
+        var contentButton=<Button
+                            full
+                            style={{height:40}}
+                            onPress={() => {  
+                                this.onSubmit();
+                            
+                            }}
+                        >
+                            Search
+                        </Button>
         if(type=="flight"){
             content=this.renderContentSearchFlight();
-        }else if(type=="hotelpackage"){
+            title='Pencarian Tiket Pesawat';
+        }else if(type=="hotel"){
             content=this.renderContentSearchHotel();
+            contentButton=<View></View>
+            title='Pencarian Hotel';
         }else if(type=="trip"){
             content=this.renderContentSearchTour();
+            contentButton=<View></View>
+            title='Pencarian Trip';
         }
+
+        contentTitle=<View><Text body2 bold>{title}</Text></View>
         return (
             <View style={{ flex: 1 }}>
+                {contentTitle}
                 {content}
-                <Button
-                        full
-                        style={{height:40}}
-                        onPress={() => {  
-                            this.onSubmit();
-                           
-                        }}
-                    >
-                        Search
-                    </Button>
+                {contentButton}
             </View>
         );
     }
@@ -497,33 +551,6 @@ export default class Home extends Component {
                     // minPrice={this.state.minPrice}
                     // totalPrice={this.state.totalPrice}
                 />
-            
-            {/* <View style={{ marginTop: 20, flexDirection: "row" }}>
-                <QuantityPicker
-                    label="Adults"
-                    detail=">= 12 years"
-                    value={this.state.dewasa}
-                    setJumlahDewasa={this.setJumlahDewasa}
-                    typeOld="1"
-                />
-        
-        
-                <QuantityPicker
-                    label="Children"
-                    detail="2 - 12 years"
-                    value={this.state.anak}
-                    style={{ marginHorizontal: 15 }}
-                    setJumlahAnak={this.setJumlahAnak}
-                    typeOld="2"
-                />
-                <QuantityPicker
-                    label="Infants"
-                    detail="<= 2 years"
-                    value={this.state.bayi}
-                    setJumlahBayi={this.setJumlahBayi}
-                    typeOld="3"
-                />
-            </View> */}
         </View>
         
         return (
@@ -533,14 +560,151 @@ export default class Home extends Component {
         );
         
     }
-    
-    
-    
+
+    renderContentSearchHotel(){
+        const { round, from, to, loading,login  } = this.state;
+        const { navigation } = this.props;
+        var content=<View>
+            <FormOption
+                style={{}} 
+                label={'Berdasarkan Kategori'}
+                option={this.state.listdata_category_hotel_package}
+                optionSet={this.setCatHotel}
+                optionSelectText={this.state.catHotel}
+                optionSelectValue={this.state.catHotelId}
+                icon={'crown'}
+            />
+
+            <FormOption
+                style={{}} 
+                label={'Berdasarkan Kota'}
+                option={this.state.listdata_product_hotel_package_city}
+                optionSet={this.setCityHotel}
+                optionSelectText={this.state.hotel_package_city}
+                optionSelectValue={this.state.hotel_package_city_id}
+                icon={'map-marker-alt'}
+            />
+
+            <HotelPlanCustom
+                to={'Berdasarkan Nama Hotel'}
+                onPressTo={() => this.onSelectHotel("to")}
+            />
+
+
+        </View>
+        
+        return (
+            <View style={{ flex: 1 }}>
+                {content}
+            </View>
+        );
+        
+    }
+
+    renderContentSearchTour(){
+        const { round, from, to, loading,login  } = this.state;
+        const { navigation } = this.props;
+        var content=<View>
+            <View style={styles.flightType}>
+                <Tag
+                    outline={!round}
+                    primary={round}
+                    round
+                    onPress={() => this.onSetFlightType(true)}
+                    style={{ marginRight: 20 }}
+                >
+                    Round Trip
+                </Tag>
+                <Tag
+                    outline={round}
+                    primary={!round}
+                    round
+                    onPress={() => this.onSetFlightType(false)}
+                >
+                    One Way
+                </Tag>
+            </View>
+            <FlightPlanCustom
+                round={round}
+                fromCode={this.state.bandaraAsalCode}
+                toCode={this.state.bandaraTujuanCode}
+                from={this.state.bandaraAsalLabel}
+                to={this.state.bandaraTujuanLabel}
+                style={{}}
+                onPressFrom={() => this.onSelectFlight("from")}
+                onPressTo={() => this.onSelectFlight("to")}
+            />
+
+            <SetDateLong
+                    labelTglAwal={'asd'}
+                    labelTglAkhir={'asdds'}
+                    setBookingTime={this.setBookingTime}
+                    tglAwal={this.state.tglAwal}
+                    tglAkhir={this.state.tglAkhir}
+                    round={this.state.round}
+                    icon={'calendar'}
+            />
+
+            <FormOption
+                style={{}} 
+                label={'Seat Class'}
+                option={this.state.listdata_kelas}
+                optionSet={this.setKelasPesawat}
+                optionSelectText={this.state.kelas}
+                optionSelectValue={this.state.kelasId}
+                icon={'crown'}
+            />
+            
+            <SetPenumpangLong
+                    label={this.state.jumlahPerson}
+                    dewasa={this.state.dewasa}
+                    anak={this.state.anak}
+                    bayi={this.state.bayi}
+                    setJumlahDewasa={this.setJumlahDewasa}
+                    setJumlahAnak={this.setJumlahAnak}
+                    setJumlahBayi={this.setJumlahBayi}
+                    // setMinPerson={}
+                    minPersonDef={1}
+                    minPerson={1}
+                    // minPrice={this.state.minPrice}
+                    // totalPrice={this.state.totalPrice}
+                />
+        </View>
+        
+        return (
+            <View style={{ flex: 1 }}>
+                {content}
+            </View>
+        );
+        
+    }
+
+    onSelectProduct(select) {
+        console.log('select',JSON.stringify(select));
+        this.setState({
+            icons: this.state.icons.map(item => {
+                if (item.name == select.name) {
+                    return {
+                        ...item,
+                        checked: true
+                    };
+                } else {
+                    return {
+                        ...item,
+                        checked: false
+                    };
+                }
+            })
+        });
+        
+        this.setState({type:select.type});
+        // setTimeout(() => {
+        //     this.fetch();
+        // }, 200);
+        
+    }
    
     //End Function Search-----------------------//
-
-
-    
     getProductTripCountry(){
         const {config} =this.state;
         var url=config.baseUrl;
@@ -592,7 +756,6 @@ export default class Home extends Component {
         });
     }
     
-    
     getProductVoucher(){
         const {config} =this.state;
         var url=config.baseUrl;
@@ -617,7 +780,6 @@ export default class Home extends Component {
             ); 
         });
     }
-    
     
     getProductHotelPackage(){
         const {config} =this.state;
@@ -644,7 +806,64 @@ export default class Home extends Component {
             ); 
         });
     }
+
+    getProductHotelPackageCity(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.common_city_hotel_package.dir;
+        this.setState({ loading_product_hotel_package_city: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    //console.log('getProductHotelPackageCity',JSON.stringify(result));
+                    this.setState({loading_product_hotel_package_city: false });
+                    this.setState({listdata_product_hotel_package_city: result});
+                    this.setState({hotel_package_city:result[0].text});
+                    this.setState({hotel_package_city_id:result[0].value});
+
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
     
+    getProductHotelPackageCategory(){
+        const {config} =this.state;
+        var url=config.baseUrl;
+        var path=config.common_category_hotel_package.dir;
+        this.setState({ loading_category_hotel_package: true }, () => {
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    console.log('category_hotel_package',JSON.stringify(result));
+                    this.setState({loading_category_hotel_package: false });
+                    this.setState({listdata_category_hotel_package: result});
+                    this.setState({catHotel:result[0].text});
+                    this.setState({catHotelId:result[0].value});
+                },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
+
     getProductFlash(){
         const {config} =this.state;
         var url=config.baseUrl;
@@ -750,7 +969,6 @@ export default class Home extends Component {
         });
     }
     
-
     componentDidMount() {
         //membuat bar transparant
         // StatusBar.setBackgroundColor("rgba(0,0,0,0)");
@@ -777,12 +995,13 @@ export default class Home extends Component {
             this.getProductTripCountry();
             this.getProductTrip();
             this.getProductHotelPackage();
+            this.getProductHotelPackageCity();
+            this.getProductHotelPackageCategory();
             this.getProductFlash();
             //this.getBlog();
         }, 500);
 
      }
-
      
     //fungsi untuk menampilkan icon
     renderIconService() {
@@ -802,10 +1021,11 @@ export default class Home extends Component {
                             style={styles.itemService}
                             activeOpacity={0.9}
                             onPress={() => {
-                            
-                                if(!item.checked){
-                                    navigation.navigate(item.route,{type:item.type});
-                                }
+                                
+                                this.onSelectProduct(item)
+                                // if(!item.checked){
+                                //     navigation.navigate(item.route,{type:item.type});
+                                // }
                                 
                             }}
                         >   
@@ -974,7 +1194,7 @@ export default class Home extends Component {
                             
                              <View 
                                 style={{ 
-                                marginTop:20,
+                                marginTop:10,
                                 backgroundColor:'#fff',
                                 width:'90%',
                                 alignSelf: 'center',
@@ -995,6 +1215,41 @@ export default class Home extends Component {
                             </View> 
                             
                            
+                            {   
+                            this.state.listdata_product_hotel_package_city.length != 0 ?
+                            <View>
+                                <CardCustomTitle style={{marginLeft:20}} title={'Featured Destination'} desc={'Sekumpulan tempat menginap pilihan yang telah terverifikasi kualitas dan desainnya'} />
+                                <FlatList
+                                        contentContainerStyle={{
+                                            paddingRight: 20
+                                        }}
+                                        horizontal={true}
+                                        data={this.state.listdata_product_hotel_package_city}
+                                        showsHorizontalScrollIndicator={false}
+                                        keyExtractor={(item, index) => item.id}
+                                        renderItem={({ item, index }) => (
+                                        
+                                            <CardCustom
+                                                propImage={{height:wp("40%"),url:item.img_featured_url}}
+                                                propInframe={{top:'',bottom:item.city_name}}
+                                                propTitle={{text:''}}
+                                                propDesc={{text:''}}
+                                                propPrice={{price:'',startFrom:false}}
+                                                propStar={{rating:''.stars,enabled:false}}
+                                                propLeftRight={{left:'',right:''}}
+                                                onPress={() =>
+                                                    navigation.navigate("HotelDetail",{product:item})
+                                                }
+                                                loading={this.state.loading_product_hotel_package_city}
+                                                propOther={{inFrame:false,horizontal:true,width:wp("60%")}}
+                                            />
+                                        
+                                        )}
+                                    />
+                            </View>
+                            :
+                            <View></View>
+                            }
                                     
 
                             {   
@@ -1032,6 +1287,9 @@ export default class Home extends Component {
                             :
                             <View></View>
                             }
+
+
+                            
                             
                             
                             
