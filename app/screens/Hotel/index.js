@@ -23,12 +23,27 @@ export default class Hotel extends Component {
     constructor(props) {
         super(props);
         
-        if(this.props.navigation.state.params && this.props.navigation.state.params.country){
-            country=this.props.navigation.state.params.country;
-            id_country=country.id_country;
+        if(this.props.navigation.state.params && this.props.navigation.state.params.id_country){
+            id_country=this.props.navigation.state.params.id_country;
         }else{
             id_country='';
         }
+
+        var id_city='';
+        if(this.props.navigation.state.params && this.props.navigation.state.params.id_city){
+            id_city=this.props.navigation.state.params.id_city;
+        }else{
+            id_city='';
+        }
+
+        var detail_category='';
+        if(this.props.navigation.state.params && this.props.navigation.state.params.detail_category){
+            detail_category=this.props.navigation.state.params.detail_category;
+        }else{
+            detail_category='';
+        }
+
+        
 
         
 
