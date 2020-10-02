@@ -89,10 +89,8 @@ export default class Tour extends Component {
         const { navigation } = this.props;
     
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-
-      
                 return (
-                                <View style={{marginTop: 20}}>
+                                <View style={{}}>
 
                                 {   
                                     this.state.listdata_product_trip.length != 0 ?
@@ -143,7 +141,7 @@ export default class Tour extends Component {
             >
                 <Header
                     title="Trip"
-                    // subTitle="24 Dec 2018, 2 Nights, 1 Room"
+                    subTitle="Indonesia"
                     renderLeft={() => {
                         return (
                             <Icon

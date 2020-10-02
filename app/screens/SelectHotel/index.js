@@ -104,7 +104,7 @@ export default class SelectHotel extends Component {
 
     onChange(select) {
         const { navigation } = this.props;
-        navigation.navigate("Hotel",{product:item})
+        navigation.navigate("HotelDetail",{product:select})
         // this.setState({
         //     flight: this.state.flight.map(item => {
         //         if (item.code == select.code) {
@@ -144,30 +144,59 @@ export default class SelectHotel extends Component {
             AsyncStorage.getItem('config', (error, result) => {
                 if (result) {   
                     let config = JSON.parse(result);
-                    // var access_token=config.token;
-                    // var path=config.common_airport.dir;
-                    var url=config.product_hotel_package_by_name.url;
+                    // // var access_token=config.token;
+                    // // var path=config.common_airport.dir;
+                    // var url=config.product_hotel_package_by_name.url;
 
-                    var myHeaders = new Headers();
-                    var raw = "";
+                    // var myHeaders = new Headers();
+                    // var raw = "";
 
-                    var requestOptions = {
-                    method: 'GET',
-                    headers: myHeaders,
-                    body: raw,
-                    redirect: 'follow'
-                    };
+                    // var requestOptions = {
+                    // method: 'GET',
+                    // headers: myHeaders,
+                    // body: raw,
+                    // redirect: 'follow'
+                    // };
 
-                    fetch(url+value, requestOptions)
-                    .then(response => response.json())
-                    .then(result => {
+                    // fetch(url+value, requestOptions)
+                    // .then(response => response.json())
+                    // .then(result => {
 
-                        //console.log('search',JSON.stringify(result));
-                        this.setState({flight:result});
-                    })
-                    .catch(error => console.log('error', error));
-                                    }
-                }); 
+                    //     //console.log('search',JSON.stringify(result));
+                    //     this.setState({flight:result});
+                    // })
+                    // .catch(error => console.log('error', error));
+                    
+                    var url=config.baseUrl;
+                    var path=config.product_hotel_package.dir;
+                    var paramUrl={"param":{
+                                "id_country":"",
+                                "id_city":"",
+                                "id_hotelpackage":"",
+                                "detail_category":"",
+                                "search":value,
+                                "limit":""
+                                }}
+                            
+                    console.log('paramUrl',JSON.stringify(paramUrl));
+                    var param={
+                        method: 'POST',
+                        headers: {
+                          Accept: 'application/json',
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(paramUrl),
+                      }
+                     PostDataNew(url,path,param)
+                         .then((result) => {
+                            this.setState({flight:result});
+                         },
+                         (error) => {
+                             this.setState({ error });
+                         }
+                    ); 
+                }
+            }); 
         }else{
 
             this.setState({flight:[]});
@@ -288,7 +317,7 @@ export default class SelectHotel extends Component {
                                     >
                                         <View style={styles.left}>
                                             <Text headline semibold>
-                                            {item.text}
+                                            {item.product_name}
                                             </Text>
                                             <Text
                                                 note
@@ -299,7 +328,7 @@ export default class SelectHotel extends Component {
                                                     paddingTop: 5
                                                 }}
                                             >
-                                                {item.detail_category.replace(/_/gi, ' ')} - {item.city}
+                                                {item.product_detail.detail_category.replace(/_/gi, ' ')} - {item.product_detail.city_name}
                                             </Text>
                                         </View>
                                     </View>

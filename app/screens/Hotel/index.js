@@ -42,6 +42,8 @@ export default class Hotel extends Component {
         }else{
             detail_category='';
         }
+        
+        
 
         
 
@@ -49,6 +51,8 @@ export default class Hotel extends Component {
 
         this.state = {
             id_country:id_country,
+            id_city:id_city,
+            detail_category:detail_category,
             listdata_product_hotel_package:DataHotelPackage,
             config:DataConfig,
         };
@@ -69,20 +73,30 @@ export default class Hotel extends Component {
     
     getProductHotelPackage(){
         const {config} =this.state;
-        var url=config.baseUrl;
-        var path=config.product_hotel_package.dir;
+        
         this.setState({ loading_product_hotel_package: true }, () => {
+            var url=config.baseUrl;
+            var path=config.product_hotel_package.dir;
+            var paramUrl={"param":{
+                        "id_country":this.state.id_country,
+                        "id_city":this.state.id_city,
+                        "id_hotelpackage":"",
+                        "detail_category":this.state.detail_category,
+                        "search":"",
+                        "limit":""
+                        }}
+                    
+                    
             var param={
                 method: 'POST',
                 headers: {
                   Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(),
+                body: JSON.stringify(paramUrl),
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    //console.log("getProductHotelPackage",JSON.stringify(result));
                     this.setState({loading_product_hotel_package: false });
                     this.setState({listdata_product_hotel_package: result});
                  },
@@ -109,7 +123,7 @@ export default class Hotel extends Component {
 
       
                 return (
-                                <View style={{marginTop: 20}}>
+                                <View style={{}}>
 
                                 {   
                                     this.state.listdata_product_hotel_package.length != 0 ?
