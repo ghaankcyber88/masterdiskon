@@ -164,23 +164,25 @@ export default function PembayaranDetail(props) {
     }
     
     function submitPayment(){
-        var payment_type=dataPayment.payment_type;        
+        var payment_type=dataPayment.payment_type;
+        //////console.log(payment_type);
         
-        // var paramPayMD={
-        //     "total_pembayaran":totalPembayaran,
-        //     "fee":fee,
-        //     "id_invoice":dataBooking[0].order_payment_recent.id_invoice,
-        //     "dataPayment":dataPayment,
-        //     "token":""
-        //     }
         
-        // if(payment_type=='bank_transfer'){
-        //     payMasterDiskon(paramPayMD);
-        // }else if(payment_type=='credit_card'){
-        //     tokenCC(paramPayMD);
-        // }
-
-        tokenMidtrans();
+        var paramPayMD={
+            "total_pembayaran":totalPembayaran,
+            "fee":fee,
+            "id_invoice":dataBooking[0].order_payment_recent.id_invoice,
+            "dataPayment":dataPayment,
+            "token":""
+            }
+        ////console.log('paramPayMD',JSON.stringify(paramPayMD));
+        
+        
+        if(payment_type=='bank_transfer'){
+            payMasterDiskon(paramPayMD);
+        }else if(payment_type=='credit_card'){
+            tokenCC(paramPayMD);
+        }
     }
     
     function tokenCC(paramPayMD){
@@ -243,174 +245,80 @@ export default function PembayaranDetail(props) {
             ); 
     
     }
-
-    function tokenMidtrans(){
-        var token = require('basic-auth-token');
-        var authBasicHeader=config.midtransKey.authBasicHeader;
-        var keyServerMidtrans=config.midtransKey.server;
-        var keyServerMidtransEnc=token("Aladdin", "open sesame");
-        alert(keyServerMidtransEnc);
-        // var payment_type=dataPayment.payment_type;
-        // var payment_sub=dataPayment.payment_sub;
+    
+    function payMidtrans(dataSendMidTrans){
+        var payment_type=dataPayment.payment_type;
+        var payment_sub=dataPayment.payment_sub;
         
-        // var transaction_details={
-        //     gross_amount: totalPembayaran,
-        //     order_id: dataBooking[0].order_payment_recent.id_invoice
-        // }
-        // var customer_details={
-        //     email: dataBooking[0].contact.contact_email,
-        //     first_name: dataBooking[0].contact.contact_first,
-        //     last_name: dataBooking[0].contact.contact_last,
-        //     phone: dataBooking[0].contact.contact_phone,
-        // }
-
-        // var enabled_payments=[payment_sub];
         
-        // var paramPay={
-        //     // payment_type: payment_type,
-        //     transaction_details: transaction_details,
-        //     customer_details: customer_details,
-        //     enabled_payments
-        // }
         
-        // var param={
-        //     method: 'POST',
-        //     headers: {
-        //       'Accept': 'application/json',
-        //       'Content-Type': 'application/json',
-        //       'Authorization': 'Basic '+authBasicHeader,
-        //     },
-        //     body: JSON.stringify(paramPay),
-        //   }
-        //   console.log('param',JSON.stringify(param));
-        //   console.log('paramPay',JSON.stringify(paramPay));
+        var transaction_details={
+            gross_amount: totalPembayaran,
+            order_id: dataSendMidTrans.id_invoice
+        }
+        var customer_details={
+            email: dataBooking[0].contact.contact_email,
+            first_name: dataBooking[0].contact.contact_first,
+            last_name: dataBooking[0].contact.contact_last,
+            phone: dataBooking[0].contact.contact_phone,
+        }
+        
+        
+        if(payment_type=='bank_transfer'){
+            var paramPay={
+                payment_type: payment_type,
+                transaction_details: transaction_details,
+                customer_details: customer_details,
+                bank_transfer: {
+                  bank: payment_sub
+                }
+            }
+        }else if(payment_type=='credit_card'){
+            var paramPay={
+                payment_type: payment_type,
+                transaction_details: transaction_details,
+                customer_details: customer_details,
+                credit_card: {
+                    token_id: dataSendMidTrans.token,
+                    authentication:false
+                    
+                }
+            }
+        }
+        
+        var param={
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic '+config.midtransKey.authBasicHeader,
+            },
+            body: JSON.stringify(paramPay),
+          }
+          //console.log('param',JSON.stringify(param));
+          //console.log('paramPay',JSON.stringify(paramPay));
        
-        //  var url=config.midtransUrlToken;
-        //  console.log('url',url);
-        //  return PostDataNew(url,'',param)
+         var url=config.midtransUrl;
+         
+        //  return PostDataNew(url,'v2/charge',param)
         //      .then((result) => {
-        //         console.log(JSON.stringify(result));
+                
         //         setLoading(false);
                 
-        //         // var redirect='PembayaranDetail';
-        //         //     var param={
-        //         //         id_order:idOrder,
-        //         //         dataPayment:dataPayment
-        //         //     }
-        //         // navigation.navigate("Loading",{redirect:redirect,param:param});
+        //         var redirect='PembayaranDetail';
+        //             var param={
+        //                 id_order:idOrder,
+        //                 dataPayment:dataPayment
+        //             }
+        //         navigation.navigate("Loading",{redirect:redirect,param:param});
         //         },
         //      (error) => {
-        //          //this.setState({ error });
+        //          this.setState({ error });
         //      }
-        //     ); 
+        // ); 
 
-            
-
-            
-            
-
-            
     
     }
-
-    function fetchTokenMidtrans(authBasicHeader){
-        var myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Basic "+authBasicHeader);
-
-        var raw = JSON.stringify({"transaction_details":{"gross_amount":2430000,"order_id":"MDPY2010011891"},"customer_details":{"email":"matadesaindotcom@gmail.com","first_name":"arif","last_name":"pambudi","phone":"79879879879"},"enabled_payments":["bca_va"]});
-
-        var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-        };
-
-        return fetch("https://app.sandbox.midtrans.com/snap/v1/transactions", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-
-            console.log(JSON.stringify(result));
-        })
-        .catch(error => console.log('error', error));
-    } 
-
-    
-    // function payMidtrans(dataSendMidTrans){
-    //     var payment_type=dataPayment.payment_type;
-    //     var payment_sub=dataPayment.payment_sub;
-        
-        
-        
-    //     var transaction_details={
-    //         gross_amount: totalPembayaran,
-    //         order_id: dataSendMidTrans.id_invoice
-    //     }
-    //     var customer_details={
-    //         email: dataBooking[0].contact.contact_email,
-    //         first_name: dataBooking[0].contact.contact_first,
-    //         last_name: dataBooking[0].contact.contact_last,
-    //         phone: dataBooking[0].contact.contact_phone,
-    //     }
-        
-        
-    //     if(payment_type=='bank_transfer'){
-    //         var paramPay={
-    //             payment_type: payment_type,
-    //             transaction_details: transaction_details,
-    //             customer_details: customer_details,
-    //             bank_transfer: {
-    //               bank: payment_sub
-    //             }
-    //         }
-    //     }else if(payment_type=='credit_card'){
-    //         var paramPay={
-    //             payment_type: payment_type,
-    //             transaction_details: transaction_details,
-    //             customer_details: customer_details,
-    //             credit_card: {
-    //                 token_id: dataSendMidTrans.token,
-    //                 authentication:false
-                    
-    //             }
-    //         }
-    //     }
-        
-    //     var param={
-    //         method: 'POST',
-    //         headers: {
-    //           Accept: 'application/json',
-    //           'Content-Type': 'application/json',
-    //           'Authorization': 'Basic '+config.midtransKey.authBasicHeader,
-    //         },
-    //         body: JSON.stringify(paramPay),
-    //       }
-    //       //console.log('param',JSON.stringify(param));
-    //       //console.log('paramPay',JSON.stringify(paramPay));
-       
-    //      var url=config.midtransUrl;
-         
-    //     //  return PostDataNew(url,'v2/charge',param)
-    //     //      .then((result) => {
-                
-    //     //         setLoading(false);
-                
-    //     //         var redirect='PembayaranDetail';
-    //     //             var param={
-    //     //                 id_order:idOrder,
-    //     //                 dataPayment:dataPayment
-    //     //             }
-    //     //         navigation.navigate("Loading",{redirect:redirect,param:param});
-    //     //         },
-    //     //      (error) => {
-    //     //          this.setState({ error });
-    //     //      }
-    //     // ); 
-
-    
-    // }
     
     function changePayment(){
         var item=dataBooking[0];
@@ -708,7 +616,31 @@ export default function PembayaranDetail(props) {
         var virtual_account='';
         
             if(order_payment_recent != null){
-                content=<View>
+                if(order_payment_recent.payment_type==""){
+                    var payment_type=dataPayment.payment_type;
+                    var payment_sub=dataPayment.payment_sub;
+                    virtual_account='';
+                }else{
+                    var payment_type=order_payment_recent.payment_type;
+                    var payment_sub=order_payment_recent.payment_sub;
+                    
+                    if(payment_type=='bank_transfer'){
+                        if(payment_sub=='bca'){
+                            virtual_account=statusMidtrans.va_numbers[0].va_number;
+                        }else if(payment_sub=='bni'){
+                            virtual_account=statusMidtrans.va_numbers[0].va_number;
+                        }else if(payment_sub=='permata'){
+                            virtual_account=statusMidtrans.permata_va_number;
+                        }
+                    }
+                    
+                }
+                
+                
+                if(order_payment_recent.payment_type == ""){
+            
+        
+                            content=<View>
                                         <View style={{
                                                     borderWidth: 1, 
                                                     borderColor: BaseColor.textSecondaryColor,
@@ -788,8 +720,133 @@ export default function PembayaranDetail(props) {
                                             </View>
                                         </View>
                                     </View>
+                                
+                            }else{
+                            
+                                content=<View>
+                                <View style={{
+                                            borderWidth: 1, 
+                                            borderColor: BaseColor.textSecondaryColor,
+                                            borderRadius: 10,
+                                            marginBottom:10,
+                                            padding:10
+                                            }}>
+                                            
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        No. Tagihan
+                                                    </Text>
+                                                    <Text>
+                                                        {order_payment_recent.id_invoice}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        Transfer
+                                                    </Text>
+                                                    <Text>
+                                                        {dataPayment.payment_sub_label} 
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
+                                                    <Text></Text>
+                                                    <Text headline semibold numberOfLines={1}>
+                                                    
+                                                    </Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        No Rekening 
+                                                    </Text>
+                                                    <Text headline semibold numberOfLines={6}>
+                                                        {dataBooking[0].order_payment_info.norek}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
+                                                    <Text></Text>
+                                                    <TouchableOpacity onPress={() => Clipboard.setString(dataBooking[0].order_payment_info.norek)}>
+                                                        <View>
+                                                            <Text>
+                                                                SALIN
+                                                            </Text>
+                                                          </View>
+                                                    </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center",borderBottomWidth: 1,borderBottomColor: BaseColor.textSecondaryColor,borderBottomStyle: 'solid',paddingBottom:10}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        Total Pembayaran 
+                                                    </Text>
+                                                    <Text headline semibold numberOfLines={1}>
+                                                    {'IDR '+priceSplitter(order_payment_recent.iv_total_amount)}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                                        <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                                            <View style={{ flex: 8,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                                <View>
+                                                    <Text style={{color:BaseColor.grayColor,fontSize:12}}>
+                                                        Virtual Account 
+                                                    </Text>
+                                                    <Text headline semibold numberOfLines={10}>
+                                                        {virtual_account}
+                                                        
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View style={{flex:4,justifyContent: "center",alignItems: "flex-end"}}>
+                                                    <Text></Text>
+                                                    <TouchableOpacity onPress={() => Clipboard.setString(virtual_account)}>
+                                                        <View>
+                                                            <Text>
+                                                                SALIN
+                                                            </Text>
+                                                          </View>
+                                                    </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    
+                                    
+                                    
+                                </View>
+                            </View>
                 
-                
+                    
+                    
+                }
             }
         
             
@@ -982,6 +1039,9 @@ export default function PembayaranDetail(props) {
     }
     
     function content_button(){
+        //var dataBooking=dataBooking;
+        //const { navigation} = props;
+        //const {dataPayment,loading,dataBooking} =state;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         var order_payment_num=dataBooking[0].order_payment_num;
@@ -992,8 +1052,8 @@ export default function PembayaranDetail(props) {
             if(order_payment_recent.payment_type == ""){
                 var payment_type=dataPayment.payment_type;
                 var payment_sub=dataPayment.payment_sub;
-                
-                    content=<View style={styles.contentButtonBottom}>
+                if(payment_type=='bank_transfer'){
+                content=<View style={styles.contentButtonBottom}>
                             <Button
                                 full
                                 loading={loading}
@@ -1011,8 +1071,37 @@ export default function PembayaranDetail(props) {
                                 Bayar
                             </Button>
                     </View>
-               
+                    }else{
+                        content=<View>
+                                    <TouchableOpacity  disabled={disabledButton} 
+                                        onPress={() => {
+                                        Alert.alert(
+                                            'Confirm',
+                                            'Yakin ingin membayar tagihan ini ?',
+                                            [
+                                              {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                              {text: 'YES', onPress: () => submitPayment()},
+                                            ]
+                                          );
+                                        }} 
+                                        
+                                        
+                                        >
+                                        <View pointerEvents='none' style={styles.groupinput}>
+                                            <Button
+                                                loading={loading}
+                                                style={{backgroundColor:colorButton}}
+                                                full
+                                            >
+                                                <Text style={{color:colorButtonText}}>Bayar</Text>
+                                            </Button>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                    }
             }else{
+                
+                    
                 content=<View>
                     <View style={styles.contentButtonBottom}>
                             <Button
@@ -1020,12 +1109,14 @@ export default function PembayaranDetail(props) {
                                 loading={loading}
                                 onPress={() => { 
                                     //onSubmit();
+                                    
                                     // var redirect='PembayaranDetail';
                                     // var param={
                                     //     id_order:idOrder,
                                     //     dataPayment:{}
                                     // }
                                     // navigation.navigate("Loading",{redirect:redirect,param:param});
+            
                                 }}
                             >
                                 Sudah Membayar
@@ -1243,19 +1334,19 @@ export default function PembayaranDetail(props) {
     var order_payment_recent=item.order_payment_recent;
     
     var content=<View></View>
-    if(order_payment_recent.snaptoken==''){
+    if(payment_type=='coreapi'){
     content=<ScrollView>
             <View  style={{ padding: 20 }}>
                 {content_countdown()}
                 {content_payment()}
-                {/* {content_payment_form()} */}
+                {content_payment_form()}
                 {content_button()}
             </View>
             </ScrollView>
     }else{
         var urlSnap=config.midtransUrlSnap+params.snaptoken;
         //console.log('urlSnap',urlSnap);
-        content=<View style={{flex:1}}>
+        content=<View style={{flex:1,marginTop:20}}>
         <WebView style={{}} source={{ uri: urlSnap }} />
                             <Button
                                 style={{borderRadius: 0,marginVertical:0}}

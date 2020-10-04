@@ -7,10 +7,11 @@ const DataConfig = {
     "aeroClientSecret": "Djlb5JDp",
     "aeroUsername": "vasubagent@gmail.com",
     "aeroPassword": "PU8FDHK0",
-    "token": "6Z9Wy71nPoa8LBms7oAdG9VmEp23HsMjFAR3rta1y5E",
+    "token": "o7nIuhXzbEebeohIwOro2QhUjXep6rgq8v55MTbAVoQ",
     "midtransStatus": false,
     "midtransUrl": "https://api.sandbox.midtrans.com/",
     "midtransUrlSnap": "https://app.sandbox.midtrans.com/snap/v2/vtweb/",
+    "midtransUrlToken": "https://app.midtrans.com/snap/v1/transactions",
     "midtransKey": {
         "client": "SB-Mid-client-zxkvGZYYuXIidGRG",
         "server": "SB-Mid-server-kaH7VW-jCiV028kVrbfn6HLf",
@@ -113,7 +114,7 @@ const DataConfig = {
     "product_hotel_package": {
         "url": "https://sandbox.masterdiskon.com/front/api/product/product_hotel_package",
         "dir": "front/api/product/product_hotel_package",
-        "param": "{'param':{'id_city':''}}"
+        "param": "{'param':{'id_country':'','id_city':'','id_hotelpackage':'','detail_category':'','limit':''}}"
     },
     "product_flash": {
         "url": "https://sandbox.masterdiskon.com/front/api/product/product_flash",

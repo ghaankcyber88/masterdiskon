@@ -179,7 +179,7 @@ export default class Pembayaran extends Component {
                     option:false,
                     subPayment:[
                                     {
-                                        payment_sub:"visa_mastercard",
+                                        payment_sub:"credit_card",
                                         payment_sub_label:"Kartu Kredit",
                                         icon:"",
                                     }
@@ -191,17 +191,17 @@ export default class Pembayaran extends Component {
                     option:true,
                     subPayment:[
                                     {
-                                        payment_sub:"bca",
+                                        payment_sub:"bca_va",
                                         payment_sub_label:"BCA",
                                         icon:"",
                                     },
                                     {
-                                        payment_sub:"bni",
+                                        payment_sub:"bni_va",
                                         payment_sub_label:"BNI",
                                         icon:"",
                                     },
                                     {
-                                        payment_sub:"permata",
+                                        payment_sub:"permata_va",
                                         payment_sub_label:"PERMATA",
                                         icon:"",
                                     },
@@ -761,7 +761,8 @@ export default class Pembayaran extends Component {
     gotoPaymentDetailSub(item){
         this.setState({modalVisible:false});
         const { navigation} = this.props;
-        const {id_order,paymentChooseTemp} =this.state;
+        const {id_order,paymentChooseTemp,config} =this.state;
+        console.log(config.midtransMethod);
         
         //console.log('paymentChooseTemp',JSON.stringify(paymentChooseTemp));
         //console.log('paymentChooseSub',JSON.stringify(item));
@@ -785,7 +786,9 @@ export default class Pembayaran extends Component {
     
     gotoPaymentDetail(item){
         const { navigation} = this.props;
-        const {id_order} =this.state;
+        const {id_order,config} =this.state;
+
+        console.log(config.midtransMethod);
         var dataPayment={
             payment_type:item.payment_type,
             payment_type_label:item.payment_type_label,
@@ -903,8 +906,7 @@ export default class Pembayaran extends Component {
             )
         ))
         
-        if(config.midtransMethod=='coreapi'){
-            if(order_payment_recent != null){
+        if(order_payment_recent != null){
                 var expiredTime=this.duration(order_payment_recent.expired);
     
                 if(expiredTime > 0){
@@ -958,122 +960,7 @@ export default class Pembayaran extends Component {
                     }
                 
                 }
-            }else{
-                status_name=item.order_status.order_status_name;
-                content=<View
-                            style={{
-                                borderWidth: 1, 
-                                borderColor: BaseColor.textSecondaryColor,
-                                borderRadius: 10,
-                                marginBottom:10,
-                                padding:10,
-                                justifyContent: 'center', alignItems: 'center'
-                                }}
-                            >
-                                <Icon
-                                    name="check-circle"
-                                    size={50}
-                                    color={'green'}
-                                    solid
-                                />
-                                <Text style={{fontSize:50}}>
-                                    {status_name}
-                                </Text>
-                            </View>
-               
-            }
         }else{
-        
-            if(order_payment_recent != null){
-                var expiredTime=this.duration(order_payment_recent.expired);
-    
-                if(expiredTime > 0){
-                    status_name=item.order_status.order_status_name;
-                    content=content=<Button
-                                        full
-                                        style={{ 
-                                             marginTop: 20,
-                                            borderRadius: 18,
-                                        // backgroundColor: BaseColor.fieldColor,
-                                        shadowColor: "#000",
-                                        shadowOffset: {
-                                            width: 0,
-                                            height: 2,
-                                        },
-                                        shadowOpacity: 0.25,
-                                        shadowRadius: 3.84,
-                                        elevation: 5 }}
-                                        onPress={() => {
-                                            var dataPayment={
-                                                payment_type:'snap',
-                                                payment_type_label:'snap',
-                                                payment_sub:'snap',
-                                                payment_sub_label:'snap',
-                                            }
-                                            
-                                            var param={
-                                                id_order:id_order,
-                                                snaptoken:order_payment_recent.snaptoken,
-                                                dataPayment:dataPayment
-                                            }
-                                            navigation.navigate("PembayaranDetail",{
-                                                param:param,
-                                            });
-                                        
-                                        
-                                        }}
-                                    >
-                                        Bayar Sekarang
-                                    </Button>
-                }else{
-                    if(item.order_status.order_status_slug=='new'){
-                        status_name='Expired';
-                        content=<View
-                            style={{
-                                borderWidth: 1, 
-                                borderColor: BaseColor.textSecondaryColor,
-                                borderRadius: 10,
-                                marginBottom:10,
-                                padding:10,
-                                justifyContent: 'center', alignItems: 'center'
-                                }}
-                            >
-                                <Icon
-                                    name="times-circle"
-                                    size={50}
-                                    color={BaseColor.thirdColor}
-                                    solid
-                                />
-                                <Text style={{fontSize:50}}>
-                                    {status_name}
-                                </Text>
-                            </View>
-                    }else{
-                        status_name=item.order_status.order_status_name;
-                        content=<View
-                            style={{
-                                borderWidth: 1, 
-                                borderColor: BaseColor.textSecondaryColor,
-                                borderRadius: 10,
-                                marginBottom:10,
-                                padding:10,
-                                justifyContent: 'center', alignItems: 'center'
-                                }}
-                            >
-                                <Icon
-                                    name="times-circle"
-                                    size={50}
-                                    color={BaseColor.thirdColor}
-                                    solid
-                                />
-                                <Text style={{fontSize:50}}>
-                                    {status_name}
-                                </Text>
-                            </View>
-                    }
-                
-                }
-            }else{
                 status_name=item.order_status.order_status_name;
                 content=<View
                             style={{
@@ -1096,11 +983,12 @@ export default class Pembayaran extends Component {
                                 </Text>
                             </View>
                
-            }
+        }
+                
+          
            
             
             
-        }
       
         
         
@@ -1208,8 +1096,8 @@ export default class Pembayaran extends Component {
              PostDataNew(url,path,param)
                  .then((result) => {
                     var dataBooking=result;
-                            //console.log("---------------get_booking_historys ------------");
-                            //console.log(JSON.stringify(result));
+                            // console.log("---------------get_booking_historys ------------");
+                            // console.log(JSON.stringify(result));
                             
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:dataBooking});
