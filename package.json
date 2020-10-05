@@ -25,6 +25,7 @@
         "@zwdvidal/react-native-dropdownalert": "^3.11.0",
         "basic-auth-token": "^0.4.2",
         "basic-authorization-header": "^0.2.7",
+        "js-base64": "^3.5.2",
         "lottie-react-native": "^3.4.0",
         "midtrans-client": "^1.1.0",
         "prop-types": "^15.7.2",

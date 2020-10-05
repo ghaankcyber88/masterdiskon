@@ -28,8 +28,7 @@ import {localNotificationService} from '../../src/LocalNotificationService';
 import {DataMasterDiskon} from "@data";
 // import Clipboard from "@react-native-community/clipboard";
 import { Form, TextValidator } from 'react-native-validator-form';
-
-
+import {Base64} from 'js-base64';
 
 const styles = StyleSheet.create({
     containField: {
@@ -121,7 +120,7 @@ export default function PembayaranDetail(props) {
       const [colorButtonText,setColorButtonText] =useState(BaseColor.whiteColor);
       const [disabledButton,setDisabledButton] =useState(true);
       const [dataMasterDiskon, setDataMasterDiskon]=useState(DataMasterDiskon[0]);
-
+        
 
       //console.log('dataBookingBro',JSON.stringify(dataBooking));
       
@@ -223,12 +222,9 @@ export default function PembayaranDetail(props) {
               }
            
              var url=config.baseUrl;
-             ////console.log('baseUrl',url);
              
              return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
                  .then((result) => {
-                            ////console.log("---------------result payment md ------------");
-                            ////console.log(JSON.stringify(result));
                             var id_invoice=result.id_invoice;
                             var token=result.token;
                             var dataSendMidTrans={
@@ -241,68 +237,112 @@ export default function PembayaranDetail(props) {
                      this.setState({ error });
                  }
             ); 
-    
     }
+    
+    function snapTokenUpdate(paramPayMD){
+        setLoading(true);
+        
+        var param={
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(paramPayMD),
+          }
+       
+         var url=config.baseUrl;
+         
+         return PostDataNew(url,'front/api/OrderSubmit/snap_token_update',param)
+             .then((result) => {
+                        console.log('snapTokenUpdate',JSON.stringify(result));
+                        var id_invoice=result.id_invoice;
+                        var token=result.token;
+                        var dataSendMidTrans={
+                            id_invoice:id_invoice,
+                            token:token
+                        }
+                        var redirect='PembayaranDetail';
+                        var param={
+                             id_order:idOrder,
+                             dataPayment:dataPayment
+                        }
+                        navigation.navigate("Loading",{redirect:redirect,param:param});
+
+             },
+             (error) => {
+                 this.setState({ error });
+             }
+        ); 
+}
 
     function tokenMidtrans(){
-        var token = require('basic-auth-token');
+        // var token = require('basic-auth-token');
         var authBasicHeader=config.midtransKey.authBasicHeader;
-        var keyServerMidtrans=config.midtransKey.server;
-        var keyServerMidtransEnc=token("Aladdin", "open sesame");
-        alert(keyServerMidtransEnc);
-        // var payment_type=dataPayment.payment_type;
-        // var payment_sub=dataPayment.payment_sub;
-        
-        // var transaction_details={
-        //     gross_amount: totalPembayaran,
-        //     order_id: dataBooking[0].order_payment_recent.id_invoice
-        // }
-        // var customer_details={
-        //     email: dataBooking[0].contact.contact_email,
-        //     first_name: dataBooking[0].contact.contact_first,
-        //     last_name: dataBooking[0].contact.contact_last,
-        //     phone: dataBooking[0].contact.contact_phone,
-        // }
 
-        // var enabled_payments=[payment_sub];
+        var payment_type=dataPayment.payment_type;
+        var payment_sub=dataPayment.payment_sub;
         
-        // var paramPay={
-        //     // payment_type: payment_type,
-        //     transaction_details: transaction_details,
-        //     customer_details: customer_details,
-        //     enabled_payments
-        // }
+        var transaction_details={
+            gross_amount: totalPembayaran,
+            order_id: dataBooking[0].order_payment_recent.id_invoice
+        }
+        var customer_details={
+            email: dataBooking[0].contact.contact_email,
+            first_name: dataBooking[0].contact.contact_first,
+            last_name: dataBooking[0].contact.contact_last,
+            phone: dataBooking[0].contact.contact_phone,
+        }
+
+        var enabled_payments=[payment_sub];
         
-        // var param={
-        //     method: 'POST',
-        //     headers: {
-        //       'Accept': 'application/json',
-        //       'Content-Type': 'application/json',
-        //       'Authorization': 'Basic '+authBasicHeader,
-        //     },
-        //     body: JSON.stringify(paramPay),
-        //   }
-        //   console.log('param',JSON.stringify(param));
-        //   console.log('paramPay',JSON.stringify(paramPay));
+        var paramPay={
+            // payment_type: payment_type,
+            transaction_details: transaction_details,
+            customer_details: customer_details,
+            enabled_payments
+        }
+        
+        var param={
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic '+authBasicHeader,
+            },
+            body: JSON.stringify(paramPay),
+          }
+          console.log('param',JSON.stringify(param));
+          console.log('paramPay',JSON.stringify(paramPay));
        
-        //  var url=config.midtransUrlToken;
-        //  console.log('url',url);
-        //  return PostDataNew(url,'',param)
-        //      .then((result) => {
-        //         console.log(JSON.stringify(result));
-        //         setLoading(false);
+         var url=config.midtransUrlToken;
+         console.log('url',url);
+         return PostDataNew(url,'',param)
+             .then((result) => {
+                console.log(JSON.stringify(result));
+                var paramPayMD={
+                    "total_pembayaran":totalPembayaran,
+                    "fee":fee,
+                    "id_invoice":dataBooking[0].order_payment_recent.id_invoice,
+                    "dataPayment":dataPayment,
+                    "token":result.token,
+                    "order_code":dataBooking[0].order_code
+                    }
                 
-        //         // var redirect='PembayaranDetail';
-        //         //     var param={
-        //         //         id_order:idOrder,
-        //         //         dataPayment:dataPayment
-        //         //     }
-        //         // navigation.navigate("Loading",{redirect:redirect,param:param});
-        //         },
-        //      (error) => {
-        //          //this.setState({ error });
-        //      }
-        //     ); 
+                snapTokenUpdate(paramPayMD);
+                setLoading(false);
+                
+                // var redirect='PembayaranDetail';
+                //     var param={
+                //         id_order:idOrder,
+                //         dataPayment:dataPayment
+                //     }
+                // navigation.navigate("Loading",{redirect:redirect,param:param});
+                },
+             (error) => {
+                 //this.setState({ error });
+             }
+            ); 
 
             
 
@@ -519,8 +559,8 @@ export default function PembayaranDetail(props) {
                         return PostDataNew(url,path,param)
                             .then((result) => {
                                 var dataBooking=result;
-                                //console.log("---------------get_booking_historyssss ------------");
-                                //console.log(JSON.stringify(result));
+                                console.log("---------------get_booking_historyssss ------------");
+                                console.log(JSON.stringify(result));
                                 setLoading(false);
                                 setDataBooking(dataBooking);
                                 
@@ -1014,23 +1054,23 @@ export default function PembayaranDetail(props) {
                
             }else{
                 content=<View>
-                    <View style={styles.contentButtonBottom}>
-                            <Button
-                                full
-                                loading={loading}
-                                onPress={() => { 
-                                    //onSubmit();
-                                    // var redirect='PembayaranDetail';
-                                    // var param={
-                                    //     id_order:idOrder,
-                                    //     dataPayment:{}
-                                    // }
-                                    // navigation.navigate("Loading",{redirect:redirect,param:param});
-                                }}
-                            >
-                                Sudah Membayar
-                            </Button>
-                    </View>
+                        <View style={styles.contentButtonBottom}>
+                                <Button
+                                    full
+                                    loading={loading}
+                                    onPress={() => { 
+                                        //onSubmit();
+                                        // var redirect='PembayaranDetail';
+                                        // var param={
+                                        //     id_order:idOrder,
+                                        //     dataPayment:{}
+                                        // }
+                                        // navigation.navigate("Loading",{redirect:redirect,param:param});
+                                    }}
+                                >
+                                    Sudah Membayar
+                                </Button>
+                        </View>
                         <View style={styles.contentButtonBottom}>
                                 <Button
                                     full
@@ -1253,7 +1293,7 @@ export default function PembayaranDetail(props) {
             </View>
             </ScrollView>
     }else{
-        var urlSnap=config.midtransUrlSnap+params.snaptoken;
+        var urlSnap=config.midtransUrlSnap+order_payment_recent.snaptoken;
         //console.log('urlSnap',urlSnap);
         content=<View style={{flex:1}}>
         <WebView style={{}} source={{ uri: urlSnap }} />
@@ -1274,7 +1314,7 @@ export default function PembayaranDetail(props) {
                                     // );
                             }}    
                             >
-                                Klik disini untuk cek pembayaran Anda
+                                Sudah Membayar
                             </Button>
         </View>
     }
