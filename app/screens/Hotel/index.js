@@ -9,6 +9,11 @@ import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
 import CardCustom from "../../components/CardCustom";
 import CardCustomTitle from "../../components/CardCustomTitle";
+import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp
+  } from "react-native-responsive-screen";
+
 
 // Load sample data
 import {DataLoading,DataConfig,DataHotelPackage,DataTrip} from "@data";
@@ -127,19 +132,17 @@ export default class Hotel extends Component {
 
                                 {   
                                     this.state.listdata_product_hotel_package.length != 0 ?
-                                    <View>
+                                    <View style={{flex:1}}>
                                         <FlatList
-                                                contentContainerStyle={{
-                                                    paddingRight: 20
-                                                }}
-                                                horizontal={false}
+                                                columnWrapperStyle={{ marginBottom: 10 }}
+                                                numColumns={2}
+                                                //horizontal={false}
                                                 data={this.state.listdata_product_hotel_package}
                                                 showsHorizontalScrollIndicator={false}
                                                 keyExtractor={(item, index) => item.id}
                                                 renderItem={({ item, index }) => (
-                                                
                                                     <CardCustom
-                                                        propImage={{height:200,url:item.img_featured_url}}
+                                                        propImage={{height:wp("40%"),url:item.img_featured_url}}
                                                         propInframe={{top:item.product_detail.area,bottom:item.product_detail.detail_category}}
                                                         propTitle={{text:item.product_name}}
                                                         propDesc={{text:item.product_detail.address}}
@@ -150,7 +153,10 @@ export default class Hotel extends Component {
                                                             navigation.navigate("HotelDetail",{product:item})
                                                         }
                                                         loading={this.state.loading_product_hotel_package}
-                                                        propOther={{inFrame:true,horizontal:false,width:Utils.scaleWithPixel(200)}}
+                                                        propOther={{inFrame:true,horizontal:false,width:wp("45%")}}
+                                                        style={
+                                                            {marginLeft:15,marginBottom: 15}
+                                                        }
                                                     />
                                                 
                                                 )}

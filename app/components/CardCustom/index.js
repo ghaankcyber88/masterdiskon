@@ -190,14 +190,26 @@ export default class CardCustom extends Component {
             }else{
               styles={marginLeft:0,color:BaseColor.thirdColor}
             }
-            contentPrice=<Text
+            
+            if(propOther.horizontal==false){
+              contentPrice=<Text
+                                body2
+                                bold
+                                style={styles}
+                            >
+                                {propPrice.price}
+                            </Text>
+            }else{
+              contentPrice=<Text
                                 body1
                                 bold
                                 style={styles}
                             >
                                 {propPrice.price}
                             </Text>
-                          
+            
+            }
+            
           }
           
           
@@ -285,15 +297,14 @@ export default class CardCustom extends Component {
         var marginBottom=0;
         var styleCustom={};
         if(propOther.horizontal==false){
-          styleCustom.marginBottom=10;
-          styleCustom.marginLeft=20;
+          //styleCustom.marginBottom=10;
+          styleCustom.width=propOther.width;
         }else{
           styleCustom.marginLeft=20;
           styleCustom.borderRadius=5;
           styleCustom.width=propOther.width;
           styleCustom.marginLeft=20;
         }
-        //styleCustom.width=Utils.scaleWithPixel(propOther.width)
         return (
             <View style={[styleCustom,style]}>
                 <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
@@ -322,6 +333,7 @@ CardCustom.propTypes = {
     propOther:PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
     onPress : PropTypes.func,
     loading : PropTypes.bool,
+    grid: PropTypes.bool,
 };
 
 CardCustom.defaultProps = {
@@ -336,4 +348,5 @@ CardCustom.defaultProps = {
     propOther : {},
     onPress: () => {},
     loading : true,
+    grid: false,
 };

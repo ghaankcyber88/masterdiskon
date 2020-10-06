@@ -13,7 +13,7 @@ export default StyleSheet.create({
         // borderColor: BaseColor.fieldColor,
         
         paddingHorizontal: 10,
-        paddingVertical: 5,
+        paddingVertical: 10,
         width: "100%",
         borderBottomColor: BaseColor.fieldColor,
         borderBottomWidth: 2,
