@@ -1096,14 +1096,20 @@ export default class Pembayaran extends Component {
              PostDataNew(url,path,param)
                  .then((result) => {
                     var dataBooking=result;
-                            // console.log("---------------get_booking_historys ------------");
-                            // console.log(JSON.stringify(result));
+                            console.log("---------------get_booking_historys ------------");
+                            console.log(JSON.stringify(result));
                             
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:dataBooking});
                             
                             var order_status=dataBooking[0].order_status.order_status_slug;
                             var product=dataBooking[0].product;
+                            // var item=dataBooking[0];
+                            // var order_payment_recent=item.order_payment_recent;
+                            
+                            // if(order_payment_recent.snaptoken !=''){
+                            
+                            // }
                             
                             if(product=='Flight' && order_status=='complete'){
                                 var order_code=dataBooking[0].aero_orderid;

@@ -1296,27 +1296,43 @@ export default function PembayaranDetail(props) {
         var urlSnap=config.midtransUrlSnap+order_payment_recent.snaptoken;
         //console.log('urlSnap',urlSnap);
         content=<View style={{flex:1}}>
-        <WebView style={{}} source={{ uri: urlSnap }} />
-                            <Button
-                                style={{borderRadius: 0,marginVertical:0}}
-                                full
-                                loading={loading}
-                                onPress={() => { 
-                                    paymentConfirm(order_payment_recent.id_invoice);
-                                //alert(order_payment_recent.id_invoice);
-                                    // Alert.alert(
-                                    //   'Confirm',
-                                    //   'Yakin ingin membayar tagihan ini ?',
-                                    //   [
-                                    //     {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
-                                    //     {text: 'YES', onPress: () => submitPayment()},
-                                    //   ]
-                                    // );
-                            }}    
-                            >
-                                Sudah Membayar
-                            </Button>
-        </View>
+                <WebView style={{height:'80%'}} source={{ uri: urlSnap }} />
+                            <View style={{flexDirection: "row"}}>
+                                {/* <View style={{flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                    <Button
+                                        style={{borderRadius: 0,marginVertical:0,backgroundColor:BaseColor.primaryColor}}
+                                        full
+                                        loading={loading}
+                                        onPress={() => { 
+                                            Alert.alert(
+                                              'Confirm',
+                                              'Yakin ingin membayar tagihan ini ?',
+                                              [
+                                                {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                                {text: 'YES', onPress: () => submitPayment()},
+                                              ]
+                                            );
+                                        }}    
+                                        >
+                                        <Text style={{color:BaseColor.whiteColor}}>Ganti Pembayaran</Text>
+                                        
+                                    </Button>
+                                </View> */}
+                                
+                                <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                                    <Button
+                                        style={{borderRadius: 0,marginVertical:0}}
+                                        full
+                                        loading={loading}
+                                        onPress={() => { 
+                                        }}    
+                                        >
+                                        Sudah Membayar
+                                    </Button>
+                                </View>
+                            
+                            </View>
+            </View>
     }
 
   return (
