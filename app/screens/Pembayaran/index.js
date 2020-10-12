@@ -208,18 +208,18 @@ export default class Pembayaran extends Component {
                                    
                                 ]
                 },
-                {
-                    payment_type:"pembayaran_qr",
-                    payment_type_label: "Pembayaran QR",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"visa_mastercard",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
+                // {
+                //     payment_type:"pembayaran_qr",
+                //     payment_type_label: "Pembayaran QR",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"visa_mastercard",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
                 {
                     payment_type:"klik_bca",
                     payment_type_label: "Klik BCA",
@@ -244,42 +244,42 @@ export default class Pembayaran extends Component {
                                     }
                                 ]
                 },
-                {
-                    payment_type:"cimb_clicks",
-                    payment_type_label: "CIMB Clicks",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"visa_mastercard",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
-                {
-                    payment_type:"danamon_online_banking",
-                    payment_type_label: "Danamon Online Banking",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"visa_mastercard",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
-                {
-                    payment_type:"telkomsel_cash",
-                    payment_type_label: "Telkomsel Cash",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"visa_mastercard",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
+                // {
+                //     payment_type:"cimb_clicks",
+                //     payment_type_label: "CIMB Clicks",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"visa_mastercard",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
+                // {
+                //     payment_type:"danamon_online_banking",
+                //     payment_type_label: "Danamon Online Banking",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"visa_mastercard",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
+                // {
+                //     payment_type:"telkomsel_cash",
+                //     payment_type_label: "Telkomsel Cash",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"visa_mastercard",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
                 {
                     payment_type:"indomart",
                     payment_type_label: "Indomart",

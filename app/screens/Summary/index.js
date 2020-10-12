@@ -1588,11 +1588,14 @@ export default class Summary extends Component {
                 old='adult';
             }
             
-            
+        var labeldetail='Penumpang ';
+            if (param.type !='flight'){
+                labeldetail='Treveller ';
+            }
             
         var obj = {};
             obj['key'] = i;
-            obj['label'] = "Penumpang "+i+" : "+old;
+            obj['label'] = labeldetail+i+" : "+old;
             obj['old'] = old;
 
             obj['fullname'] = "";
@@ -2296,7 +2299,10 @@ export default class Summary extends Component {
             </View>
 
     
-
+        var labeldetail='Detail Penumpang';
+            if (param.type !='flight'){
+                labeldetail='Detail Treveller';
+            }
           
         return (
             <SafeAreaView
@@ -2384,7 +2390,7 @@ export default class Summary extends Component {
                         {/* --------------------------------- */}
 
                         <Text title3 style={{ paddingVertical: 10,fontSize: 12 }}>
-                        Detail Penumpang
+                            {labeldetail}
                         </Text>
                         <View style={styles.profileItem}>
                             <Text body1>Sama dengan pemesan</Text>

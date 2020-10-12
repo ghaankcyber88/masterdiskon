@@ -182,62 +182,127 @@ export default function PembayaranDetail(props) {
         tokenMidtrans();
     }
     
-    function tokenCC(paramPayMD){
-        var param={
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(),
-          }
+    // function tokenCC(paramPayMD){
+    //     var param={
+    //         method: 'GET',
+    //         headers: {
+    //           Accept: 'application/json',
+    //           'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify(),
+    //       }
        
-         //var url='https://api.sandbox.midtrans.com/';
-         var url=config.midtransUrl;
-         ////console.log('baseUrl',url);
+    //      //var url='https://api.sandbox.midtrans.com/';
+    //      var url=config.midtransUrl;
+    //      ////console.log('baseUrl',url);
          
-         return PostDataNew(url,'v2/token?client_key='+config.midtransKey.client+'&card_number='+cardNumber+'&card_exp_month='+cardExpMonth+'&card_exp_year='+cardExpYear+'&card_cvv='+cardCVV,param)
+    //      return PostDataNew(url,'v2/token?client_key='+config.midtransKey.client+'&card_number='+cardNumber+'&card_exp_month='+cardExpMonth+'&card_exp_year='+cardExpYear+'&card_cvv='+cardCVV,param)
+    //          .then((result) => {
+    //             var tokenCC=result.token_id;
+    //             paramPayMD.token=tokenCC;
+    //             payMasterDiskon(paramPayMD);
+    //             },
+    //          (error) => {
+    //              this.setState({ error });
+    //          }
+    //     );  
+    
+    // }
+    
+    // function payMasterDiskon(paramPayMD){
+    //         setLoading(true);
+            
+    //         var param={
+    //             method: 'POST',
+    //             headers: {
+    //               Accept: 'application/json',
+    //               'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(paramPayMD),
+    //           }
+           
+    //          var url=config.baseUrl;
+             
+    //          return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
+    //              .then((result) => {
+    //                         var id_invoice=result.id_invoice;
+    //                         var token=result.token;
+    //                         var dataSendMidTrans={
+    //                             id_invoice:id_invoice,
+    //                             token:token
+    //                         }
+    //                         payMidtrans(dataSendMidTrans);
+    //              },
+    //              (error) => {
+    //                  this.setState({ error });
+    //              }
+    //         ); 
+    // }
+    
+    
+
+    function tokenMidtrans(){
+        var authBasicHeader=config.midtransKey.authBasicHeader;
+
+        var payment_type=dataPayment.payment_type;
+        var payment_sub=dataPayment.payment_sub;
+        
+        var transaction_details={
+            gross_amount: totalPembayaran,
+            order_id: dataBooking[0].order_payment_recent.id_invoice
+        }
+        var customer_details={
+            email: dataBooking[0].contact.contact_email,
+            first_name: dataBooking[0].contact.contact_first,
+            last_name: dataBooking[0].contact.contact_last,
+            phone: dataBooking[0].contact.contact_phone,
+        }
+
+        var enabled_payments=[payment_sub];
+        
+        var paramPay={
+            transaction_details: transaction_details,
+            customer_details: customer_details,
+            enabled_payments
+        }
+        
+        var param={
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': 'Basic '+authBasicHeader,
+            },
+            body: JSON.stringify(paramPay),
+          }
+          console.log('param',JSON.stringify(param));
+          console.log('paramPay',JSON.stringify(paramPay));
+       
+         var url=config.midtransUrlToken;
+         console.log('url',url);
+         
+         return PostDataNew(url,'',param)
              .then((result) => {
-                var tokenCC=result.token_id;
-                paramPayMD.token=tokenCC;
-                payMasterDiskon(paramPayMD);
+                console.log(JSON.stringify(result));
+                var paramPayMD={
+                    "total_pembayaran":totalPembayaran,
+                    "fee":fee,
+                    "id_invoice":dataBooking[0].order_payment_recent.id_invoice,
+                    "dataPayment":dataPayment,
+                    "token":result.token,
+                    "order_code":dataBooking[0].order_code
+                    }
+                
+                snapTokenUpdate(paramPayMD);
+                setLoading(false);
                 },
              (error) => {
-                 this.setState({ error });
+                 //this.setState({ error });
              }
-        );  
-    
-    }
-    
-    function payMasterDiskon(paramPayMD){
-            setLoading(true);
-            
-            var param={
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(paramPayMD),
-              }
-           
-             var url=config.baseUrl;
-             
-             return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
-                 .then((result) => {
-                            var id_invoice=result.id_invoice;
-                            var token=result.token;
-                            var dataSendMidTrans={
-                                id_invoice:id_invoice,
-                                token:token
-                            }
-                            payMidtrans(dataSendMidTrans);
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
             ); 
+            
     }
+    
     
     function snapTokenUpdate(paramPayMD){
         setLoading(true);
@@ -274,108 +339,119 @@ export default function PembayaranDetail(props) {
                  this.setState({ error });
              }
         ); 
-}
-
-    function tokenMidtrans(){
-        // var token = require('basic-auth-token');
-        var authBasicHeader=config.midtransKey.authBasicHeader;
-
-        var payment_type=dataPayment.payment_type;
-        var payment_sub=dataPayment.payment_sub;
+    }
+    
+    function changePayment(){
+        var item=dataBooking[0];
+        var order_payment_recent=item.order_payment_recent;
+        var totalPembayaran=parseInt(order_payment_recent.iv_total_amount)-parseInt(fee);
+        // var paramPayMD={
+        //     "total_pembayaran": total_pembayaran,
+        //     "fee": "0",
+        //     "id_invoice": order_payment_recent.id_invoice,
+        //     "dataPayment": {
+        //         "payment_type": "",
+        //         "payment_type_label": "",
+        //         "payment_sub": "",
+        //         "payment_sub_label": ""
+        //     },
+        //     "token":""
+        // }
         
-        var transaction_details={
-            gross_amount: totalPembayaran,
-            order_id: dataBooking[0].order_payment_recent.id_invoice
-        }
-        var customer_details={
-            email: dataBooking[0].contact.contact_email,
-            first_name: dataBooking[0].contact.contact_first,
-            last_name: dataBooking[0].contact.contact_last,
-            phone: dataBooking[0].contact.contact_phone,
-        }
-
-        var enabled_payments=[payment_sub];
-        
-        var paramPay={
-            // payment_type: payment_type,
-            transaction_details: transaction_details,
-            customer_details: customer_details,
-            enabled_payments
-        }
-        
-        var param={
+        var paramPayMD={
+            "total_pembayaran":totalPembayaran,
+            "fee":0,
+            "id_invoice":dataBooking[0].order_payment_recent.id_invoice,
+            "dataPayment": {
+                "payment_type": "",
+                "payment_type_label": "",
+                "payment_sub": "",
+                "payment_sub_label": ""
+            },
+            "token":"",
+            "order_code":dataBooking[0].order_code
+            }
+            
+       
+        setLoading(true);
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paramPayMD),
+              }
+           
+             var url=config.baseUrl;
+             
+             return PostDataNew(url,'front/api/OrderSubmit/snap_token_update',param)
+                 .then((result) => {
+                        var id_invoice=result.id_invoice;
+                        cancelMidtrans(id_invoice);
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+    }
+    
+    function cancelMidtrans(id_invoice){
+        var order_code=id_invoice;
+           
+          var param={
             method: 'POST',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
-              'Authorization': 'Basic '+authBasicHeader,
+              'Authorization': 'Basic '+config.midtransKey.authBasicHeader,
             },
-            body: JSON.stringify(paramPay),
+            redirect: 'follow'
           }
-          console.log('param',JSON.stringify(param));
-          console.log('paramPay',JSON.stringify(paramPay));
        
-         var url=config.midtransUrlToken;
-         console.log('url',url);
-         return PostDataNew(url,'',param)
+         var url=config.midtransUrl;
+         
+         return PostDataNew(url,"v2/"+order_code+"/cancel",param)
              .then((result) => {
-                console.log(JSON.stringify(result));
-                var paramPayMD={
-                    "total_pembayaran":totalPembayaran,
-                    "fee":fee,
-                    "id_invoice":dataBooking[0].order_payment_recent.id_invoice,
-                    "dataPayment":dataPayment,
-                    "token":result.token,
-                    "order_code":dataBooking[0].order_code
-                    }
-                
-                snapTokenUpdate(paramPayMD);
-                setLoading(false);
-                
-                // var redirect='PembayaranDetail';
-                //     var param={
-                //         id_order:idOrder,
-                //         dataPayment:dataPayment
-                //     }
-                // navigation.navigate("Loading",{redirect:redirect,param:param});
+                            //console.log('cancelMidtrans',JSON.stringify(result));
+                            setLoading(false);
+                            var redirect='Pembayaran';
+                            var param={
+                                id_order:idOrder,
+                                dataPayment:{}
+                            }
+                            navigation.navigate("Loading",{redirect:redirect,param:param});
                 },
              (error) => {
-                 //this.setState({ error });
+                 this.setState({ error });
              }
-            ); 
+        ); 
 
-            
-
-            
-            
-
-            
-    
     }
 
-    function fetchTokenMidtrans(authBasicHeader){
-        var myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Basic "+authBasicHeader);
+    // function fetchTokenMidtrans(authBasicHeader){
+    //     var myHeaders = new Headers();
+    //     myHeaders.append("Accept", "application/json");
+    //     myHeaders.append("Content-Type", "application/json");
+    //     myHeaders.append("Authorization", "Basic "+authBasicHeader);
 
-        var raw = JSON.stringify({"transaction_details":{"gross_amount":2430000,"order_id":"MDPY2010011891"},"customer_details":{"email":"matadesaindotcom@gmail.com","first_name":"arif","last_name":"pambudi","phone":"79879879879"},"enabled_payments":["bca_va"]});
+    //     var raw = JSON.stringify({"transaction_details":{"gross_amount":2430000,"order_id":"MDPY2010011891"},"customer_details":{"email":"matadesaindotcom@gmail.com","first_name":"arif","last_name":"pambudi","phone":"79879879879"},"enabled_payments":["bca_va"]});
 
-        var requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-        };
+    //     var requestOptions = {
+    //     method: 'POST',
+    //     headers: myHeaders,
+    //     body: raw,
+    //     redirect: 'follow'
+    //     };
 
-        return fetch("https://app.sandbox.midtrans.com/snap/v1/transactions", requestOptions)
-        .then(response => response.json())
-        .then(result => {
+    //     return fetch("https://app.sandbox.midtrans.com/snap/v1/transactions", requestOptions)
+    //     .then(response => response.json())
+    //     .then(result => {
 
-            console.log(JSON.stringify(result));
-        })
-        .catch(error => console.log('error', error));
-    } 
+    //         console.log(JSON.stringify(result));
+    //     })
+    //     .catch(error => console.log('error', error));
+    // } 
 
     
     // function payMidtrans(dataSendMidTrans){
@@ -452,81 +528,7 @@ export default function PembayaranDetail(props) {
     
     // }
     
-    function changePayment(){
-        var item=dataBooking[0];
-        var order_payment_recent=item.order_payment_recent;
-        var total_pembayaran=parseInt(order_payment_recent.iv_total_amount)-parseInt(fee);
-        var paramPayMD={
-            "total_pembayaran": total_pembayaran,
-            "fee": "0",
-            "id_invoice": order_payment_recent.id_invoice,
-            "dataPayment": {
-                "payment_type": "",
-                "payment_type_label": "",
-                "payment_sub": "",
-                "payment_sub_label": ""
-            },
-            "token":""
-        }
-        //console.log('changePaymentParam',JSON.stringify(paramPayMD));
-       
-        setLoading(true);
-            var param={
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(paramPayMD),
-              }
-           
-             var url=config.baseUrl;
-             
-             return PostDataNew(url,'front/api/OrderSubmit/payment_update',param)
-                 .then((result) => {
-                        var id_invoice=result.id_invoice;
-                        cancelMidtrans(id_invoice);
-                 },
-                 (error) => {
-                     this.setState({ error });
-                 }
-            ); 
-         
-            
-    }
     
-    function cancelMidtrans(id_invoice){
-        var order_code=id_invoice;
-           
-          var param={
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              'Authorization': 'Basic '+config.midtransKey.authBasicHeader,
-            },
-            redirect: 'follow'
-          }
-       
-         var url=config.midtransUrl;
-         
-         return PostDataNew(url,"v2/"+order_code+"/cancel",param)
-             .then((result) => {
-             
-                            setLoading(false);
-                            var redirect='Pembayaran';
-                            var param={
-                                id_order:idOrder,
-                                dataPayment:{}
-                            }
-                            navigation.navigate("Loading",{redirect:redirect,param:param});
-                },
-             (error) => {
-                 this.setState({ error });
-             }
-        ); 
-
-    }
     
     function fetch(){
             AsyncStorage.getItem('userSession', (error, result) => {
@@ -1298,39 +1300,26 @@ export default function PembayaranDetail(props) {
         content=<View style={{flex:1}}>
                 <WebView style={{height:'80%'}} source={{ uri: urlSnap }} />
                             <View style={{flexDirection: "row"}}>
-                                {/* <View style={{flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
-                                    <Button
-                                        style={{borderRadius: 0,marginVertical:0,backgroundColor:BaseColor.primaryColor}}
-                                        full
-                                        loading={loading}
-                                        onPress={() => { 
-                                            Alert.alert(
-                                              'Confirm',
-                                              'Yakin ingin membayar tagihan ini ?',
-                                              [
-                                                {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
-                                                {text: 'YES', onPress: () => submitPayment()},
-                                              ]
-                                            );
-                                        }}    
-                                        >
-                                        <Text style={{color:BaseColor.whiteColor}}>Ganti Pembayaran</Text>
-                                        
-                                    </Button>
-                                </View> */}
-                                
                                 <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
                                     <Button
                                         style={{borderRadius: 0,marginVertical:0}}
                                         full
                                         loading={loading}
                                         onPress={() => { 
+                                            Alert.alert(
+                                                'Confirm',
+                                                'Ingin mengganti metode pembayaran ?',
+                                                [
+                                                  {text: 'NO', onPress: () => console.warn('NO Pressed'), style: 'cancel'},
+                                                  {text: 'YES', onPress: () => changePayment()},
+                                                ]
+                                              );
+                                              
                                         }}    
                                         >
-                                        Sudah Membayar
+                                        Ganti Metode Pembayaran
                                     </Button>
                                 </View>
-                            
                             </View>
             </View>
     }

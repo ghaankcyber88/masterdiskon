@@ -44,7 +44,10 @@ export default class Header extends Component {
       source={Images.logo_masdis}
       style={{
         height: 255/7,
-        width: 600/7
+        width: 255/7,
+        
+        // height: 255/7,
+        // width: 600/7
         }}
       />
     }
