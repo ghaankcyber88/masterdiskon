@@ -39,7 +39,10 @@ export default class FilterSort extends Component {
                 };
             })
         });
-        this.sortData(selected);
+        
+        this.props.sortProcess(selected.value);
+        //alert(selected.value);
+        // this.sortData(selected);
         
         setTimeout(() => {
             this.onApply();
@@ -64,15 +67,11 @@ export default class FilterSort extends Component {
         const { navigation } = this.props;
         var typeSort=selected.value;
         var listdata=this.props.listdata;
-        //console.log('listdatasort',JSON.stringify(listdata));
         
         
         if(typeSort=='low_price'){
-            //console.log('low_price',listdata.sort((a,b) =>  a.price_custom-b.price_custom ))
         }else if(typeSort=='hight_price'){
-            //console.log('hight_price',listdata.sort((a,b) =>  b.price_custom-a.price_custom ))
         }
-        
         
         this.props.sortProcess(listdata);
         
@@ -222,7 +221,7 @@ export default class FilterSort extends Component {
                         </Text>
                         
                     </TouchableOpacity>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         onPress={onClear}
                         style={styles.contentFilter}
                     >
@@ -236,7 +235,7 @@ export default class FilterSort extends Component {
                             Clear Filter
                         </Text>
                         
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
         );

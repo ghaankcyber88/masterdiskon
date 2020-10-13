@@ -20,7 +20,6 @@ import styles from "./styles";
 import { FlightData,DataLoading,DataFlight } from "@data";
 import { FlightSearch } from "@data";
 import {PostData} from '../../services/PostData';
-import {PostDataNew} from '../../services/PostDataNew';
 import {AsyncStorage} from 'react-native';
 import Modal from "react-native-modal";
 import AnimatedLoader from "react-native-animated-loader";
@@ -118,6 +117,14 @@ export default class FlightResult extends Component {
             obj['num'] = a.toString();
             obj['nums'] = a;
             obj['data_type'] = "real";
+            
+            obj['filter_price'] = item.price.total_price;
+            obj['filter_airline'] = item.airline_name;
+            obj['filter_transit'] = item.transit;
+            obj['filter_fasilities_entertainment'] = item.flight_schedule[0].inflight_entertainment;
+            obj['filter_fasilities_baggage'] = item.flight_schedule[0].baggage;
+            obj['filter_fasilities_meal'] = item.flight_schedule[0].meal;
+            
             obj["price"]=item.price;
             obj["international"]= item.international;
             obj["combinable"]= item.combinable;
@@ -171,6 +178,14 @@ export default class FlightResult extends Component {
             "num" : num.toString(),
             "nums" : num,
             "data_type" : "real",
+            
+            "filter_price" : item.price.total_price,
+            "filter_airline" : item.airline_name,
+            "filter_transit" : item.transit,
+            "filter_fasilities_entertainment" : item.flight_schedule[0].inflight_entertainment,
+            "filter_fasilities_baggage" : item.flight_schedule[0].baggage,
+            "filter_fasilities_meal" : item.flight_schedule[0].meal,
+            
             "price":item.price,
             "international": item.international,
             "combinable": item.combinable,
@@ -249,7 +264,7 @@ export default class FlightResult extends Component {
                               .then(response => response.json())
                               .then(result => {
                                                             var length=result.data.departure.length;
-                                                            ////console.log('getProduct',JSON.stringify(result.data.departure));
+                                                            //console.log('getProduct',JSON.stringify(result.data.departure));
                                                             console.log('flight_result',length);   
 
                                                             if(length != 0){
@@ -261,8 +276,8 @@ export default class FlightResult extends Component {
                                                                 this.setState({ listdata_departure: listdata_departure });
                                                                 this.setState({ listdata_return: listdata_return });
                                 
-                                                                this.setState({ listdata_departure_original: listdata_departure });
-                                                                this.setState({ listdata_return_original: listdata_return });
+                                                                // this.setState({ listdata_departure_original: listdata_departure });
+                                                                // this.setState({ listdata_return_original: listdata_return });
     
                                                             
                                                             
@@ -354,8 +369,8 @@ export default class FlightResult extends Component {
                                         this.setState({ listdata_departure: listdata_departure_state });
                                         this.setState({ listdata_return: listdata_return_state });
                                 
-                                        this.setState({ listdata_departure_original: listdata_departure_state });
-                                        this.setState({ listdata_return_original: listdata_return_state });
+                                        // this.setState({ listdata_departure_original: listdata_departure_state });
+                                        // this.setState({ listdata_return_original: listdata_return_state });
                                         
                                     
                                     }
@@ -482,11 +497,12 @@ export default class FlightResult extends Component {
     }
     
     
-    sortProcess(listdata)
+    sortProcess(selected)
     {   
-    
-       //console.log('hasil sort',JSON.stringify(listdata));
-       this.setState({listdata_departure:listdata});
+        //alert(selected);
+    var listdata_departure=this.state.listdata_departure;
+       console.log('listdata_departuresortProcess',JSON.stringify(listdata_departure));
+       //this.setState({listdata_departure:listdata});
      
     }
     
@@ -648,12 +664,16 @@ export default class FlightResult extends Component {
        // this.getProduct();
        
        const {navigation} = this.props;
-        navigation.addListener ('willFocus', () =>{
-            // this.setState({ loading_spinner: true });
-            setTimeout(() => {
-                this.getProduct();
-            }, 200);
-        });
+        // navigation.addListener ('willFocus', () =>{
+        //     // this.setState({ loading_spinner: true });
+        //     setTimeout(() => {
+        //         this.getProduct();
+        //     }, 200);
+        // });
+        
+        setTimeout(() => {
+            this.getProduct();
+        }, 200);
  
     }
     
