@@ -400,17 +400,30 @@ export default class FlightResult extends Component {
 
 
     }
-
+    
+    sortProcess(selected)
+    {   
+        //alert(selected);
+    var listdata_departure=this.state.listdata_departure;
+       //console.log('listdata_departuresortProcess',JSON.stringify(listdata_departure));
+       //this.setState({listdata_departure:listdata});
+       if(selected=='low_price'){
+       this.sortLowestPrice();
+        }else if(selected=='hight_price'){
+            this.sortHightestPrice();
+        }
+    }
+    
     sortLowestPrice(){
         //----------untuk sort asc---------//
         var data = eval(this.state.listdata_departure);
         var results = data;
         results.sort(function(a,b){
-            if(a.price.total_price == b.price.total_price)
+            if(a.filter_price == b.filter_price)
                 return 0;
-            if(a.price.total_price < b.price.total_price)
+            if(a.filter_price < b.filter_price)
                 return -1;
-            if(a.price.total_price > b.price.total_price)
+            if(a.filter_price > b.filter_price)
                 return 1;
         });
 
@@ -422,11 +435,11 @@ export default class FlightResult extends Component {
         var data = eval(this.state.listdata_departure);
         var results = data;
         results.sort(function(a,b){
-            if(a.price.total_price == b.price.total_price)
+            if(a.filter_price == b.filter_price)
                 return 0;
-            if(a.price.total_price < b.price.total_price)
+            if(a.filter_price < b.filter_price)
                 return 1;
-            if(a.price.total_price > b.price.total_price)
+            if(a.filter_price > b.filter_price)
                 return -1;
         });
 
@@ -497,14 +510,7 @@ export default class FlightResult extends Component {
     }
     
     
-    sortProcess(selected)
-    {   
-        //alert(selected);
-    var listdata_departure=this.state.listdata_departure;
-       console.log('listdata_departuresortProcess',JSON.stringify(listdata_departure));
-       //this.setState({listdata_departure:listdata});
-     
-    }
+    
     
      mapOrder(array, order, key) {
   
