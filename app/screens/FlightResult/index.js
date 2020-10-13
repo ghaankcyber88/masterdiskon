@@ -250,7 +250,7 @@ export default class FlightResult extends Component {
                               .then(result => {
                                                             var length=result.data.departure.length;
                                                             ////console.log('getProduct',JSON.stringify(result.data.departure));
-                                                            //console.log('flight_result',length);   
+                                                            console.log('flight_result',length);   
 
                                                             if(length != 0){
                                                                 this.setState({ loading_spinner: false });
@@ -315,7 +315,7 @@ export default class FlightResult extends Component {
                                 ////console.log('getProductNext',JSON.stringify(result.data.departure));
                                     
                                     var length=result.data.departure.length;
-                                    //console.log('flight_result_next',length);   
+                                    console.log('flight_result_next',length);   
 
                                     
                                     if(length != 0){

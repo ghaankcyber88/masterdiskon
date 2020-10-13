@@ -112,9 +112,50 @@ export default class SelectFlight extends Component {
                     var path=config.common_airport.dir;
                     var url=config.baseUrl;
 
-                    PostDataNew(url,path,{"param":value})
-                    .then((result) => {
-                            this.setState({ loading_spinner: false });
+                    console.log(url,path,{"param":value});
+
+                    // PostDataNew(url,path,{"param":value})
+                    // .then((result) => {
+                    //         this.setState({ loading_spinner: false });
+                    //         this.setState({flight:result});
+                    //         const { navigation } = this.props;
+                    //         const selected = navigation.getParam("selected");
+                
+                    //         if (selected) {
+                    //             this.setState({
+                    //                 flight: this.state.flight.map(item => {
+                    //                     return {
+                    //                         ...item,
+                    //                         checked: item.code == selected
+                    //                     };
+                    //                 })
+                    //             });
+                    //         }
+                    //     },
+                    //     (error) => {
+                    //         this.setState({ error });
+                    //     }
+                    // );
+
+
+                    var myHeaders = new Headers();
+                    myHeaders.append("Content-Type", "application/json");
+                    // myHeaders.append("Cookie", "ci_session=htllmlmq1kc1inaabihi3lqeqv8jjm91");
+                    
+                    var raw = JSON.stringify({"param":value});
+                    
+                    var requestOptions = {
+                      method: 'POST',
+                      headers: myHeaders,
+                      body: raw,
+                      redirect: 'follow'
+                    };
+                    
+                    fetch(config.baseUrl+"front/api/common/airport", requestOptions)
+                      .then(response => response.json())
+                      .then(result => {
+                          
+                        this.setState({ loading_spinner: false });
                             this.setState({flight:result});
                             const { navigation } = this.props;
                             const selected = navigation.getParam("selected");
@@ -129,11 +170,11 @@ export default class SelectFlight extends Component {
                                     })
                                 });
                             }
-                        },
-                        (error) => {
-                            this.setState({ error });
-                        }
-                    );
+                    
+                    })
+                      .catch(error => console.log('error', error));     
+
+
                 }
             }); 
         });
@@ -237,7 +278,7 @@ export default class SelectFlight extends Component {
                         style={BaseStyle.textInput}
                         onChangeText={text => this.search(text)}
                         autoCorrect={false}
-                        placeholder="Search Airplane"
+                        placeholder="Search Airport"
                         placeholderTextColor={BaseColor.grayColor}
                         selectionColor={BaseColor.primaryColor}
                     />
@@ -312,7 +353,7 @@ export default class SelectFlight extends Component {
                                                     paddingTop: 5
                                                 }}
                                             >
-                                                {item.country_name}
+                                                {item.city}, {item.country_name}
                                             </Text>
                                         </View>
                                     </View>
