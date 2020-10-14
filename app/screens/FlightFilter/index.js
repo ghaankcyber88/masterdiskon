@@ -344,6 +344,7 @@ export default class FlightFilter extends Component {
         });
 
 
+        console.log('filter',JSON.stringify(filter));
         this.props.navigation.state.params.filterProcess(filter);
         navigation.goBack();
 
@@ -442,7 +443,7 @@ export default class FlightFilter extends Component {
                     }}
                     renderRight={() => {
                         return (
-                            <Text headline whiteColor numberOfLines={1}>
+                            <Text headline numberOfLines={1}>
                                 Apply
                             </Text>
                         );
@@ -582,7 +583,7 @@ export default class FlightFilter extends Component {
                                         color={BaseColor.primaryColor}
                                     />
                                     <Text body1 style={{ marginLeft: 10 }}>
-                                        {item.title}
+                                        {item.title} ({item.id})
                                     </Text>
                                 </TouchableOpacity>
                             );

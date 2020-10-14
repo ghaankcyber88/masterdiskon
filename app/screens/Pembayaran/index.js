@@ -173,28 +173,28 @@ export default class Pembayaran extends Component {
             //id_invoice:id_invoice,
             dataBooking:DataBooking,
             payment: [
-                {
-                    payment_type:"credit_card",
-                    payment_type_label: "Kartu Kredit",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"credit_card",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
+                // {
+                //     payment_type:"credit_card",
+                //     payment_type_label: "Kartu Kredit",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"credit_card",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
                 {
                     payment_type:"bank_transfer",
                     payment_type_label: "ATM / Bank Transfer",
                     option:true,
                     subPayment:[
-                                    {
-                                        payment_sub:"bca_va",
-                                        payment_sub_label:"BCA",
-                                        icon:"",
-                                    },
+                                    // {
+                                    //     payment_sub:"bca_va",
+                                    //     payment_sub_label:"BCA",
+                                    //     icon:"",
+                                    // },
                                     {
                                         payment_sub:"bni_va",
                                         payment_sub_label:"BNI",
@@ -220,30 +220,30 @@ export default class Pembayaran extends Component {
                 //                     }
                 //                 ]
                 // },
-                {
-                    payment_type:"klik_bca",
-                    payment_type_label: "Klik BCA",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"visa_mastercard",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
-                {
-                    payment_type:"bca_klik_pay",
-                    payment_type_label: "BCA KlikPay",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"visa_mastercard",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
+                // {
+                //     payment_type:"klik_bca",
+                //     payment_type_label: "Klik BCA",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"visa_mastercard",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
+                // {
+                //     payment_type:"bca_klik_pay",
+                //     payment_type_label: "BCA KlikPay",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"visa_mastercard",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
                 // {
                 //     payment_type:"cimb_clicks",
                 //     payment_type_label: "CIMB Clicks",
@@ -280,42 +280,42 @@ export default class Pembayaran extends Component {
                 //                     }
                 //                 ]
                 // },
-                {
-                    payment_type:"indomart",
-                    payment_type_label: "Indomart",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"visa_mastercard",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
-                {
-                    payment_type:"alfamart",
-                    payment_type_label: "Alfamart",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"visa_mastercard",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
-                {
-                    payment_type:"akulaku",
-                    payment_type_label: "Akulaku",
-                    option:false,
-                    subPayment:[
-                                    {
-                                        payment_sub:"visa_mastercard",
-                                        payment_sub_label:"Kartu Kredit",
-                                        icon:"",
-                                    }
-                                ]
-                },
+                // {
+                //     payment_type:"indomart",
+                //     payment_type_label: "Indomart",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"visa_mastercard",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
+                // {
+                //     payment_type:"alfamart",
+                //     payment_type_label: "Alfamart",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"visa_mastercard",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
+                // {
+                //     payment_type:"akulaku",
+                //     payment_type_label: "Akulaku",
+                //     option:false,
+                //     subPayment:[
+                //                     {
+                //                         payment_sub:"visa_mastercard",
+                //                         payment_sub_label:"Kartu Kredit",
+                //                         icon:"",
+                //                     }
+                //                 ]
+                // },
              
                 
                 

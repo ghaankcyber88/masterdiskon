@@ -221,7 +221,7 @@ export default class FilterSort extends Component {
                         </Text>
                         
                     </TouchableOpacity>
-                    {/* <TouchableOpacity
+                    <TouchableOpacity
                         onPress={onClear}
                         style={styles.contentFilter}
                     >
@@ -235,7 +235,7 @@ export default class FilterSort extends Component {
                             Clear Filter
                         </Text>
                         
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                 </View>
             </View>
         );

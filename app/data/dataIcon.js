@@ -66,6 +66,14 @@ const DataIcon =[
         type:'trip',
         image: Images.trip
     },
+    {
+        icon: "map-marker-alt",
+        name: "Activities",
+        route: "Activities",
+        iconAnimation:"tour.json",
+        type:'activities',
+        image: Images.trip
+    },
     
     // {
     //     icon: "tag",

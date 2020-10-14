@@ -119,7 +119,7 @@ export default class FlightResult extends Component {
             obj['data_type'] = "real";
             
             obj['filter_price'] = item.price.total_price;
-            obj['filter_airline'] = item.airline_name;
+            obj['filter_airline_code'] = item.airline_code;
             obj['filter_transit'] = item.transit;
             obj['filter_fasilities_entertainment'] = item.flight_schedule[0].inflight_entertainment;
             obj['filter_fasilities_baggage'] = item.flight_schedule[0].baggage;
@@ -180,7 +180,7 @@ export default class FlightResult extends Component {
             "data_type" : "real",
             
             "filter_price" : item.price.total_price,
-            "filter_airline" : item.airline_name,
+            "filter_airline_code" : item.airline_code,
             "filter_transit" : item.transit,
             "filter_fasilities_entertainment" : item.flight_schedule[0].inflight_entertainment,
             "filter_fasilities_baggage" : item.flight_schedule[0].baggage,
@@ -276,8 +276,8 @@ export default class FlightResult extends Component {
                                                                 this.setState({ listdata_departure: listdata_departure });
                                                                 this.setState({ listdata_return: listdata_return });
                                 
-                                                                // this.setState({ listdata_departure_original: listdata_departure });
-                                                                // this.setState({ listdata_return_original: listdata_return });
+                                                                this.setState({ listdata_departure_original: listdata_departure });
+                                                                this.setState({ listdata_return_original: listdata_return });
     
                                                             
                                                             
@@ -369,8 +369,8 @@ export default class FlightResult extends Component {
                                         this.setState({ listdata_departure: listdata_departure_state });
                                         this.setState({ listdata_return: listdata_return_state });
                                 
-                                        // this.setState({ listdata_departure_original: listdata_departure_state });
-                                        // this.setState({ listdata_return_original: listdata_return_state });
+                                        this.setState({ listdata_departure_original: listdata_departure_state });
+                                        this.setState({ listdata_return_original: listdata_return_state });
                                         
                                     
                                     }
@@ -455,7 +455,7 @@ export default class FlightResult extends Component {
         const { navigation } = this.props;
                 navigation.navigate("FlightFilter",
                 {
-                    listdata:this.state.listdata_departure_original,
+                    listdata:this.state.listdata_departure,
                     filterProcess: this.filterProcess
                 }
                 );

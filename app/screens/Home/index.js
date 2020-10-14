@@ -94,7 +94,18 @@ export default class Home extends Component {
                 iconAnimation:"tour.json",
                 type:'trip',
                 image: Images.trip
-            }],
+            },
+            {
+                icon: "map-marker-alt",
+                name: "Activities",
+                route: "Activities",
+                iconAnimation:"tour.json",
+                type:'activities',
+                image: Images.trip
+            }
+        
+        
+            ],
             heightHeader: Utils.heightHeader(),
             listdata_promo:DataLoading,
             listdata_musium:DataLoading,
@@ -102,6 +113,8 @@ export default class Home extends Component {
             listdata_product_trip_country:DataLoading,
             listdata_product_trip:DataTrip,
             listdata_product_hotel_package:DataHotelPackage,
+            listdata_product_hotel_package_room_promo:DataHotelPackage,
+            listdata_product_hotel_package_pay_now_stay_later:DataHotelPackage,
             listdata_product_hotel_package_city:DataHotelPackageCity,
             listdata_product_flash:DataLoading,
             config:DataConfig,
@@ -823,6 +836,84 @@ export default class Home extends Component {
         });
     }
 
+
+    getProductHotelPackageRoomPromo(){
+        const {config} =this.state;
+        
+            
+        this.setState({ loading_product_hotel_package_room_promo: true }, () => {
+            var url=config.baseUrl;
+            var path=config.product_hotel_package.dir;
+            var paramUrl={"param":{
+                "id_country":"",
+                "id_city":"",
+                "id_hotelpackage":"",
+                "detail_category":"room_promo",
+                "search":"",
+                "limit":"12"
+                }}
+            
+            
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paramUrl),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    //console.log('listdata_product_hotel_package_room_promo',JSON.stringify(result));
+                    this.setState({loading_product_hotel_package_room_promo: false });
+                    this.setState({listdata_product_hotel_package_room_promo: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
+
+
+    getProductHotelPackagePayStayLater(){
+        const {config} =this.state;
+        
+            
+        this.setState({ loading_product_hotel_package_pay_now_stay_later: true }, () => {
+            var url=config.baseUrl;
+            var path=config.product_hotel_package.dir;
+            var paramUrl={"param":{
+                "id_country":"",
+                "id_city":"",
+                "id_hotelpackage":"",
+                "detail_category":"pay_now_stay_later",
+                "search":"",
+                "limit":"12"
+                }}
+            
+            
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paramUrl),
+              }
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                    //console.log('listdata_product_hotel_package_pay_now_stay_later',JSON.stringify(result));
+                    this.setState({loading_product_hotel_package_pay_now_stay_later: false });
+                    this.setState({listdata_product_hotel_package_pay_now_stay_later: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
+
     getProductHotelPackageCity(){
         const {config} =this.state;
         var url=config.baseUrl;
@@ -851,6 +942,8 @@ export default class Home extends Component {
             ); 
         });
     }
+
+    
     
     getProductHotelPackageCategory(){
         const {config} =this.state;
@@ -996,11 +1089,13 @@ export default class Home extends Component {
             this.getProductTripCountry();
             this.getProductTrip();
             this.getProductHotelPackage();
+            this.getProductHotelPackageRoomPromo();
+            this.getProductHotelPackagePayStayLater();
             this.getProductHotelPackageCity();
             this.getProductHotelPackageCategory();
             this.getProductFlash();
             //this.getBlog();
-        }, 500);
+        }, 200);
 
      }
      
@@ -1254,51 +1349,88 @@ export default class Home extends Component {
                             }
                                     
 
-                            {   
-                            this.state.listdata_product_hotel_package.length != 0 ?
-                            <View>
-                                <CardCustomTitle style={{marginLeft:20}} title={'Hotel'} desc={''} />
-                                <FlatList
-                                        contentContainerStyle={{
-                                            paddingRight: 20
-                                        }}
-                                        horizontal={true}
-                                        data={this.state.listdata_product_hotel_package}
-                                        showsHorizontalScrollIndicator={false}
-                                        keyExtractor={(item, index) => item.id}
-                                        renderItem={({ item, index }) => (
-                                        
-                                            <CardCustom
-                                                propImage={{height:wp("50%"),url:item.img_featured_url}}
-                                                propInframe={{top:item.product_detail.area,bottom:item.product_detail.detail_category}}
-                                                propTitle={{text:item.product_name}}
-                                                propDesc={{text:item.product_detail.address}}
-                                                propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:true}}
-                                                propStar={{rating:item.product_detail.stars,enabled:true}}
-                                                propLeftRight={{left:'',right:''}}
-                                                onPress={() =>
-                                                    navigation.navigate("HotelDetail",{product:item})
-                                                }
-                                                loading={this.state.loading_product_hotel_package}
-                                                propOther={{inFrame:true,horizontal:true,width:wp("50%")}}
+                                    {   
+                                    this.state.listdata_product_hotel_package_room_promo.length != 0 ?
+                                    <View>
+                                        <CardCustomTitle style={{marginLeft:20}} title={'Room Promo'} desc={''} />
+                                        <FlatList
+                                                contentContainerStyle={{
+                                                    paddingRight: 20
+                                                }}
+                                                horizontal={true}
+                                                data={this.state.listdata_product_hotel_package_room_promo}
+                                                showsHorizontalScrollIndicator={false}
+                                                keyExtractor={(item, index) => item.id}
+                                                renderItem={({ item, index }) => (
+                                                
+                                                    <CardCustom
+                                                        propImage={{height:wp("50%"),url:item.img_featured_url}}
+                                                        propInframe={{top:item.product_detail.area,bottom:item.product_detail.detail_category}}
+                                                        propTitle={{text:item.product_name}}
+                                                        propDesc={{text:item.product_detail.address}}
+                                                        propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:true}}
+                                                        propStar={{rating:item.product_detail.stars,enabled:true}}
+                                                        propLeftRight={{left:'',right:''}}
+                                                        onPress={() =>
+                                                            navigation.navigate("HotelDetail",{product:item})
+                                                        }
+                                                        loading={this.state.loading_product_hotel_package_room_promo}
+                                                        propOther={{inFrame:true,horizontal:true,width:wp("50%")}}
+                                                    />
+                                                
+                                                )}
                                             />
-                                        
-                                        )}
-                                    />
-                            </View>
-                            :
-                            <View></View>
-                            }
+                                    </View>
+                                    :
+                                    <View></View>
+                                    }
 
 
                             
+                                {   
+                                    this.state.listdata_product_hotel_package_pay_now_stay_later.length != 0 ?
+                                    <View>
+                                        <CardCustomTitle style={{marginLeft:20}} title={'Pay Now Stay Later'} desc={''} />
+                                        <FlatList
+                                                contentContainerStyle={{
+                                                    paddingRight: 20
+                                                }}
+                                                horizontal={true}
+                                                data={this.state.listdata_product_hotel_package_pay_now_stay_later}
+                                                showsHorizontalScrollIndicator={false}
+                                                keyExtractor={(item, index) => item.id}
+                                                renderItem={({ item, index }) => (
+                                                
+                                                    <CardCustom
+                                                        propImage={{height:wp("50%"),url:item.img_featured_url}}
+                                                        propInframe={{top:item.product_detail.area,bottom:item.product_detail.detail_category}}
+                                                        propTitle={{text:item.product_name}}
+                                                        propDesc={{text:item.product_detail.address}}
+                                                        propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:true}}
+                                                        propStar={{rating:item.product_detail.stars,enabled:true}}
+                                                        propLeftRight={{left:'',right:''}}
+                                                        onPress={() =>
+                                                            navigation.navigate("HotelDetail",{product:item})
+                                                        }
+                                                        loading={this.state.loading_product_hotel_package_pay_now_stay_later}
+                                                        propOther={{inFrame:true,horizontal:true,width:wp("50%")}}
+                                                    />
+                                                
+                                                )}
+                                            />
+                                    </View>
+                                    :
+                                    <View></View>
+                                    }
+
+
                             
                             
                             
                             {   
                             this.state.listdata_product_trip.length != 0 ?
                             <View>
-                                <CardCustomTitle style={{marginLeft:20}} title={'Trip'} desc={''} />
+                                <CardCustomTitle style={{marginLeft:20}} title={'Paket Perjalanan'} desc={'Jelajahi Sekarang'} />
                                 <FlatList
                                         contentContainerStyle={{
                                             paddingRight: 20

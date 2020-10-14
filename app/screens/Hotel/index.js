@@ -92,6 +92,7 @@ export default class Hotel extends Component {
                         }}
                     
                     
+            console.log(url,path,paramUrl);
             var param={
                 method: 'POST',
                 headers: {
