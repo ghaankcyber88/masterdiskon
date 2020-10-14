@@ -223,7 +223,7 @@ export default class Booking extends Component {
                                     renderItem={({ item, index }) => (
                                         <Tag
                                             primary={item.checked}
-                                            style={{ marginRight: 10, width: 80 }}
+                                            style={{ marginRight: 10, width: 100 }}
                                             outline={!item.checked}
                                             onPress={() =>
                                                 this.onSelectStatus(item)
