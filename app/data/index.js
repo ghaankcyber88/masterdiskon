@@ -29,6 +29,7 @@ import { DataLoading } from "./dataLoading";
 import { DataFlight } from "./dataFlight";
 import { DataTrip } from "./dataTrip";
 import { DataHotelPackage } from "./dataHotelPackage";
+import { DataActivities } from "./dataActivities";
 import { DataHotelPackageCity } from "./dataHotelPackageCity";
 
 // Sample data for display on template
@@ -63,6 +64,7 @@ export {
     DataFlight,
     DataTrip,
     DataHotelPackage,
+    DataActivities,
     DataHotelPackageCity,
     DataConfig
 };

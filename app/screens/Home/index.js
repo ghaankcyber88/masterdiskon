@@ -1116,12 +1116,13 @@ export default class Home extends Component {
                         <TouchableOpacity
                             style={styles.itemService}
                             activeOpacity={0.9}
-                            onPress={() => {
-                                
-                                if(item.type != 'trip'){
-                                    this.onSelectProduct(item);
-                                }else{
+                            onPress={() => {    
+                                if(item.type == 'trip'){
                                     navigation.navigate(item.route,{type:item.type});
+                                }else if(item.type == 'activities'){
+                                        navigation.navigate(item.route,{type:item.type});
+                                }else{
+                                    this.onSelectProduct(item);
                                 }
                                 
                             }}
@@ -1372,7 +1373,7 @@ export default class Home extends Component {
                                                         propStar={{rating:item.product_detail.stars,enabled:true}}
                                                         propLeftRight={{left:'',right:''}}
                                                         onPress={() =>
-                                                            navigation.navigate("HotelDetail",{product:item})
+                                                            navigation.navigate("HotelDetail",{product:item,product_type:'hotelpackage'})
                                                         }
                                                         loading={this.state.loading_product_hotel_package_room_promo}
                                                         propOther={{inFrame:true,horizontal:true,width:wp("50%")}}
@@ -1410,7 +1411,7 @@ export default class Home extends Component {
                                                         propStar={{rating:item.product_detail.stars,enabled:true}}
                                                         propLeftRight={{left:'',right:''}}
                                                         onPress={() =>
-                                                            navigation.navigate("HotelDetail",{product:item})
+                                                            navigation.navigate("HotelDetail",{product:item,product_type:'hotelpackage'})
                                                         }
                                                         loading={this.state.loading_product_hotel_package_pay_now_stay_later}
                                                         propOther={{inFrame:true,horizontal:true,width:wp("50%")}}

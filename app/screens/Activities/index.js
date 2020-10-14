@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { FlatList, RefreshControl, View, Animated,ScrollView } from "react-native";
+import { FlatList, RefreshControl, View, Animated,ScrollView,StyleSheet } from "react-native";
 import { BaseStyle, BaseColor } from "@config";
 import { Header, SafeAreaView, Icon, HotelItem, FilterSort,Text } from "@components";
-import styles from "./styles";
+//import styles from "./styles";
 import * as Utils from "@utils";
 import {PostData} from '../../services/PostData';
 import {PostDataNew} from '../../services/PostDataNew';
@@ -16,7 +16,7 @@ import {
 
 
 // Load sample data
-import {DataLoading,DataConfig,DataHotelPackage,DataTrip} from "@data";
+import {DataLoading,DataConfig,DataActivities,DataTrip} from "@data";
 import {
     Placeholder,
     PlaceholderMedia,
@@ -28,6 +28,7 @@ export default class Hotel extends Component {
     constructor(props) {
         super(props);
         
+        var id_country='';
         if(this.props.navigation.state.params && this.props.navigation.state.params.id_country){
             id_country=this.props.navigation.state.params.id_country;
         }else{
@@ -41,11 +42,11 @@ export default class Hotel extends Component {
             id_city='';
         }
 
-        var detail_category='';
-        if(this.props.navigation.state.params && this.props.navigation.state.params.detail_category){
-            detail_category=this.props.navigation.state.params.detail_category;
+        var id_category='';
+        if(this.props.navigation.state.params && this.props.navigation.state.params.id_category){
+            id_category=this.props.navigation.state.params.id_category;
         }else{
-            detail_category='';
+            id_category='';
         }
         
         
@@ -57,8 +58,8 @@ export default class Hotel extends Component {
         this.state = {
             id_country:id_country,
             id_city:id_city,
-            detail_category:detail_category,
-            listdata_product_hotel_package:DataHotelPackage,
+            id_category:id_category,
+            listdata_product_activities:DataActivities,
             config:DataConfig,
         };
         this.getConfig();
@@ -76,17 +77,17 @@ export default class Hotel extends Component {
     }
     
     
-    getProductHotelPackage(){
+    getProductActivities(){
         const {config} =this.state;
         
-        this.setState({ loading_product_hotel_package: true }, () => {
+        this.setState({ loading_product_activities: true }, () => {
             var url=config.baseUrl;
-            var path=config.product_hotel_package.dir;
+            var path=config.product_activities.dir;
             var paramUrl={"param":{
                         "id_country":this.state.id_country,
                         "id_city":this.state.id_city,
-                        "id_hotelpackage":"",
-                        "detail_category":this.state.detail_category,
+                        "id_activities":"",
+                        "activities_category_id":this.state.id_category,
                         "search":"",
                         "limit":""
                         }}
@@ -103,8 +104,9 @@ export default class Hotel extends Component {
               }
              PostDataNew(url,path,param)
                  .then((result) => {
-                    this.setState({loading_product_hotel_package: false });
-                    this.setState({listdata_product_hotel_package: result});
+                     console.log('getProductActivities',JSON.stringify(result));
+                    this.setState({loading_product_activities: false });
+                    this.setState({listdata_product_activities: result});
                  },
                  (error) => {
                      this.setState({ error });
@@ -116,7 +118,7 @@ export default class Hotel extends Component {
 
     componentDidMount() {
         setTimeout(() => {
-            this.getProductHotelPackage();
+            this.getProductActivities();
         }, 500);
     }
 
@@ -132,28 +134,32 @@ export default class Hotel extends Component {
                                 <View style={{}}>
 
                                 {   
-                                    this.state.listdata_product_hotel_package.length != 0 ?
+                                    this.state.listdata_product_activities.length != 0 ?
                                     <View style={{flex:1}}>
                                         <FlatList
                                                 columnWrapperStyle={{ marginBottom: 10 }}
                                                 numColumns={2}
                                                 //horizontal={false}
-                                                data={this.state.listdata_product_hotel_package}
+                                                data={this.state.listdata_product_activities}
                                                 showsHorizontalScrollIndicator={false}
                                                 keyExtractor={(item, index) => item.id}
                                                 renderItem={({ item, index }) => (
                                                     <CardCustom
                                                         propImage={{height:wp("40%"),url:item.img_featured_url}}
-                                                        propInframe={{top:item.product_detail.area,bottom:item.product_detail.detail_category}}
+                                                        propInframe={{top:item.product_detail.time,bottom:item.product_detail.term}}
                                                         propTitle={{text:item.product_name}}
-                                                        propDesc={{text:item.product_detail.address}}
+                                                        propDesc={{text:''}}
                                                         propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:true}}
-                                                        propStar={{rating:item.product_detail.stars,enabled:true}}
+                                                        propStar={{rating:item.product_detail.stars,enabled:false}}
                                                         propLeftRight={{left:'',right:''}}
                                                         onPress={() =>
-                                                            navigation.navigate("HotelDetail",{product:item,product_type:'hotelpackage'})
+                                                            {
+                                                                //alert('ActivitiesDetail');
+                                                                navigation.navigate("HotelDetail",{product:item,product_type:'activities'})
+
+                                                            }
                                                         }
-                                                        loading={this.state.loading_product_hotel_package}
+                                                        loading={this.state.loading_product_activities}
                                                         propOther={{inFrame:true,horizontal:false,width:wp("45%")}}
                                                         style={
                                                             {marginLeft:15,marginBottom: 15}
@@ -180,7 +186,7 @@ export default class Hotel extends Component {
                 forceInset={{ top: "always" }}
             >
                 <Header
-                    title="Hotel"
+                    title="Activities"
                     // subTitle="24 Dec 2018, 2 Nights, 1 Room"
                     renderLeft={() => {
                         return (
@@ -228,3 +234,8 @@ export default class Hotel extends Component {
         );
     }
 }
+
+
+const styles = StyleSheet.create({
+
+});

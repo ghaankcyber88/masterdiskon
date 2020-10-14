@@ -366,6 +366,20 @@ export default class Summary extends Component {
                 this.setState({dataPrice:dataPrice});
                 this.setState({total_all:parseInt(param.totalPrice)+parseInt(dataPrice.transaction_fee)});
             });
+        }else if(param.type=='activities'){
+            this.setState({ loading_spinner: true }, () => {
+                this.setState({ loading_spinner: false });
+                var dataPrice={      
+                    required_dob:true,
+                    required_passport:false,
+                    total_price:total_price,
+                    nett_price:0,
+                    insurance_total:0,
+                    transaction_fee:0
+                };
+                this.setState({dataPrice:dataPrice});
+                this.setState({total_all:parseInt(param.totalPrice)+parseInt(dataPrice.transaction_fee)});
+            });
         }else{
             var departurePost=this.removePrice(this.state.selectDataDeparture); 
             var returnPost=this.removePrice(this.state.selectDataReturn);   
@@ -746,9 +760,111 @@ export default class Summary extends Component {
                     "typeProduct": "hotelpackage"
                 }
                 var cartToBeSaved=dataCart;
-                //console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
                 this.onSubmitOrder(cartToBeSaved);
-        
+            }else if(param.type=='activities'){
+                var customer=this.state.listdata_customer;
+                var product= this.state.product;
+                var guest=this.state.listdata_participant;
+                var param=this.state.param;
+                var dataPrice=this.state.dataPrice;
+                var productPart=this.state.productPart;
+                
+                var participant = [];
+                var a=1;
+                guest.map(item => {
+                    var obj = {};
+                                obj['key']= a,
+                                obj['label']= 'Penumpang '+a+' = '+item['old'],
+                                obj['old']= item['old'],
+                                obj['fullname']= item['fullname'],
+                                obj['firstname']= item['firstname'],
+                                obj['lastname']= item['lastname'],
+                                obj['birthday']= item['birthday'],
+                                obj['nationality']= item['nationality'],
+                                obj['passport_number']= item['passport_number'],
+                                obj['passport_country']= item['passport_country'],
+                                obj['passport_expire']= item['passport_expire'],
+                                obj['phone']= item['phone'],
+                                obj['title']= item['title'],
+                                obj['email']= item['email'],
+                                obj['nationality_id']= item['nationality_id'],
+                                obj['nationality_phone_code']= item['nationality_phone_code'],
+                                obj['passport_country_id']= item['passport_country_id']
+                                
+                    participant.push(obj);
+                    a++;
+                });
+                    var dataCart={
+                        "departure_date": param.DepartureDate,
+                        "product":product,
+                        "product_part":productPart,
+                        "pax": [
+                            {
+                                "departure_baggage": 0,
+                                "return_baggage": 0,
+                                "loyalty_number": [],
+                                "type": "ADT",
+                                "type_name": "Adult",
+                                "title": customer[0].title,
+                                "first_name": customer[0].firstname,
+                                "last_name": customer[0].lastname,
+                                "dob": customer[0].birthday,
+                                "nationality_code": customer[0].nationality_id,
+                                "nationality_name": customer[0].nationality,
+                                "identity_type": "passport",
+                                "identity_type_name": customer[0].nationality,
+                                "identity_number": customer[0].passport_number,
+                                "identity_expired_date": customer[0].passport_expire,
+                                "identity_issuing_country_code": customer[0].passport_country_id,
+                                "identity_issuing_country_name": customer[0].passport_country_id
+                            }
+                        ],
+                        "international": false,
+                        "detail_price": [
+                            {
+                                "total_tax": 0,
+                                "type": "",
+                                "segment": "",
+                                "total_price": this.state.total_all,
+                                "nett_price": 0,
+                                "commission_percent": 0,
+                                "commission_amount": 0,
+                                "insurance_code": null,
+                                "insurance_name": null,
+                                "insurance_company": null,
+                                "insurance_program": null,
+                                "insurance_fee": 0,
+                                "insurance_total": 0,
+                                "transaction_fee": 0,
+                            }
+                        ],
+                        "id": "",
+                        "adult": param.Adults,
+                        "child": param.Children,
+                        "infant": param.Infants,
+                        "nett_price": 0,
+                        "discount": 0,
+                        "total_price": this.state.total_all,
+                        "insurance_total": 0,
+                        "transaction_fee": 0,
+                        "time_limit": "2020-09-01T11: 37: 27",
+                        "contact": {
+                            "title": customer[0].title,
+                            "first_name": customer[0].firstname,
+                            "last_name": customer[0].lastname,
+                            "country_id": customer[0].nationality_id,
+                            "country_name": customer[0].nationality,
+                            "phone_code": customer[0].nationality_phone_code,
+                            "phone_number": customer[0].phone,
+                            "email": customer[0].email
+                        },
+                        "participant": participant,
+                        "typeProduct": "activities"
+                    }
+                    var cartToBeSaved=dataCart;
+                    //console.log('cartToBeSaved',JSON.stringify(cartToBeSaved));
+                    this.onSubmitOrder(cartToBeSaved);
+            
         }else{
 
             var param=this.state.param;
@@ -1007,8 +1123,9 @@ export default class Summary extends Component {
                     "otherUser":this.state.otherUser
                     }
                     
-                    //console.log("---------------data cart array cart kirim  ------------");
-                    //console.log(JSON.stringify(dataCartArrayRealSend));
+                    console.log("---------------data cart array cart kirim  ------------");
+                    console.log(JSON.stringify(dataCartArrayRealSend));
+                    console.log(url,path,JSON.stringify(dataCartArrayRealSend));
 
              
                     
@@ -1041,16 +1158,13 @@ export default class Summary extends Component {
                                 }
                                 this.props.navigation.navigate("Loading",{redirect:redirect,param:param});
                                 
-                                                                // var param={
+                                // var param={
                                 //     url:'https://masterdiskon.com/front/user/purchase/detail/'+id_order+'?access=app',
                                 //     title:'Order Detail',
                                 //     subTitle:id_order
                                 // }
                                 
                                 // this.props.navigation.navigate("WebViewPage",{param:param});
-
-                               
-                               
                     });
 
                 }
@@ -1963,6 +2077,34 @@ export default class Summary extends Component {
                                 </View>
                             </View>
                         </View>
+        }else if(this.state.param.type=='activities'){
+            contentProduct=<View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                            <View style={{ flex: 3,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                                <View>
+                                    <Image
+                                        style={{width: 70, height: 70, marginRight: 10, borderRadius: 16}}
+                                        resizeMode="contain"
+                                        source={{uri: this.state.product.img_featured_url}}
+                                    />
+                                </View>
+                            </View>
+                            <View style={{flex: 9}}>
+                                   
+                                <View>
+                                    <View>
+                                        <Text>
+                                            {this.state.product.product_name}
+                                        </Text>
+                                        <Text body3 style={{color:BaseColor.prima}}>
+                                            {this.state.productPart.detail_name}
+                                        </Text>
+                                        <Text body3 style={{color:BaseColor.prima}}>
+                                            {param.DepartureDate}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
 
         }else{
         
@@ -2131,6 +2273,47 @@ export default class Summary extends Component {
                 {contentCicil}
             </View>
         }else if(this.state.param.type=='hotelpackage'){   
+           
+            contentPrice=<View>
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 6,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text footnote grayColor numberOfLines={1}>
+                                    Subtotal
+                                </Text>
+                            </View>
+                        </View>
+                        <View style={{flex: 6,justifyContent: "center",alignItems: "flex-end"}}>
+                               
+                                <Text headline semibold numberOfLines={1}>
+                                {'IDR '+priceSplitter(this.state.param.totalPrice)}
+                                </Text>
+                        </View>
+                    </View>
+                </View>
+
+
+                <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >
+                    <View style={{flexDirection:'row',flex: 10,justifyContent: "flex-start",alignItems: "center"}}>
+                        <View style={{ flex: 5,flexDirection: "row",justifyContent: "flex-start",alignItems: "center"}}>
+                            <View>
+                                <Text footnote grayColor numberOfLines={1}>
+                                    Total
+                                </Text>
+                            
+                            </View>
+                        </View>
+                        <View style={{flex: 5,justifyContent: "center",alignItems: "flex-end"}}>
+                                <Text headline semibold numberOfLines={1}>
+                                {'IDR '+priceSplitter(this.state.total_all)}
+                                </Text>
+                        </View>
+                    </View>
+                </View>
+                
+            </View>
+        }else if(this.state.param.type=='activities'){   
            
             contentPrice=<View>
                 <View style={{flexDirection:'row',paddingLeft:20,paddingRight:20,paddingTop:5,paddingBottom:5}} >

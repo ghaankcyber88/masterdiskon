@@ -33,7 +33,6 @@ import * as Utils from "@utils";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import SetDate from "../../components/SetDate";
 import SetPenumpang from "../../components/SetPenumpang";
-
 import FormOptionQty from "../../components/FormOptionQty";
 import NotYetLogin from "../../components/NotYetLogin";
 
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     contentButtonBottom: {
         borderTopColor: BaseColor.textSecondaryColor,
         borderTopWidth: 1,
-        //paddingVertical: 10,
+        //paddingVertical: 5,
         paddingHorizontal: 20,
         flexDirection: "row",
         justifyContent: "space-between",
@@ -177,34 +176,53 @@ export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
         var product = this.props.navigation.state.params.product;
-        var product_type='';
-        if(this.props.navigation.state.params && this.props.navigation.state.params.product_type){
-            product_type=this.props.navigation.state.params.product_type;
-        }else{
-            product_type='';
-        }
-
+        //console.log('HotelDetail',JSON.stringify(product));
 
         var minDate = new Date(); // Today
         minDate.setDate(minDate.getDate() + 7);
         var tglAwal=this.convertDate(minDate);
 
 
+        // Temp data define
         this.state = {
             heightHeader: Utils.heightHeader(),
-            
-            product_type:product_type,
+            title: "Europe Cruises",
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            service: [
+                { id: "1", name: "wifi" },
+                { id: "2", name: "coffee" },
+                { id: "3", name: "bath" },
+                { id: "4", name: "car" },
+                { id: "5", name: "paw" },
+                { id: "6", name: "futbol" },
+                { id: "7", name: "user-secret" },
+                { id: "8", name: "clock" },
+                { id: "9", name: "tv" },
+                { id: "10", name: "futbol" }
+            ],
+            index: 0,
+            routes: [
+                // { key: "hotel", title: "Hotel" },
+                { key: "paket", title: "Paket" },
+                { key: "kebijakan", title: "Kebijakan" },
+                { key: "informasi", title: "Informasi" },
+                // { key: "exclude", title: "Exclude" },
+                // { key: "information", title: "Information" },
+                // { key: "review", title: "Review" },
+                // { key: "feedback", title: "Feedback" }
+            ],
             product: product,
-            minPerson:1,
-            minRoom:1,
-            minVoucher:1,
+            minPerson:0,
             minPrice:0,
-            maksPersonRoom:0,
-            sisaPersonRoom:0,
             totalPrice:0,
             modalVisiblePerson: false,
             modalVisibleDate: false,
-            dewasa:"2",
+            dewasa:"0",
             anak:"0",
             bayi:"0",
             selectedStartDate: null,
@@ -219,37 +237,17 @@ export default class HotelDetail extends Component {
                 text: "1 Voucher"
                 },
                 {
-                value: 2,
-                text: "2 Voucher"
-                },
-                {
-                value: 3,
-                text: "3 Voucher"
-                }
-            ],
-            listdataRoom:[
-                {
-                    value: 1,
-                    text: "1 Room"
-                },
-                {
                     value: 2,
-                    text: "2 Room"
-                },
-                {
-                    value: 3,
-                    text: "3 Room"
-                },
-                {
-                    value: 4,
-                    text: "4 Room"
-                },
-                {
-                    value: 5,
-                    text: "5 Room"
-                }
+                    text: "2 Voucher"
+                    },
+                    {
+                        value: 3,
+                        text: "3 Voucher"
+                        }
             ],
             
+            kelas:'Economy Class',
+            kelasId:'E',
             login:true
 
         };
@@ -259,27 +257,45 @@ export default class HotelDetail extends Component {
         this.setJumlahAnak = this.setJumlahAnak.bind(this);
         this.setJumlahBayi = this.setJumlahBayi.bind(this);
         this.setMinPerson = this.setMinPerson.bind(this);
-        this.setVoucher = this.setVoucher.bind(this);
-        this.setRoom = this.setRoom.bind(this);
         this.setTglAwal = this.setTglAwal.bind(this);
         this.setTglAkhir = this.setTglAkhir.bind(this);
-        this.setBookingTime = this.setBookingTime.bind(this);
+        this.setListdataPerson=this.setListdataPerson.bind(this);
+        // this.setKelasPesawat = this.setKelasPesawat.bind(this);
     }
 
-    setBookingTime(tglAwal, tglAkhir,round) {
-        if (round ==true) {
-            this.setState({tglAwal:tglAwal});
-            this.setState({tglAkhir:tglAkhir});
-          
-        } else {
-            this.setState({tglAwal:tglAwal});
-            this.setState({tglAkhir:null});
-        }
-    }
+   
+
+    // When tab is activated, set what's index value
+    _handleIndexChange = index =>
+        this.setState({
+            index
+        });
+
+    // Customize UI tab bar
+    _renderTabBar = props => (
+        <TabBar
+            {...props}
+            scrollEnabled
+            indicatorStyle={styles.indicator}
+            style={styles.tabbar}
+            tabStyle={styles.tab}
+            inactiveColor={BaseColor.grayColor}
+            activeColor={BaseColor.textPrimaryColor}
+            renderLabel={({ route, focused, color }) => (
+                <View style={{ flex: 1, width: 130, alignItems: "center" }}>
+                    <Text headline semibold={focused} style={{ color }}>
+                        {route.title}
+                    </Text>
+                </View>
+            )}
+        />
+    );
     
     setTglAwal(dateConversion,dateNumber){
         this.setState({tglAwal:dateConversion});
         this.setState({tglAwalNumber:dateNumber});
+        //console.log('setTglAwal',dateNumber);
+        //alert(dateNumber);
     }
 
     setTglAkhir(dateConversion,dateNumber){
@@ -287,79 +303,43 @@ export default class HotelDetail extends Component {
         this.setState({tglAkhirNumber:dateNumber});
     }
 
+
     setPrice(select){
-        var minPerson=this.state.minPerson;
-        var maksPersonRoom=parseInt(minPerson)*parseInt(select.guest_per_room);
-        var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-        var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-
-        this.setState({maksPersonRoom:maksPersonRoom});
-        this.setState({sisaPersonRoom:sisaPersonRoom});
-
-        this.setState({minPersonDef:minPerson});
-        this.setState({minPerson:minPerson});
         this.setState({select:select});
+        
     }
 
     setJumlahDewasa(jml){
-            var maksPersonRoom=this.state.maksPersonRoom;
-            var jmlPerson=parseInt(jml)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
+        this.setState({dewasa:jml});
 
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({jmlPerson:jmlPerson});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-            this.setState({dewasa:jml});
     }
 
     setJumlahAnak(jml){
-            var maksPersonRoom=this.state.maksPersonRoom;
-            var jmlPerson=parseInt(this.state.dewasa)+parseInt(jml)+parseInt(this.state.bayi);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({jmlPerson:jmlPerson});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-            this.setState({anak:jml});
+        this.setState({anak:jml});
     }
 
     setJumlahBayi(jml){
-        var maksPersonRoom=this.state.maksPersonRoom;
-            var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(jml);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-    
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({jmlPerson:jmlPerson});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-            this.setState({bayi:jml});
+        this.setState({bayi:jml});
     }
 
     setMinPerson(jml){
         this.setState({minPerson:jml});
-    }
-
-    setVoucher(jml){
-        this.setState({minVoucher:jml});
-        this.setState({dewasa:jml.toString()});
-    }
-
-    setRoom(jml){
-        this.setState({dewasa:this.state.select.guest_per_room});
-        this.setState({anak:"0"});
-        this.setState({bayi:"0"});
         setTimeout(() => {
-            var maksPersonRoom=parseInt(jml)*parseInt(this.state.select.guest_per_room);
-            var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-
-            this.setState({minRoom:jml});
-            //this.setListdataPerson();
+        this.setListdataPerson();
         }, 500);
     }
     
+    setListdataPerson(){
+        // var listdataPerson=[];
+        //     for(a=this.state.minPerson;a<=this.state.maxPerson;a++){
+        //         var obj = {};
+        //         obj['value'] = a;
+        //         obj['text'] = a + ' Voucher';
+        //         listdataPerson.push(obj);
+        //     }
+        // this.setState({listdataPerson:listdataPerson});
+    }
+
     componentDidMount(){
         const {product}=this.state;
         AsyncStorage.getItem('userSession', (error, result) => {
@@ -371,9 +351,82 @@ export default class HotelDetail extends Component {
              }
         });
         
+        
+          min = Math.min.apply(null, product.product_option.map(function(item) {
+            return item.minimum_book;
+          })),
+          max = Math.max.apply(null, product.product_option.map(function(item) {
+            return item.minimum_book;
+          }));
+          
+          this.setState({maxPerson:max});
+          this.setState({minPerson:min});
+         
+        setTimeout(() => {
+            this.setListdataPerson();
+        }, 500);
     }
+    // Render correct screen container when tab is activated
+    _renderScene = ({ route, jumpTo }) => {
+        switch (route.key) {
+            case "paket":
+                    return (
+                        <Paket
+                            product={this.state.product}
+                            jumpTo={jumpTo}
+                            navigation={this.props.navigation}
+                            setMinPerson={this.setMinPerson}
+                            setPrice={this.setPrice}
+                        />
+                    );
+            case "informasi":
+                return (
+                    <Informasi
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "exclude":
+                return (
+                    <Exclude
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "information":
+                return (
+                    <InformationTab
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "kebijakan":
+                return (
+                    <Kebijakan
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "feedback":
+                return (
+                    <Feedback
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "review":
+                return (
+                    <ReviewTab
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+        }
+    };
 
-    
     convertDate(date){
 
         var dd = String(date.getDate()).padStart(2, '0');
@@ -412,20 +465,14 @@ export default class HotelDetail extends Component {
         
         var productPart={}
         var link='';
-        var qty='';
-        if(product.product_detail.detail_category=='pay_now_stay_later'){
-            qty=this.state.minVoucher;
-        }else{
-            qty=this.state.minRoom;
-
-        } 
+       
             link='Summary';
-            param.type=this.state.product_type;
+            param.type='hotelpackage';
             param.cityId=this.state.cityId;
             param.cityText=this.state.cityText;
             param.cityProvince=this.state.cityProvince;
-            param.Qty=parseInt(qty);
-            param.totalPrice=parseInt(qty)*parseInt(select.price);
+            param.Qty=parseInt(this.state.minPerson);
+            param.totalPrice=parseInt(this.state.minPerson)*parseInt(select.price);
             param.participant=false;
             
             this.props.navigation.navigate(link,
@@ -435,6 +482,10 @@ export default class HotelDetail extends Component {
                     productPart:select
                 });
                 
+            // console.log('paramHotel',JSON.stringify(param));
+            // console.log('productHotel',JSON.stringify(product));
+            // console.log('productPartHotel',JSON.stringify(select));
+
     }
     
     content_button(){
@@ -443,81 +494,36 @@ export default class HotelDetail extends Component {
         var content=<View></View>
         
         if(product.product_detail.detail_category=='pay_now_stay_later'){
-        content=<View style={[styles.contentButtonBottom]}>
+        content=<View style={styles.contentButtonBottom}>
                         <FormOptionQty
-                                title={'Quantity'}
-                                titleSub={'Anda dapat mengambil 3 voucher dalam sekali transaksi'}
+                                style={{ marginVertical: 10 }} 
+                                label={'Quantity'}
                                 listdata={this.state.listdataPerson}
-                                setMinPerson={this.setVoucher}
-                                selectedText={this.state.minVoucher + ' Voucher'}
-                                icon={'user'}
+                                setMinPerson={this.setMinPerson}
+                                selectedText={this.state.minPerson + ' Voucher'}
                         />
                         
                         <Button
-                            style={{ height: 40,width:'80%'}}
+                            style={{ height: 46 }}
                             onPress={() => {  
                                 this.onSubmit();
                                
                             }}
                         >
-                            Next
+                            Book Now
                         </Button>
                     </View>
         }else{
         
             content=<View style={styles.contentButtonBottom}>
-                        <View>
-                            <SetDate
-                                labelTglAwal={this.state.tglAwal}
-                                labelTglAkhir={this.state.tglAwal}
-                                setBookingTime={this.setBookingTime}
-                                tglAwal={this.state.tglAwal}
-                                tglAkhir={this.state.tglAkhir}
-                                round={false}
-                            />
-                        </View>
-                        
-                        <View>
-                            <FormOptionQty
-                                    title={'Room'}
-                                    titleSub={'Maximum 2 tamu/room'}
-                                    listdata={this.state.listdataRoom}
-                                    setMinPerson={this.setRoom}
-                                    selectedText={this.state.minRoom + ' Room'}
-                                    icon={'bed'}
-                            />
-                        </View>
-
-                        <View>
-                            <SetPenumpang
-                                label={parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi)}
-                                dewasa={this.state.dewasa}
-                                anak={this.state.anak}
-                                bayi={this.state.bayi}
-                                setJumlahDewasa={this.setJumlahDewasa}
-                                setJumlahAnak={this.setJumlahAnak}
-                                setJumlahBayi={this.setJumlahBayi}
-                                minPersonDef={this.state.minPersonDef}
-                                minPerson={this.state.minPerson}
-                                minPrice={this.state.minPrice}
-                                totalPrice={this.state.totalPrice}
-                                setMinPerson={this.setMinPerson}
-                                maksPersonRoom={this.state.maksPersonRoom}
-                                sisaPersonRoom={this.state.sisaPersonRoom}
-                                includeBayi={false}
-                                type={'hotel_package_room'}
-
-                            />
-                        </View>
-                        
                         <Button
-                            style={{ height: 40}}
+                            style={{ height: 46,width:'100%' }}
                             onPress={() => {  
-                                this.onSubmit();
+                                navigation.navigate('FlightSearch',{type:'hotelpackage',product:this.state.product,productPart:this.state.select})
                                
                             }}
                         >
-                            Next
+                            Book Now
                         </Button>
                     </View>
         
@@ -538,8 +544,7 @@ export default class HotelDetail extends Component {
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
         const { modalVisiblePerson,modalVisibleDate} = this.state;
-
-        var content=<View></View>
+      
         
 
         return (
@@ -656,23 +661,7 @@ export default class HotelDetail extends Component {
                             </Text>
                         </View>
 
-                        <Paket
-                            product={this.state.product}
-                            setMinPerson={this.setMinPerson}
-                            setPrice={this.setPrice}
-                        />
-                        <Informasi
-                            data={'Biaya penambahan orang dalam kamar mungkin berlaku dan berbeda-beda menurut kebijakan properti.Tanda pengenal berfoto yang dikeluarkan oleh pemerintah dan kartu kredit, kartu debit, dan deposit uang tunai diperlukan saat check-in untuk biaya tidak terduga.Pemenuhan permintaan khusus bergantung pada ketersediaan sewaktu check-in dan mungkin menimbulkan biaya tambahan. Permintaan khusus tidak dijamin akan terpenuhi.'}
-                        />
-
-                        <Informasi
-                            data={this.state.product.product_detail.exclude}
-                        />
-
-                        <Informasi
-                            data={this.state.product.product_detail.term}
-                        />
-
+                        
                     </ScrollView>
                     :
                     <NotYetLogin redirect={'Home'} param={this.state.product} navigation={navigation} />
@@ -686,10 +675,135 @@ export default class HotelDetail extends Component {
     }
 }
 
+/**
+ * @description Show when tab Information activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class InformationTab extends Component {
+    constructor(props) {
+        super();
+    }
+
+    render() {
+        return (
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                <Text headline semibold>
+                    Day 1: London - Somme - Paris
+                </Text>
+                <Image
+                    source={Images.cruise1}
+                    style={{ height: 120, width: "100%", marginTop: 10 }}
+                />
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text headline semibold style={{ marginTop: 20 }}>
+                    Day 2: Paris - Burgundy - Swiss Alps
+                </Text>
+                <Image
+                    source={Images.cruise2}
+                    style={{ height: 120, width: "100%", marginTop: 10 }}
+                />
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text headline semibold style={{ marginTop: 20 }}>
+                    Day 3: Swiss Alps - Strasbourg - Heidel…
+                </Text>
+                <Image
+                    source={Images.cruise3}
+                    style={{ height: 120, width: "100%", marginTop: 10 }}
+                />
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+            </View>
+        );
+    }
+}
+
+
+
+
+
 class Paket extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ],
             product_option:props.product.product_option
         };
     }
@@ -702,13 +816,13 @@ class Paket extends Component {
                 if (product_option.length != 0) {
                     var select=product.product_option[0];
                     this.props.setPrice(select);
-                    const selected = select.id_product_option;
+                    const selected = select.id_hotelpackage_detail;
                     if (selected) {
                         this.setState({
                             product_option: this.state.product_option.map(item => {
                                 return {
                                     ...item,
-                                    checked: item.id_product_option == selected
+                                    checked: item.id_hotelpackage_detail == selected
                                 };
                             })
                         });
@@ -718,9 +832,12 @@ class Paket extends Component {
     
     onChange(select) {
         const { navigation, product,setMinPerson,setListdataPerson} = this.props;
+        var minPerson=select.minimum_book;
+        setMinPerson(minPerson);
+        
         this.setState({
             product_option: this.state.product_option.map(item => {
-                if (item.id_product_option == select.id_product_option) {
+                if (item.id_hotelpackage_detail == select.id_hotelpackage_detail) {
                     return {
                         ...item,
                         checked: true
@@ -763,7 +880,7 @@ class Paket extends Component {
         }else{
             content=<FlatList
             data={product_option}
-            keyExtractor={(item, index) => item.id_product_option}
+            keyExtractor={(item, index) => item.id_hotelpackage_detail}
             renderItem={({ item }) => (
                 <TouchableOpacity
                     // style={styles.item}
@@ -847,11 +964,54 @@ class Paket extends Component {
     }
 }
 
+
+
+/**
+ * @description Show when tab Kebijakan activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
 class Informasi extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data:props.data  
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ]
         };
     }
 
@@ -862,14 +1022,16 @@ class Informasi extends Component {
     }
 
     render() {
-        const {data} = this.state;
+        const { renderMapView, todo, helpBlock} = this.state;
         const { navigation,product } = this.props;
-        // var informasi='Biaya penambahan orang dalam kamar mungkin berlaku dan berbeda-beda menurut kebijakan properti.Tanda pengenal berfoto yang dikeluarkan oleh pemerintah dan kartu kredit, kartu debit, dan deposit uang tunai diperlukan saat check-in untuk biaya tidak terduga.Pemenuhan permintaan khusus bergantung pada ketersediaan sewaktu check-in dan mungkin menimbulkan biaya tambahan. Permintaan khusus tidak dijamin akan terpenuhi.';
+        var product_detail=product.product_detail;
+        
+        var informasi='Biaya penambahan orang dalam kamar mungkin berlaku dan berbeda-beda menurut kebijakan properti.Tanda pengenal berfoto yang dikeluarkan oleh pemerintah dan kartu kredit, kartu debit, dan deposit uang tunai diperlukan saat check-in untuk biaya tidak terduga.Pemenuhan permintaan khusus bergantung pada ketersediaan sewaktu check-in dan mungkin menimbulkan biaya tambahan. Permintaan khusus tidak dijamin akan terpenuhi.';
         
         return (
             <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
                 <HTML
-                  html={data}
+                  html={informasi}
                   imagesMaxWidth={Dimensions.get("window").width}
                 />
             </View>
@@ -877,11 +1039,54 @@ class Informasi extends Component {
     }
 }
 
+
+
+/**
+ * @description Show when tab Kebijakan activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
 class Exclude extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ]
         };
     }
 
@@ -909,11 +1114,53 @@ class Exclude extends Component {
     }
 }
 
+
+/**
+ * @description Show when tab Kebijakan activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
 class Kebijakan extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ]
         };
     }
 
@@ -938,5 +1185,128 @@ class Kebijakan extends Component {
     }
 }
 
+/**
+ * @description Show when tab Package activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class Feedback extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            rate: 4.5,
+            title: "",
+            review: ""
+        };
+    }
 
+    render() {
+        const { rate, title, review } = this.state;
+        return (
+            <View style={{ alignItems: "center", padding: 20 }}>
+                <View style={{ width: 160 }}>
+                    <StarRating
+                        starSize={26}
+                        maxStars={5}
+                        rating={rate}
+                        selectedStar={rating => {
+                            this.setState({ rate: rating });
+                        }}
+                        fullStarColor={BaseColor.yellowColor}
+                        containerStyle={{ padding: 5 }}
+                    />
+                    <Text caption1 grayColor style={{ textAlign: "center" }}>
+                        Tap a star to rate
+                    </Text>
+                </View>
+                <TextInput
+                    style={[BaseStyle.textInput, { marginTop: 10 }]}
+                    onChangeText={text => this.setState({ title: text })}
+                    autoCorrect={false}
+                    placeholder="Title"
+                    placeholderTextColor={BaseColor.grayColor}
+                    value={title}
+                    selectionColor={BaseColor.primaryColor}
+                />
+                <TextInput
+                    style={[
+                        BaseStyle.textInput,
+                        { marginTop: 20, height: 140 }
+                    ]}
+                    onChangeText={text => this.setState({ review: text })}
+                    textAlignVertical="top"
+                    multiline={true}
+                    autoCorrect={false}
+                    placeholder="Reviews"
+                    placeholderTextColor={BaseColor.grayColor}
+                    value={review}
+                    selectionColor={BaseColor.primaryColor}
+                />
+                <Button full style={{ marginTop: 20 }} onPress={() => { }}>
+                    Sent
+                </Button>
+            </View>
+        );
+    }
+}
 
+/**
+ * @description Show when tab Review activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class ReviewTab extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            rateDetail: {
+                point: 4.7,
+                maxPoint: 5,
+                totalRating: 25,
+                data: ["80%", "10%", "10%", "0%", "0%"]
+            },
+            reviewList: ReviewData
+        };
+    }
+    render() {
+        let { rateDetail, reviewList } = this.state;
+        return (
+            <FlatList
+                style={{ padding: 20 }}
+                refreshControl={
+                    <RefreshControl
+                        colors={[BaseColor.primaryColor]}
+                        tintColor={BaseColor.primaryColor}
+                        refreshing={this.state.refreshing}
+                        onRefresh={() => { }}
+                    />
+                }
+                data={reviewList}
+                keyExtractor={(item, index) => item.id}
+                ListHeaderComponent={() => (
+                    <RateDetail
+                        point={rateDetail.point}
+                        maxPoint={rateDetail.maxPoint}
+                        totalRating={rateDetail.totalRating}
+                        data={rateDetail.data}
+                    />
+                )}
+                renderItem={({ item }) => (
+                    <CommentItem
+                        style={{ marginTop: 10 }}
+                        image={item.source}
+                        name={item.name}
+                        rate={item.rate}
+                        date={item.date}
+                        title={item.title}
+                        comment={item.comment}
+                    />
+                )}
+            />
+        );
+    }
+}

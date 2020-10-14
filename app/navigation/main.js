@@ -40,6 +40,7 @@ import Voucher from "@screens/Voucher";
 import Car from "@screens/Car";
 import OverViewCar from "@screens/OverViewCar";
 import Hotel from "@screens/Hotel";
+import Activities from "@screens/Activities";
 import HotelSearch from "@screens/HotelSearch";
 import Review from "@screens/Review";
 import Feedback from "@screens/Feedback";
@@ -62,6 +63,7 @@ import Eticket from "@screens/Eticket";
 import Currency from "@screens/Currency";
 import Coupons from "@screens/Coupons";
 import HotelDetail from "@screens/HotelDetail";
+import ActivitiesDetail from "@screens/HotelDetail";
 import ContactUs from "@screens/ContactUs";
 import PreviewBooking from "@screens/PreviewBooking";
 import TourOrderDetail from "@screens/TourOrderDetail";
@@ -314,6 +316,9 @@ const StackNavigator = createStackNavigator(
         HotelDetail: {
             screen: HotelDetail
         },
+        ActivitiesDetail: {
+            screen: ActivitiesDetail
+        },
         HotelSearch: {
             screen: HotelSearch
         },
@@ -481,6 +486,9 @@ const StackNavigator = createStackNavigator(
         },
         Hotel: {
             screen: Hotel
+        },
+        Activities: {
+            screen: Activities
         },
         DashboardEvent: {
             screen: DashboardEvent

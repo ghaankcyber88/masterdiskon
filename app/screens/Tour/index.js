@@ -18,6 +18,11 @@ import {
     PlaceholderLine,
     Fade
   } from "rn-placeholder";
+  import {
+    heightPercentageToDP as hp,
+    widthPercentageToDP as wp
+  } from "react-native-responsive-screen";
+
 
 export default class Tour extends Component {
     constructor(props) {
@@ -89,44 +94,90 @@ export default class Tour extends Component {
         const { navigation } = this.props;
     
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-                return (
-                                <View style={{}}>
+                // return (
+                //                 <View style={{}}>
 
-                                {   
-                                    this.state.listdata_product_trip.length != 0 ?
-                                    <View>
-                                        <FlatList
-                                                contentContainerStyle={{
-                                                    paddingRight: 20
-                                                }}
-                                                horizontal={false}
-                                                data={this.state.listdata_product_trip}
-                                                showsHorizontalScrollIndicator={false}
-                                                keyExtractor={(item, index) => item.id}
-                                                renderItem={({ item, index }) => (
+                //                 {   
+                //                     this.state.listdata_product_trip.length != 0 ?
+                //                     <View>
+                //                         <FlatList
+                //                                 // contentContainerStyle={{
+                //                                 //     paddingRight: 20
+                //                                 // }}
                                                 
-                                                    <CardCustom
-                                                        propImage={{height:200,url:item.img_featured_url}}
-                                                        propInframe={{top:item.product_place,bottom:item.product_duration}}
-                                                        propTitle={{text:item.product_name}}
-                                                        propDesc={{text:item.product_detail.description}}
-                                                        propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:false}}
-                                                        propStar={{rating:10,enabled:false}}
-                                                        propLeftRight={{left:'',right:''}}
-                                                        onPress={() =>
+
+                //                                 columnWrapperStyle={{ marginBottom: 10 }}
+                //                                 numColumns={2}
+                //                                 //horizontal={false}
+
+                //                                 data={this.state.listdata_product_trip}
+                //                                 showsHorizontalScrollIndicator={false}
+                //                                 keyExtractor={(item, index) => item.id}
+                //                                 renderItem={({ item, index }) => (
+                                                
+                //                                     <CardCustom
+                //                                         propImage={{height:wp("40%"),url:item.img_featured_url}}
+                //                                         propInframe={{top:item.product_place,bottom:item.product_duration}}
+                //                                         propTitle={{text:item.product_name}}
+                //                                         propDesc={{text:item.product_detail.description}}
+                //                                         propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:false}}
+                //                                         propStar={{rating:10,enabled:false}}
+                //                                         propLeftRight={{left:'',right:''}}
+                //                                         onPress={() =>
+                //                                             navigation.navigate("TourDetailCustom",{product:item})
+                //                                         }
+                //                                         loading={this.state.loading_product_trip}
+                //                                         propOther={{inFrame:true,horizontal:false,width:wp("45%")}}
+                //                                     />
+                                                
+                //                                 )}
+                //                             />
+                //                     </View>
+                //                     :
+                //                     <View></View>
+                //                     }
+                //                 </View>
+                // );
+
+                return (
+                    <View style={{}}>
+
+                    {   
+                        this.state.listdata_product_trip.length != 0 ?
+                        <View style={{flex:1}}>
+                            <FlatList
+                                    columnWrapperStyle={{ marginBottom: 10 }}
+                                    numColumns={2}
+                                    //horizontal={false}
+                                    data={this.state.listdata_product_trip}
+                                    showsHorizontalScrollIndicator={false}
+                                    keyExtractor={(item, index) => item.id}
+                                    renderItem={({ item, index }) => (
+                                        <CardCustom
+                                            propImage={{height:wp("40%"),url:item.img_featured_url}}
+                                            propInframe={{top:item.product_place,bottom:item.product_duration}}
+                                            propTitle={{text:item.product_name}}
+                                            propDesc={{text:item.product_detail.description}}
+                                            propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:false}}
+                                            propStar={{rating:10,enabled:false}}
+                                            propLeftRight={{left:'',right:''}}
+                                            onPress={() =>
                                                             navigation.navigate("TourDetailCustom",{product:item})
                                                         }
-                                                        loading={this.state.loading_product_trip}
-                                                        propOther={{inFrame:true,horizontal:false,width:Utils.scaleWithPixel(250)}}
-                                                    />
-                                                
-                                                )}
-                                            />
-                                    </View>
-                                    :
-                                    <View></View>
-                                    }
-                                </View>
+                                            loading={this.state.loading_product_trip}
+                                            propOther={{inFrame:true,horizontal:false,width:wp("45%")}}
+                                            style={
+                                                {marginLeft:15,marginBottom: 15}
+                                            }
+                                        />
+                                    
+                                    )}
+                                />
+                        </View>
+                        :
+                        <View></View>
+                        }
+                    </View>
                 );
             
     }

@@ -37,13 +37,1336 @@ import SetPenumpang from "../../components/SetPenumpang";
 import FormOptionQty from "../../components/FormOptionQty";
 import NotYetLogin from "../../components/NotYetLogin";
 
-// import styles from "./styles";
 
 // Load sample data
 import { HelpBlockData, ReviewData } from "@data";
 import HTML from "react-native-render-html";
 import Modal from "react-native-modal";
 import CalendarPicker from 'react-native-calendar-picker';
+
+
+
+export default class ActivitiesDetail extends Component {
+    constructor(props) {
+        super(props);
+        var product = this.props.navigation.state.params.product;
+
+        var minDate = new Date(); // Today
+        minDate.setDate(minDate.getDate() + 7);
+        var tglAwal=this.convertDate(minDate);
+
+
+        this.state = {
+            heightHeader: Utils.heightHeader(),
+            title: "Europe Cruises",
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            service: [
+                { id: "1", name: "wifi" },
+                { id: "2", name: "coffee" },
+                { id: "3", name: "bath" },
+                { id: "4", name: "car" },
+                { id: "5", name: "paw" },
+                { id: "6", name: "futbol" },
+                { id: "7", name: "user-secret" },
+                { id: "8", name: "clock" },
+                { id: "9", name: "tv" },
+                { id: "10", name: "futbol" }
+            ],
+            index: 0,
+            routes: [
+                { key: "paket", title: "Paket" },
+                { key: "kebijakan", title: "Kebijakan" },
+                { key: "informasi", title: "Informasi" },
+            ],
+            product: product,
+            minPerson:1,
+            minRoom:1,
+            minVoucher:1,
+            minPrice:0,
+            maksPersonRoom:0,
+            sisaPersonRoom:0,
+            totalPrice:0,
+            modalVisiblePerson: false,
+            modalVisibleDate: false,
+            dewasa:"2",
+            anak:"0",
+            bayi:"0",
+            selectedStartDate: null,
+            tglAwal:tglAwal,
+            tglAkhir:'',
+            tglAwalNumber:0,
+            tglAkhirNumber:0,
+            
+            listdataPerson:[
+                {
+                value: 1,
+                text: "1 Voucher"
+                },
+                {
+                value: 2,
+                text: "2 Voucher"
+                },
+                {
+                value: 3,
+                text: "3 Voucher"
+                }
+            ],
+            listdataRoom:[
+                {
+                    value: 1,
+                    text: "1 Room"
+                },
+                {
+                    value: 2,
+                    text: "2 Room"
+                },
+                {
+                    value: 3,
+                    text: "3 Room"
+                },
+                {
+                    value: 4,
+                    text: "4 Room"
+                },
+                {
+                    value: 5,
+                    text: "5 Room"
+                }
+            ],
+            
+            kelas:'Economy Class',
+            kelasId:'E',
+            login:true
+
+        };
+        this._deltaY = new Animated.Value(0);
+        this.setPrice = this.setPrice.bind(this);
+        this.setJumlahDewasa = this.setJumlahDewasa.bind(this);
+        this.setJumlahAnak = this.setJumlahAnak.bind(this);
+        this.setJumlahBayi = this.setJumlahBayi.bind(this);
+        this.setMinPerson = this.setMinPerson.bind(this);
+        this.setVoucher = this.setVoucher.bind(this);
+        this.setRoom = this.setRoom.bind(this);
+        this.setTglAwal = this.setTglAwal.bind(this);
+        this.setTglAkhir = this.setTglAkhir.bind(this);
+        this.setBookingTime = this.setBookingTime.bind(this);
+        this.setListdataPerson=this.setListdataPerson.bind(this);
+        // this.setKelasPesawat = this.setKelasPesawat.bind(this);
+    }
+
+   
+
+    // When tab is activated, set what's index value
+    _handleIndexChange = index =>
+        this.setState({
+            index
+        });
+
+    // Customize UI tab bar
+    _renderTabBar = props => (
+        <TabBar
+            {...props}
+            scrollEnabled
+            indicatorStyle={styles.indicator}
+            style={styles.tabbar}
+            tabStyle={styles.tab}
+            inactiveColor={BaseColor.grayColor}
+            activeColor={BaseColor.textPrimaryColor}
+            renderLabel={({ route, focused, color }) => (
+                <View style={{ flex: 1, width: 130, alignItems: "center" }}>
+                    <Text headline semibold={focused} style={{ color }}>
+                        {route.title}
+                    </Text>
+                </View>
+            )}
+        />
+    );
+
+    setBookingTime(tglAwal, tglAkhir,round) {
+        if (round ==true) {
+            this.setState({tglAwal:tglAwal});
+            this.setState({tglAkhir:tglAkhir});
+          
+        } else {
+            this.setState({tglAwal:tglAwal});
+            this.setState({tglAkhir:null});
+        }
+    }
+    
+    setTglAwal(dateConversion,dateNumber){
+        this.setState({tglAwal:dateConversion});
+        this.setState({tglAwalNumber:dateNumber});
+    }
+
+    setTglAkhir(dateConversion,dateNumber){
+        this.setState({tglAkhir:dateConversion});
+        this.setState({tglAkhirNumber:dateNumber});
+    }
+
+    
+    setPrice(select){
+        var minPerson=this.state.minPerson;
+        var maksPersonRoom=parseInt(minPerson)*parseInt(select.guest_per_room);
+        var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
+        var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
+
+        this.setState({maksPersonRoom:maksPersonRoom});
+        this.setState({sisaPersonRoom:sisaPersonRoom});
+
+        this.setState({minPersonDef:minPerson});
+        this.setState({minPerson:minPerson});
+        this.setState({select:select});
+
+
+    }
+
+    setJumlahDewasa(jml){
+            var maksPersonRoom=this.state.maksPersonRoom;
+            var jmlPerson=parseInt(jml)+parseInt(this.state.anak)+parseInt(this.state.bayi);
+            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
+    
+            //console.log('maksPersonRoom',maksPersonRoom);
+            //console.log('jmlPerson',jmlPerson);
+            //console.log('sisaPersonRoom',sisaPersonRoom);
+
+            this.setState({maksPersonRoom:maksPersonRoom});
+            this.setState({jmlPerson:jmlPerson});
+            this.setState({sisaPersonRoom:sisaPersonRoom});
+            this.setState({dewasa:jml});
+    }
+
+    setJumlahAnak(jml){
+       
+
+            var maksPersonRoom=this.state.maksPersonRoom;
+            var jmlPerson=parseInt(this.state.dewasa)+parseInt(jml)+parseInt(this.state.bayi);
+            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
+    
+            //console.log('maksPersonRoom',maksPersonRoom);
+            //console.log('jmlPerson',jmlPerson);
+            //console.log('sisaPersonRoom',sisaPersonRoom);
+
+            this.setState({maksPersonRoom:maksPersonRoom});
+            this.setState({jmlPerson:jmlPerson});
+            this.setState({sisaPersonRoom:sisaPersonRoom});
+            this.setState({anak:jml});
+    }
+
+    setJumlahBayi(jml){
+        var maksPersonRoom=this.state.maksPersonRoom;
+            var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(jml);
+            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
+    
+            //console.log('maksPersonRoom',maksPersonRoom);
+            //console.log('jmlPerson',jmlPerson);
+            //console.log('sisaPersonRoom',sisaPersonRoom);
+
+            this.setState({maksPersonRoom:maksPersonRoom});
+            this.setState({jmlPerson:jmlPerson});
+            this.setState({sisaPersonRoom:sisaPersonRoom});
+            this.setState({bayi:jml});
+    }
+
+    setMinPerson(jml){
+        this.setState({minPerson:jml});
+    }
+
+    setVoucher(jml){
+        this.setState({minVoucher:jml});
+        this.setState({dewasa:jml.toString()});
+    }
+
+    setRoom(jml){
+        this.setState({dewasa:this.state.select.guest_per_room});
+        this.setState({anak:"0"});
+        this.setState({bayi:"0"});
+        setTimeout(() => {
+            var maksPersonRoom=parseInt(jml)*parseInt(this.state.select.guest_per_room);
+            var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
+            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
+
+            this.setState({maksPersonRoom:maksPersonRoom});
+            this.setState({sisaPersonRoom:sisaPersonRoom});
+
+            //console.log('maksPersonRoom',maksPersonRoom);
+            //console.log('jmlPerson',jmlPerson);
+            //console.log('sisaPersonRoom',sisaPersonRoom);
+            this.setState({minRoom:jml});
+            this.setListdataPerson();
+        }, 500);
+    }
+    
+    setListdataPerson(){
+        // var listdataPerson=[];
+        //     for(a=this.state.minPerson;a<=this.state.maxPerson;a++){
+        //         var obj = {};
+        //         obj['value'] = a;
+        //         obj['text'] = a + ' Voucher';
+        //         listdataPerson.push(obj);
+        //     }
+        // this.setState({listdataPerson:listdataPerson});
+    }
+
+    componentDidMount(){
+        const {product}=this.state;
+        AsyncStorage.getItem('userSession', (error, result) => {
+            if (result) {
+                this.setState({login:true});
+             }else{
+                this.setState({login:false});
+
+             }
+        });
+        
+        setTimeout(() => {
+            this.setListdataPerson();
+        }, 500);
+    }
+    // Render correct screen container when tab is activated
+    _renderScene = ({ route, jumpTo }) => {
+        switch (route.key) {
+            case "paket":
+                    return (
+                        <Paket
+                            product={this.state.product}
+                            jumpTo={jumpTo}
+                            navigation={this.props.navigation}
+                            setMinPerson={this.setMinPerson}
+                            setPrice={this.setPrice}
+                        />
+                    );
+            case "informasi":
+                return (
+                    <Informasi
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "exclude":
+                return (
+                    <Exclude
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "information":
+                return (
+                    <InformationTab
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "kebijakan":
+                return (
+                    <Kebijakan
+                        product={this.state.product}
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "feedback":
+                return (
+                    <Feedback
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+            case "review":
+                return (
+                    <ReviewTab
+                        jumpTo={jumpTo}
+                        navigation={this.props.navigation}
+                    />
+                );
+        }
+    };
+
+    convertDate(date){
+
+        var dd = String(date.getDate()).padStart(2, '0');
+        var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = date.getFullYear();
+
+        date = yyyy + '-' + mm + '-' + dd;
+        return date;
+    }
+    
+    setDate(date) {
+    
+        var date = new Date(date);
+        var tempoMonth = (date.getMonth()+1);
+        var tempoDate = (date.getDate());
+        var finaldate="";
+        if (tempoMonth < 10) tempoMonth = '0' + tempoMonth;
+        if (tempoDate < 10) tempoDate = '0' + tempoDate;
+    
+        return finaldate = date.getFullYear()  + '-' +  tempoMonth  + '-' +  tempoDate;
+    };
+    
+    onSubmit() {
+    
+        const {type,product,select} =this.state;
+        var tgl_akhir='';
+
+ 
+          var param = {
+            DepartureDate:this.state.tglAwal,
+            ReturnDate:tgl_akhir,
+            Adults:this.state.dewasa,
+            Children:this.state.anak,
+            Infants:this.state.bayi,
+            }
+        
+        var productPart={}
+        var link='';
+        var qty='';
+        if(product.product_detail.detail_category=='pay_now_stay_later'){
+            qty=this.state.minVoucher;
+        }else{
+            qty=this.state.minRoom;
+
+        } 
+            link='Summary';
+            param.type='activities';
+            param.cityId=this.state.cityId;
+            param.cityText=this.state.cityText;
+            param.cityProvince=this.state.cityProvince;
+            param.Qty=parseInt(qty);
+            param.totalPrice=parseInt(qty)*parseInt(select.price);
+            param.participant=false;
+            
+            this.props.navigation.navigate(link,
+                {
+                    param:param,
+                    product:product,
+                    productPart:select
+                });
+                
+            //console.log('paramHotel',JSON.stringify(param));
+            // //console.log('productHotel',JSON.stringify(product));
+            // //console.log('productPartHotel',JSON.stringify(select));
+
+    }
+    
+    content_button(){
+        const {product}=this.state;
+        const { navigation } = this.props;
+        var content=<View></View>
+        
+        if(product.product_detail.detail_category=='pay_now_stay_later'){
+        content=<View style={[styles.contentButtonBottom]}>
+                        <FormOptionQty
+                                title={'Quantity'}
+                                titleSub={'Anda dapat mengambil 3 voucher dalam sekali transaksi'}
+                                listdata={this.state.listdataPerson}
+                                setMinPerson={this.setVoucher}
+                                selectedText={this.state.minVoucher + ' Voucher'}
+                                icon={'user'}
+                        />
+                        
+                        <Button
+                            style={{ height: 40,width:'80%'}}
+                            onPress={() => {  
+                                this.onSubmit();
+                               
+                            }}
+                        >
+                            Next
+                        </Button>
+                    </View>
+        }else{
+        
+            content=<View style={styles.contentButtonBottom}>
+                        <View>
+                            <SetDate
+                                labelTglAwal={this.state.tglAwal}
+                                labelTglAkhir={this.state.tglAwal}
+                                setBookingTime={this.setBookingTime}
+                                tglAwal={this.state.tglAwal}
+                                tglAkhir={this.state.tglAkhir}
+                                round={false}
+                            />
+                        </View>
+                        
+                        <View>
+                            <FormOptionQty
+                                    title={'Room'}
+                                    titleSub={'Maximum 2 tamu/room'}
+                                    listdata={this.state.listdataRoom}
+                                    setMinPerson={this.setRoom}
+                                    selectedText={this.state.minRoom + ' Room'}
+                                    icon={'bed'}
+                            />
+                        </View>
+
+                        {/* <View>
+                            <FormOptionQty
+                                    title={'Room'}
+                                    titleSub={'Maximum 2 tamu/room'}
+                                    listdata={this.state.listdataRoom}
+                                    setMinPerson={this.setMinPerson}
+                                    selectedText={this.state.minPerson + ' Room'}
+                                    icon={'male'}
+                            />
+                        </View>
+
+                        <View>
+                            <FormOptionQty
+                                    title={'Room'}
+                                    titleSub={'Maximum 2 tamu/room'}
+                                    listdata={this.state.listdataRoom}
+                                    setMinPerson={this.setMinPerson}
+                                    selectedText={this.state.minPerson + ' Room'}
+                                    icon={'child'}
+                            />
+                        </View> */}
+
+
+                        <View>
+                            <SetPenumpang
+                                label={parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi)}
+                                dewasa={this.state.dewasa}
+                                anak={this.state.anak}
+                                bayi={this.state.bayi}
+                                setJumlahDewasa={this.setJumlahDewasa}
+                                setJumlahAnak={this.setJumlahAnak}
+                                setJumlahBayi={this.setJumlahBayi}
+                                minPersonDef={this.state.minPersonDef}
+                                minPerson={this.state.minPerson}
+                                minPrice={this.state.minPrice}
+                                totalPrice={this.state.totalPrice}
+                                setMinPerson={this.setMinPerson}
+                                maksPersonRoom={this.state.maksPersonRoom}
+                                sisaPersonRoom={this.state.sisaPersonRoom}
+                                includeBayi={false}
+                                type={'activities_room'}
+
+                            />
+                        </View>
+                        
+                        <Button
+                            style={{ height: 40}}
+                            onPress={() => {  
+                                this.onSubmit();
+                                //navigation.navigate('FlightSearch',{type:'activities',product:this.state.product,productPart:this.state.select})
+                               
+                            }}
+                        >
+                            Next
+                        </Button>
+                    </View>
+        
+        }
+        return(
+            <View>
+                {content}
+            </View>
+            
+        )
+    }
+   
+    render() {
+        const { navigation } = this.props;
+        const { title, heightHeader, service, product,minPerson,minPrice,totalPrice,login} = this.state;
+        const heightImageBanner = Utils.scaleWithPixel(250, 1);
+        const marginTopBanner = heightImageBanner - heightHeader;
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
+        const { modalVisiblePerson,modalVisibleDate} = this.state;
+      
+        
+
+        return (
+            <View style={{ flex: 1 }}>
+                <Animated.View
+                    style={[
+                        styles.imgBanner,
+                        {
+                            height: this._deltaY.interpolate({
+                                inputRange: [
+                                    0,
+                                    Utils.scaleWithPixel(150),
+                                    Utils.scaleWithPixel(150)
+                                ],
+                                outputRange: [
+                                    heightImageBanner,
+                                    heightHeader,
+                                    heightHeader
+                                ]
+                            })
+                        }
+                    ]}
+                >
+                    <Image
+                        source={{ uri: product.img_featured_url }}
+                        style={{ width: "100%", height: "100%" }}
+                        resizeMode="cover"
+                    />
+                  
+                </Animated.View>
+                <SafeAreaView
+                    style={BaseStyle.safeAreaView}
+                    forceInset={{ top: "always" }}
+                >
+                    <Header
+                        title=""
+                        transparent={true}
+                        
+                    />
+                    {
+                    login ?
+                    <ScrollView
+                        onScroll={Animated.event([
+                            {
+                                nativeEvent: {
+                                    contentOffset: { y: this._deltaY }
+                                }
+                            }
+                        ])}
+                        onContentSizeChange={() =>
+                            this.setState({
+                                heightHeader: Utils.heightHeader()
+                            })
+                        }
+                        scrollEventThrottle={8}
+                    >
+                        <View
+                            style={[
+                                {
+                                    flexDirection: "row",
+                                    paddingHorizontal: 20,
+                                    marginBottom: 10,
+                                    paddingTop: 10
+                                },
+                                { marginTop: marginTopBanner }
+                            ]}
+                        >
+                            <Tag
+                                primary
+                                style={{ marginRight: 15 }}
+                            >
+                                Valid Until {product.product_detail.end_date}
+                            </Tag>
+                        </View>
+
+                        
+                        <View
+                            style={[
+                                { paddingHorizontal: 20, paddingTop: 0 },
+                            ]}
+                        >
+                            <Text
+                                header
+                                style={{ marginBottom: 10 }}
+                            >
+                                {product.product_name}
+                            </Text>
+                        </View>
+                        
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20 }}>
+                            <StarRating
+                                    disabled={true}
+                                    starSize={14}
+                                    maxStars={5}
+                                    rating={5}
+                                    selectedStar={rating => {}}
+                                    fullStarColor={BaseColor.yellowColor}
+                                />
+                        </View>
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingBottom: 20 }}>
+                            <Icon
+                                name="map-marker-alt"
+                                color={BaseColor.lightPrimaryColor}
+                                size={10}
+                            />
+                            <Text
+                                caption1
+                                style={{ marginLeft: 10 }}
+                                numberOfLines={1}
+                            >
+                                {product.product_detail.address}, {product.product_detail.capital}
+                            </Text>
+                        </View>
+
+                        {/* <TabView
+                            lazy
+                            navigationState={this.state}
+                            renderScene={this._renderScene}
+                            renderTabBar={this._renderTabBar}
+                            onIndexChange={this._handleIndexChange}
+                        /> */}
+
+                        <Paket
+                            product={this.state.product}
+                            setMinPerson={this.setMinPerson}
+                            setPrice={this.setPrice}
+                        />
+                        <Informasi
+                            product={this.state.product}
+                        />
+                        <Exclude
+                            product={this.state.product}
+                        />
+                    <Kebijakan
+                        product={this.state.product}
+                    />
+                    </ScrollView>
+                    :
+                    <NotYetLogin redirect={'Home'} param={this.state.product} navigation={navigation} />
+                    
+        }
+                   {this.content_button()}
+                    
+                </SafeAreaView>
+            </View>
+        );
+    }
+}
+
+/**
+ * @description Show when tab Information activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class InformationTab extends Component {
+    constructor(props) {
+        super();
+    }
+
+    render() {
+        return (
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                <Text headline semibold>
+                    Day 1: London - Somme - Paris
+                </Text>
+                <Image
+                    source={Images.cruise1}
+                    style={{ height: 120, width: "100%", marginTop: 10 }}
+                />
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text headline semibold style={{ marginTop: 20 }}>
+                    Day 2: Paris - Burgundy - Swiss Alps
+                </Text>
+                <Image
+                    source={Images.cruise2}
+                    style={{ height: 120, width: "100%", marginTop: 10 }}
+                />
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text headline semibold style={{ marginTop: 20 }}>
+                    Day 3: Swiss Alps - Strasbourg - Heidel…
+                </Text>
+                <Image
+                    source={Images.cruise3}
+                    style={{ height: 120, width: "100%", marginTop: 10 }}
+                />
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+                <Text body2 style={{ marginTop: 10 }}>
+                    Curabitur non nulla sit amet nisl tempus convallis quis ac
+                    lectus. Lorem ipsum dolor sit amet, consectetur adipiscing
+                    elit.
+                </Text>
+            </View>
+        );
+    }
+}
+
+
+
+
+
+class Paket extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ],
+            product_option:props.product.product_option
+        };
+    }
+
+    componentDidMount() {
+        const { navigation, product } = this.props;
+        const { product_option } =this.state;
+        
+        
+                if (product_option.length != 0) {
+                    var select=product.product_option[0];
+                    this.props.setPrice(select);
+                    const selected = select.id_activities_detail;
+                    if (selected) {
+                        this.setState({
+                            product_option: this.state.product_option.map(item => {
+                                return {
+                                    ...item,
+                                    checked: item.id_activities_detail == selected
+                                };
+                            })
+                        });
+                    }
+                }
+    }
+    
+    onChange(select) {
+        const { navigation, product,setMinPerson,setListdataPerson} = this.props;
+        // var minPerson=select.minimum_book;
+        // setMinPerson(minPerson);
+        
+        this.setState({
+            product_option: this.state.product_option.map(item => {
+                if (item.id_activities_detail == select.id_activities_detail) {
+                    return {
+                        ...item,
+                        checked: true
+                    };
+                } else {
+                    return {
+                        ...item,
+                        checked: false
+                    };
+                }
+               
+            })
+        });
+        
+        this.props.setPrice(select);
+    }
+
+
+    render() {
+        const { renderMapView, todo, helpBlock,product_option } = this.state;
+        const { navigation} = this.props;
+        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+
+        var content=<View></View>
+        if (product_option.length == 0) {
+            content=<View
+                        style={{
+                                // flexDirection: 'column',
+                                // justifyContent: 'center',
+                                alignItems: 'center',
+                                height: '100%',padding: 20
+                            }}
+                        >       
+                        <Image
+                            source={Images.empty}
+                            style={{ width: "40%", height: "40%" }}
+                            resizeMode="cover"
+                        />
+                        </View>
+        }else{
+            content=<FlatList
+            data={product_option}
+            keyExtractor={(item, index) => item.id_activities_detail}
+            renderItem={({ item }) => (
+                <TouchableOpacity
+                    // style={styles.item}
+                    onPress={() => 
+                    {
+                    this.onChange(item)
+                    }
+                    
+                    }
+                >
+                    <View style={[styles.itemPrice, { backgroundColor: BaseColor.secondColor == BaseColor.whiteColor ? item.checked : null}]}>
+                            <View style={styles.linePrice}>
+                                <Text headline semibold>
+                                    {item.detail_name}
+                                </Text>
+                                
+                                {item.checked && (
+                                    <View style={styles.iconRight}>
+                                    <Icon
+                                        name="check"
+                                        size={24}
+                                        color={'green'}
+                                        />
+                                    </View>
+                                )}
+                                
+                            </View>
+        
+                            <View style={styles.linePriceMinMax}>
+                                <View style={styles.contentService}>
+                                    {[
+                                        { key: "1", name: "clock",label:item.duration+ 'night' },
+                                        { key: "2", name: "user",label:item.guest_per_room+' guest' },
+                                        { key: "3", name: "crop",label:item.room_size+' m2' },
+                                        { key: "4", name: "bed",label:item.bed_type},
+                                        { key: "5", name: "bath",label:'shower' }
+                                    ].map((item, index) => (
+                                        <View
+                                            style={{ alignItems: "center" }}
+                                            key={"service" + index}
+                                        >
+                                            <Icon
+                                                name={item.name}
+                                                size={24}
+                                                color={BaseColor.primaryColor}
+                                            />
+                                            <Text
+                                                overline
+                                                grayColor
+                                                style={{ marginTop: 4 }}
+                                            >
+                                                {item.label}
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </View>
+                                <View style={styles.linePrice}>
+                                    <Text primaryColor semibold>
+                                        Minimum: 2
+                                                </Text>
+                                    <View style={styles.iconRight}>
+                                        <Text>
+                                            Rp {priceSplitter(item.price)}
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                </TouchableOpacity>
+            )}
+        />
+
+
+        }
+
+        return (
+            <View style={{}}>
+                {content}
+            </View>
+        );
+    }
+}
+
+
+
+/**
+ * @description Show when tab Kebijakan activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class Informasi extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ]
+        };
+    }
+
+    componentDidMount() {
+        InteractionManager.runAfterInteractions(() => {
+            this.setState({ renderMapView: true });
+        });
+    }
+
+    render() {
+        const { renderMapView, todo, helpBlock} = this.state;
+        const { navigation,product } = this.props;
+        var product_detail=product.product_detail;
+        
+        var informasi='Biaya penambahan orang dalam kamar mungkin berlaku dan berbeda-beda menurut kebijakan properti.Tanda pengenal berfoto yang dikeluarkan oleh pemerintah dan kartu kredit, kartu debit, dan deposit uang tunai diperlukan saat check-in untuk biaya tidak terduga.Pemenuhan permintaan khusus bergantung pada ketersediaan sewaktu check-in dan mungkin menimbulkan biaya tambahan. Permintaan khusus tidak dijamin akan terpenuhi.';
+        
+        return (
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                <HTML
+                  html={informasi}
+                  imagesMaxWidth={Dimensions.get("window").width}
+                />
+            </View>
+        );
+    }
+}
+
+
+
+/**
+ * @description Show when tab Kebijakan activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class Exclude extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ]
+        };
+    }
+
+    componentDidMount() {
+        InteractionManager.runAfterInteractions(() => {
+            this.setState({ renderMapView: true });
+        });
+    }
+
+    render() {
+        const { renderMapView, todo, helpBlock} = this.state;
+        const { navigation,product } = this.props;
+        var product_detail=product.product_detail;
+        
+        
+        
+        return (
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                <HTML
+                  html={product_detail.exclude}
+                  imagesMaxWidth={Dimensions.get("window").width}
+                />
+            </View>
+        );
+    }
+}
+
+
+/**
+ * @description Show when tab Kebijakan activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class Kebijakan extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            renderMapView: false,
+            region: {
+                latitude: 1.9344,
+                longitude: 103.358727,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.004
+            },
+            helpBlock: HelpBlockData,
+            todo: [
+                {
+                    id: "1",
+                    title: "South Travon",
+                    image: Images.trip1
+                },
+                {
+                    id: "2",
+                    title: "South Travon",
+                    image: Images.trip2
+                },
+                {
+                    id: "3",
+                    title: "South Travon",
+                    image: Images.trip3
+                },
+                {
+                    id: "4",
+                    title: "South Travon",
+                    image: Images.trip4
+                },
+                {
+                    id: "5",
+                    title: "South Travon",
+                    image: Images.trip5
+                }
+            ]
+        };
+    }
+
+    componentDidMount() {
+        
+    }
+
+    render() {
+        const { renderMapView, todo, helpBlock} = this.state;
+        const { navigation,product } = this.props;
+        
+        
+        
+        return (
+            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                <HTML
+                  html={product.product_detail.term}
+                  imagesMaxWidth={Dimensions.get("window").width}
+                />
+            </View>
+        );
+    }
+}
+
+/**
+ * @description Show when tab Package activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class Feedback extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            rate: 4.5,
+            title: "",
+            review: ""
+        };
+    }
+
+    render() {
+        const { rate, title, review } = this.state;
+        return (
+            <View style={{ alignItems: "center", padding: 20 }}>
+                <View style={{ width: 160 }}>
+                    <StarRating
+                        starSize={26}
+                        maxStars={5}
+                        rating={rate}
+                        selectedStar={rating => {
+                            this.setState({ rate: rating });
+                        }}
+                        fullStarColor={BaseColor.yellowColor}
+                        containerStyle={{ padding: 5 }}
+                    />
+                    <Text caption1 grayColor style={{ textAlign: "center" }}>
+                        Tap a star to rate
+                    </Text>
+                </View>
+                <TextInput
+                    style={[BaseStyle.textInput, { marginTop: 10 }]}
+                    onChangeText={text => this.setState({ title: text })}
+                    autoCorrect={false}
+                    placeholder="Title"
+                    placeholderTextColor={BaseColor.grayColor}
+                    value={title}
+                    selectionColor={BaseColor.primaryColor}
+                />
+                <TextInput
+                    style={[
+                        BaseStyle.textInput,
+                        { marginTop: 20, height: 140 }
+                    ]}
+                    onChangeText={text => this.setState({ review: text })}
+                    textAlignVertical="top"
+                    multiline={true}
+                    autoCorrect={false}
+                    placeholder="Reviews"
+                    placeholderTextColor={BaseColor.grayColor}
+                    value={review}
+                    selectionColor={BaseColor.primaryColor}
+                />
+                <Button full style={{ marginTop: 20 }} onPress={() => { }}>
+                    Sent
+                </Button>
+            </View>
+        );
+    }
+}
+
+/**
+ * @description Show when tab Review activated
+ * @author Passion UI <passionui.com>
+ * @date 2019-08-03
+ * @class PreviewTab
+ * @extends {Component}
+ */
+class ReviewTab extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            rateDetail: {
+                point: 4.7,
+                maxPoint: 5,
+                totalRating: 25,
+                data: ["80%", "10%", "10%", "0%", "0%"]
+            },
+            reviewList: ReviewData
+        };
+    }
+    render() {
+        let { rateDetail, reviewList } = this.state;
+        return (
+            <FlatList
+                style={{ padding: 20 }}
+                refreshControl={
+                    <RefreshControl
+                        colors={[BaseColor.primaryColor]}
+                        tintColor={BaseColor.primaryColor}
+                        refreshing={this.state.refreshing}
+                        onRefresh={() => { }}
+                    />
+                }
+                data={reviewList}
+                keyExtractor={(item, index) => item.id}
+                ListHeaderComponent={() => (
+                    <RateDetail
+                        point={rateDetail.point}
+                        maxPoint={rateDetail.maxPoint}
+                        totalRating={rateDetail.totalRating}
+                        data={rateDetail.data}
+                    />
+                )}
+                renderItem={({ item }) => (
+                    <CommentItem
+                        style={{ marginTop: 10 }}
+                        image={item.source}
+                        name={item.name}
+                        rate={item.rate}
+                        date={item.date}
+                        title={item.title}
+                        comment={item.comment}
+                    />
+                )}
+            />
+        );
+    }
+}
 
 const styles = StyleSheet.create({
     imgBanner: {
@@ -171,772 +1494,3 @@ const styles = StyleSheet.create({
         justifyContent: "space-between"
     },
 });
-
-
-export default class HotelDetail extends Component {
-    constructor(props) {
-        super(props);
-        var product = this.props.navigation.state.params.product;
-        var product_type='';
-        if(this.props.navigation.state.params && this.props.navigation.state.params.product_type){
-            product_type=this.props.navigation.state.params.product_type;
-        }else{
-            product_type='';
-        }
-
-
-        var minDate = new Date(); // Today
-        minDate.setDate(minDate.getDate() + 7);
-        var tglAwal=this.convertDate(minDate);
-
-
-        this.state = {
-            heightHeader: Utils.heightHeader(),
-            
-            product_type:product_type,
-            product: product,
-            minPerson:1,
-            minRoom:1,
-            minVoucher:1,
-            minPrice:0,
-            maksPersonRoom:0,
-            sisaPersonRoom:0,
-            totalPrice:0,
-            modalVisiblePerson: false,
-            modalVisibleDate: false,
-            dewasa:"2",
-            anak:"0",
-            bayi:"0",
-            selectedStartDate: null,
-            tglAwal:tglAwal,
-            tglAkhir:'',
-            tglAwalNumber:0,
-            tglAkhirNumber:0,
-            
-            listdataPerson:[
-                {
-                value: 1,
-                text: "1 Voucher"
-                },
-                {
-                value: 2,
-                text: "2 Voucher"
-                },
-                {
-                value: 3,
-                text: "3 Voucher"
-                }
-            ],
-            listdataRoom:[
-                {
-                    value: 1,
-                    text: "1 Room"
-                },
-                {
-                    value: 2,
-                    text: "2 Room"
-                },
-                {
-                    value: 3,
-                    text: "3 Room"
-                },
-                {
-                    value: 4,
-                    text: "4 Room"
-                },
-                {
-                    value: 5,
-                    text: "5 Room"
-                }
-            ],
-            
-            login:true
-
-        };
-        this._deltaY = new Animated.Value(0);
-        this.setPrice = this.setPrice.bind(this);
-        this.setJumlahDewasa = this.setJumlahDewasa.bind(this);
-        this.setJumlahAnak = this.setJumlahAnak.bind(this);
-        this.setJumlahBayi = this.setJumlahBayi.bind(this);
-        this.setMinPerson = this.setMinPerson.bind(this);
-        this.setVoucher = this.setVoucher.bind(this);
-        this.setRoom = this.setRoom.bind(this);
-        this.setTglAwal = this.setTglAwal.bind(this);
-        this.setTglAkhir = this.setTglAkhir.bind(this);
-        this.setBookingTime = this.setBookingTime.bind(this);
-    }
-
-    setBookingTime(tglAwal, tglAkhir,round) {
-        if (round ==true) {
-            this.setState({tglAwal:tglAwal});
-            this.setState({tglAkhir:tglAkhir});
-          
-        } else {
-            this.setState({tglAwal:tglAwal});
-            this.setState({tglAkhir:null});
-        }
-    }
-    
-    setTglAwal(dateConversion,dateNumber){
-        this.setState({tglAwal:dateConversion});
-        this.setState({tglAwalNumber:dateNumber});
-    }
-
-    setTglAkhir(dateConversion,dateNumber){
-        this.setState({tglAkhir:dateConversion});
-        this.setState({tglAkhirNumber:dateNumber});
-    }
-
-    setPrice(select){
-        var minPerson=this.state.minPerson;
-        var maksPersonRoom=parseInt(minPerson)*parseInt(select.guest_per_room);
-        var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-        var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-
-        this.setState({maksPersonRoom:maksPersonRoom});
-        this.setState({sisaPersonRoom:sisaPersonRoom});
-
-        this.setState({minPersonDef:minPerson});
-        this.setState({minPerson:minPerson});
-        this.setState({select:select});
-    }
-
-    setJumlahDewasa(jml){
-            var maksPersonRoom=this.state.maksPersonRoom;
-            var jmlPerson=parseInt(jml)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({jmlPerson:jmlPerson});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-            this.setState({dewasa:jml});
-    }
-
-    setJumlahAnak(jml){
-            var maksPersonRoom=this.state.maksPersonRoom;
-            var jmlPerson=parseInt(this.state.dewasa)+parseInt(jml)+parseInt(this.state.bayi);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({jmlPerson:jmlPerson});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-            this.setState({anak:jml});
-    }
-
-    setJumlahBayi(jml){
-        var maksPersonRoom=this.state.maksPersonRoom;
-            var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(jml);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-    
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({jmlPerson:jmlPerson});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-            this.setState({bayi:jml});
-    }
-
-    setMinPerson(jml){
-        this.setState({minPerson:jml});
-    }
-
-    setVoucher(jml){
-        this.setState({minVoucher:jml});
-        this.setState({dewasa:jml.toString()});
-    }
-
-    setRoom(jml){
-        this.setState({dewasa:this.state.select.guest_per_room});
-        this.setState({anak:"0"});
-        this.setState({bayi:"0"});
-        setTimeout(() => {
-            var maksPersonRoom=parseInt(jml)*parseInt(this.state.select.guest_per_room);
-            var jmlPerson=parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi);
-            var sisaPersonRoom=parseInt(maksPersonRoom)-parseInt(jmlPerson);
-
-            this.setState({maksPersonRoom:maksPersonRoom});
-            this.setState({sisaPersonRoom:sisaPersonRoom});
-
-            this.setState({minRoom:jml});
-            //this.setListdataPerson();
-        }, 500);
-    }
-    
-    componentDidMount(){
-        const {product}=this.state;
-        AsyncStorage.getItem('userSession', (error, result) => {
-            if (result) {
-                this.setState({login:true});
-             }else{
-                this.setState({login:false});
-
-             }
-        });
-        
-    }
-
-    
-    convertDate(date){
-
-        var dd = String(date.getDate()).padStart(2, '0');
-        var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
-        var yyyy = date.getFullYear();
-
-        date = yyyy + '-' + mm + '-' + dd;
-        return date;
-    }
-    
-    setDate(date) {
-    
-        var date = new Date(date);
-        var tempoMonth = (date.getMonth()+1);
-        var tempoDate = (date.getDate());
-        var finaldate="";
-        if (tempoMonth < 10) tempoMonth = '0' + tempoMonth;
-        if (tempoDate < 10) tempoDate = '0' + tempoDate;
-    
-        return finaldate = date.getFullYear()  + '-' +  tempoMonth  + '-' +  tempoDate;
-    };
-    
-    onSubmit() {
-    
-        const {type,product,select} =this.state;
-        var tgl_akhir='';
-
- 
-          var param = {
-            DepartureDate:this.state.tglAwal,
-            ReturnDate:tgl_akhir,
-            Adults:this.state.dewasa,
-            Children:this.state.anak,
-            Infants:this.state.bayi,
-            }
-        
-        var productPart={}
-        var link='';
-        var qty='';
-        if(product.product_detail.detail_category=='pay_now_stay_later'){
-            qty=this.state.minVoucher;
-        }else{
-            qty=this.state.minRoom;
-
-        } 
-            link='Summary';
-            param.type=this.state.product_type;
-            param.cityId=this.state.cityId;
-            param.cityText=this.state.cityText;
-            param.cityProvince=this.state.cityProvince;
-            param.Qty=parseInt(qty);
-            param.totalPrice=parseInt(qty)*parseInt(select.price);
-            param.participant=false;
-            
-            this.props.navigation.navigate(link,
-                {
-                    param:param,
-                    product:product,
-                    productPart:select
-                });
-                
-    }
-    
-    content_button(){
-        const {product}=this.state;
-        const { navigation } = this.props;
-        var content=<View></View>
-        
-        if(product.product_detail.detail_category=='pay_now_stay_later'){
-        content=<View style={[styles.contentButtonBottom]}>
-                        <FormOptionQty
-                                title={'Quantity'}
-                                titleSub={'Anda dapat mengambil 3 voucher dalam sekali transaksi'}
-                                listdata={this.state.listdataPerson}
-                                setMinPerson={this.setVoucher}
-                                selectedText={this.state.minVoucher + ' Voucher'}
-                                icon={'user'}
-                        />
-                        
-                        <Button
-                            style={{ height: 40,width:'80%'}}
-                            onPress={() => {  
-                                this.onSubmit();
-                               
-                            }}
-                        >
-                            Next
-                        </Button>
-                    </View>
-        }else{
-        
-            content=<View style={styles.contentButtonBottom}>
-                        <View>
-                            <SetDate
-                                labelTglAwal={this.state.tglAwal}
-                                labelTglAkhir={this.state.tglAwal}
-                                setBookingTime={this.setBookingTime}
-                                tglAwal={this.state.tglAwal}
-                                tglAkhir={this.state.tglAkhir}
-                                round={false}
-                            />
-                        </View>
-                        
-                        <View>
-                            <FormOptionQty
-                                    title={'Room'}
-                                    titleSub={'Maximum 2 tamu/room'}
-                                    listdata={this.state.listdataRoom}
-                                    setMinPerson={this.setRoom}
-                                    selectedText={this.state.minRoom + ' Room'}
-                                    icon={'bed'}
-                            />
-                        </View>
-
-                        <View>
-                            <SetPenumpang
-                                label={parseInt(this.state.dewasa)+parseInt(this.state.anak)+parseInt(this.state.bayi)}
-                                dewasa={this.state.dewasa}
-                                anak={this.state.anak}
-                                bayi={this.state.bayi}
-                                setJumlahDewasa={this.setJumlahDewasa}
-                                setJumlahAnak={this.setJumlahAnak}
-                                setJumlahBayi={this.setJumlahBayi}
-                                minPersonDef={this.state.minPersonDef}
-                                minPerson={this.state.minPerson}
-                                minPrice={this.state.minPrice}
-                                totalPrice={this.state.totalPrice}
-                                setMinPerson={this.setMinPerson}
-                                maksPersonRoom={this.state.maksPersonRoom}
-                                sisaPersonRoom={this.state.sisaPersonRoom}
-                                includeBayi={false}
-                                type={'hotel_package_room'}
-
-                            />
-                        </View>
-                        
-                        <Button
-                            style={{ height: 40}}
-                            onPress={() => {  
-                                this.onSubmit();
-                               
-                            }}
-                        >
-                            Next
-                        </Button>
-                    </View>
-        
-        }
-        return(
-            <View>
-                {content}
-            </View>
-            
-        )
-    }
-   
-    render() {
-        const { navigation } = this.props;
-        const { title, heightHeader, service, product,minPerson,minPrice,totalPrice,login} = this.state;
-        const heightImageBanner = Utils.scaleWithPixel(250, 1);
-        const marginTopBanner = heightImageBanner - heightHeader;
-        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-
-        const { modalVisiblePerson,modalVisibleDate} = this.state;
-
-        var content=<View></View>
-        
-
-        return (
-            <View style={{ flex: 1 }}>
-                <Animated.View
-                    style={[
-                        styles.imgBanner,
-                        {
-                            height: this._deltaY.interpolate({
-                                inputRange: [
-                                    0,
-                                    Utils.scaleWithPixel(150),
-                                    Utils.scaleWithPixel(150)
-                                ],
-                                outputRange: [
-                                    heightImageBanner,
-                                    heightHeader,
-                                    heightHeader
-                                ]
-                            })
-                        }
-                    ]}
-                >
-                    <Image
-                        source={{ uri: product.img_featured_url }}
-                        style={{ width: "100%", height: "100%" }}
-                        resizeMode="cover"
-                    />
-                  
-                </Animated.View>
-                <SafeAreaView
-                    style={BaseStyle.safeAreaView}
-                    forceInset={{ top: "always" }}
-                >
-                    <Header
-                        title=""
-                        transparent={true}
-                        
-                    />
-                    {
-                    login ?
-                    <ScrollView
-                        onScroll={Animated.event([
-                            {
-                                nativeEvent: {
-                                    contentOffset: { y: this._deltaY }
-                                }
-                            }
-                        ])}
-                        onContentSizeChange={() =>
-                            this.setState({
-                                heightHeader: Utils.heightHeader()
-                            })
-                        }
-                        scrollEventThrottle={8}
-                    >
-                        <View
-                            style={[
-                                {
-                                    flexDirection: "row",
-                                    paddingHorizontal: 20,
-                                    marginBottom: 10,
-                                    paddingTop: 10
-                                },
-                                { marginTop: marginTopBanner }
-                            ]}
-                        >
-                            <Tag
-                                primary
-                                style={{ marginRight: 15 }}
-                            >
-                                Valid Until {product.product_detail.end_date}
-                            </Tag>
-                        </View>
-
-                        
-                        <View
-                            style={[
-                                { paddingHorizontal: 20, paddingTop: 0 },
-                            ]}
-                        >
-                            <Text
-                                header
-                                style={{ marginBottom: 10 }}
-                            >
-                                {product.product_name}
-                            </Text>
-                        </View>
-                        
-
-                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20 }}>
-                            <StarRating
-                                    disabled={true}
-                                    starSize={14}
-                                    maxStars={5}
-                                    rating={5}
-                                    selectedStar={rating => {}}
-                                    fullStarColor={BaseColor.yellowColor}
-                                />
-                        </View>
-
-                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingBottom: 20 }}>
-                            <Icon
-                                name="map-marker-alt"
-                                color={BaseColor.lightPrimaryColor}
-                                size={10}
-                            />
-                            <Text
-                                caption1
-                                style={{ marginLeft: 10 }}
-                                numberOfLines={1}
-                            >
-                                {product.product_detail.address}, {product.product_detail.capital}
-                            </Text>
-                        </View>
-
-                        <Paket
-                            product={this.state.product}
-                            setMinPerson={this.setMinPerson}
-                            setPrice={this.setPrice}
-                        />
-                        <Informasi
-                            data={'Biaya penambahan orang dalam kamar mungkin berlaku dan berbeda-beda menurut kebijakan properti.Tanda pengenal berfoto yang dikeluarkan oleh pemerintah dan kartu kredit, kartu debit, dan deposit uang tunai diperlukan saat check-in untuk biaya tidak terduga.Pemenuhan permintaan khusus bergantung pada ketersediaan sewaktu check-in dan mungkin menimbulkan biaya tambahan. Permintaan khusus tidak dijamin akan terpenuhi.'}
-                        />
-
-                        <Informasi
-                            data={this.state.product.product_detail.exclude}
-                        />
-
-                        <Informasi
-                            data={this.state.product.product_detail.term}
-                        />
-
-                    </ScrollView>
-                    :
-                    <NotYetLogin redirect={'Home'} param={this.state.product} navigation={navigation} />
-                    
-        }
-                   {this.content_button()}
-                    
-                </SafeAreaView>
-            </View>
-        );
-    }
-}
-
-class Paket extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            product_option:props.product.product_option
-        };
-    }
-
-    componentDidMount() {
-        const { navigation, product } = this.props;
-        const { product_option } =this.state;
-        
-        
-                if (product_option.length != 0) {
-                    var select=product.product_option[0];
-                    this.props.setPrice(select);
-                    const selected = select.id_product_option;
-                    if (selected) {
-                        this.setState({
-                            product_option: this.state.product_option.map(item => {
-                                return {
-                                    ...item,
-                                    checked: item.id_product_option == selected
-                                };
-                            })
-                        });
-                    }
-                }
-    }
-    
-    onChange(select) {
-        const { navigation, product,setMinPerson,setListdataPerson} = this.props;
-        this.setState({
-            product_option: this.state.product_option.map(item => {
-                if (item.id_product_option == select.id_product_option) {
-                    return {
-                        ...item,
-                        checked: true
-                    };
-                } else {
-                    return {
-                        ...item,
-                        checked: false
-                    };
-                }
-               
-            })
-        });
-        
-        this.props.setPrice(select);
-    }
-
-
-    render() {
-        const { renderMapView, todo, helpBlock,product_option } = this.state;
-        const { navigation} = this.props;
-        const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
-
-        var content=<View></View>
-        if (product_option.length == 0) {
-            content=<View
-                        style={{
-                                // flexDirection: 'column',
-                                // justifyContent: 'center',
-                                alignItems: 'center',
-                                height: '100%',padding: 20
-                            }}
-                        >       
-                        <Image
-                            source={Images.empty}
-                            style={{ width: "40%", height: "40%" }}
-                            resizeMode="cover"
-                        />
-                        </View>
-        }else{
-            content=<FlatList
-            data={product_option}
-            keyExtractor={(item, index) => item.id_product_option}
-            renderItem={({ item }) => (
-                <TouchableOpacity
-                    // style={styles.item}
-                    onPress={() => 
-                    {
-                    this.onChange(item)
-                    }
-                    
-                    }
-                >
-                    <View style={[styles.itemPrice, { backgroundColor: BaseColor.secondColor == BaseColor.whiteColor ? item.checked : null}]}>
-                            <View style={styles.linePrice}>
-                                <Text headline semibold>
-                                    {item.detail_name}
-                                </Text>
-                                
-                                {item.checked && (
-                                    <View style={styles.iconRight}>
-                                    <Icon
-                                        name="check"
-                                        size={24}
-                                        color={'green'}
-                                        />
-                                    </View>
-                                )}
-                                
-                            </View>
-        
-                            <View style={styles.linePriceMinMax}>
-                                <View style={styles.contentService}>
-                                    {[
-                                        { key: "1", name: "clock",label:item.duration+ 'night' },
-                                        { key: "2", name: "user",label:item.guest_per_room+' guest' },
-                                        { key: "3", name: "crop",label:item.room_size+' m2' },
-                                        { key: "4", name: "bed",label:item.bed_type},
-                                        { key: "5", name: "bath",label:'shower' }
-                                    ].map((item, index) => (
-                                        <View
-                                            style={{ alignItems: "center" }}
-                                            key={"service" + index}
-                                        >
-                                            <Icon
-                                                name={item.name}
-                                                size={24}
-                                                color={BaseColor.primaryColor}
-                                            />
-                                            <Text
-                                                overline
-                                                grayColor
-                                                style={{ marginTop: 4 }}
-                                            >
-                                                {item.label}
-                                            </Text>
-                                        </View>
-                                    ))}
-                                </View>
-                                <View style={styles.linePrice}>
-                                    <Text primaryColor semibold>
-                                        Minimum: 2
-                                                </Text>
-                                    <View style={styles.iconRight}>
-                                        <Text>
-                                            Rp {priceSplitter(item.price)}
-                                        </Text>
-                                    </View>
-                                </View>
-                            </View>
-                        </View>
-                </TouchableOpacity>
-            )}
-        />
-
-
-        }
-
-        return (
-            <View style={{}}>
-                {content}
-            </View>
-        );
-    }
-}
-
-class Informasi extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data:props.data  
-        };
-    }
-
-    componentDidMount() {
-        InteractionManager.runAfterInteractions(() => {
-            this.setState({ renderMapView: true });
-        });
-    }
-
-    render() {
-        const {data} = this.state;
-        const { navigation,product } = this.props;
-        // var informasi='Biaya penambahan orang dalam kamar mungkin berlaku dan berbeda-beda menurut kebijakan properti.Tanda pengenal berfoto yang dikeluarkan oleh pemerintah dan kartu kredit, kartu debit, dan deposit uang tunai diperlukan saat check-in untuk biaya tidak terduga.Pemenuhan permintaan khusus bergantung pada ketersediaan sewaktu check-in dan mungkin menimbulkan biaya tambahan. Permintaan khusus tidak dijamin akan terpenuhi.';
-        
-        return (
-            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-                <HTML
-                  html={data}
-                  imagesMaxWidth={Dimensions.get("window").width}
-                />
-            </View>
-        );
-    }
-}
-
-class Exclude extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            
-        };
-    }
-
-    componentDidMount() {
-        InteractionManager.runAfterInteractions(() => {
-            this.setState({ renderMapView: true });
-        });
-    }
-
-    render() {
-        const { renderMapView, todo, helpBlock} = this.state;
-        const { navigation,product } = this.props;
-        var product_detail=product.product_detail;
-        
-        
-        
-        return (
-            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-                <HTML
-                  html={product_detail.exclude}
-                  imagesMaxWidth={Dimensions.get("window").width}
-                />
-            </View>
-        );
-    }
-}
-
-class Kebijakan extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            
-        };
-    }
-
-    componentDidMount() {
-        
-    }
-
-    render() {
-        const { renderMapView, todo, helpBlock} = this.state;
-        const { navigation,product } = this.props;
-        
-        
-        
-        return (
-            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-                <HTML
-                  html={product.product_detail.term}
-                  imagesMaxWidth={Dimensions.get("window").width}
-                />
-            </View>
-        );
-    }
-}
-
-
-

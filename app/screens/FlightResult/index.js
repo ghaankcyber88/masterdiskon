@@ -269,10 +269,10 @@ export default class FlightResult extends Component {
 
                                                             if(length != 0){
                                                                 this.setState({ loading_spinner: false });
-                                                                ////console.log('flight_result',JSON.stringify(result.data.departure));                            
                                                                 var listdata_departure=this.rebuild(result.data.departure);
                                                                 var listdata_return=this.rebuild(result.data.return);  
-                                                                
+                                                                //console.log('flight_results',JSON.stringify(this.rebuild(result.data.departure)));                            
+
                                                                 this.setState({ listdata_departure: listdata_departure });
                                                                 this.setState({ listdata_return: listdata_return });
                                 
@@ -403,10 +403,6 @@ export default class FlightResult extends Component {
     
     sortProcess(selected)
     {   
-        //alert(selected);
-    var listdata_departure=this.state.listdata_departure;
-       //console.log('listdata_departuresortProcess',JSON.stringify(listdata_departure));
-       //this.setState({listdata_departure:listdata});
        if(selected=='low_price'){
        this.sortLowestPrice();
         }else if(selected=='hight_price'){

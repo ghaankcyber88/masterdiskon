@@ -126,12 +126,45 @@ export default class FlightResultArrival extends Component {
         }
     }
     
-    sortProcess(listdata)
+    sortProcess(selected)
     {   
+       if(selected=='low_price'){
+       this.sortLowestPrice();
+        }else if(selected=='hight_price'){
+            this.sortHightestPrice();
+        }
+    }
     
-       //console.log('hasil sort',JSON.stringify(listdata));
-       this.setState({listdata_return:listdata});
-     
+    sortLowestPrice(){
+        //----------untuk sort asc---------//
+        var data = eval(this.state.listdata_return);
+        var results = data;
+        results.sort(function(a,b){
+            if(a.filter_price == b.filter_price)
+                return 0;
+            if(a.filter_price < b.filter_price)
+                return -1;
+            if(a.filter_price > b.filter_price)
+                return 1;
+        });
+    
+        this.setState({listdata_return:results});
+    }
+    
+    sortHightestPrice(){
+        //----------untuk sort desc---------//
+        var data = eval(this.state.listdata_return);
+        var results = data;
+        results.sort(function(a,b){
+            if(a.filter_price == b.filter_price)
+                return 0;
+            if(a.filter_price < b.filter_price)
+                return 1;
+            if(a.filter_price > b.filter_price)
+                return -1;
+        });
+    
+        this.setState({listdata_return:results});
     }
     
     

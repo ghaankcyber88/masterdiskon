@@ -178,7 +178,8 @@ export default class SelectHotel extends Component {
                                 "limit":""
                                 }}
                             
-                    console.log('paramUrl',JSON.stringify(paramUrl));
+                    
+                    
                     var param={
                         method: 'POST',
                         headers: {
@@ -189,6 +190,7 @@ export default class SelectHotel extends Component {
                       }
                      PostDataNew(url,path,param)
                          .then((result) => {
+                            console.log('gethotel',url,path,JSON.stringify(result));
                             this.setState({flight:result});
                          },
                          (error) => {
@@ -328,11 +330,11 @@ export default class SelectHotel extends Component {
                                                     paddingTop: 5
                                                 }}
                                             >
-                                                {item.product_detail.detail_category.replace(/_/gi, ' ')} - {item.product_detail.city_name}
+                                                {item.detail_category.replace(/_/gi, ' ')} - {item.city_name}
                                             </Text>
                                         </View>
                                     </View>
-                                    {item.checked && (
+                                    {item.checked && 'kanjut' (
                                         <Icon
                                             name="check"
                                             size={14}
