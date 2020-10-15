@@ -17,8 +17,8 @@ export default class FlightFilter extends Component {
     constructor(props) {
         super(props);
         var listdata=this.props.navigation.state.params.listdata;
-        //console.log("----------------listdata asli ------------------------------------");
-        //console.log(JSON.stringify(listdata));
+        console.log("----------------listdata asli ------------------------------------");
+        console.log(JSON.stringify(listdata));
 
 
         var listdata_new = [];

@@ -6,8 +6,8 @@ const DataMasterDiskon = [
         //baseUrl: "https://masterdiskon.com/",
 
         //untuk development
-        //baseUrl: "https://masterdiskon.com/",
-        baseUrl: "https://sandbox.masterdiskon.com/",
+        baseUrl: "https://masterdiskon.com/",
+        //baseUrl: "https://sandbox.masterdiskon.com/",
         username: "digidawdigidaw",
         password: "123456",
         

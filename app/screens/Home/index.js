@@ -927,6 +927,7 @@ export default class Home extends Component {
                 },
                 body: JSON.stringify(),
               }
+              //console.log('getProductHotelPackageCityparam',url,path);
              PostDataNew(url,path,param)
                  .then((result) => {
                     //console.log('getProductHotelPackageCity',JSON.stringify(result));

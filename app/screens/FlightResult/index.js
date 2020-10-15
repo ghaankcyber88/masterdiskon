@@ -301,8 +301,6 @@ export default class FlightResult extends Component {
             });
 
         });
-        
-        
       
     }
     
@@ -442,6 +440,7 @@ export default class FlightResult extends Component {
         this.setState({listdata_departure:results});
     }
 
+    
     /**
      * @description Open modal when filterring mode is applied
      * @author Passion UI <passionui.com>

@@ -174,7 +174,7 @@ export default class FlightItem extends Component {
                                 />
                                 <View>
                                     <Text caption1 semibold accentColor>
-                                        {brand} / {brandCode}
+                                        {brand}
                                     </Text>
                                     <Text caption2 light>
                                         {kelas}
@@ -182,13 +182,13 @@ export default class FlightItem extends Component {
                                 </View>
                             </View>
                             <View
-                                style={{ flexDirection: "row", alignItems: "flex-end" }}
+                                style={styles.bottomRight}
                             >
-                                <Text title3 semibold primaryColor>
+                                <Text body2 light  primaryColor>
                                     {price}
                                 </Text>
                                 <Text caption1 light style={{ marginLeft: 5 }}>
-                                    Pax
+                                    / Pax
                                 </Text>
                             </View>
                         </View>
