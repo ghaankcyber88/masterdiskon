@@ -111,7 +111,8 @@ export default class FormOption extends Component {
                                     semibold
                                     primaryColor={item.checked}
                                 >
-                                    {item.text}
+                                    {/* {item.text} */}
+                                    {(item.text.replace(/_/gi, ' ')).toUpperCase()}
                                 </Text>
                                 {item.checked && (
                                     <Icon

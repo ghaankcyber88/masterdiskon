@@ -104,38 +104,10 @@ export default class SelectHotel extends Component {
 
     onChange(select) {
         const { navigation } = this.props;
-        navigation.navigate("HotelDetail",{product:select})
-        // this.setState({
-        //     flight: this.state.flight.map(item => {
-        //         if (item.code == select.code) {
-        //             return {
-        //                 ...item,
-        //                 checked: true
-        //             };
-        //         } else {
-        //             return {
-        //                 ...item,
-        //                 checked: false
-        //             };
-        //         }
-               
-        //     })
-        // });
 
-        // const { navigation } = this.props;
-        // var type = navigation.getParam("type");
-        //     if(type=='from'){
-        //                     this.props.navigation.state.params.setBandaraAsal(
-        //                         select.code,select.label
-        //                         )
-        //                     navigation.goBack();
-        //     }else if(type=='to'){
-           
-        //                     this.props.navigation.state.params.setBandaraTujuan(
-        //                         select.code,select.label
-        //                         )
-        //                     navigation.goBack();
-        //     }
+        //console.log('HotelDetail',JSON.stringify(select));
+        navigation.navigate("HotelDetail",{product:select,product_type:'hotelpackage'})
+        
     }
 
     search(value){
@@ -190,7 +162,7 @@ export default class SelectHotel extends Component {
                       }
                      PostDataNew(url,path,param)
                          .then((result) => {
-                            console.log('gethotel',url,path,JSON.stringify(result));
+                            //console.log('gethotel',url,path,JSON.stringify(result));
                             this.setState({flight:result});
                          },
                          (error) => {
@@ -334,7 +306,7 @@ export default class SelectHotel extends Component {
                                             </Text>
                                         </View>
                                     </View>
-                                    {item.checked && 'kanjut' (
+                                    {item.checked && (
                                         <Icon
                                             name="check"
                                             size={14}

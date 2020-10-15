@@ -35,7 +35,7 @@ import SetPenumpangLong from "../../components/SetPenumpangLong";
 
 
 
-import {DataLoading,DataConfig,DataTrip,DataHotelPackage,DataIcon,DataHotelPackageCity} from "@data";
+import {DataLoading,DataConfig,DataTrip,DataHotelPackage,DataIcon,DataHotelPackageCity,DataActivities} from "@data";
 import {
     heightPercentageToDP as hp,
     widthPercentageToDP as wp
@@ -117,6 +117,7 @@ export default class Home extends Component {
             listdata_product_hotel_package_pay_now_stay_later:DataHotelPackage,
             listdata_product_hotel_package_city:DataHotelPackageCity,
             listdata_product_flash:DataLoading,
+            listdata_product_activities:DataActivities,
             config:DataConfig,
             
             
@@ -257,11 +258,18 @@ export default class Home extends Component {
         });
     }
 
-    convertDate(date){
+    convertDateText(date){
         var d = new Date(date);
         var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
         return days[d.getDay()]+", "+d.getDate()+" "+months[d.getMonth()]+" "+d.getFullYear();
+    }
+
+    convertDateDM(date){
+        var d = new Date(date);
+        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        var months = ["Jan","Feb","Mar","Ap","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        return d.getDate()+" "+months[d.getMonth()];
     }
 
     onSelectFlight(type) {
@@ -1078,6 +1086,44 @@ export default class Home extends Component {
             ); 
         });
     }
+
+    getProductActivities(){
+        const {config} =this.state;
+        
+        this.setState({ loading_product_activities: true }, () => {
+            var url=config.baseUrl;
+            var path=config.product_activities.dir;
+            var paramUrl={"param":{
+                        "id_country":"",
+                        "id_city":"",
+                        "id_activities":"",
+                        "activities_category_id":"",
+                        "search":"",
+                        "limit":""
+                        }}
+                    
+                    
+            var param={
+                method: 'POST',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(paramUrl),
+              }
+              //console.log('getProductActivities',url,path,paramUrl);
+             PostDataNew(url,path,param)
+                 .then((result) => {
+                     //console.log('getProductActivities',JSON.stringify(result));
+                    this.setState({loading_product_activities: false });
+                    this.setState({listdata_product_activities: result});
+                 },
+                 (error) => {
+                     this.setState({ error });
+                 }
+            ); 
+        });
+    }
     
     componentDidMount() {
         //membuat bar transparant
@@ -1095,6 +1141,7 @@ export default class Home extends Component {
             this.getProductHotelPackageCity();
             this.getProductHotelPackageCategory();
             this.getProductFlash();
+            this.getProductActivities();
             //this.getBlog();
         }, 200);
 
@@ -1425,7 +1472,45 @@ export default class Home extends Component {
                                     <View></View>
                                     }
 
+                                    {   
+                                    this.state.listdata_product_activities.length != 0 ?
+                                    <View style={{flex:1}}>
+                                        <CardCustomTitle style={{marginLeft:20}} title={'Virtual Tour'} desc={''} />
+                                        <FlatList
+                                                contentContainerStyle={{
+                                                    paddingRight: 20
+                                                }}
+                                                horizontal={true}
+                                                data={this.state.listdata_product_activities}
+                                                showsHorizontalScrollIndicator={false}
+                                                keyExtractor={(item, index) => item.id}
+                                                renderItem={({ item, index }) => (
+                                                    <CardCustom
+                                                    propImage={{height:wp("50%"),url:item.img_featured_url}}
+                                                    propInframe={{top:this.convertDateDM(item.product_detail.valid_start),bottom:item.product_detail.term}}
+                                                        propTitle={{text:item.product_name}}
+                                                        propDesc={{text:''}}
+                                                        propPrice={{price:'Rp '+priceSplitter(item.product_detail.price),startFrom:true}}
+                                                        propStar={{rating:item.product_detail.stars,enabled:false}}
+                                                        propLeftRight={{left:'',right:''}}
+                                                        onPress={() =>
+                                                            {
+                                                                //alert('ActivitiesDetail');
+                                                                navigation.navigate("HotelDetail",{product:item,product_type:'activities'})
 
+                                                            }
+                                                        }
+                                                        loading={this.state.loading_product_activities}
+                                                        propOther={{inFrame:true,horizontal:true,width:wp("50%")}}
+                                                        
+                                                    />
+                                                
+                                                )}
+                                            />
+                                    </View>
+                                    :
+                                    <View></View>
+                                }
                             
                             
                             

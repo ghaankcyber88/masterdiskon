@@ -177,13 +177,14 @@ export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
         var product = this.props.navigation.state.params.product;
+        //console.log('HotelDetail',JSON.stringify(product));
         var product_type='';
         if(this.props.navigation.state.params && this.props.navigation.state.params.product_type){
             product_type=this.props.navigation.state.params.product_type;
         }else{
             product_type='';
         }
-
+        //console.log('product_type',product_type);
 
         var minDate = new Date(); // Today
         minDate.setDate(minDate.getDate() + 7);
@@ -413,7 +414,7 @@ export default class HotelDetail extends Component {
         var productPart={}
         var link='';
         var qty='';
-        if(product.product_detail.detail_category=='pay_now_stay_later'){
+        if(product.detail_category=='pay_now_stay_later'){
             qty=this.state.minVoucher;
         }else{
             qty=this.state.minRoom;
@@ -442,7 +443,7 @@ export default class HotelDetail extends Component {
         const { navigation } = this.props;
         var content=<View></View>
         
-        if(product.product_detail.detail_category=='pay_now_stay_later'){
+        if(product.detail_category=='pay_now_stay_later'){
         content=<View style={[styles.contentButtonBottom]}>
                         <FormOptionQty
                                 title={'Quantity'}
@@ -530,9 +531,31 @@ export default class HotelDetail extends Component {
         )
     }
    
+    convertDateDDMY(date){
+        var d = new Date(date);
+        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        var months = ["Jan","Feb","Mar","Ap","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        return days[d.getDay()]+", "+d.getDate()+" "+months[d.getMonth()]+" "+d.getFullYear();
+    }
+
+    convertDateDMY(date){
+        var d = new Date(date);
+        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        var months = ["Jan","Feb","Mar","Ap","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        return d.getDate()+" "+months[d.getMonth()]+" "+d.getFullYear();
+    }
+
+    convertDateDM(date){
+        var d = new Date(date);
+        var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        var months = ["Jan","Feb","Mar","Ap","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+        return d.getDate()+" "+months[d.getMonth()];
+    }
+
+
     render() {
         const { navigation } = this.props;
-        const { title, heightHeader, service, product,minPerson,minPrice,totalPrice,login} = this.state;
+        const { title, heightHeader, service, product,product_type,minPerson,minPrice,totalPrice,login} = this.state;
         const heightImageBanner = Utils.scaleWithPixel(250, 1);
         const marginTopBanner = heightImageBanner - heightHeader;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
@@ -540,6 +563,191 @@ export default class HotelDetail extends Component {
         const { modalVisiblePerson,modalVisibleDate} = this.state;
 
         var content=<View></View>
+        if(product_type=='hotelpackage'){
+            content=<View>
+                        <View
+                            style={[
+                                {
+                                    flexDirection: "row",
+                                    paddingHorizontal: 20,
+                                    marginBottom: 10,
+                                    paddingTop: 10
+                                },
+                                { marginTop: marginTopBanner }
+                            ]}
+                        >
+                            <Tag
+                                primary
+                                style={{ marginRight: 15 }}
+                            >
+                                 {/* {product.detail_category} */}
+                                {(product.detail_category.replace(/_/gi, ' ')).toUpperCase()}
+                            </Tag>
+                        </View>
+
+                        
+                        <View
+                            style={[
+                                { paddingHorizontal: 20, paddingTop: 0 },
+                            ]}
+                        >
+                            <Text
+                                header
+                                style={{ marginBottom: 10 }}
+                            >
+                                {product.product_name}
+                            </Text>
+                        </View>
+                        
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20 }}>
+                            <StarRating
+                                    disabled={true}
+                                    starSize={14}
+                                    maxStars={5}
+                                    rating={5}
+                                    selectedStar={rating => {}}
+                                    fullStarColor={BaseColor.yellowColor}
+                                />
+                        </View>
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingBottom: 20 }}>
+                            <Icon
+                                name="map-marker-alt"
+                                color={BaseColor.lightPrimaryColor}
+                                size={10}
+                            />
+                            <Text
+                                caption1
+                                style={{ marginLeft: 10 }}
+                                numberOfLines={1}
+                            >
+                                {product.product_detail.address}, {product.product_detail.capital}
+                            </Text>
+                        </View>
+
+                        <Paket
+                            product={this.state.product}
+                            setMinPerson={this.setMinPerson}
+                            setPrice={this.setPrice}
+                            productType={this.state.product_type}
+                        />
+                        <Informasi
+                            data={'Biaya penambahan orang dalam kamar mungkin berlaku dan berbeda-beda menurut kebijakan properti.Tanda pengenal berfoto yang dikeluarkan oleh pemerintah dan kartu kredit, kartu debit, dan deposit uang tunai diperlukan saat check-in untuk biaya tidak terduga.Pemenuhan permintaan khusus bergantung pada ketersediaan sewaktu check-in dan mungkin menimbulkan biaya tambahan. Permintaan khusus tidak dijamin akan terpenuhi.'}
+                        />
+
+                        <Informasi
+                            data={this.state.product.product_detail.exclude}
+                        />
+
+                        <Informasi
+                            data={this.state.product.product_detail.term}
+                        />
+                    </View>
+
+        }else if(product_type=='activities'){
+            content=<View>
+                        <View
+                            style={[
+                                {
+                                    flexDirection: "row",
+                                    paddingHorizontal: 20,
+                                    marginBottom: 10,
+                                    paddingTop: 10
+                                },
+                                { marginTop: marginTopBanner }
+                            ]}
+                        >
+                            <Tag
+                                primary
+                                style={{ marginRight: 15 }}
+                            >
+                                {(product.product_detail.term.replace(/_/gi, ' ')).toUpperCase()}
+
+                            </Tag>
+                        </View>
+
+                        
+                        <View
+                            style={[
+                                { paddingHorizontal: 20, paddingTop: 0 },
+                            ]}
+                        >
+                            <Text
+                                header
+                                style={{ marginBottom: 10 }}
+                            >
+                                {product.product_name}
+                            </Text>
+                        </View>
+                        
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20 }}>
+                            <StarRating
+                                    disabled={true}
+                                    starSize={14}
+                                    maxStars={5}
+                                    rating={5}
+                                    selectedStar={rating => {}}
+                                    fullStarColor={BaseColor.yellowColor}
+                                />
+                        </View>
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingBottom: 0 }}>
+                            <Icon
+                                name="map-marker-alt"
+                                color={BaseColor.lightPrimaryColor}
+                                size={10}
+                            />
+                            <Text
+                                caption1
+                                style={{ marginLeft: 10 }}
+                                numberOfLines={1}
+                            >
+                                {product.product_detail.address}, {product.product_detail.capital}
+                            </Text>
+                        </View>
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingBottom: 0 }}>
+                            <Icon
+                                name="clock"
+                                color={BaseColor.lightPrimaryColor}
+                                size={10}
+                            />
+                            <Text
+                                caption1
+                                style={{ marginLeft: 10 }}
+                                numberOfLines={1}
+                            >
+                                Periode Pemesanan s/d {this.convertDateDMY(product.product_detail.end_date)}
+                            </Text>
+                        </View>
+
+                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingBottom: 0 }}>
+                            <Icon
+                                name="clock"
+                                color={BaseColor.lightPrimaryColor}
+                                size={10}
+                            />
+                            <Text
+                                caption1
+                                style={{ marginLeft: 10 }}
+                                numberOfLines={1}
+                            >
+                                Live {this.convertDateDMY(product.product_detail.valid_start)}
+                            </Text>
+                        </View>
+
+                        <Paket
+                            product={this.state.product}
+                            setMinPerson={this.setMinPerson}
+                            setPrice={this.setPrice}
+                            productType={this.state.product_type}
+                        />
+                        
+                    </View>
+
+        }
         
 
         return (
@@ -596,82 +804,8 @@ export default class HotelDetail extends Component {
                         }
                         scrollEventThrottle={8}
                     >
-                        <View
-                            style={[
-                                {
-                                    flexDirection: "row",
-                                    paddingHorizontal: 20,
-                                    marginBottom: 10,
-                                    paddingTop: 10
-                                },
-                                { marginTop: marginTopBanner }
-                            ]}
-                        >
-                            <Tag
-                                primary
-                                style={{ marginRight: 15 }}
-                            >
-                                Valid Until {product.product_detail.end_date}
-                            </Tag>
-                        </View>
+                        {content}
 
-                        
-                        <View
-                            style={[
-                                { paddingHorizontal: 20, paddingTop: 0 },
-                            ]}
-                        >
-                            <Text
-                                header
-                                style={{ marginBottom: 10 }}
-                            >
-                                {product.product_name}
-                            </Text>
-                        </View>
-                        
-
-                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20 }}>
-                            <StarRating
-                                    disabled={true}
-                                    starSize={14}
-                                    maxStars={5}
-                                    rating={5}
-                                    selectedStar={rating => {}}
-                                    fullStarColor={BaseColor.yellowColor}
-                                />
-                        </View>
-
-                        <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingBottom: 20 }}>
-                            <Icon
-                                name="map-marker-alt"
-                                color={BaseColor.lightPrimaryColor}
-                                size={10}
-                            />
-                            <Text
-                                caption1
-                                style={{ marginLeft: 10 }}
-                                numberOfLines={1}
-                            >
-                                {product.product_detail.address}, {product.product_detail.capital}
-                            </Text>
-                        </View>
-
-                        <Paket
-                            product={this.state.product}
-                            setMinPerson={this.setMinPerson}
-                            setPrice={this.setPrice}
-                        />
-                        <Informasi
-                            data={'Biaya penambahan orang dalam kamar mungkin berlaku dan berbeda-beda menurut kebijakan properti.Tanda pengenal berfoto yang dikeluarkan oleh pemerintah dan kartu kredit, kartu debit, dan deposit uang tunai diperlukan saat check-in untuk biaya tidak terduga.Pemenuhan permintaan khusus bergantung pada ketersediaan sewaktu check-in dan mungkin menimbulkan biaya tambahan. Permintaan khusus tidak dijamin akan terpenuhi.'}
-                        />
-
-                        <Informasi
-                            data={this.state.product.product_detail.exclude}
-                        />
-
-                        <Informasi
-                            data={this.state.product.product_detail.term}
-                        />
 
                     </ScrollView>
                     :
@@ -690,7 +824,8 @@ class Paket extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            product_option:props.product.product_option
+            product_option:props.product.product_option,
+            product_type:props.productType
         };
     }
 
@@ -740,7 +875,7 @@ class Paket extends Component {
 
 
     render() {
-        const { renderMapView, todo, helpBlock,product_option } = this.state;
+        const { renderMapView, todo, helpBlock,product_option,product_type} = this.state;
         const { navigation} = this.props;
         const priceSplitter = (number) => (number && number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
 
@@ -761,80 +896,129 @@ class Paket extends Component {
                         />
                         </View>
         }else{
-            content=<FlatList
-            data={product_option}
-            keyExtractor={(item, index) => item.id_product_option}
-            renderItem={({ item }) => (
-                <TouchableOpacity
-                    // style={styles.item}
-                    onPress={() => 
-                    {
-                    this.onChange(item)
-                    }
-                    
-                    }
-                >
-                    <View style={[styles.itemPrice, { backgroundColor: BaseColor.secondColor == BaseColor.whiteColor ? item.checked : null}]}>
-                            <View style={styles.linePrice}>
-                                <Text headline semibold>
-                                    {item.detail_name}
-                                </Text>
-                                
-                                {item.checked && (
-                                    <View style={styles.iconRight}>
-                                    <Icon
-                                        name="check"
-                                        size={24}
-                                        color={'green'}
-                                        />
-                                    </View>
-                                )}
-                                
-                            </View>
-        
-                            <View style={styles.linePriceMinMax}>
-                                <View style={styles.contentService}>
-                                    {[
-                                        { key: "1", name: "clock",label:item.duration+ 'night' },
-                                        { key: "2", name: "user",label:item.guest_per_room+' guest' },
-                                        { key: "3", name: "crop",label:item.room_size+' m2' },
-                                        { key: "4", name: "bed",label:item.bed_type},
-                                        { key: "5", name: "bath",label:'shower' }
-                                    ].map((item, index) => (
-                                        <View
-                                            style={{ alignItems: "center" }}
-                                            key={"service" + index}
-                                        >
-                                            <Icon
-                                                name={item.name}
-                                                size={24}
-                                                color={BaseColor.primaryColor}
+            if(product_type=='hotelpackage'){
+                content=<FlatList
+                data={product_option}
+                keyExtractor={(item, index) => item.id_product_option}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        // style={styles.item}
+                        onPress={() => 
+                        {
+                        this.onChange(item)
+                        }
+                        
+                        }
+                    >
+                        <View style={[styles.itemPrice, { backgroundColor: BaseColor.secondColor == BaseColor.whiteColor ? item.checked : null}]}>
+                                <View style={styles.linePrice}>
+                                    <Text headline semibold>
+                                        {item.detail_name}
+                                    </Text>
+                                    
+                                    {item.checked && (
+                                        <View style={styles.iconRight}>
+                                        <Icon
+                                            name="check"
+                                            size={24}
+                                            color={'green'}
                                             />
-                                            <Text
-                                                overline
-                                                grayColor
-                                                style={{ marginTop: 4 }}
+                                        </View>
+                                    )}
+                                    
+                                </View>
+            
+                                <View style={styles.linePriceMinMax}>
+                                    <View style={styles.contentService}>
+                                        {[
+                                            { key: "1", name: "clock",label:item.duration+ 'night' },
+                                            { key: "2", name: "user",label:item.guest_per_room+' guest' },
+                                            { key: "3", name: "crop",label:item.room_size+' m2' },
+                                            { key: "4", name: "bed",label:item.bed_type},
+                                            { key: "5", name: "bath",label:'shower' }
+                                        ].map((item, index) => (
+                                            <View
+                                                style={{ alignItems: "center" }}
+                                                key={"service" + index}
                                             >
-                                                {item.label}
+                                                <Icon
+                                                    name={item.name}
+                                                    size={24}
+                                                    color={BaseColor.primaryColor}
+                                                />
+                                                <Text
+                                                    overline
+                                                    grayColor
+                                                    style={{ marginTop: 4 }}
+                                                >
+                                                    {item.label}
+                                                </Text>
+                                            </View>
+                                        ))}
+                                    </View>
+                                    <View style={styles.linePrice}>
+                                        {/* <Text primaryColor semibold>
+                                            Minimum: 2
+                                        </Text> */}
+                                        <View style={styles.iconRight}>
+                                            <Text title2 style={{color:BaseColor.primaryColor}}>
+                                                Rp {priceSplitter(item.price)}
                                             </Text>
                                         </View>
-                                    ))}
-                                </View>
-                                <View style={styles.linePrice}>
-                                    <Text primaryColor semibold>
-                                        Minimum: 2
-                                                </Text>
-                                    <View style={styles.iconRight}>
-                                        <Text>
-                                            Rp {priceSplitter(item.price)}
-                                        </Text>
                                     </View>
                                 </View>
                             </View>
-                        </View>
-                </TouchableOpacity>
-            )}
-        />
+                    </TouchableOpacity>
+                )}
+            />
+
+            }else{
+
+                content=<FlatList
+                data={product_option}
+                keyExtractor={(item, index) => item.id_product_option}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        // style={styles.item}
+                        onPress={() => 
+                        {
+                        this.onChange(item)
+                        }
+                        
+                        }
+                    >
+                        <View style={[styles.itemPrice, { backgroundColor: BaseColor.secondColor == BaseColor.whiteColor ? item.checked : null}]}>
+                                <View style={styles.linePrice}>
+                                    <Text headline semibold>
+                                        {item.detail_name}
+                                    </Text>
+                                    
+                                    {item.checked && (
+                                        <View style={styles.iconRight}>
+                                        <Icon
+                                            name="check"
+                                            size={24}
+                                            color={'green'}
+                                            />
+                                        </View>
+                                    )}
+                                    
+                                </View>
+                                <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+                                    <HTML
+                                    html={item.description}
+                                    imagesMaxWidth={Dimensions.get("window").width}
+                                    />
+                                </View>
+                                
+                            </View>
+                    </TouchableOpacity>
+                )}
+            />
+
+
+            }
+
 
 
         }
@@ -870,67 +1054,6 @@ class Informasi extends Component {
             <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
                 <HTML
                   html={data}
-                  imagesMaxWidth={Dimensions.get("window").width}
-                />
-            </View>
-        );
-    }
-}
-
-class Exclude extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            
-        };
-    }
-
-    componentDidMount() {
-        InteractionManager.runAfterInteractions(() => {
-            this.setState({ renderMapView: true });
-        });
-    }
-
-    render() {
-        const { renderMapView, todo, helpBlock} = this.state;
-        const { navigation,product } = this.props;
-        var product_detail=product.product_detail;
-        
-        
-        
-        return (
-            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-                <HTML
-                  html={product_detail.exclude}
-                  imagesMaxWidth={Dimensions.get("window").width}
-                />
-            </View>
-        );
-    }
-}
-
-class Kebijakan extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            
-        };
-    }
-
-    componentDidMount() {
-        
-    }
-
-    render() {
-        const { renderMapView, todo, helpBlock} = this.state;
-        const { navigation,product } = this.props;
-        
-        
-        
-        return (
-            <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
-                <HTML
-                  html={product.product_detail.term}
                   imagesMaxWidth={Dimensions.get("window").width}
                 />
             </View>

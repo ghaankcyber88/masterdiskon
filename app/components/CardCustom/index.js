@@ -89,7 +89,7 @@ export default class CardCustom extends Component {
                                       body2
                                       bold
                                   >
-                                {propInframe.bottom.replace(/_/gi, ' ')}
+                                {(propInframe.bottom.replace(/_/gi, ' ')).toUpperCase()}
                             </Text>
                           </View>
           }
