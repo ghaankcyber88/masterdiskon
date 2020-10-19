@@ -1087,7 +1087,7 @@ export default class Summary extends Component {
     }
 
     onSubmit() {
-        
+        this.setState({loading:true});
         this.saveParticipant();
         this.submitOrder();
        

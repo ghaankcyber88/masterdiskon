@@ -27,10 +27,10 @@ android {
 
     defaultConfig {
         applicationId "com.masterdiskon"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion rootProject.ext.minSdkVersion //minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 29
-        versionCode 18
-        versionName "1.0.4"
+        versionCode 19
+        versionName "1.0.5"
         multiDexEnabled true
     }
 

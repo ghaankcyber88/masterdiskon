@@ -1093,11 +1093,12 @@ export default class Pembayaran extends Component {
                 },
                 body: JSON.stringify(body),
               }
+              //console.log('get_booking_historys_param',url,path,parameter);
              PostDataNew(url,path,param)
                  .then((result) => {
                     var dataBooking=result;
-                            console.log("---------------get_booking_historys ------------");
-                            console.log(JSON.stringify(result));
+                            // console.log("---------------get_booking_historys ------------");
+                            // console.log(JSON.stringify(result));
                             
                             this.setState({ loading_spinner: false });
                             this.setState({dataBooking:dataBooking});

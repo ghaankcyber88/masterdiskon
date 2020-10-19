@@ -181,11 +181,13 @@ export default class SetDate extends Component {
                             name="calendar-alt"
                             size={18}
                             color={BaseColor.primaryColor}
+                            style={{textAlign:'center'}}
                         />
-                    </TouchableOpacity>
-                    <Text caption2 style={{}}>
+                        <Text caption2 style={{}}>
                         {tglAwal}
                     </Text>
+                    </TouchableOpacity>
+                    
                     <Modal
                     isVisible={modalVisible}
                     onBackdropPress={() => {

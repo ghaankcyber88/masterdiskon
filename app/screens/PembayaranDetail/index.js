@@ -561,8 +561,8 @@ export default function PembayaranDetail(props) {
                         return PostDataNew(url,path,param)
                             .then((result) => {
                                 var dataBooking=result;
-                                console.log("---------------get_booking_historyssss ------------");
-                                console.log(JSON.stringify(result));
+                                //console.log("---------------get_booking_historyssss ------------");
+                                //console.log(JSON.stringify(result));
                                 setLoading(false);
                                 setDataBooking(dataBooking);
                                 

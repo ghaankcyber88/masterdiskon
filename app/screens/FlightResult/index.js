@@ -121,9 +121,9 @@ export default class FlightResult extends Component {
             obj['filter_price'] = item.price.total_price;
             obj['filter_airline_code'] = item.airline_code;
             obj['filter_transit'] = item.transit;
-            obj['filter_fasilities_entertainment'] = item.flight_schedule[0].inflight_entertainment;
-            obj['filter_fasilities_baggage'] = item.flight_schedule[0].baggage;
-            obj['filter_fasilities_meal'] = item.flight_schedule[0].meal;
+            obj['filter_entertainment'] = item.flight_schedule[0].inflight_entertainment;
+            obj['filter_baggage'] = item.flight_schedule[0].baggage;
+            obj['filter_meal'] = item.flight_schedule[0].meal;
             
             obj["price"]=item.price;
             obj["international"]= item.international;
@@ -182,9 +182,9 @@ export default class FlightResult extends Component {
             "filter_price" : item.price.total_price,
             "filter_airline_code" : item.airline_code,
             "filter_transit" : item.transit,
-            "filter_fasilities_entertainment" : item.flight_schedule[0].inflight_entertainment,
-            "filter_fasilities_baggage" : item.flight_schedule[0].baggage,
-            "filter_fasilities_meal" : item.flight_schedule[0].meal,
+            "filter_entertainment" : item.flight_schedule[0].inflight_entertainment,
+            "filter_baggage" : item.flight_schedule[0].baggage,
+            "filter_meal" : item.flight_schedule[0].meal,
             
             "price":item.price,
             "international": item.international,
@@ -472,36 +472,19 @@ export default class FlightResult extends Component {
             return filters[key](item[key]);
           });
         });
-      }
+    }
 
-    filterProcess(filter)
+      
+      
+
+    filterProcess(filters)
     {
-        //console.log("----------------filter------------------------------------");
-        //console.log(filter);
-
-        var filter=filter;
-        const products =this.state.listdata_departure_original;
+   
+        var products=this.state.listdata_departure;
+        const filtered=this.filterArray(products, filters);
+        this.setState({listdata_departure:filtered});
 
         
-        if(filter.length != 0){
-            var filters = {}
-            if(filter.length != 0){
-               filters = {
-                num: num => filter.includes(num)
-              };
-            }
-            filtered = this.filterArray(products, filters);
-            this.setState({listdata_departure:filtered});
-    
-           
-            //console.log("----------------hasil filter------------------------------------");
-            //console.log(filtered);
-
-        }else{
-            //console.log("----------------hasil filter------------------------------------");
-            //console.log("null");
-            this.setState({listdata_departure:[]});
-        }
     }
     
     

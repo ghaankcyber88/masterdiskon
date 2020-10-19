@@ -397,6 +397,8 @@ export default class CardCustomBooking extends Component {
                 icon_name_type='bed';
             }else if(item.product=='Voucher'){
                 icon_name_type='gift';
+            }else if(item.product=='Activities'){
+                icon_name_type='map-signs';
             }
                         
         var icon_type=<View></View>;

@@ -177,7 +177,7 @@ export default class HotelDetail extends Component {
     constructor(props) {
         super(props);
         var product = this.props.navigation.state.params.product;
-        //console.log('HotelDetail',JSON.stringify(product));
+        console.log('HotelDetail',JSON.stringify(product));
         var product_type='';
         if(this.props.navigation.state.params && this.props.navigation.state.params.product_type){
             product_type=this.props.navigation.state.params.product_type;

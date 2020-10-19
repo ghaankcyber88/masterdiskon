@@ -208,11 +208,13 @@ export default class SetPenumpang extends Component {
                                 name="user"
                                 size={18}
                                 color={BaseColor.primaryColor}
+                                style={{textAlign:'center'}}
                             />
-                        </TouchableOpacity>
-                        <Text caption2 style={{}}>
+                            <Text caption2 style={{}}>
                             {label} Orang
                         </Text>
+                        </TouchableOpacity>
+                        
 
                     </View>
         );

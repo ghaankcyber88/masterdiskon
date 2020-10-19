@@ -193,11 +193,13 @@ export default class FormOptionQty extends Component {
                                 name={icon}
                                 size={18}
                                 color={BaseColor.primaryColor}
+                                style={{textAlign:'center'}}
                             />
-                        </TouchableOpacity>
-                        <Text caption2 style={{}}>
+                            <Text caption2 style={{}}>
                         {this.props.selectedText}
                         </Text>
+                        </TouchableOpacity>
+                        
             </View>
         );
     }

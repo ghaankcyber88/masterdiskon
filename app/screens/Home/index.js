@@ -229,6 +229,7 @@ export default class Home extends Component {
     //-----function untuk hotel-----//
     
     setBookingTime(tglAwal, tglAkhir,round) {
+        //alert(round);
         if (round ==true) {
             this.setState({tglAwal:tglAwal});
             this.setState({tglAkhir:tglAkhir});
@@ -1111,7 +1112,7 @@ export default class Home extends Component {
                 },
                 body: JSON.stringify(paramUrl),
               }
-              //console.log('getProductActivities',url,path,paramUrl);
+              console.log('getProductActivities',url,path,paramUrl);
              PostDataNew(url,path,param)
                  .then((result) => {
                      //console.log('getProductActivities',JSON.stringify(result));

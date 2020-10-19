@@ -96,36 +96,16 @@ export default class FlightResultArrival extends Component {
         });
       }
     
-    filterProcess(filter)
-    {
-        //console.log("----------------filter------------------------------------");
-        //console.log(filter);
-    
-        var filter=filter;
-        const products =this.state.listdata_return_original;
-    
-        
-        if(filter.length != 0){
-        var filters = {}
-        if(filter.length != 0){
-           filters = {
-            num: num => filter.includes(num)
-          };
-        }
-        filtered = this.filterArray(products, filters);
-        this.setState({listdata_return:filtered});
-    
-       
-        //console.log("----------------hasil filter------------------------------------");
-        //console.log(filtered);
-    
-        }else{
-            //console.log("----------------hasil filter------------------------------------");
-            //console.log("null");
-            this.setState({listdata_return:[]});
-        }
-    }
-    
+      filterProcess(filters)
+      {
+     
+          var products=this.state.listdata_return;
+          const filtered=this.filterArray(products, filters);
+          this.setState({listdata_return:filtered});
+  
+          
+      }
+      
     sortProcess(selected)
     {   
        if(selected=='low_price'){

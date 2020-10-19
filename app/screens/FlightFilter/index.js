@@ -17,8 +17,8 @@ export default class FlightFilter extends Component {
     constructor(props) {
         super(props);
         var listdata=this.props.navigation.state.params.listdata;
-        console.log("----------------listdata asli ------------------------------------");
-        console.log(JSON.stringify(listdata));
+        // console.log("----------------listdata asliss ------------------------------------");
+        // console.log(JSON.stringify(listdata));
 
 
         var listdata_new = [];
@@ -90,13 +90,16 @@ export default class FlightFilter extends Component {
                 { id: "QG", selected: false, title: "Citilink" },
                 { id: "SJ", selected: false, title: "Sriwijaya" },
                 { id: "GA", selected: false, title: "Garuda Indonesia" },
+                { id: "JT", selected: false, title: "Lion Air" },
+                { id: "ID", selected: false, title: "Batik Air" },
+                { id: "QZ", selected: false, title: "Air Asia" },
             ],
             transits: [
                 // { id: "ALL", selected: true, title: "All" },
-                { id: "0", selected: false, title: "Direct" },
-                { id: "1", selected: false, title: "1 Transit" },
-                { id: "2", selected: false, title: "2 Transits" },
-                { id: "4", selected: false, title: "+2 Transits" },
+                { id: 0, selected: false, title: "Direct" },
+                { id: 1, selected: false, title: "1 Transit" },
+                { id: 2, selected: false, title: "2 Transits" },
+                { id: 3, selected: false, title: "+2 Transits" },
             ],
             facilitiess: [
                 // { id: "ALL", selected: true, title: "All" },
@@ -108,6 +111,14 @@ export default class FlightFilter extends Component {
             // listdata_departure_new:listdata_departure_new,
             listdata_new:listdata_new,
             listdata:listdata,
+
+            filtersParam:{},
+            filterAirline:[],
+            filterTransits:[],
+            filterBaggage:"0",
+            filterEntertainment:false,
+            filterMeal:"1"
+
 
         };
         this.onChangeRound = this.onChangeRound.bind(this);
@@ -182,6 +193,7 @@ export default class FlightFilter extends Component {
         });
     }
 
+
     onSelectTransits(selected) {
         this.setState({
             transits: this.state.transits.map(item => {
@@ -192,6 +204,18 @@ export default class FlightFilter extends Component {
                 };
             })
         });
+
+        setTimeout(() => {
+            var filterTransits=[];
+            var transits=this.state.transits;
+            for (const item of transits) {
+                if(item.selected==true){
+                    filterTransits.push(item.id);
+                }
+            }
+            console.log('filterTransits',JSON.stringify(filterTransits));
+            this.setState({filterTransits:filterTransits});
+        }, 200);
     }
 
     onSelectAirline(selected) {
@@ -204,6 +228,18 @@ export default class FlightFilter extends Component {
                 };
             })
         });
+        
+        setTimeout(() => {
+            var filterAirline=[];
+            var airline=this.state.airline;
+            for (const item of airline) {
+                if(item.selected==true){
+                    filterAirline.push(item.id);
+                }
+            }
+            this.setState({filterAirline:filterAirline});
+        }, 200);
+
     }
 
     onSelectFacilitiess(selected) {
@@ -216,6 +252,30 @@ export default class FlightFilter extends Component {
                 };
             })
         });
+
+        setTimeout(() => {
+            //console.log('facilitiess',JSON.stringify(this.state.facilitiess));
+            var facilitiess=this.state.facilitiess;
+
+            if(facilitiess[0].selected==true){
+                this.setState({filterBaggage:"1"}); 
+            }else if(facilitiess[0].selected==false){
+                this.setState({filterBaggage:"2"}); 
+            }
+
+            if(facilitiess[1].selected==true){
+                this.setState({filterEntertainment:true}); 
+            }else if(facilitiess[1].selected==false){
+                this.setState({filterEntertainment:false}); 
+            }    
+
+            if(facilitiess[2].selected==true){
+                this.setState({filterMeal:"1"}); 
+            }else if(facilitiess[2].selected==false){
+                this.setState({filterMeal:"0"}); 
+            }    
+          
+        }, 200);
     }
 
     filterByAirline(){
@@ -224,7 +284,6 @@ export default class FlightFilter extends Component {
             if(item.selected==true){
                 airline.push(item.id);
             }
-
         })
 
         var filter=airline;
@@ -354,19 +413,79 @@ export default class FlightFilter extends Component {
 
     submitFilter(){
         const { navigation } = this.props;
-
-        this.filterByAirline();
+        const {filterAirline,filterTransits,filterEntertainment,filterMeal,filterBaggage,priceBegin,priceEnd}=this.state;
+        //this.filterByAirline();
 
 
      
 
 
-       
+        const filter = {
+            //filter_airline_code: filter_airline_code => filterAirline.includes(filter_airline_code.toUpperCase()),
+            filter_airline_codes: filterAirline,
+
+            //filter_transit: filter_transit => filterTransits.includes(filter_transit),
+            filter_transits: filterTransits,
+
+            //filter_entertainment : filter_entertainment =>  filter_entertainment === filterEntertainment,
+            filter_entertainments : filterEntertainment,
+            
+            //filter_baggage : filter_baggage =>  filter_baggage != filterBaggage,
+            filter_baggages : filterBaggage,
+            
+            //filter_meal : filter_meal =>  filter_meal != filterMeal,
+            filter_meals : filterMeal,
+
+            filter_prices: [priceBegin,priceEnd]
+
+          };
+          console.log('filter',JSON.stringify(filter));
+
+          var filtersParam={}
+
+          //var filterAirline=[];
+          if(filterAirline.length != 0)
+          {
+          filtersParam.filter_airline_code=filter_airline_code => filterAirline.includes(filter_airline_code.toUpperCase());
+          }
+          
+          //var filterTransits=[];
+          if(filterTransits.length != 0)
+          {
+          filtersParam.filter_transit=filter_transit => filterTransits.includes(filter_transit);
+          }
+          
+          //var filterEntertainment=false;
+          if (filterEntertainment==true){
+          filtersParam.filter_entertainment=filter_entertainment => filter_entertainment === filterEntertainment;
+          }
+          
+          //var filterBaggage="0";
+          if(filterBaggage != "0"){
+          filtersParam.filter_baggage=filter_baggage => filter_baggage != filterBaggage;
+          
+          }
+          
+          //var filterMeal="1";
+          if(filterMeal == "0"){
+          filtersParam.filter_meal=filter_meal => filter_meal != filterMeal;
+          
+          }
+          filtersParam.filter_price=filter_price => filter_price <= priceEnd && filter_price >= priceBegin;       
+          const filters = filtersParam;
+          //console.log('filters',filters);
+
+          
 
 
- 
+        
+        //   this.props.filterProcess(filters);
 
-        // const products =this.state.listdata_departure_new;
+        this.props.navigation.state.params.filterProcess(filters);
+        navigation.goBack();
+
+
+       // const products =this.state.listdata_departure_new;
       
         // const filters = {
         //   airline_code: airline_code => airline.includes(airline_code.toUpperCase()),

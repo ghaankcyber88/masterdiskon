@@ -75,7 +75,7 @@ export default class Booking extends Component {
               body: raw,
               redirect: 'follow'
             };
-            
+            console.log('fetchbooking',url+path,{"param":{"id":id_user,"id_order":"","id_order_status":idParam,"product":""}})
             fetch(url+path, requestOptions)
               .then(response => response.json())
               .then(result => {
