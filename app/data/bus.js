@@ -4,7 +4,7 @@ const BusData = [
     {
         id: "1",
         from: {
-            name: "Market",
+            name: "Markeet",
             value: "Smart Market",
             hour: "05:00"
         },
